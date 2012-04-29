@@ -1,0 +1,89 @@
+VERSION 2.1
+1March2012
+C. Duke
+Grinnell College
+
+Questions/Comments :  send me a note at duke@grinnell.edu
+
+GrOptics is a ray-tracing package for telescope arrays containing a combination of 
+Davis-Cotton (DC) and Schwarzschild-Couder (SC) optical systems.  The DC telescope 
+class models a standard Veritas telescope using a grisudet configuration file. The SC
+class models an ideal SC telescope. For version 1.0, the SC telescope shape 
+parameters are hard coded in the GSCTelescope class. 
+
+GrOptics accepts input from GrISU compatible photon files.
+
+1. Version History
+
+       version 1.0 (v1.0)
+       svn revision number: r1353
+
+       version 2.0 (will update files to "v2.0" soon)
+       svn revision number 1553  USE THIS SVN VERSION, -r1509
+          see new testtel option in opticsConfiguration.pilot file
+
+       version 2.1:  svn revision number: r1646  
+       added rotation and translation error offsets for all elements of 
+       an SCTelescope by containing the secondary mirror and the
+       camera/focal surface in individual geovolumes and then using
+       rotation and translation transformations to position these
+       volumes in the top volume. This might increase the execution
+       time a bit, but we need the error offsets. A later version will
+       provide mirror roughness reflection. 
+       Revised SC camera parameters to conform
+       with Nepomuk's camera description; documentation in 
+       stdSCTelescope.cfg configuration file.  Substantially 
+       cleaned up the code, more to do however. Now using
+       robast v1.4.3.
+
+       current working version is: r1662 or later. use this for
+       mirror roughness and robast v1.5.0_beta. Code won't compile
+       until AOpticsManager.h is updated in robast - that should 
+       occur today or tonight: March 8 2012
+
+1. Installation
+
+   Dependencies: ROOT, Gsl, robast	
+   Check out current version from svn repository
+
+   repository name = 
+   svn+ssh://svn.slac.stanford.edu/nfs/slac/g/agis/repo/subversion/trunk/simulation/GrOptics
+
+   <prompt> svn co <repository name> -r1553
+   <prompt> cd GrOptics
+   <prompt> make
+
+   The Makefile will download the robast package from sourceforge and compile its libraries. 
+   These libraries and the source code will be in the GrOptics/v1.4.3 directory.  The robast package, 
+   written and maintained by Akiri Okumura, contains the ROOT geometry add-on classes used 
+   to construct the SC telescopes. For more details go http://sourceforge.net/projects/robast/ 
+   and to http://arxiv.org/abs/1110.4448.
+   
+   The executable is grOptics
+
+   to see command line arguments
+   <prompt> grOptics -help
+
+2. Tests
+
+   All files to test the grOptics code are included in the tarball.  The tests use the 
+   Config/photon.cph photon file containing a single 0.8 TeV shower. The test telescope
+   array is defined in Config/arrayConfig.cfg as 3 veritas-type telescopes and a single 
+   SC telescope, all located in a square array. The veritas4Tel.cfg file contains a standard
+   veritas configuration file plus additional records needed by GrOptics at the head of this
+   file.
+
+3. Documentation
+
+   See the GrOptics/README/ files. Each configuration file in GrOptics/Config is fully 
+   documented.
+
+   Expect fairly frequent updates. The next version will read the SC telescope parameters from
+   the SC telescope input file. Currently, these parameters are hard coded in GSCTelescope.cpp.
+
+4. Comments
+
+   If you do not have access to the Stanford svn repository, let me know and I'll place the 
+   tarball in a Grinnell public directory at a mutually convenient time for downloading.
+
+5.

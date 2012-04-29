@@ -1,0 +1,27 @@
+# script to add version from version.txt
+# NOT TO UPDATE the version, that's another script with sed
+
+# get all .cpp files
+
+cppfiles=$(ls *.cpp)
+#echo $cppfiles
+for name in $cppfiles
+do
+   echo $name
+   cat version.txt $name > file.tmp
+   mv file.tmp $name
+   
+done
+
+# get all .h files
+
+hfiles=$(ls *.h)
+#echo $hfiles
+for name in $hfiles
+do
+   echo $name
+   cat version.txt $name > file.tmp
+   mv file.tmp $name
+   
+done
+

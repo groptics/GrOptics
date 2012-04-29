@@ -1,0 +1,44 @@
+October 14, 2011
+VERSION 1.0
+C. Duke
+Grinnell College
+
+I. Main duties of grOptics.cpp
+   comments taken from grOptics.cpp
+
+  /////// read command line and pilot file 
+  /////// set random number generator seed
+  /////// open and write to log file
+
+  /////// fill map (mTelDetails) of TelDetails structure
+  /////// fill vector (vTelFac) of GTelescopeFactory's 
+  /////// use factories to fill map (mArrayTel) of array telescopes
+
+  /////// make a photon reader (GReadPhotonBase)
+  /////// create an instance of GSimulateOptics for the raytracing
+
+  /////// instantiate the simulate optics class (GSimulateOptics)
+
+  /////// do the simulations (where do we create the output class).
+ 
+II. Structures defined in grOptics
+
+    Cline: contains command line information
+    Pilot: contains pilotfile information
+    TelFactory: factory details: telType, rdType, configFile, editFile
+    TelDetails: telescope details: telID, telStd, telType, locGrd, offSets
+
+III.  Making telescopes
+    instantiate telescope factories:
+       DC example: instantiate GReadDCStdGrISU
+       	  	   instantiate GDCTelescopeFactory with reader and factory
+		               details
+       make array telescope map:map<int, GArrayTel *> mArrayTel;
+            fill telescope map given TelDetails map
+	    ask the factory to return GTelescope pointer
+	    fill the mArrayTel map (pass in telescope pointer, etc.)
+
+IV. Running Simulations
+    make a photon reader GReadPhotonGrISU
+    instantiate GSimulateOptics(readP,&mArrayTel)
+    siO->startSimulations(pilot.nShower,pilot.nPhoton)     

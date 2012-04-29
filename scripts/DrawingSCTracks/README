@@ -1,0 +1,12 @@
+Replace the repository copies of these files with the files in 
+this directory. 
+
+Use a single SC telescope as the array.
+
+The code will draw a limited number of tracks on an opengl drawing 
+of the SC telescope. Change the number of tracks to plot a different
+number. The code snipet is from GSCTelescope.cpp
+
+  if (manager->GetNtracks() == 27) {
+    manager->DrawTracks();
+  }

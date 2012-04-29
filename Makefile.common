@@ -1,0 +1,107 @@
+# Makefile.common
+#VERSION2.1 
+#1March2012
+#     C. Duke
+# Grinnell College
+# June 21, 2010
+
+
+# Makefile.common to be included at the beginning of all Makefiles for
+# compiling and linking GrISep code, can be used for non-GrISep applications
+
+SHELL=bash
+
+MAKEFLAGS = -r
+
+# -----------------------------------------------------------------------------
+# Architecture dependent compile / link options
+# -----------------------------------------------------------------------------
+# find the machine architecture
+ARCH :=$(shell uname)
+DLLSUFF :=
+
+# linux flags
+ifeq ($(ARCH),Linux)
+DLLSUFF       =.so
+CXX           = g++ 
+ARCHCFLAGS    = -g  -O2 -Wall -fPIC  -fno-strict-aliasing  -D_FILE_OFFSET_BITS=64 -D_LARGE_FILE_SOURCE -D_LARGEFILE64_SOURCE 
+LD            = g++
+ARCHLDFLAGS   = -g
+ARCHSOFLAGS   = -shared
+
+endif
+
+# Apple OS X flags
+ifeq ($(ARCH),Darwin)
+DLLSUFF       =.dylib
+CXX           = g++ 
+
+#ARCHCFLAGS    = -g -Wall -fPIC  -fno-strict-aliasing 
+ARCHCFLAGS    =  -pipe -Wall -W -Woverloaded-virtual -Wshadow
+LD            = g++
+ARCHLDFLAGS   =  -bind_at_load 
+#-O -bind_at_load
+#ARCHSOFLAGS   = -dynamiclib -single_module -undefined dynamic_lookup
+ARCHSOFLAGS   = -dynamiclib -undefined dynamic_lookup
+
+endif
+
+
+CXXFLAGS      = $(ARCHCFLAGS) $(ROOTCFLAGS) $(GSLCFLAGS)
+LDFLAGS      += $(ARCHLDFLAGS) $(ROOTLDFLAGS) $(GSLCFLAGS)
+LIBS         += $(ROOTGLIBS) $(GSLLIBS) 
+
+OutPutOpt     = -o
+
+# -----------------------------------------------------------------------------
+# Root
+# -----------------------------------------------------------------------------
+ROOTCFLAGS   := $(shell root-config --cflags)
+ROOTLDFLAGS  := $(shell root-config --ldflags)
+#ROOTLIBS     := $(shell root-config --libs) -lMinuit -lTreePlayer -lGenVector 
+#ROOTLIBS += -lGeomBuilder  -lGeomPainter  -lGeom -lGed
+ROOTGLIBS    := $(shell root-config --glibs) -lMinuit -lTreePlayer -lGenVector  
+ROOTGLIBS += -lGeomBuilder  -lGeomPainter  -lGeom -lGed
+
+# -----------------------------------------------------------------------------
+# GSL (Gnu Scientific Library)
+# -----------------------------------------------------------------------------
+GSLCFLAGS  := $(shell gsl-config --cflags)
+GSLLIBS    := $(shell gsl-config --libs)
+
+# -----------------------------------------------------------------------------
+# TMVA :if TMVASYS is defined in .bashrc file
+#       otherwise, use ROOT version from ROOTSYS 
+# -----------------------------------------------------------------------------
+ifdef TMVASYS
+      TMVACFLAGS := -I$(TMVASYS)/include
+      TMVALIBS   := -L$(TMVASYS)/lib -lTMVA.1 -lMLP 
+else
+      TMVACFLAGS :=
+      TMVALIBS   :=
+
+endif
+
+# -----------------------------------------------------------
+# Robast
+# -----------------------------------------------------------
+# ROBAST build
+//ROBAST_VER = v1.2.0
+//ROBAST_VER = v1.3.0
+//ROBAST_VER = v1.4.3
+ROBAST_VER = v1.5.0_beta
+ROBAST_TGZ = robast-$(ROBAST_VER).tar.gz
+ROBAST_BASE_URL = http://sourceforge.net/projects/robast/files/
+ROBAST_URL = $(ROBAST_BASE_URL)/$(ROBAST_TGZ)/download
+ROOTMAP = $(ROBAST_VER)/libROBAST.rootmap
+
+INCLUDEFLAGS  += -I$(ROBAST_VER)/include
+LDFLAGS       += -L$(ROBAST_VER)
+LIBS          += -lROBAST
+
+ARCH :=$(shell uname)
+ifeq ($(ARCH),Linux)
+# passes option "-rpath v1.2.0" to the linker to set the
+# run path (which hasn't been set in LD_LIBRARY_PATH)
+LDFLAGS += -Xlinker -rpath -Xlinker $(ROBAST_VER)
+endif

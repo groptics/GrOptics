@@ -1,0 +1,82 @@
+  Steering pilot file for GrOptics
+VERSION2.1 
+1March2012
+
+C. Duke
+Grinnell College
+
+Only records with an initial "*" are active.  
+
+cherenkov photon GRISU-type input file, 
+same type input file as for grisudet. 
+FILEIN <filename>  
+* FILEIN ./Config/photon.cph
+ FILEIN ./Config/star0Deg.cph
+camera output root file specification type
+      - root file name
+      - name for tree containing parameters common to all photons
+      - base name for photon trees, one tree per telescope, 
+        telescope number appended to base name
+      - photonDirCosine flag: 0/1, if 1 add dirCosineCamera branches
+FILEOUT <root filename> <TreeName> <telBaseTreeName> <photonDirCosBranchFlag>
+* FILEOUT photonLocation.root allT T 0
+
+name of grOptics log file, default use cerr (if no asterisk)
+ LOGFILE logTest.log
+
+number of showers/photons, defaults -1
+  NSHOWER <numShowers, <0, no limit>
+          <numPhotons, <0, no limit>
+* NSHOWER 1 1
+
+x and y coordinates of the source in the field
+of view followed by the source extention radius (all in degrees). The fourth
+parameter is the latitude of the observatory in degrees. If the latitude is
+set to 90 degrees the source position is given in camera corrdinates. If the
+latitude is less than 90 degrees, the source position in x corresponds to an
+offset in the east west direction while the y position corresponds to north 
+south.
+Example: 
+wobble North: WOBBLE 0.0 0.5 0.0 31.675  
+wobble East : WOBBLE 0.5 0.0 0.0 31.675  
+* WOBBLE 0.0 0.0 0.0 90.0
+
+array configuration file
+ ARRAYCONFIG <filename: default ./Config/arrayConfig.cfg>
+* ARRAYCONFIG ./Config/arrayConfig.cfg
+
+random number seed for TRandom3: default seed = 0, set by machine clock.
+seed must be an unsigned integer
+* SEED 12345
+
+photonHistory file, no history file if no asterisk, each telescope has 
+a history file
+Very useful for debugging
+ PHOTONHISTORY <root file, tel.number appended to base name> 
+               <tree name: default = "his">
+* PHOTONHISTORY photonhistory.root his
+
+///////////////  draw possibilities for checking configuration and
+                               debugging
+
+DRAWTEL <telescope number to draw>, default 0 (no drawing)
+code makes an opengl drawing of the telescope and immediately 
+stops with the root prompt. These are cool drawings. 
+  DRAWTEL 1
+
+TESTTEL <telescope number> <baseFileName for histograms>   
+THis is a very useful option for producing spot histograms and spot rms
+plots; the code doesn't use a photon input file; the photons are internally
+produced. However, at present, you still need a valid photon input file 
+in the above FILEIN record.
+
+Makes histograms and graphs of psf width and psf spot for a number of 
+photon incident angles. Makes histograms and graphs for transit time width
+for the same incident angles.  Be sure to set the number of photons to some 
+small number in the NSHOWER record; the code does not stop after making the 
+test graphs. DO NOT ADD A ROOT EXTENSION TO THE BASEFILENAME, THE CODE WILL
+DO THAT.
+The graphs and histograms are printed to png files using the base filenames.
+
+TESTTEL <telescope number> <baseFileName for histograms>   
+* TESTTEL 1  scSpotNoCamera
