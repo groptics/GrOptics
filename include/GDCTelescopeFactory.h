@@ -1,6 +1,6 @@
 /*
-VERSION2.1
-1MARCH2012
+VERSION2.2
+10MAY2012
 */
 /*! \brief GDCTelescopeFactory concrete class for creating ACT 
   Telescopes
@@ -68,6 +68,7 @@ struct DCStdOptics {
   double defoc;           /*!< Defocusing >0 when camera is too far 
 			   away from the dish <0 when too close.*/
   double foclength;       //!< Focal length (meters)
+  double camRadius;       //!< Radius of camera
   double radius;          //!< Radius of dish (meters) 
   double rotation_offset; /*!< distance between focal point and
                             rotation center (meters) */

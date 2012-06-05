@@ -1,6 +1,6 @@
 /*
-VERSION2.1
-1MARCH2012
+VERSION2.2
+10MAY2012
 */
 // standard includes
 #include <iostream>
@@ -1139,15 +1139,23 @@ const char * GRootDCNavigator::getNextNodeName(const double *pos,
 };
 
 //****************************************************
-const char * GRootDCNavigator::getPositionDirection(const double *pos1, 
-                                                    const double *dir1) {
+const char * GRootDCNavigator::getPositionDirection(double *pos1, 
+                                                    double *dir1) {
   gGeoManager = fGeom;
-  pos1 = fGeom->GetCurrentPoint();
-  dir1 = fGeom->GetCurrentDirection();
+
+  const double *p,*d;
+  
+  p = fGeom->GetCurrentPoint();
+  d = fGeom->GetCurrentDirection();
+  for (int i = 0;i<3;i++) {
+    pos1[i] = p[i];
+    dir1[i] = d[i];
+  }
 
   TGeoNode *cnode = fGeom->GetCurrentNode();
   const char * currnode = cnode->GetName();
-  
+
+
   return currnode;
 };
 
@@ -1163,6 +1171,10 @@ void GRootDCNavigator::drawTelescope() {
 void GRootDCNavigator::setTrackingDebug(bool setDebug) {
   fDebugTr = setDebug;
 
+};
+double GRootDCNavigator::getFocalBoxZBottomTopVolCoor() {
+  double tmp = (*fTopPosV)[2] - fFocusBoxDim[2] - fepsil;
+  return tmp;
 };
 
 //****************************************************

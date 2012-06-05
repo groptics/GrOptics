@@ -1,6 +1,6 @@
 /*
-VERSION2.1
-1MARCH2012
+VERSION2.2
+10MAY2012
 */
 /*!  GReadDCStdGrISU.cpp
      Charlie Duke
@@ -56,6 +56,7 @@ GReadDCStdGrISU::GReadDCStdGrISU(const string pilotfile,GDCTelescopeFactory *DCF
   iTelNum = 0;
   iGeoNum = 0;
   dFocLgt    = 0.0;
+  dCamRad    = 0.0;
   dFocError  = 0.0;
   dTelRadius = 0.0;
   //mVReflWaveLgts = 0;
@@ -251,9 +252,18 @@ void GReadDCStdGrISU::makeStdTelescope() {
   //telp->geoStruct = 0;  // set pointer to zero. not used here.
 
   // now fill the *telp class with entries for this standard telescope.
-  
+
   bool readtelflag = false;  // check for telescope in config file
-  string flag = "GRIDF"; 
+
+   string flag = "CAMRAD"; 
+   pi->set_flag(flag);
+   while (pi->get_line_vector(tokens) >=0) {
+     if ( atoi(tokens[0].c_str()) == iTelNum ) {
+       telp->camRadius = atof(tokens[1].c_str());
+     }
+   }
+
+  flag = "GRIDF"; 
   pi->set_flag(flag);
   while (pi->get_line_vector(tokens) >=0) {
     if ( atoi(tokens[0].c_str()) == iTelNum ) {
@@ -573,6 +583,7 @@ void GReadDCStdGrISU::makeStdOptics() {
     dco->stdType = DC;
     dco->defoc = (*itTel).second->defoc;
     dco->foclength = (*itTel).second->foclength;
+    dco->camRadius = (*itTel).second->camRadius;
     dco->radius = (*itTel).second->radius;
     dco->rotation_offset = (*itTel).second->rotation_offset;
     dco->xoff = (*itTel).second->xoff;

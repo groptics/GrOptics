@@ -1,6 +1,6 @@
 /*
-VERSION2.1
-1MARCH2012
+VERSION2.2
+10MAY2012
 */
 /*!  \brief GReadPhotonBase:  base class for reading Cherenkov photons
             Currently one concrete class for reading GrISU format files.

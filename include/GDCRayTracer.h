@@ -1,6 +1,6 @@
 /*
-VERSION2.1
-1MARCH2012
+VERSION2.2
+10MAY2012
 */
 /*!  GDCRayTracer concrete class for implementing DC raytracer with
   using ROOT for shadowing only, as in grisudet
@@ -62,6 +62,7 @@ class GDCRayTracer : public GRayTracerBase {
 
   GRootDCNavigator *geoT; //!< root geometry ray tracer from GrISU  
 
+  double fTopVolOrigin2FocBox;  //!< distance from topvolOrigin to focBox
   /*!<  \brief  determine the location of the photon on the tel.sphere
 
    */

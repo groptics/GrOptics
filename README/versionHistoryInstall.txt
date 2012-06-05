@@ -41,6 +41,24 @@ GrOptics accepts input from GrISU compatible photon files.
        until AOpticsManager.h is updated in robast - that should 
        occur today or tonight: March 8 2012
 
+       version 2.2: svn revision number: r1924
+       main addition was a CAMRAD record in veritas.cfg file. 
+       as follows:
+       //////////////
+       camera radius in mm (for veritas Rmax for pixel position is 357.58 mm
+                     pixel radius is 14.00 mm. so 375.00 mm is the camera radius
+       including the camera restricts the photon locations to lie within this radius on
+       the camera plane.  If left out, all photons striking the camera plane extended
+       across the entire base of the focus box will be recorded in the root file.
+       * CAMRAD 1 375.0
+       * CAMRAD 2 375.0
+       * CAMRAD 3 375.0
+       * CAMRAD 4 375.0
+       ////////////////
+       continued cleanup of code. 
+       only one veritas config file, veritas.cfg, now. And it's an abbreviated version
+       All files have this new version number and 10MAY2012 date.
+
 1. Installation
 
    Dependencies: ROOT, Gsl, robast	
@@ -49,7 +67,7 @@ GrOptics accepts input from GrISU compatible photon files.
    repository name = 
    svn+ssh://svn.slac.stanford.edu/nfs/slac/g/agis/repo/subversion/trunk/simulation/GrOptics
 
-   <prompt> svn co <repository name> -r1553
+   <prompt> svn co <repository name> -r1553 (see above for current svn version number)
    <prompt> cd GrOptics
    <prompt> make
 
@@ -69,7 +87,7 @@ GrOptics accepts input from GrISU compatible photon files.
    All files to test the grOptics code are included in the tarball.  The tests use the 
    Config/photon.cph photon file containing a single 0.8 TeV shower. The test telescope
    array is defined in Config/arrayConfig.cfg as 3 veritas-type telescopes and a single 
-   SC telescope, all located in a square array. The veritas4Tel.cfg file contains a standard
+   SC telescope, all located in a square array. The veritas.cfg file contains a standard
    veritas configuration file plus additional records needed by GrOptics at the head of this
    file.
 

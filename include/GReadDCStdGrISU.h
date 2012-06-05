@@ -1,6 +1,6 @@
 /*
-VERSION2.1
-1MARCH2012
+VERSION2.2
+10MAY2012
 */
 /*! \brief  GReadDCStdGrISU class: concrete class for reading 
       standard telescope configurations for use by telescope factory
@@ -46,6 +46,7 @@ class GReadDCStdGrISU : public GReadDCStdBase {
   int iGeoNum; //!< active geometry number, used in filling telescope entries
 
   double dFocLgt;  //!< temporary storage, focal length
+  double dCamRad;  //<! temporary storate, camera radius
   double dFocError; //!< temporary for now
   double dTelRadius; //!< temporary
 

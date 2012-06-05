@@ -1,6 +1,6 @@
 /*
-VERSION2.1
-1MARCH2012
+VERSION2.2
+10MAY2012
 */
 #ifndef GGEOTELESCOPE
 #define GGEOTELESCOPE
@@ -100,7 +100,7 @@ class GRootDCNavigator {
 
   // get current position and direction from parameter arrays
   // return node number occupied by current position
-  const char * getPositionDirection(const double *pos1, const double *dir1);
+  const char * getPositionDirection(double *pos1, double *dir1);
 
   void movePositionToTopOfTopVol();
 
@@ -109,6 +109,9 @@ class GRootDCNavigator {
   
   // print out position, direction, and node name in telescope coordinates
   void setTrackingDebug(bool setDebug);
+
+  // get z location of bottom of focal box in topvol coordinates
+  double getFocalBoxZBottomTopVolCoor();
 
   // debug print: print all variables, not totally implemented, don't use
   void printVariables();

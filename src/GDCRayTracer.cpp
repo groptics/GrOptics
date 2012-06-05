@@ -1,6 +1,6 @@
 /*
-VERSION2.1
-1MARCH2012
+VERSION2.2
+10MAY2012
 */
 #include <iostream>
 #include <cstdlib>
@@ -63,11 +63,15 @@ GDCRayTracer::GDCRayTracer(GDCTelescope *dcTel)
   facetGrid = 0;
   iFacet = 0;
   fTimeFacetToCamera = 0.0;
+  fTopVolOrigin2FocBox = 0.0;
 
   // make the navigator if necessary
   if ( (dcTel->eRayTracerType == RTDCROOT) && 
        ( dcTel->geoStruct->type != NOSTRUCT ) ){
     geoT = new GRootDCNavigator(DCTel);
+    // add small amount since geometry step is across boundary
+    fTopVolOrigin2FocBox = geoT->getFocalBoxZBottomTopVolCoor() + 0.001;
+ 
     bDoGeoStruct = true;
   }
 
@@ -484,6 +488,13 @@ bool GDCRayTracer::getPhotonOnCamera() {
     DCTel->cameraZ = DCTel->vPhotonCameraLoc.Z();
   }
 
+  // do a camera radius check if necessary
+  if (DCTel->dCamRad > 0.1) {
+    double xdist = (DCTel->vPhotonCameraLoc).X();
+    double ydist = (DCTel->vPhotonCameraLoc).Y();
+    double dist = sqrt(xdist*xdist + ydist*ydist);
+    if (dist > DCTel->dCamRad) return false;
+  }
   return true;
 };
 /******************* end of getPhotonOnCamera ******************/
@@ -618,15 +629,65 @@ bool GDCRayTracer::getPhotonLocCamera(ROOT::Math::XYZVector *pCam,
 	  dir[1] = DCTel->vPhotonCameraDcos.Y();
 	  dir[2] = DCTel->vPhotonCameraDcos.Z();
 	  
-	  geoT->setPositionDirection(pos,dir);
-	  
-	  // check for shadowing on the way out
-	  
+       
+          // comment out for testing 
+          //////////////////////////////////////////////////
+          // can track location of focus box, for example
+          // position of edges of focus box are as specified
+          // C. Duke, May 3, 2012
+          /*
+          pos[0] = 0.4;
+          pos[1] = -0.4;
+          pos[2] = -2.0;
+
+          dir[0] = dir[1] = 0.0;
+          dir[2] = 1.0;
+            
+          for (int i = 0;i<3;i++) {
+            cout << "i  pos dir " << i << "  " << pos[i] << " " 
+                 << dir[i] << endl;
+          }
+    
+          /////////////////////////////////////////////////
+          for (int j = 0;j<20; j++) {
+            pos[0] = pos[0] + 0.01;
+            pos[1] = pos[1] - 0.01;
+            for (int i = 0;i<3;i++) {
+              cout << "i  pos dir " << pos[i] << " " << dir[i] << endl;
+            }
+            geoT->setPositionDirection(pos,dir);
+            string sNodeName3 = geoT->getNextNodeName();
+            
+            /////////// check for shadowing on the way out////////////
+            // get current position after stepping to next node
+            double pos4[3],dir4[3];
+            geoT->getPositionDirection(pos4,dir4);
+            
+            *oLog << "       nextNodeName " << j << " " << sNodeName3 << endl;
+            for (int i = 0;i<3;i++) {
+              *oLog << "     " << i << "  " << pos4[i] << endl;
+            }
+            *oLog << endl;
+         }
+          exit(0);
+          */
+          ////////////////////////////////////////////////////////	  
+
+          // position is a facet hit location
+          geoT->setPositionDirection(pos,dir);
 	  string sNodeName = geoT->getNextNodeName();
 	  if (sNodeName != "fFocBoxVol_1") {
 	    return false;
 	  }
-        	  
+          // get current position after stepping to next node
+          double pos2[3],dir2[3];
+          geoT->getPositionDirection(pos2,dir2);
+ 
+          // this removes photons striking side of focus box
+          if (pos2[2] > fTopVolOrigin2FocBox ) {
+            return false;
+          }
+    	  
 	}  // bDoGeoStruct
 
 	if ( (bOnCameraFlag = getPhotonOnCamera() )) {

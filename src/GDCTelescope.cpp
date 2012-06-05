@@ -1,6 +1,6 @@
 /*
-VERSION2.1
-1MARCH2012
+VERSION2.2
+10MAY2012
 */
 /*  GDCTelescope.cpp
 
@@ -236,6 +236,7 @@ GDCTelescope::GDCTelescope() {
   dPointOffsetY   = 0.0;
   dRadius         = 0.0;
   dFocLgt         = 0.0;
+  dCamRad         = 0.0;
   dFocError       = 0.0;
 
   iTelID          = 0;
@@ -382,6 +383,7 @@ void GDCTelescope::printTelescope() {
 	   << dPointOffsetY << endl;
   *oPrtStrm<< "         dRadius:          " << dRadius << endl;
   *oPrtStrm<< "         dFocLgt:           " << dFocLgt << endl;    
+  *oPrtStrm<< "         dCamRad:         " << dCamRad << endl;          
   *oPrtStrm<< "         dFocError:         " << dFocError << endl;          
   *oPrtStrm<< "         eTelType:          " << eTelType << endl;
   *oPrtStrm<< "         eRayTracerType:    " << eRayTracerType << endl;

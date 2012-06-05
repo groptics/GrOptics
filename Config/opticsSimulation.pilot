@@ -1,6 +1,6 @@
   Steering pilot file for GrOptics
-VERSION2.1 
-1March2012
+VERSION2.2 
+10MAY2012
 
 C. Duke
 Grinnell College
@@ -11,7 +11,7 @@ cherenkov photon GRISU-type input file,
 same type input file as for grisudet. 
 FILEIN <filename>  
 * FILEIN ./Config/photon.cph
- FILEIN ./Config/star0Deg.cph
+
 camera output root file specification type
       - root file name
       - name for tree containing parameters common to all photons
@@ -27,7 +27,7 @@ name of grOptics log file, default use cerr (if no asterisk)
 number of showers/photons, defaults -1
   NSHOWER <numShowers, <0, no limit>
           <numPhotons, <0, no limit>
-* NSHOWER 1 1
+* NSHOWER -1 -1
 
 x and y coordinates of the source in the field
 of view followed by the source extention radius (all in degrees). The fourth
@@ -79,4 +79,4 @@ DO THAT.
 The graphs and histograms are printed to png files using the base filenames.
 
 TESTTEL <telescope number> <baseFileName for histograms>   
-* TESTTEL 1  scSpotNoCamera
+ TESTTEL 1  scSpotNoCamera

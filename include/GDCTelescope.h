@@ -1,6 +1,6 @@
 /*
-VERSION2.1
-1MARCH2012
+VERSION2.2
+10MAY2012
 */
 /*! \brief GDCTelescope concrete class for ACT telescopes
   inherits from GTelescope
@@ -124,6 +124,7 @@ class GDCTelescope : public GTelescope {
   double dPointOffsetY;    //!< telescope pointing offsetY (radians)
   double dRadius;          //!< telescope primary radius (meters)
   double dFocLgt;          //!< telescope focal length (meters)
+  double dCamRad;          //!< camera radius (mm)
   double dFocError;        //!< focusing error (meters) >0 camera too far
   
   double dCameraRadius;    //!< camera radius
@@ -282,6 +283,10 @@ double fTransitTime;                //!< photon total transit time (from inject 
 
   double getFocalLength() {
     return dFocLgt;
+  }
+
+  double getCameraRadius() {
+    return dCamRad;
   }
 
   double getIdealTransitTime() {
