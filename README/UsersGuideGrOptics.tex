@@ -2,6 +2,7 @@
 % Charlie Duke, Grinnell College
 
 \documentclass{article}
+\usepackage{latexsym,amssymb,amsmath,graphics}
 
 \begin{document}
 
@@ -9,13 +10,16 @@
 \author{Charlie Duke \\
 Grinnell College \\
 Grinnell, Iowa }
+
 \date{July 15, 2012}
 
 \maketitle
 \begin{abstract}
+
 GrOptics is a detailed simulation program for ray-tracing Cherenkov photons
 through large arrays of atmospheric Cherenkov telescopes. Shower packages, such
- as Corsika, provide Cherenkov photons after conversion to GrISU format. 
+as GrISU \cite{GRISU} and CORSIKA \cite{CORSIKA}, provide Cherenkov 
+photons after conversion to GrISU format. 
 The output to a ROOT file records
 individual photons striking the camera surface.  The package models
 both VERITAS Davies-Cotton and Schwarzchild-Coudee telescopes with all
@@ -23,10 +27,139 @@ telescope parameters taken from input files. There is no limit to the number
 or type of array telescopes. Adding new telescope types, input and
 output formats, etc. is 
 straightforward using standard C++ coding techniques with existing base
-classes. The code may be downloaded from xxx
+classes. Reference \cite{GROPTICS} gives the code download site.
        
 \end{abstract}
-\section{Introduction}
+%-------------------------------------------------------------
+%-------------------------------------------------------------
+\section{Introduction}\label{S:INTRO}
+GrOptics is a detailed C++ Monte Carlo ray-tracing program to 
+study the passage of 
+atmospheric Cherenkov photons through telescopes designed to study 
+atmospheric Cherenkov air showers.  
+Photons produced by standard air shower 
+codes enter the telescope; the output 
+ROOT file contains tree records of the photons that strike the telescope
+cameras.  GrOptics provides the input to the CARE  telescope 
+electronics code \cite{CARE}.
+
+There are no intrinsic limits to the number or type of telescopes placed in 
+the air Cherenkov telescope (ACT) array. Currently, the code contains two 
+concrete telescope 
+classes: for VERITAS Davies-Cotton telescopes and for Schwarzchild-Coudee 
+telescopes. All array and telescope parameters are placed in input pilot or
+configuration files.   
+
+\subsection{Installation}\label{SS:INSTALL}
+
+\begin{enumerate}
+\item
+    
+\item
+  GrOptics relies heavily on ROOT \cite{ROOT}.  I use the following
+  installation method:
+  \begin{itemize} 
+    \item Download the ROOT source package \cite{ROOT}
+    \item Follow package instructions to configure and to make
+    \item Setup ROOT environmental variables by sourcing \emph{thisroot.sh}
+      or \emph{thisroot.csh} in \textless rootDirectory\textgreater/bin
+  \end{itemize}
+  \item 
+  The Schwarzchild-Coudee telescope class uses the ROBAST 
+  package \cite{ROBAST}. 
+  ROBAST (ROot BAsed Simulator for ray Tracing) is a non-sequential 
+  ray tracing program which utilizes the 3D geometry library in ROOT. 
+  Its function is very simple compared to Geant4 Optical, 
+  but much easier to use. The ROBAST package is automatically downloaded
+  by \emph{make} when producing the GrOptics executable.
+ 
+\item
+  Download the GrOptics git repository \cite{GROPTICS}. After installing
+  ROOT, go to the GrOptics directory and run \emph{make} to produce the 
+  grOptics executable.
+
+\item
+  Executing \emph{grOptics} from the GrOptics directory will use the
+  default configuration and pilot files and a test Cherenkov photon file
+  to produce an output root file, photonLocation.root. Other output 
+  possibilities (see later sections) for this test configuration are 
+  telescope drawings and psf camera plots.
+
+\end{enumerate}
+
+
+\subsection{QuickStart}\label{SS:QSTART}
+
+%-------------------------------------------------------------
+%-------------------------------------------------------------
+\section{Code Overview}\label{S:OVERV}
+
+%-------------------------------------------------------------
+%-------------------------------------------------------------
+\section{Input Files}\label{S:INPUT}
+
+%-------------------------------------------------------------
+\subsection{Array Configuration}\label{SS:ARRAY}
+
+%-------------------------------------------------------------
+\subsection{Standard Telescopes}\label{SSS:}
+
+
+%-------------------------------------------------------------
+\subsubsection{Davies-Cotton Telescopes}\label{SSS:}
+
+
+%-------------------------------------------------------------
+\subsubsection{Schwarzchild-Coudee Telescopes}\label{SSS:}
+
+%-------------------------------------------------------------
+%-------------------------------------------------------------
+\section{Data Files}\label{S:DATAF}
+%-------------------------------------------------------------
+\subsection{Input Data Files}\label{SS:INDATA}
+
+
+%-------------------------------------------------------------
+\subsection {Output Data Files}\label{SS:ODATA}
+
+%-------------------------------------------------------------
+%-------------------------------------------------------------
+\section{Graphical Output Options}\label{S:GRAPH}
+
+%-------------------------------------------------------------
+%-------------------------------------------------------------
+\begin{thebibliography}{4}
+  \bibitem{GROPTICS}
+    GrOptics git repository (read only) \\
+    git clone http://gtlib.gatech.edu/pub/IACT/GrOptics.git
+
+  \bibitem{GRISU}
+    GrISU download site \\
+    http://www.physics.utah.edu/gammaray/GrISU/
+
+  \bibitem{CORSIKA}    
+    CORSIKA: A Monte Carlo Code to Simulate Extensive Air Showers\\
+    D. Heck, J. Knapp, J.N. Capdevielle, G. Schatz, T. Thouw \\
+    Forschungszentrum Karlsruhe Report FZKA 6019 (1998)
+
+ \bibitem{CARE}
+   CARE git repository (read only) \\
+   git clone http://gtlib.gatech.edu/pub/IACT/CARE.git
+
+ \bibitem{ROOT} 
+   Rene Brun and Fons Rademakers,\\
+   ROOT - An Object Oriented Data Analysis Framework,\\
+   Proceedings AIHENP'96 Workshop, Lausanne, Sep. 1996, \\
+   Nucl. Inst. \& Meth. in Phys. Res. A 389 (1997) 81-86. \\
+   See also http://root.cern.ch/drupal/
+
+ \bibitem{ROBAST} 
+   Development of Non-sequential Ray-tracing Software for Cosmic-ray Telescopes
+   Authors: Akira Okumura, Masaaki Hayashida, Hideaki Katagiri, Takayuki Saito,
+   Vladimir Vassiliev.  http://arxiv.org/abs/1110.4448
+   Download site http://sourceforge.net/projects/robast/
+
+\end{thebibliography}
 
 
 \end{document}
