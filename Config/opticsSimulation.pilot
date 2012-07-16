@@ -54,15 +54,15 @@ a history file
 Very useful for debugging
  PHOTONHISTORY <root file, tel.number appended to base name> 
                <tree name: default = "his">
-* PHOTONHISTORY photonhistory.root his
+ PHOTONHISTORY photonhistory.root his
 
 ///////////////  draw possibilities for checking configuration and
                                debugging
-
+			       
 DRAWTEL <telescope number to draw>, default 0 (no drawing)
 code makes an opengl drawing of the telescope and immediately 
 stops with the root prompt. These are cool drawings. 
-  DRAWTEL 1
+ DRAWTEL 1
 
 TESTTEL <telescope number> <baseFileName for histograms>   
 THis is a very useful option for producing spot histograms and spot rms
@@ -79,4 +79,4 @@ DO THAT.
 The graphs and histograms are printed to png files using the base filenames.
 
 TESTTEL <telescope number> <baseFileName for histograms>   
- TESTTEL 1  scSpotNoCamera
+ TESTTEL 1  DCSpot

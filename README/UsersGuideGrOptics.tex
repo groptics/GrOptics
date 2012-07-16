@@ -11,7 +11,14 @@
 \title{GrOptics User's Guide \\ Version 2.2}
 \author{Charlie Duke \\
 Grinnell College \\
-Grinnell, Iowa }
+Grinnell, Iowa 50112 \\
+duke@grinnell.edu
+\and
+Akira Okumura \\
+Solar-Terrestrial Environment Laboratory 
+\\Nagoya University \\
+Furo-cho, Chikusa-ku, Nagoya 464-8601, Japan \\
+oxon@mac.com}
 
 \date{July 15, 2012}
 
@@ -24,7 +31,8 @@ as GrISU \cite{GRISU} and CORSIKA \cite{CORSIKA}, provide Cherenkov
 photons after conversion to GrISU format. 
 The output to a ROOT file records
 individual photons striking the camera surface.  The package models
-both VERITAS Davies-Cotton and Schwarzchild-Coudee telescopes with all
+both VERITAS Davies-Cotton (DC) and Schwarzchild-Coudee SC) 
+telescopes with all
 telescope parameters taken from input files. There is no limit to the number
 or type of array telescopes. Adding new telescope types, input and
 output formats, etc. is 
@@ -48,43 +56,46 @@ electronics code \cite{CARE}.
 There are no intrinsic limits to the number or type of telescopes placed in 
 the air Cherenkov telescope (ACT) array. Currently, the code contains two 
 concrete telescope 
-classes: for VERITAS Davies-Cotton telescopes and for Schwarzchild-Coudee 
+classes: for VERITAS DC telescopes and for SC 
 telescopes. All array and telescope parameters are placed in input pilot or
 configuration files.   
 
 \subsection{Installation}\label{SS:INSTALL}
 
-\begin{enumerate}
+\begin{enumerate}    
 \item
-    
-\item
-  GrOptics relies heavily on ROOT \cite{ROOT}.  I use the following
+  GrOptics relies heavily on ROOT\cite{ROOT}.  I use the following
   installation method:
   \begin{itemize} 
+    \item Be sure you have installed gsl for use by ROOT
     \item Download the ROOT source package \cite{ROOT}
-    \item Follow package instructions to configure and to make
-    \item Setup ROOT environmental variables by sourcing \emph{thisroot.sh}
-      or \emph{thisroot.csh} in \textless rootDirectory\textgreater/bin
+    \item Follow package instructions to configure and to make, but 
+      do not specify a --prefix directory with configure.
+    \item Setup all necessary ROOT environmental variables 
+      by sourcing \emph{thisroot.sh} or \emph{thisroot.csh} in your 
+      \textless rootDirectory\textgreater/bin
   \end{itemize}
   \item 
-  The Schwarzchild-Coudee telescope class uses the ROBAST 
+  The SC telescope class uses the ROBAST 
   package \cite{ROBAST}. 
   ROBAST (ROot BAsed Simulator for ray Tracing) is a non-sequential 
   ray tracing program which utilizes the 3D geometry library in ROOT. 
-  Its function is very simple compared to Geant4 Optical, 
-  but much easier to use. The ROBAST package is automatically downloaded
-  by \emph{make} when producing the GrOptics executable.
+  The ROBAST package is automatically downloaded
+  by \emph{curl} within \emph{make} when producing the GrOptics executable.
  
 \item
-  Download the GrOptics git repository \cite{GROPTICS}. After installing
-  ROOT, go to the GrOptics directory and run \emph{make} to produce the 
+  After installing
+  ROOT, download the GrOptics git repository \cite{GROPTICS}.  
+  Go to the GrOptics directory and run \emph{make} to produce the 
   grOptics executable.
 
 \item
-  Executing \emph{grOptics} from the GrOptics directory will use the
-  default configuration and pilot files and a test Cherenkov photon file
-  to produce an output root file, photonLocation.root. Other output 
-  possibilities (see later sections) for this test configuration are 
+  To test the installation, 
+  execute \emph{grOptics} from the GrOptics directory. The code  will use the
+  default configuration and pilot files and a test Cherenkov 
+  photon file, all within the GrOptics/Config directory, 
+  to produce an output root file, \emph{photonLocation.root}. Other test 
+  possibilities (see later sections) for using this configuration are 
   telescope drawings and psf camera plots.
 
 \end{enumerate}
@@ -92,9 +103,148 @@ configuration files.
 
 \subsection{QuickStart}\label{SS:QSTART}
 
+  The \emph{grOptics} executable can use the
+  configuration and pilot files and a test Cherenkov 
+  photon file, all within the GrOptics/Config directory, downloaded with 
+  the git repository.  The file,
+  \emph{opticsSimulation.pilot} steers the simulation and specifies the 
+  output. The file, \emph{arrayConfig.cfg}, defines the ACT array. You'll see
+  the downloaded file defines a four-telescope DC array that is
+  compatible with the \emph{photon.cph} test input Cherenkov photon file.  
+  The parameters in these files are documented both in these files and
+  in following sections in this document.
+
+\begin{enumerate} 
+\item
+  Execute the grOptics code from the GrOptics directory to produce 
+  \emph{photonLocation.root} as specified in \emph{opticsSimulation.pilot}.
+  You'll find the output trees with records of the photons on the camera
+  surface for each telescope in this file. You'll also find a history ROOT
+  file for each telescope which documents the history of each photon incident
+  onto the telescope (useful for debugging). You can turn off the creation 
+  of these files by removing the leading asterisk of the \emph{PHOTONHIST}
+
+\item
+  To create an \emph{opengl} drawing of a Davies-Cotton telescope 
+  using the ROOT geometry classes,
+  add a leading asterisk to the 
+  \emph{DRAWTEL} record in \emph{opticsSimulation.pilot} and execute
+  \emph{grOptics}. Note that for
+  DC telescopes, the code does not draw the mirror facets as
+  the ray-tracing for the facets does not use the ROOT geometry classes.
+  Have a look at the \emph{canSpot} figure.
+
+\item
+  To replace an DC telescope with an SC telescope, open the 
+  \emph{arrayConfig.cfg} file and activate the 
+  \emph{TELFAC SC} SC telescope factory record. Then, in one of the 
+  \emph{ARRAYTEL} records replace the \emph{DC} with \emph{SC}. You can then
+  run the same tests as described above. Note that the ROOT geometry classes
+  will draw the complete SC telescope (in contrast to the DC telescope
+  drawing)
+
+\item
+  To produce a series of spot patterns on the camera, activate the 
+  \emph{TESTTEL} record in \emph{opticsSimulation.pilot} by adding an asterisk.
+  Since the code produces the spot photons internally, change the \emph{NSHOWER}
+  from $-1$ and $-1$ to $1$ and $1$ (fixing this requirement 
+  is on my to do list). Execute \emph{grOptics}.
+\end{enumerate}
 %-------------------------------------------------------------
 %-------------------------------------------------------------
 \section{Code Overview}\label{S:OVERV}
+
+See \emph{DevelopersGuideGrOptics.pdf} for more details. This section
+only introduces standard telescopes, telescope arrays,
+and the various coordinate systems used in GrOptics.
+
+GrOptics uses standard C++ plus ROOT.
+ 
+\subsection{Standard Telescopes}\label{SSS:STEL} 
+
+  The GrOptics package currently produces telescopes from each of two
+  telescope factories, one for DC telescopes and one for SC telescopes.
+  All telescope parameters are in configuration files to maintain maximum
+  flexibility.  However, having separate configuration files for each array
+  telescope leads to large, unmanagable file sizes. Thus, the factories 
+  can produce a limited number of standard telescopes based on configuration
+  files in the \emph{GrOptics/Config} directory.  The factories then use
+  edit records taken from the configuration files to change specific 
+  telescope parameters, e.g. the mirror reflectivity, thus maintaining
+  complete flexibility for parameter selection for individual telescopes. 
+  The edit
+  records use matlab colon notation so that a single record may change a 
+  parameter for a range of telescopes and elements within each
+  telescope, e.g., facet reflectivities.
+  Edit records for additional parameters can easily be added.
+
+  None of the telescope dimensions or super structures may be edited.  
+  Changing these dimensions requires a separate standard telescope. 
+
+\subsection{Telescope Arrays}
+
+  The telescope factories provide individual standard telescopes, after
+  editing,  to the ACT array
+  as defined by telescope type, standard ID number, ground location, and
+  pointing offset. Telescope numbering starts at $1$, not $0$.
+
+\subsection{Coordinate Systems}
+
+Understanding the coordinate systems used in our simulation codes 
+is always difficult, especially if your memory is as bad as mine.  
+So, these descriptions should help.
+
+\subsubsection{GrISU Ground Coordinate System}
+  The GrISU Cherenkov files either from GrISU or from the 
+CORSIKA I/O Reader use the following coordinate system:
+
+\noindent
+\hspace*{20pt}x:  East \\ 
+\hspace*{20pt}y:  South \\
+\hspace*{20pt}z:  Down \\
+to form a right-handed system
+
+\subsubsection{GrOptics ground coordinate system}
+
+The incoming GrISU produced incoming photons are immediately transformed
+by GrOptics to the system:
+
+\noindent
+\hspace*{20pt}x: East \\
+\hspace*{20pt}y: North\\
+\hspace*{20pt}z: up\\
+forming a right-handed system. Note that the telescope locations in the
+VERITAS GrISU configuration file use this coordinate system.
+ 
+\subsubsection{Telescope Coordinate System}  
+  Each telescope has a coordinate system with origin at the 
+  telescope rotation 
+  point and with z axis pointed toward the sky along the optic axis of the 
+  telescope.  In stow position (DC telescopes), the z axis is horizontal and 
+  pointed toward the North,  
+  the y axis is down, and 
+  the x axis is toward the East.  To point the telescope to a given location on the 
+  sky, GrOptics first rotates the telescope about the vertical through the azimuthal angle. 
+  Then, it raises the telescope about its new x axis through the elevation angle.  This
+  new coordinate system is the "telescope coordinate system".  Prior to injection 
+  into the GTelescope class, the photons undergo a coordinate transformation to this
+  telescope coordinate system.
+
+\subsubsection{Array Coordinate System} 
+  Prior to added pointing misalignments, all telescopes point to the same location
+  on the sky with coordinate systems previously defined.  
+  The array coordinate system is similarly defined, but its
+  origin is at the origin of the array.
+
+\subsubsection{Camera Coordinate System}
+  For historical reasons, the camera coordinate system's y axis is a reflection of the 
+  y-axis of the telescope coordinate system. For the VERITAS telescope, stand in front of the
+  camera with the telescope in stow position. The camera y axis is up and the camera x axis
+  is to your right (to the East).  The telescope y-axis is down; its x axis is to the right.
+  
+  In the output tree of grOptics, the photon locations on the camera are in camera coordinates,
+  both for DC and for SC telescopes.  I'll add an input flag later to select photon camera
+  locations in either telescope or camera coordinates.
 
 %-------------------------------------------------------------
 %-------------------------------------------------------------
@@ -104,15 +254,15 @@ configuration files.
 \subsection{Array Configuration}\label{SS:ARRAY}
 
 %-------------------------------------------------------------
-\subsection{Standard Telescopes}\label{SSS:}
+\subsection{Standard Telescopes}\label{SSS:STEL1}
 
 
 %-------------------------------------------------------------
-\subsubsection{Davies-Cotton Telescopes}\label{SSS:}
+\subsubsection{Davies-Cotton Telescopes}\label{SSS:DCTEL}
 
 
 %-------------------------------------------------------------
-\subsubsection{Schwarzchild-Coudee Telescopes}\label{SSS:}
+\subsubsection{Schwarzchild-Coudee Telescopes}\label{SSS:SCTEL}
 
 %-------------------------------------------------------------
 %-------------------------------------------------------------

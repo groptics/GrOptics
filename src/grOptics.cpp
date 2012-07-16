@@ -525,6 +525,10 @@ int readCommandLine(int argc, char *argv[], Cline *cline) {
 	i++;
       }
     }
+    else if (clArg.at(i)=="-h" ) {
+      commandLineHelp();
+      exit(0);
+    }
     else {
       *oLog << "   INCORRECT COMMMANDLINE SWITCHES" << endl;
       commandLineHelp();
@@ -555,7 +559,7 @@ void printCommandLine( Cline *cline ) {
 /******************** end of printCommandLine ***********/
 int commandLineHelp() {
 
-  *oLog << "gropt:  commandline options with default values" << endl;
+  *oLog << "grOptics:  commandline options with default values" << endl;
   *oLog << "    -it <inputFileType = grisu>" << endl;
   *oLog << "        possible types: grisu, corsika, only grisu implemented" 
 	<< endl;
