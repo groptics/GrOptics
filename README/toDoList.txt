@@ -8,3 +8,8 @@ ToDo list
 4. set up pilot record for use of TPolyLine3D photon traces 
 5. add commandLine -h option (Done 7/16)
 6. add correct verion number in GDefinition.h (Done 7/16)
+7. recheck telescope printing options 
+8. take out cameraRadius record in geo pilot file.
+9. separate draw telescope records for DC and SC telescopes
+   since they can have different options. Add facet drawings
+   to DC telescope drawer.
