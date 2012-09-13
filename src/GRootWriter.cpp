@@ -168,8 +168,8 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
   fYcore = (float)vSCore.Y();
   fXcos  = (float)vSDCore.X();
   fYcos  = (float)vSDCore.Y();
-  fXsource = (float)xSource;
-  fYsource = (float)ySource;
+  fXsource = (float)xSource*(TMath::RadToDeg());
+  fYsource = (float)ySource*(TMath::RadToDeg());
   fDelay = (float)delayTime;
   fTransit = (float)transitTime;
   

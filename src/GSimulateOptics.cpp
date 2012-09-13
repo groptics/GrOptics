@@ -162,6 +162,7 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
          iterArrayTel++) {
       iterArrayTel->second->setPrimary(vSCore,vSDcosGd,fAzPrim,fZnPrim,
                                        fEnergy,fWobbleTN,fWobbleTE,fLatitude);
+      //*oLog << " after set Primary " << fWobbleTN*(TMath::RadToDeg()) << " " << fWobbleTE*(TMath::RadToDeg()) << endl;
     }
             
     photonFlag = false;

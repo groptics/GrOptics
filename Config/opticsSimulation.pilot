@@ -39,7 +39,7 @@ south.
 Example: 
 wobble North: WOBBLE 0.0 0.5 0.0 31.675  
 wobble East : WOBBLE 0.5 0.0 0.0 31.675  
-* WOBBLE 0.0 0.0 0.0 90.0
+* WOBBLE 0.0 0.5 0.0 90.0
 
 array configuration file
  ARRAYCONFIG <filename: default ./Config/arrayConfig.cfg>
@@ -54,7 +54,7 @@ a history file
 Very useful for debugging
  PHOTONHISTORY <root file, tel.number appended to base name> 
                <tree name: default = "his">
- PHOTONHISTORY photonhistory.root his
+* PHOTONHISTORY photonhistory.root his
 
 ///////////////  draw possibilities for checking configuration and
                                debugging
