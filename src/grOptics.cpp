@@ -1,6 +1,7 @@
 /*
 VERSION2.2
 10MAY2012
+VERSION with reordered calls to open output file and rootwriter instances
 */
 /*!  gropt.cpp
           optics simulations main code
@@ -272,6 +273,23 @@ int main(int argc, char *argv[]) {
   vector< TelFactory* > vTelFac;
   
   getTelescopeFactoryDetails(&vTelFac,&mTelDetails,pilot.arrayConfigFile);
+  //////////////////////////// output file here
+  string outFileName = pilot.outFileName;  //!< name of output file
+  
+  TFile *fO = new TFile(outFileName.c_str(),"RECREATE");
+  if (fO->IsZombie() ) {
+    *oLog << "error opening root output file: " << outFileName << endl;
+    *oLog << "...exiting" << endl;
+    exit(-1);
+  }
+  ///////////////// try writers here ///////////
+  map<int,GRootWriter *> mRootWriter;
+  map<int,GRootWriter *>::iterator mRootWriterIter;
+  for (mIter=mTelDetails.begin();mIter!=mTelDetails.end();mIter++) {
+    int telID = mIter->first;
+    mRootWriter[telID] = new GRootWriter(fO,telID,pilot.outFileTelTreeName,
+					 pilot.outFileDCos);
+  }
   
   // set up factories
   GTelescopeFactory *DCFac = 0;
@@ -377,24 +395,24 @@ int main(int argc, char *argv[]) {
   // open root output file and write header as a TString to the file,
   // trees are filled later in GSimulateOptics
   
-  string outFileName = pilot.outFileName;  //!< name of output file
+  //string outFileName = pilot.outFileName;  //!< name of output file
   
-  TFile *fO = new TFile(outFileName.c_str(),"RECREATE");
-  if (fO->IsZombie() ) {
-    *oLog << "error opening root output file: " << outFileName << endl;
-    *oLog << "...exiting" << endl;
-    exit(-1);
-  }
+  //TFile *fO = new TFile(outFileName.c_str(),"RECREATE");
+  //if (fO->IsZombie() ) {
+  //*oLog << "error opening root output file: " << outFileName << endl;
+  //*oLog << "...exiting" << endl;
+  //exit(-1);
+  //}
   
   // make map of photon writers, one per telescope, using telID
   // as key
-  map<int,GRootWriter *> mRootWriter;
-  map<int,GRootWriter *>::iterator mRootWriterIter;
-  for (mIter=mTelDetails.begin();mIter!=mTelDetails.end();mIter++) {
-    int telID = mIter->first;
-    mRootWriter[telID] = new GRootWriter(fO,telID,pilot.outFileTelTreeName,
-					 pilot.outFileDCos);
-  }
+  //map<int,GRootWriter *> mRootWriter;
+  //map<int,GRootWriter *>::iterator mRootWriterIter;
+  //for (mIter=mTelDetails.begin();mIter!=mTelDetails.end();mIter++) {
+  //int telID = mIter->first;
+  // mRootWriter[telID] = new GRootWriter(fO,telID,pilot.outFileTelTreeName,
+  //					 pilot.outFileDCos);
+//}
   
   ////////////////////////////////////////
   /////// instantiate the simulate optics class (GSimulateOptics)
