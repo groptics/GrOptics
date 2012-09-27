@@ -3,8 +3,7 @@
 #1March2012
 #      C. Duke
 #  Grinnell College
-#   Version 1.0
-#   June 22, 2010
+
 #
 # dependencies: root and gsl
 # robast is downloaded, see url in Makefile.common
