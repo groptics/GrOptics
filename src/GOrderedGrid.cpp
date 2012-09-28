@@ -103,16 +103,15 @@ GOrderedGrid::GOrderedGrid( const vector<double> &xe,const vector<double> &ye,
 
 GOrderedGrid::~GOrderedGrid() {
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GOrderedGrid::~GOrderedGrid " << endl; 
   }
 
   for (unsigned i = 0;i<vGrid.size();i++) {
-    if (vGrid[i]) SafeDelete(vGrid[i]);
+    SafeDelete(vGrid[i]);
 
   }
-  //vGrid.clear();
 
 };
 /********************* end of ~GOrderedGrid ***********/

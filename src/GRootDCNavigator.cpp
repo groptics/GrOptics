@@ -205,15 +205,15 @@ GRootDCNavigator::  ~GRootDCNavigator() {
   if (fGeom) {
     gGeoManager = fGeom;
     SafeDelete(fGeom);
-    gGeoManager = 0;
+    // gGeoManager is set to zero ok
 
   }
   
-  if (fTopPosV) SafeDelete(fTopPosV);
+  SafeDelete(fTopPosV);
   
   for (int i = 0; i<3;i++) {
-    if (fQuadArmR2R1V[i]) SafeDelete(fQuadArmR2R1V[i]);
-    if (fQuadArmPosV[i]) SafeDelete(fQuadArmPosV[i]);
+    SafeDelete(fQuadArmR2R1V[i]);
+    SafeDelete(fQuadArmPosV[i]);
   }
 
 };

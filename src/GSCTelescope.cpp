@@ -177,12 +177,10 @@ GSCTelescope::~GSCTelescope() {
  }
   if (manager != 0) {
     gGeoManager = manager;
-    delete manager;
-    gGeoManager = 0;
-    manager = 0;
+    SafeDelete(manager);
   }
 
-  if (ray) SafeDelete(ray);
+  SafeDelete(ray);
 
 };
 /********************** end of ~GSCTelescope *****************/
@@ -279,7 +277,8 @@ void GSCTelescope::buildTelescope(bool os8)
   if (gPrimRefl!=0) {
     primaryMirror->SetReflectivity(gPrimRefl);
   }
-  
+
+  /*  
   TGeoRotation *rPrim = new TGeoRotation("rPrim", 
 					 fPrimPhiAngle,fPrimThetaOffset,0.0);
   TGeoCombiTrans *cPrim = new TGeoCombiTrans("cPrim",
@@ -287,6 +286,16 @@ void GSCTelescope::buildTelescope(bool os8)
 					     fPrimYoffset*mm,
 					     kZp + fPrimZoffset*mm,rPrim);
   top->AddNode(primaryMirror, 1,cPrim);
+  */
+
+  // valgrind shows a memory leak here, but not in other similar addNode calls.
+  top->AddNode(primaryMirror, 1, new TGeoCombiTrans("cPrim",
+						    fPrimXoffset*mm,
+						    fPrimYoffset*mm,
+						    kZp + fPrimZoffset*mm,
+						    new TGeoRotation("rPrim", 
+								     fPrimPhiAngle,fPrimThetaOffset,0.0) ));
+
 
   cout << " adding primary roughness sigma = " << fPrimRoughSigma << endl;
   ABorderSurfaceCondition * condition = new ABorderSurfaceCondition(top,primaryMirror);
@@ -338,6 +347,7 @@ void GSCTelescope::buildTelescope(bool os8)
   
   secVol->AddNode(secondaryObs, 1);
  
+  /*
   TGeoRotation *rSec = new TGeoRotation("rSec", 
   					 fSecondPhiAngle,
   					 fSecondThetaOffset,0.0);
@@ -346,6 +356,14 @@ void GSCTelescope::buildTelescope(bool os8)
   					     fSecondYoffset*mm,
   					     kZs + fSecondZoffset*mm,rSec);
    top->AddNode(secVol, 1,cSec);
+  */
+  top->AddNode(secVol,1, new TGeoCombiTrans("cSec",
+					    fSecondXoffset*mm,
+					    fSecondYoffset*mm,
+					    kZs + fSecondZoffset*mm,
+					    new TGeoRotation("rSec", 
+							     fSecondPhiAngle,
+							     fSecondThetaOffset,0.0) ));
 
   ////////////////// make the camera or the focal surface with no camera ///////////////////
   // make a new volume for the camera or focal plane
@@ -530,6 +548,7 @@ void GSCTelescope::buildTelescope(bool os8)
     AObscuration* focalObs = new AObscuration("focalObs", focalObsV);
 
     focVol->AddNode(focalObs, 1);
+    /*
     TGeoRotation *rFocS = new TGeoRotation("rFocS", 
 					   fFocalPlPhiAngle,
 					   fFocalPlThetaOffset,0.0);
@@ -538,7 +557,16 @@ void GSCTelescope::buildTelescope(bool os8)
 					       fFocalPlYoffset*mm,
 					       kZf + fFocalPlZoffset*mm,rFocS);
     top->AddNode(focVol, 1,cFocS);
-    
+    */
+
+    top->AddNode(focVol, 1,new TGeoCombiTrans("cFocS",
+					      fFocalPlXoffset*mm,
+					      fFocalPlYoffset*mm,
+					      kZf + fFocalPlZoffset*mm,
+					      new TGeoRotation("rFocS", 
+							       fFocalPlPhiAngle,
+							       fFocalPlThetaOffset,0.0)));
+
     *oLog << " focal plane positions: " << kZf + kzs[0] - 1*mm << "  " << kZf + kzs[0] << endl;
     *oLog << " obs plane positions:   " << kZf + kzs[0] - 2*mm << "  " << kZf + kzs[0]-1*mm << endl;
 
@@ -616,7 +644,7 @@ void GSCTelescope::injectPhoton(const ROOT::Math::XYZVector &photonLocT,
   double dy = fphotonInjectDir[1];
   double dz = fphotonInjectDir[2];
 
-  if (ray!=0) SafeDelete(ray);
+  SafeDelete(ray);
   ray = new ARay(0, fphotWaveLgt, x*m, y*m, z*m, t, dx, dy, dz);
 
   gGeoManager = manager;

@@ -84,7 +84,7 @@ GDCRayTracer::~GDCRayTracer() {
   if (debug) {
     *oLog << "  -- GDCRayTracer::~GDCRayTracer " << endl;
   }
-  if (geoT) SafeDelete(geoT);
+  SafeDelete(geoT);
 
 };
 /*************** end of ~GDCRayTracer ****************/

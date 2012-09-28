@@ -237,18 +237,19 @@ GSCTelescopeFactory::~GSCTelescopeFactory() {
   if (debug) {
     *oLog << "  -- GSCTelescopeFactory::~GSCTelescopeFactory" << endl;
   }
-  if (pi) SafeDelete(pi);
-  if (readSC) SafeDelete(readSC);
+  SafeDelete(pi);
+  SafeDelete(readSC);
 
   for (itmStdOp=mStdOptics.begin();
        itmStdOp!=mStdOptics.end(); itmStdOp++) {
-    if (itmStdOp->second) SafeDelete(itmStdOp->second);
+    SafeDelete(itmStdOp->second);
   }
 
   for (itmGRefl=mGRefl->begin();
        itmGRefl!=mGRefl->end(); itmGRefl++) {
-    if (itmGRefl->second ) SafeDelete(itmGRefl->second ); 
+    SafeDelete(itmGRefl->second ); 
   }
+  SafeDelete(mGRefl);
 };
 /************** end of ~GSCTelescopeFactory ***********************/
 

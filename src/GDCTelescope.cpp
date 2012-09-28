@@ -282,15 +282,15 @@ GDCTelescope::~GDCTelescope() {
     *oLog << "  -- GDCTelescope::~GDCTelescope: iTelID = " 
 	  << iTelID << endl;
   }
-  if (rayTracer) SafeDelete(rayTracer);
-
-  if (hisF != 0) {
+  SafeDelete(rayTracer);
+  /*
+    we've already closed the file in writePhotonHistory()
+    if (hisF != 0) {
     hisF->cd();  
     hisT->Write();
-    delete hisF;
-    hisF = 0;
+    SafeDelete(hisF);
   }
- 
+  */
 };
 /********************** end of ~GDCTelescope *****************/
  
@@ -655,7 +655,9 @@ void GDCTelescope::writePhotonHistory() {
     hisF->cd();  
     hisT->Write();
     hisF->Close();
-    hisF = 0;
+    // do I need to delete hisF after Close()? the hisF pointer is not set
+    // to zero by its Close() method.
+    //SafeDelete(hisF);
   }
 };
 /************************* end of writePhotonHistory *****/
