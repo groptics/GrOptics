@@ -130,9 +130,9 @@ GArrayTel::~GArrayTel() {
     *oLog << "  -- GArrayTel::~GArrayTel: telID = " 
 	  << telID << endl;
   } 
-  if (tel) SafeDelete(tel);
-  if (dStoreLoc) SafeDelete(dStoreLoc);
-  if (dStorePix) SafeDelete(dStorePix);
+  SafeDelete(tel);
+  SafeDelete(dStoreLoc);
+  SafeDelete(dStorePix);
 
 };
 /**************end of GArrayTel ***************************/
