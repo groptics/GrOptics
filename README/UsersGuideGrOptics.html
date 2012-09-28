@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="generator" content="plasTeX" />
+<meta content="text/html; charset=utf-8" http-equiv="content-type" />
+
+<title>GrOptics User’s Guide Version 2.2</title>
+
+
+
+<link rel="stylesheet" href="styles/styles.css" />
+</head>
+<body>
+
+<div class="navigation">
+<table cellspacing="2" cellpadding="0" width="100%">
+<tr>
+
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+<td class="navtitle" align="center">GrOptics User’s Guide <br />Version 2.2</td>
+<td><a href="UsersGuideGrOptics.html" title="Table of Contents"><img border="0" alt="" src="icons/contents.gif" width="32" height="32" /></a></td>
+
+
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+</tr>
+</table>
+</div>
+
+
+
+<div><div class="titlepage">
+<h1>GrOptics User’s Guide <br />Version 2.2</h1>
+<p>Charlie Duke <br />Grinnell College <br />Grinnell, Iowa 50112 <br />duke@grinnell.edu Akira Okumura <br />Solar-Terrestrial Environment Laboratory <br />Nagoya University <br />Furo-cho, Chikusa-ku, Nagoya 464-8601, Japan <br />oxon@mac.com</p>
+<p>July 15, 2012</p>
+
+</div><div class="abstract"><p>GrOptics is a detailed simulation program for ray-tracing Cherenkov photons through large arrays of atmospheric Cherenkov telescopes. Shower packages, such as GrISU <span class="cite">[<a href="UsersGuideGrOptics.html#GRISU">2</a>]</span> and CORSIKA <span class="cite">[<a href="UsersGuideGrOptics.html#CORSIKA">3</a>]</span>, provide Cherenkov photons after conversion to GrISU format. The output to a ROOT file records individual photons striking the camera surface. The package models both VERITAS Davies-Cotton (DC) and Schwarzchild-Coudee SC) telescopes with all telescope parameters taken from input files. There is no limit to the number or type of array telescopes. Adding new telescope types, input and output formats, etc. is straightforward using standard C++ coding techniques with existing base classes. Reference <span class="cite">[<a href="UsersGuideGrOptics.html#GROPTICS">1</a>]</span> gives the code download site. </p></div><h1 id="S:INTRO">1 Introduction</h1>
+<p> GrOptics is a detailed C++ Monte Carlo ray-tracing program to study the passage of atmospheric Cherenkov photons through telescopes designed to study atmospheric Cherenkov air showers. Photons produced by standard air shower codes enter the telescope; the output ROOT file contains tree records of the photons that strike the telescope cameras. GrOptics provides the input to the CARE telescope electronics code <span class="cite">[<a href="UsersGuideGrOptics.html#CARE">4</a>]</span>. </p><p>There are no intrinsic limits to the number or type of telescopes placed in the air Cherenkov telescope (ACT) array. Currently, the code contains two concrete telescope classes: for VERITAS DC telescopes and for SC telescopes. All array and telescope parameters are placed in input pilot or configuration files. </p><h2 id="SS:INSTALL">1.1 Installation</h2>
+<ol class="enumerate">
+<li><p>GrOptics relies heavily on ROOT<span class="cite">[<a href="UsersGuideGrOptics.html#ROOT">5</a>]</span>. I use the following installation method: </p><ul class="itemize">
+<li><p>Be sure you have installed gsl for use by ROOT </p></li><li><p>Download the ROOT source package <span class="cite">[<a href="UsersGuideGrOptics.html#ROOT">5</a>]</span> </p></li><li><p>Follow package instructions to configure and to make, but do not specify a –prefix directory with configure. </p></li><li><p>Setup all necessary ROOT environmental variables by sourcing <em>thisroot.sh</em> or <em>thisroot.csh</em> in your &lt;rootDirectory&gt;/bin </p></li>
+</ul></li><li><p>The SC telescope class uses the ROBAST package <span class="cite">[<a href="UsersGuideGrOptics.html#ROBAST">6</a>]</span>. ROBAST (ROot BAsed Simulator for ray Tracing) is a non-sequential ray tracing program which utilizes the 3D geometry library in ROOT. The ROBAST package is automatically downloaded by <em>curl</em> within <em>make</em> when producing the GrOptics executable. </p></li><li><p>After installing ROOT, download the GrOptics git repository <span class="cite">[<a href="UsersGuideGrOptics.html#GROPTICS">1</a>]</span>. Go to the GrOptics directory and run <em>make</em> to produce the grOptics executable. </p></li><li><p>To test the installation, execute <em>grOptics</em> from the GrOptics directory. The code will use the default configuration and pilot files and a test Cherenkov photon file, all within the GrOptics/Config directory, to produce an output root file, <em>photonLocation.root</em>. Other test possibilities (see later sections) for using this configuration are telescope drawings and psf camera plots. </p></li>
+</ol><h2 id="SS:QSTART">1.2 QuickStart</h2>
+<p>The <em>grOptics</em> executable can use the configuration and pilot files and a test Cherenkov photon file, all within the GrOptics/Config directory, downloaded with the git repository. The file, <em>opticsSimulation.pilot</em> steers the simulation and specifies the output. The file, <em>arrayConfig.cfg</em>, defines the ACT array. You’ll see the downloaded file defines a four-telescope DC array that is compatible with the <em>photon.cph</em> test input Cherenkov photon file. The parameters in these files are documented both in these files and in following sections in this document. </p><ol class="enumerate">
+<li><p>Execute the grOptics code from the GrOptics directory to produce <em>photonLocation.root</em> as specified in <em>opticsSimulation.pilot</em>. You’ll find the output trees with records of the photons on the camera surface for each telescope in this file. You’ll also find a history ROOT file for each telescope which documents the history of each photon incident onto the telescope (useful for debugging). You can turn off the creation of these files by removing the leading asterisk of the <em>PHOTONHIST</em> </p></li><li><p>To create an <em>opengl</em> drawing of a Davies-Cotton telescope using the ROOT geometry classes, add a leading asterisk to the <em>DRAWTEL</em> record in <em>opticsSimulation.pilot</em> and execute <em>grOptics</em>. Note that for DC telescopes, the code does not draw the mirror facets as the ray-tracing for the facets does not use the ROOT geometry classes. Have a look at the <em>canSpot</em> figure. </p></li><li><p>To replace an DC telescope with an SC telescope, open the <em>arrayConfig.cfg</em> file and activate the <em>TELFAC SC</em> SC telescope factory record. Then, in one of the <em>ARRAYTEL</em> records replace the <em>DC</em> with <em>SC</em>. You can then run the same tests as described above. Note that the ROOT geometry classes will draw the complete SC telescope (in contrast to the DC telescope drawing) </p></li><li><p>To produce a series of spot patterns on the camera, activate the <em>TESTTEL</em> record in <em>opticsSimulation.pilot</em> by adding an asterisk. Since the code produces the spot photons internally, change the <em>NSHOWER</em> from <img src="images/img-0001.png" alt="$-1$" style="vertical-align:0px; 
+                                     width:19px; 
+                                     height:12px" class="math gen" /> and <img src="images/img-0001.png" alt="$-1$" style="vertical-align:0px; 
+                                     width:19px; 
+                                     height:12px" class="math gen" /> to <img src="images/img-0002.png" alt="$1$" style="vertical-align:0px; 
+                                     width:6px; 
+                                     height:12px" class="math gen" /> and <img src="images/img-0002.png" alt="$1$" style="vertical-align:0px; 
+                                     width:6px; 
+                                     height:12px" class="math gen" /> (fixing this requirement is on my to do list). Execute <em>grOptics</em>. </p></li>
+</ol><h1 id="S:OVERV">2 Code Overview</h1>
+<p>See <em>DevelopersGuideGrOptics.pdf</em> for more details. This section only introduces standard telescopes, telescope arrays, and the various coordinate systems used in GrOptics. </p><p>GrOptics uses standard C++ plus ROOT. </p><h2 id="SSS:STEL">2.1 Standard Telescopes</h2>
+<p>The GrOptics package currently produces telescopes from each of two telescope factories, one for DC telescopes and one for SC telescopes. All telescope parameters are in configuration files to maintain maximum flexibility. However, having separate configuration files for each array telescope leads to large, unmanagable file sizes. Thus, the factories can produce a limited number of standard telescopes based on configuration files in the <em>GrOptics/Config</em> directory. The factories then use edit records taken from the configuration files to change specific telescope parameters, e.g. the mirror reflectivity, thus maintaining complete flexibility for parameter selection for individual telescopes. The edit records use matlab colon notation so that a single record may change a parameter for a range of telescopes and elements within each telescope, e.g., facet reflectivities. Edit records for additional parameters can easily be added. </p><p>None of the telescope dimensions or super structures may be edited. Changing these dimensions requires a separate standard telescope. </p><h2 id="a0000000002">2.2 Telescope Arrays</h2>
+<p>The telescope factories provide individual standard telescopes, after editing, to the ACT array as defined by telescope type, standard ID number, ground location, and pointing offset. Telescope numbering starts at <img src="images/img-0002.png" alt="$1$" style="vertical-align:0px; 
+                                     width:6px; 
+                                     height:12px" class="math gen" />, not <img src="images/img-0003.png" alt="$0$" style="vertical-align:0px; 
+                                     width:8px; 
+                                     height:12px" class="math gen" />. </p><h2 id="a0000000003">2.3 Coordinate Systems</h2>
+<p>Understanding the coordinate systems used in our simulation codes is always difficult, especially if your memory is as bad as mine. So, these descriptions should help. </p><h3 id="a0000000004">GrISU Ground Coordinate System</h3>
+<p> The GrISU Cherenkov files either from GrISU or from the CORSIKA I/O Reader use the following coordinate system: </p><p>x: East <br />y: South <br />z: Down <br />to form a right-handed system </p><h3 id="a0000000005">GrOptics ground coordinate system</h3>
+<p>The incoming GrISU produced incoming photons are immediately transformed by GrOptics to the system: </p><p>x: East <br />y: North<br />z: up<br />forming a right-handed system. Note that the telescope locations in the VERITAS GrISU configuration file use this coordinate system. </p><h3 id="a0000000006">Telescope Coordinate System</h3>
+<p> Each telescope has a coordinate system with origin at the telescope rotation point and with z axis pointed toward the sky along the optic axis of the telescope. In stow position (DC telescopes), the z axis is horizontal and pointed toward the North, the y axis is down, and the x axis is toward the East. To point the telescope to a given location on the sky, GrOptics first rotates the telescope about the vertical through the azimuthal angle. Then, it raises the telescope about its new x axis through the elevation angle. This new coordinate system is the "telescope coordinate system". Prior to injection into the GTelescope class, the photons undergo a coordinate transformation to this telescope coordinate system. </p><h3 id="a0000000007">Array Coordinate System</h3>
+<p> Prior to added pointing misalignments, all telescopes point to the same location on the sky with coordinate systems previously defined. The array coordinate system is similarly defined, but its origin is at the origin of the array. </p><h3 id="a0000000008">Camera Coordinate System</h3>
+<p> For historical reasons, the camera coordinate system’s y axis is a reflection of the y-axis of the telescope coordinate system. For the VERITAS telescope, stand in front of the camera with the telescope in stow position. The camera y axis is up and the camera x axis is to your right (to the East). The telescope y-axis is down; its x axis is to the right. </p><p>In the output tree of grOptics, the photon locations on the camera are in camera coordinates, both for DC and for SC telescopes. I’ll add an input flag later to select photon camera locations in either telescope or camera coordinates. </p><h1 id="S:INPUT">3 Input Files</h1>
+<p> The git repository contains input files for steering the simulation, setting up the array, and defining the standard telescopes. These files have unique record flags and can be self-referential for combining into single files. </p><h2 id="SS:STEER">3.1 Simulation Steering</h2>
+<p> The default input steering file is <em>GrOptics/Config/opticsSimulation.pilot</em>. Execute <em>grOptics -h</em> so obtain command line options to use other filenames. The <em>opticsSimulation.pilot</em> file is fully documented. Much of the documentation is reproduced here for completeness. </p><p>The <em>opticsSimulation.pilot</em> file contains the following records. Each record has a leading asterisk (not reproduced here) when active. In the following list, the bolded name is the record flag with the adjustable parameter listing following. </p><dl class="description">
+
+    <dt>FILEIN</dt>
+    <dd><p>&lt;filename of GrISU-type file&gt;</p></dd>
+
+    <dt>FILEOUT</dt>
+    <dd><p>&lt;root filename&gt;&lt;TreeName&gt;&lt;telBaseTreeName&gt;&lt;photonDirCosBranchFlag&gt;</p><blockquote class="quote"><p> &lt;root filename&gt;: name of output data root file <br />&lt;TreeName&gt;: name of ROOT tree containing parameters common to all photons <br />&lt;telBaseTreeName&gt;: telescope number to be appended to this base tree name <br />&lt;photonDirCosBranchFlag&gt;: if 1, add dirCosineCamera branches. </p></blockquote></dd>
+
+    <dt>LOGFILE</dt>
+    <dd><p>&lt;name of logfile&gt;// </p></dd>
+
+    <dt>NSHOWER</dt>
+    <dd><p>&lt;number Showers&gt;&lt;number Photons&gt;</p><blockquote class="quote"><p> &lt;number Showers&gt;: &lt;<img src="images/img-0003.png" alt="$0$" style="vertical-align:0px; 
+                                     width:8px; 
+                                     height:12px" class="math gen" />, no limit <br />&lt;number Photons&gt;: &lt;<img src="images/img-0003.png" alt="$0$" style="vertical-align:0px; 
+                                     width:8px; 
+                                     height:12px" class="math gen" />, no limit <br /></p></blockquote></dd>
+
+    <dt>ARRAYCONFIG</dt>
+    <dd><p>&lt;filename: default ./Config/arrayConfig.cfg&gt;<br /></p></dd>
+
+    <dt>SEED</dt>
+    <dd><p>&lt;TRandom3 seed, default <img src="images/img-0003.png" alt="$0$" style="vertical-align:0px; 
+                                     width:8px; 
+                                     height:12px" class="math gen" /> : set by machine clock &gt;<br /></p></dd>
+
+    <dt>WOBBLE</dt>
+    <dd><p>&lt;xSource&gt;&lt;ySource&gt;&lt;source Extension&gt;&lt;latitude&gt;</p><blockquote class="quote"><p> &lt;xSource&gt;&lt;ySource&gt;: coordinates (deg) of source in field of view &lt;source Extension&gt;: source extension radius (deg) &lt;latitude&gt;: latitude of observatory <br />If the latitude is less than 90 degrees, the source position in x corresponds to an offset in the east west direction while the y position corresponds to north south. <br />Example: <br />wobble North: WOBBLE 0.0 0.5 0.0 31.675 <br />wobble East : WOBBLE 0.5 0.0 0.0 31.675 <br /></p></blockquote></dd>
+
+    <dt>DRAWTEL</dt>
+    <dd><p>&lt;&lt;telescope number to draw&gt;, default 0 (no drawing)&gt;<br /></p></dd>
+
+    <dt>TESTTEL</dt>
+    <dd><p>&lt;telescope number&gt;&lt;baseName for histograms &gt;<br /></p></dd>
+
+    <dt>PHOTONHISTORY</dt>
+    <dd><p>&lt;ROOT filename, tel.number to be appended &gt;&lt;tree name&gt;<br /></p></dd>
+
+</dl><h2 id="SS:ARRAY">3.2 Array Configuration</h2>
+<p> The default array configuration filename, set in <em>GrOptics/Config/opticsSimulation.pilot</em>, is <em>GrOptics/Config/arrayConfig.cfg</em>. This file specifies telescope locations, types, and configuration files for standard telescopes. Edit records for individual telescopes usually appear in this file. The <em>arrayConfig.cfg</em> file is fully documented. Much of the documentation is reproduced here for completeness. </p><p>The array defined here may be a subset of the array used to create the photon file. </p><dl class="description">
+
+    <dt>TELFAC</dt>
+    <dd><p>telescope factory type and parameters </p><p>&lt;factory type: DC or SC &gt;<br />&lt;photon reader type: GRISU (only option) &gt;<br />&lt;configuration filename &gt;<br />&lt;telescope edit filename &gt;<br /></p></dd>
+
+    <dt>ARRAYTEL</dt>
+    <dd><p>parameters listed below </p><blockquote class="quote"> &lt;telescope number, &gt;<img src="images/img-0003.png" alt="$0$" style="vertical-align:0px; 
+                                     width:8px; 
+                                     height:12px" class="math gen" /> &gt;<blockquote class="quote"> The array numbering eed not be sequential and can be a subset of the array used to create the photon file. </blockquote> &lt;x telescope location (meters)&gt;<br />&lt;y telescope location (meters)&gt;<br />&lt;z telescope location (meters)&gt;<br />&lt;pointing offset x &gt;: &gt;<img src="images/img-0003.png" alt="$0$" style="vertical-align:0px; 
+                                     width:8px; 
+                                     height:12px" class="math gen" /> is left on tangent plane in degrees <br />&lt;pointing offset y &gt;: &gt;<img src="images/img-0003.png" alt="$0$" style="vertical-align:0px; 
+                                     width:8px; 
+                                     height:12px" class="math gen" /> is down on tangent plane in degrees <br />&lt;telescope print mode &gt;: fully implemented for DC telescopes only <blockquote class="quote"> 0: no printing <br />1: print summary information <br />2: add geometry details <br />3: add facet details <br /></blockquote> </blockquote></dd>
+
+</dl><h2 id="SSS:TEDIT">3.3 Telescope Parameter Editing</h2>
+<p>The telescope editing records in the git repository are contained in the <em>arrayConfig.cfg</em> file. The editing flags are <em>EDITDCTEL</em> for DC telescopes and <em>EDITSCTEL</em> for SC telescopes. Only the <em>EDITDCTEL</em> are currently implemented. </p><h3 id="a0000000009">Colon Numbering Notation</h3>
+<p> The colon numbering notation (used in Matlab and Octave) is useful for containing multiple entries in a single record. It is easily explained with several examples. <br /></p><blockquote class="quote"> <img src="images/img-0004.png" alt="$[1 : 3] = [1\; \;  2\; \;  3]$" style="vertical-align:-5px; 
+                                     width:110px; 
+                                     height:18px" class="math gen" /> and <br /><img src="images/img-0005.png" alt="$[1 : 3 \;  \;  5] = [1 \; \;  2 \; \;  3 \; \;  5]$" style="vertical-align:-5px; 
+                                     width:145px; 
+                                     height:18px" class="math gen" /> <br /></blockquote><p> Thus, if the telescope number in an EDITDCTEL record is <img src="images/img-0006.png" alt="$[1 : 3]$" style="vertical-align:-5px; 
+                                     width:35px; 
+                                     height:18px" class="math gen" />, the telescope parameter changes defined on the remainer of the record will apply to telescope numbers 1, 2, and 3. Similarly, if the telescope number is <img src="images/img-0007.png" alt="$[4\; \; 5:8\; \; 10\; \; 11]$" style="vertical-align:-5px; 
+                                     width:104px; 
+                                     height:18px" class="math gen" />, the changes will apply to telescopes 4, 5, 6, 7, 8, 10,and 11. </p><h3 id="a0000000010">DC Telescope Editing</h3>
+<p>The edit records normally are placed in the <em>arrayConfigure.cfg</em> file. These edit records apply to specific telescopes, not to standard telescopes. The telescope factories create the telescopes and then look for edit records specific to that telescope. </p><dl class="description">
+
+    <dt>EDITDCTEL</dt>
+    <dd><p>DC telescope edit record </p><blockquote class="quote"><p> &lt;telescope number (matlab notation)&gt;<br />&lt;edit Flag1 &gt;<em>FACET</em> only current option <br />&lt;facet number (matlab notation) &gt;<br />&lt;edit Flag2 &gt;<em>align</em> or <em>reflect</em> are current options </p><blockquote class="quote"><p> Parameter following <em>align</em> <br />&lt;maximum misalignment (degrees)&gt;<br /></p><p>Parameters following <em>reflect</em> <br />&lt;blur radius &gt;<br />&lt;mirror degradation factor &gt;<br />&lt;reflective curve (int) &gt;<br /></p></blockquote></blockquote><p>Examples: <br />EDITDCTEL [1:2] FACET [1:50] align 0.5 <br />EDITDCTEL [5:10] FACET [10:100] reflect 0.2 0.95 2 </p></dd>
+
+</dl><h3 id="a0000000011">SC Telescope Editing</h3>
+<p>The edit records normally are placed in the <em>arrayConfigure.cfg</em> file. These edit records apply to specific telescopes, not to standard telescopes. The telescope factories create the telescopes and then look for edit records specific to that telescope. </p><dl class="description">
+
+    <dt>EDITSCTEL</dt>
+    <dd><p>SC telescope edit record, no options implemented at present </p></dd>
+
+</dl><h2 id="SSS:STEL1">3.4 Standard Telescopes</h2>
+<p> The telescope DC and SC factories produce standard, editable telescopes for the array. The standard telescope configuration files are given in the <em>arrayConfiguration.cfg</em> file. </p><h3 id="SSS:DCTEL">Davies-Cotton Telescopes</h3>
+<p> At present, the only implemented DC telescope is the VERITAS telescope. Please be careful about changing the dimensions of this telescope. In particular, the dimensions and placements of the supporting quad arms and cross arms for the focus box are tightly coupled to the telescope dimensions. The file, <em>GrOptics/Config/veritas.cfg</em>, defines 4 standard VERITAS telescopes, all with identical dimensions. The file contains a series of records partially defining each of the 4 standard telescopes followed by a sample, partial VERITAS telescope configuration file from the GrISU VERITAS simulation package. </p><h3 id="SSS:SCTEL">Schwarzchild-Coudee Telescopes</h3>
+<h1 id="S:DATAF">4 Data Files</h1>
+<h2 id="SS:INDATA">4.1 Input Data Files</h2>
+<p> The photon Cherenkov file begins with a header followed by photon lines (see <em>GrOptics/Config/photon.cph</em>. The header file contains information passed from shower and photon production code. All header information must occur between the initial HEADF flag and the final DATAF flag which indicates the start of data records. The following data records are from the beginning of the <em>GrOptics/Config/photon.cph</em> file: <br /><br />R 1.000000 <br />H 1307.645000 <br />S 0.80000 50.0 -50.0 -0.2500 0.4330 1307.6 -1000 -10777 -32656 <br />P -1.4 79.9 -0.2519 0.4403 13509.0 239.0 534 3 2 <br />P -0.2 79.6 -0.2518 0.4402 13531.4 237.5 498 3 2 <br />The <em>R</em> record carries the photon thinning fraction. <br />The <em>H</em> record carries the observatory height in meters <br />The <em>S</em> record indicates the start of a new shower and contains information about the primary in this order: </p><ol class="enumerate">
+<li></li><li><p>Primary energy in TeV </p><p>x coordinate of the core (meters) </p><p>y coordinate of the core (meters) </p><p>x-direction cosine of the core </p><p>y-direction cosine of the core </p><p>observatory height (meters) </p><p>three negative random-number seeds </p></li>
+</ol><p>The <em>P</em> record contains the Cherenkov photon details as follows: </p><ol class="enumerate">
+<li></li><li></li><li><p>x-coordinate (meters) on the ground relative to an individual telescope at telescope level for CORSIKA or at ground level for KASCADE. </p></li><li><p>y-coordinate (meters) on the ground relative to an individual telescope at telescope level for CORSIKA or at ground level for KASCADE. </p></li><li><p>x-direction cosine in ground coordinates </p></li><li><p>y-direction cosine in ground coordinates </p></li><li><p>height (meters) of emission </p></li><li><p>relative time (nsecs) of emission </p></li><li><p>wavelength (nanometers) </p></li><li><p>particle type </p></li><li><p>telescope id number intercepting the photon </p></li>
+</ol><h2 id="SS:ODATA">4.2 Output Data Trees</h2>
+<h3 id="a0000000012">allTel Tree</h3>
+<p> The allTel tree contains information that is constant for all showers in the file. The tree branches are as follows: </p><ol class="enumerate">
+<li></li><li><p>fileHeader string </p><p>globalEffic globalEffic/D </p><p>obsHgt obsHgt/D </p><p>telIDVector vector&lt;int&gt; </p><p>telLocXVector vector&lt;float&gt; </p><p>telLocYVector vector&lt;float&gt; </p><p>telLocZVector vector&lt;float&gt; </p><p>transitTimeVector vector&lt;float&gt; </p></li>
+</ol><h3 id="a0000000013">Individual Telescope Tree</h3>
+<p>Each telescope has its own tree. The branches are as follows: </p><ol class="enumerate">
+<li></li><li><p>eventNumber eventNumber/i </p><p>primaryType primaryType/i </p><p>primaryEnergy primaryEnergy/F </p><p>Xcore Xcore/F </p><p>Ycore Ycore/F </p><p>Xcos Xcos/F </p><p>Ycos Ycos/F </p><p>Xsource Xsource/F </p><p>Ysource Ysource/F </p><p>delay delay/F </p><p>photonX vector&lt;float&gt; </p><p>photonY vector&lt;float&gt; </p><p>time vector&lt;float&gt; </p><p>wavelength vector&lt;float&gt; </p></li>
+</ol><h1 id="S:GRAPH">5 Graphical Output Options</h1>
+<dl class="bibliography">
+
+<dt>
+[<a name="GROPTICS">1</a>]
+</dt>
+<dd><p>GrOptics git repository (read only) <br />git clone http://gtlib.gatech.edu/pub/IACT/GrOptics.git </p></dd>
+
+<dt>
+[<a name="GRISU">2</a>]
+</dt>
+<dd><p>GrISU download site <br />http://www.physics.utah.edu/gammaray/GrISU/ </p></dd>
+
+<dt>
+[<a name="CORSIKA">3</a>]
+</dt>
+<dd><p>CORSIKA: A Monte Carlo Code to Simulate Extensive Air Showers<br />D. Heck, J. Knapp, J.N. Capdevielle, G. Schatz, T. Thouw <br />Forschungszentrum Karlsruhe Report FZKA 6019 (1998) </p></dd>
+
+<dt>
+[<a name="CARE">4</a>]
+</dt>
+<dd><p>CARE git repository (read only) <br />git clone http://gtlib.gatech.edu/pub/IACT/CARE.git </p></dd>
+
+<dt>
+[<a name="ROOT">5</a>]
+</dt>
+<dd><p>Rene Brun and Fons Rademakers,<br />ROOT - An Object Oriented Data Analysis Framework,<br />Proceedings AIHENP’96 Workshop, Lausanne, Sep. 1996, <br />Nucl. Inst. &amp; Meth. in Phys. Res. A 389 (1997) 81-86. <br />See also http://root.cern.ch/drupal/ </p></dd>
+
+<dt>
+[<a name="ROBAST">6</a>]
+</dt>
+<dd><p>Development of Non-sequential Ray-tracing Software for Cosmic-ray Telescopes Authors: Akira Okumura, Masaaki Hayashida, Hideaki Katagiri, Takayuki Saito, Vladimir Vassiliev. http://arxiv.org/abs/1110.4448 Download site http://sourceforge.net/projects/robast/ </p></dd>
+
+</dl></div>
+
+
+
+
+
+<div class="navigation">
+<table cellspacing="2" cellpadding="0" width="100%">
+<tr>
+
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+<td class="navtitle" align="center">GrOptics User’s Guide <br />Version 2.2</td>
+<td><a href="UsersGuideGrOptics.html" title="Table of Contents"><img border="0" alt="" src="icons/contents.gif" width="32" height="32" /></a></td>
+
+
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+</tr>
+</table>
+</div>
+
+<script language="javascript" src="icons/imgadjust.js" type="text/javascript"></script>
+
+</body>
+</html>
