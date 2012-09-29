@@ -25,13 +25,13 @@ DOXYFILE_ENCODING      = UTF-8
 # The PROJECT_NAME tag is a single word (or a sequence of words surrounded 
 # by quotes) that should identify the project.
 
-PROJECT_NAME           = Array Optics
+PROJECT_NAME           = GrOptics
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. 
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER         = 
+PROJECT_NUMBER         = 2.2
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
@@ -221,7 +221,7 @@ OPTIMIZE_OUTPUT_VHDL   = NO
 # func(std::string) {}). This also make the inheritance and collaboration 
 # diagrams that involve STL classes more complete and accurate.
 
-BUILTIN_STL_SUPPORT    = NO
+BUILTIN_STL_SUPPORT    = YES
 
 # If you use Microsoft's C++/CLI language, you should set this option to YES to
 # enable parsing support.
@@ -1283,7 +1283,7 @@ CLASS_GRAPH            = YES
 # indirect implementation dependencies (inheritance, containment, and 
 # class references variables) of the class with other documented classes.
 
-COLLABORATION_GRAPH    = YES
+COLLABORATION_GRAPH    = NO
 
 # If the GROUP_GRAPHS and HAVE_DOT tags are set to YES then doxygen 
 # will generate a graph for groups, showing the direct groups dependencies
@@ -1334,7 +1334,7 @@ CALLER_GRAPH           = NO
 # If the GRAPHICAL_HIERARCHY and HAVE_DOT tags are set to YES then doxygen 
 # will graphical hierarchy of all classes instead of a textual one.
 
-GRAPHICAL_HIERARCHY    = NO
+GRAPHICAL_HIERARCHY    = YES
 
 # If the DIRECTORY_GRAPH, SHOW_DIRECTORIES and HAVE_DOT tags are set to YES 
 # then doxygen will show the dependencies a directory has on other directories 

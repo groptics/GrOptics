@@ -446,10 +446,10 @@ int main(int argc, char *argv[]) {
     //delete mArrayTelIter->second; 
   }
   
-  // Close() probably deletes the TFile; use SafeDelete anyway
   fO->cd();
   fO->Close();
-  SafeDelete(fO);
+  // no memory leak detected by valgrind so don't delete f0
+  //SafeDelete(fO);
   
   clock_t endClock = clock();
   double elapsedTime = (double)((endClock - startClock)/ 
@@ -468,9 +468,9 @@ int main(int argc, char *argv[]) {
     app->Run(); 
   }
   
-  // clean up
-  if (readP) SafeDelete(readP);  // delete photon reader
-
+  // clean up. makes valgrind output easier to read
+  SafeDelete(readP);  // delete photon reader
+  
   for (mIter = mTelDetails.begin(); mIter!=mTelDetails.end();
        mIter++) {
     SafeDelete(mIter->second);
@@ -478,23 +478,23 @@ int main(int argc, char *argv[]) {
   for (unsigned ij = 0;ij < vTelFac.size();ij++) {
     SafeDelete(vTelFac[ij]);
   }
-  if (DCFac) SafeDelete(DCFac);
-  if (SCFac) SafeDelete(SCFac);
-
+  SafeDelete(DCFac);
+  SafeDelete(SCFac);
+  
   // this deletes the telescopes
   for (mArrayTelIter = mArrayTel.begin();
        mArrayTelIter != mArrayTel.end();
        mArrayTelIter++ ) {
-    if (mArrayTelIter->second) SafeDelete(mArrayTelIter->second);
+    SafeDelete(mArrayTelIter->second);
   }
   // delete root writer map entries
   for (mRootWriterIter = mRootWriter.begin();
        mRootWriterIter != mRootWriter.end();
        mRootWriterIter++) {
-    if (mRootWriterIter->second) SafeDelete(mRootWriterIter->second);
+    SafeDelete(mRootWriterIter->second);
   } 
-  if (siO) SafeDelete(siO);
-
+  SafeDelete(siO);
+  
   return 0;
 };
 /********************** end of main ***************************************/

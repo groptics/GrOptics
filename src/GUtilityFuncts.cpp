@@ -910,7 +910,7 @@ void GUtilityFuncts::telescopeAzZnRot(const double &primAz,
     }
   }
 
-  delete rotPrim;
+  SafeDelete(rotPrim);
   
 };
 

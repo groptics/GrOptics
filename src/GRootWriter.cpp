@@ -132,12 +132,12 @@ GRootWriter::~GRootWriter() {
   if (debug) {
     *oLog << "  -- GRootWriter::~GRootWriter" << endl;
   }
-  delete fPE_photonX;
-  delete fPE_photonY;
-  delete fPE_DcosX;
-  delete fPE_DcosY;
-  delete fPE_time;
-  delete fPE_wl;
+  SafeDelete(fPE_photonX);
+  SafeDelete(fPE_photonY);
+  SafeDelete(fPE_DcosX);
+  SafeDelete(fPE_DcosY);
+  SafeDelete(fPE_time);
+  SafeDelete(fPE_wl);
 
 }
 //******************************** end of ~GRootWriter ********************

@@ -307,13 +307,11 @@ bool GOrderedGrid::readGrid() {
   int numBins = nbinsx*nbinsy;
     
   // start with a new grid if it's already filled
-  if (vGrid.size() > 0) {
-    for (unsigned i = 0;i<vGrid.size();i++) {
-      delete vGrid[i];
-    }
-    
-    vGrid.clear();
+  for (unsigned i = 0;i<vGrid.size();i++) {
+    SafeDelete(vGrid[i]);
+    *oLog << " vGrid " << vGrid[i] << endl;
   }
+  vGrid.clear();
 
   // prepare the grid since we know the number of bins
   for (int i = 0;i<numBins;i++) {
@@ -321,7 +319,6 @@ bool GOrderedGrid::readGrid() {
   } 
   
   for (int i = 0;i<nbinsx*nbinsy;i++) {
-    //for (int i = 0;i<10;i++) {
 
     string elements  = "";
     string distances = "";

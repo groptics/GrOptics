@@ -83,7 +83,7 @@ GReadPhotonGrISU::~GReadPhotonGrISU() {
     *oLog << "  -- GReadPhotonGrISU::~GReadPhotonGrISU" << endl;
   }
   if ( (sInFileStr != "") && (pInStream != 0) ) { 
-    delete pInStream;
+    SafeDelete(pInStream);
   }
 };
 /*****************end of ~GReadPhotonGrISU ********************************/

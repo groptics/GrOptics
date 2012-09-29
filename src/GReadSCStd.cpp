@@ -87,7 +87,7 @@ GReadSCStd::~GReadSCStd() {
   if (debug) {
     *oLog << "  -- GReadSCStd::~GReadSCStd " << endl;
   }
-  if (!pi) SafeDelete(pi); 
+  SafeDelete(pi); 
 
 };
 /****************** end of ~GReadSCStd **********/
@@ -273,8 +273,7 @@ void GReadSCStd::setupSCFactory() {
     opt->iSecReflID = atoi(tokens.at(2).c_str());
   }
 
-  delete pi;
-  pi = 0;
+  SafeDelete(pi);
 
   getPolyCoeffs();
   // 

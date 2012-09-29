@@ -88,7 +88,7 @@ DCStdOptics::~DCStdOptics() {
   if (debug) {
     *oLog << "  -- DCStdOptics::~DCStdOptics " << endl;
   }
-  if (grid) SafeDelete(grid);
+  SafeDelete(grid);
   for (unsigned i = 0;i<facet.size();i++) {
     SafeDelete(facet[i]);
   }
@@ -203,12 +203,12 @@ GDCTelescopeFactory::~GDCTelescopeFactory() {
   if (debug) {
     *oLog << "  -- GDCTelescopeFactory::~GDCTelescopeFactory" << endl;
   }
-  if (pi) SafeDelete(pi);
-  if (readDC) SafeDelete(readDC);
+  SafeDelete(pi);
+  SafeDelete(readDC);
 
   // reflection coeffs owned by the factory so delete here
-  if (mVReflWaveLgts) SafeDelete(mVReflWaveLgts);
-  if (mVCoeffs) SafeDelete(mVCoeffs);
+  SafeDelete(mVReflWaveLgts);
+  SafeDelete(mVCoeffs);
 
   for (itmStdOp=mStdOptics.begin();
        itmStdOp!=mStdOptics.end();
