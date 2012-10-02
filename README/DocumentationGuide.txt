@@ -1,0 +1,24 @@
+October 1, 2012
+Charlie Duke
+Grinnell College
+
+Documentation Guide:
+
+1. Documentation in GrOptics/README directory
+     UsersGuideGrOptics.pdf
+
+     html versions: one page: UsersGuideGrOptics.html
+       multiple pages: open README/html/index.html
+
+     html files produced from latex2html.sh script
+     using plastex converter python module (installed via Debian)
+
+2. Detailed code documentation
+     in GrOptics directory: execute "./doxygen" to produce 
+     html code documentation.  Open GrOptics/html/index.html.
+
+     Links to the multiple page UsersGuideGrOptics html files are
+     on the doxygen main page.
+
+
+     

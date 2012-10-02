@@ -2,8 +2,8 @@ July 16, 2012
 Charlie Duke
 
 ToDo list
-1. don't require an input file with using TESTTEL and DRAWTEL
-2. finish doxygen code documentation
+1. don't require an input photon file with using TESTTEL and DRAWTEL
+2. finish doxygen code documentation (underway)
 3. finish first draft of UsersGuide and DevelopersGuide
 4. set up pilot record for use of TPolyLine3D photon traces 
 5. add commandLine -h option (Done 7/16)
@@ -13,3 +13,6 @@ ToDo list
 9. separate draw telescope records for DC and SC telescopes
    since they can have different options. Add facet drawings
    to DC telescope drawer.
+10. valgrind/alleyoop to remove memory leaks (Done 9/29)
+11. change deletes to SafeDelete's  / rerun valgrind (Done 9/29)
+12. determine memory usage (Done 9/28: 18 MB/telescopeSCorDC)

@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="generator" content="plasTeX" />
+<meta content="text/html; charset=utf-8" http-equiv="content-type" />
+<title>GrOptics User’s Guide Version 2.2: Simulation Steering</title>
+
+<link href="SS-ARRAY.html" title="Array Configuration" rel="next" />
+<link href="S-INPUT.html" title="Input Files" rel="prev" />
+<link href="S-INPUT.html" title="Input Files" rel="up" />
+<link rel="stylesheet" href="styles/styles.css" />
+</head>
+<body>
+
+<div class="navigation">
+<table cellspacing="2" cellpadding="0" width="100%">
+<tr>
+<td><a href="S-INPUT.html" title="Input Files"><img alt="Previous: Input Files" border="0" src="icons/previous.gif" width="32" height="32" /></a></td>
+
+<td><a href="S-INPUT.html" title="Input Files"><img alt="Up: Input Files" border="0" src="icons/up.gif" width="32" height="32" /></a></td>
+
+<td><a href="SS-ARRAY.html" title="Array Configuration"><img alt="Next: Array Configuration" border="0" src="icons/next.gif" width="32" height="32" /></a></td>
+
+<td class="navtitle" align="center">GrOptics User’s Guide <br />Version 2.2</td>
+<td><a href="index.html" title="Table of Contents"><img border="0" alt="" src="icons/contents.gif" width="32" height="32" /></a></td>
+
+
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+</tr>
+</table>
+</div>
+
+<div class="breadcrumbs">
+<span>
+<span>
+<a href="index.html">GrOptics User’s Guide <br />Version 2.2</a> <b>:</b>
+</span>
+
+</span><span>
+<span>
+<a href="S-INPUT.html">Input Files</a> <b>:</b>
+</span>
+
+</span><span>
+
+<span>
+<b class="current">Simulation Steering</b>
+</span>
+</span>
+<hr />
+</div>
+
+<div><h2 id="SS:STEER">3.1 Simulation Steering</h2>
+<p> The default input steering file is <em>GrOptics/Config/opticsSimulation.pilot</em>. Execute <em>grOptics -h</em> so obtain command line options to use other filenames. The <em>opticsSimulation.pilot</em> file is fully documented. Much of the documentation is reproduced here for completeness. </p><p>The <em>opticsSimulation.pilot</em> file contains the following records. Each record has a leading asterisk (not reproduced here) when active. In the following list, the bolded name is the record flag with the adjustable parameter listing following. </p><dl class="description">
+
+    <dt>FILEIN</dt>
+    <dd><p>&lt;filename of GrISU-type file&gt;</p></dd>
+
+    <dt>FILEOUT</dt>
+    <dd><p>&lt;root filename&gt;&lt;TreeName&gt;&lt;telBaseTreeName&gt;&lt;photonDirCosBranchFlag&gt;</p><blockquote class="quote"><p> &lt;root filename&gt;: name of output data root file <br />&lt;TreeName&gt;: name of ROOT tree containing parameters common to all photons <br />&lt;telBaseTreeName&gt;: telescope number to be appended to this base tree name <br />&lt;photonDirCosBranchFlag&gt;: if 1, add dirCosineCamera branches. </p></blockquote></dd>
+
+    <dt>LOGFILE</dt>
+    <dd><p>&lt;name of logfile&gt;// </p></dd>
+
+    <dt>NSHOWER</dt>
+    <dd><p>&lt;number Showers&gt;&lt;number Photons&gt;</p><blockquote class="quote"><p> &lt;number Showers&gt;: &lt;<img src="images/img-0003.png" alt="$0$" style="vertical-align:0px; 
+                                     width:8px; 
+                                     height:12px" class="math gen" />, no limit <br />&lt;number Photons&gt;: &lt;<img src="images/img-0003.png" alt="$0$" style="vertical-align:0px; 
+                                     width:8px; 
+                                     height:12px" class="math gen" />, no limit <br /></p></blockquote></dd>
+
+    <dt>ARRAYCONFIG</dt>
+    <dd><p>&lt;filename: default ./Config/arrayConfig.cfg&gt;<br /></p></dd>
+
+    <dt>SEED</dt>
+    <dd><p>&lt;TRandom3 seed, default <img src="images/img-0003.png" alt="$0$" style="vertical-align:0px; 
+                                     width:8px; 
+                                     height:12px" class="math gen" /> : set by machine clock &gt;<br /></p></dd>
+
+    <dt>WOBBLE</dt>
+    <dd><p>&lt;xSource&gt;&lt;ySource&gt;&lt;source Extension&gt;&lt;latitude&gt;</p><blockquote class="quote"><p> &lt;xSource&gt;&lt;ySource&gt;: coordinates (deg) of source in field of view &lt;source Extension&gt;: source extension radius (deg) &lt;latitude&gt;: latitude of observatory <br />If the latitude is less than 90 degrees, the source position in x corresponds to an offset in the east west direction while the y position corresponds to north south. <br />Example: <br />wobble North: WOBBLE 0.0 0.5 0.0 31.675 <br />wobble East : WOBBLE 0.5 0.0 0.0 31.675 <br /></p></blockquote></dd>
+
+    <dt>DRAWTEL</dt>
+    <dd><p>&lt;&lt;telescope number to draw&gt;, default 0 (no drawing)&gt;<br /></p></dd>
+
+    <dt>TESTTEL</dt>
+    <dd><p>&lt;telescope number&gt;&lt;baseName for histograms &gt;<br /></p></dd>
+
+    <dt>PHOTONHISTORY</dt>
+    <dd><p>&lt;ROOT filename, tel.number to be appended &gt;&lt;tree name&gt;<br /></p></dd>
+
+</dl></div>
+
+
+
+
+
+<div class="navigation">
+<table cellspacing="2" cellpadding="0" width="100%">
+<tr>
+<td><a href="S-INPUT.html" title="Input Files"><img alt="Previous: Input Files" border="0" src="icons/previous.gif" width="32" height="32" /></a></td>
+
+<td><a href="S-INPUT.html" title="Input Files"><img alt="Up: Input Files" border="0" src="icons/up.gif" width="32" height="32" /></a></td>
+
+<td><a href="SS-ARRAY.html" title="Array Configuration"><img alt="Next: Array Configuration" border="0" src="icons/next.gif" width="32" height="32" /></a></td>
+
+<td class="navtitle" align="center">GrOptics User’s Guide <br />Version 2.2</td>
+<td><a href="index.html" title="Table of Contents"><img border="0" alt="" src="icons/contents.gif" width="32" height="32" /></a></td>
+
+
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+</tr>
+</table>
+</div>
+
+<script language="javascript" src="icons/imgadjust.js" type="text/javascript"></script>
+
+</body>
+</html>

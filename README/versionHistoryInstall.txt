@@ -41,7 +41,7 @@ GrOptics accepts input from GrISU compatible photon files.
        until AOpticsManager.h is updated in robast - that should 
        occur today or tonight: March 8 2012
 
-       version 2.2: svn revision number: r1924
+       version 2.2: 
        main addition was a CAMRAD record in veritas.cfg file. 
        as follows:
        //////////////
@@ -55,21 +55,21 @@ GrOptics accepts input from GrISU compatible photon files.
        * CAMRAD 3 375.0
        * CAMRAD 4 375.0
        ////////////////
+       SC telescope parameters now in SC configuration file
+       ////////////////
        continued cleanup of code. 
        only one veritas config file, veritas.cfg, now. And it's an abbreviated version
        All files have this new version number and 10MAY2012 date.
 
+       code cleanup in progress, no version number change as cleanup progresses
+       ////////////////
+
 1. Installation
 
    Dependencies: ROOT, Gsl, robast	
-   Check out current version from svn repository
+   Check out current version from git repository at Georgia Tech
 
-   repository name = 
-   svn+ssh://svn.slac.stanford.edu/nfs/slac/g/agis/repo/subversion/trunk/simulation/GrOptics
-
-   <prompt> svn co <repository name> -r1553 (see above for current svn version number)
-   <prompt> cd GrOptics
-   <prompt> make
+   <need url here>
 
    The Makefile will download the robast package from sourceforge and compile its libraries. 
    These libraries and the source code will be in the GrOptics/v1.4.3 directory.  The robast package, 
@@ -96,12 +96,4 @@ GrOptics accepts input from GrISU compatible photon files.
    See the GrOptics/README/ files. Each configuration file in GrOptics/Config is fully 
    documented.
 
-   Expect fairly frequent updates. The next version will read the SC telescope parameters from
-   the SC telescope input file. Currently, these parameters are hard coded in GSCTelescope.cpp.
-
-4. Comments
-
-   If you do not have access to the Stanford svn repository, let me know and I'll place the 
-   tarball in a Grinnell public directory at a mutually convenient time for downloading.
-
-5.
+   Expect fairly frequent updates.

@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="generator" content="plasTeX" />
+<meta content="text/html; charset=utf-8" http-equiv="content-type" />
+<title>GrOptics User’s Guide Version 2.2: Coordinate Systems</title>
+
+<link href="S-INPUT.html" title="Input Files" rel="next" />
+<link href="sect0001.html" title="Telescope Arrays" rel="prev" />
+<link href="S-OVERV.html" title="Code Overview" rel="up" />
+<link rel="stylesheet" href="styles/styles.css" />
+</head>
+<body>
+
+<div class="navigation">
+<table cellspacing="2" cellpadding="0" width="100%">
+<tr>
+<td><a href="sect0001.html" title="Telescope Arrays"><img alt="Previous: Telescope Arrays" border="0" src="icons/previous.gif" width="32" height="32" /></a></td>
+
+<td><a href="S-OVERV.html" title="Code Overview"><img alt="Up: Code Overview" border="0" src="icons/up.gif" width="32" height="32" /></a></td>
+
+<td><a href="S-INPUT.html" title="Input Files"><img alt="Next: Input Files" border="0" src="icons/next.gif" width="32" height="32" /></a></td>
+
+<td class="navtitle" align="center">GrOptics User’s Guide <br />Version 2.2</td>
+<td><a href="index.html" title="Table of Contents"><img border="0" alt="" src="icons/contents.gif" width="32" height="32" /></a></td>
+
+
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+</tr>
+</table>
+</div>
+
+<div class="breadcrumbs">
+<span>
+<span>
+<a href="index.html">GrOptics User’s Guide <br />Version 2.2</a> <b>:</b>
+</span>
+
+</span><span>
+<span>
+<a href="S-OVERV.html">Code Overview</a> <b>:</b>
+</span>
+
+</span><span>
+
+<span>
+<b class="current">Coordinate Systems</b>
+</span>
+</span>
+<hr />
+</div>
+
+<div><h2 id="a0000000003">2.3 Coordinate Systems</h2>
+<p>Understanding the coordinate systems used in our simulation codes is always difficult, especially if your memory is as bad as mine. So, these descriptions should help. </p><h3 id="a0000000004">GrISU Ground Coordinate System</h3>
+<p> The GrISU Cherenkov files either from GrISU or from the CORSIKA I/O Reader use the following coordinate system: </p><p>x: East <br />y: South <br />z: Down <br />to form a right-handed system </p><h3 id="a0000000005">GrOptics ground coordinate system</h3>
+<p>The incoming GrISU produced incoming photons are immediately transformed by GrOptics to the system: </p><p>x: East <br />y: North<br />z: up<br />forming a right-handed system. Note that the telescope locations in the VERITAS GrISU configuration file use this coordinate system. </p><h3 id="a0000000006">Telescope Coordinate System</h3>
+<p> Each telescope has a coordinate system with origin at the telescope rotation point and with z axis pointed toward the sky along the optic axis of the telescope. In stow position (DC telescopes), the z axis is horizontal and pointed toward the North, the y axis is down, and the x axis is toward the East. To point the telescope to a given location on the sky, GrOptics first rotates the telescope about the vertical through the azimuthal angle. Then, it raises the telescope about its new x axis through the elevation angle. This new coordinate system is the "telescope coordinate system". Prior to injection into the GTelescope class, the photons undergo a coordinate transformation to this telescope coordinate system. </p><h3 id="a0000000007">Array Coordinate System</h3>
+<p> Prior to added pointing misalignments, all telescopes point to the same location on the sky with coordinate systems previously defined. The array coordinate system is similarly defined, but its origin is at the origin of the array. </p><h3 id="a0000000008">Camera Coordinate System</h3>
+<p> For historical reasons, the camera coordinate system’s y axis is a reflection of the y-axis of the telescope coordinate system. For the VERITAS telescope, stand in front of the camera with the telescope in stow position. The camera y axis is up and the camera x axis is to your right (to the East). The telescope y-axis is down; its x axis is to the right. </p><p>In the output tree of grOptics, the photon locations on the camera are in camera coordinates, both for DC and for SC telescopes. I’ll add an input flag later to select photon camera locations in either telescope or camera coordinates. </p></div>
+
+
+
+
+
+<div class="navigation">
+<table cellspacing="2" cellpadding="0" width="100%">
+<tr>
+<td><a href="sect0001.html" title="Telescope Arrays"><img alt="Previous: Telescope Arrays" border="0" src="icons/previous.gif" width="32" height="32" /></a></td>
+
+<td><a href="S-OVERV.html" title="Code Overview"><img alt="Up: Code Overview" border="0" src="icons/up.gif" width="32" height="32" /></a></td>
+
+<td><a href="S-INPUT.html" title="Input Files"><img alt="Next: Input Files" border="0" src="icons/next.gif" width="32" height="32" /></a></td>
+
+<td class="navtitle" align="center">GrOptics User’s Guide <br />Version 2.2</td>
+<td><a href="index.html" title="Table of Contents"><img border="0" alt="" src="icons/contents.gif" width="32" height="32" /></a></td>
+
+
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+<td><img border="0" alt="" src="icons/blank.gif" width="32" height="32" /></td>
+</tr>
+</table>
+</div>
+
+<script language="javascript" src="icons/imgadjust.js" type="text/javascript"></script>
+
+</body>
+</html>
