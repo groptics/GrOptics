@@ -137,7 +137,6 @@ bool GReadPhotonGrISU::setInputFile(const string &infile) {
 	if (fileline == "") continue;  // check for blank lines
        
         recordCt++;
-        //sInFileHeader += fileline + '\n';
         
         // look for end of header
         idx = fileline.find(headerEnd);

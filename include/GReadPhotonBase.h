@@ -3,8 +3,9 @@ VERSION2.2
 10MAY2012
 */
 /*!  \brief GReadPhotonBase:  base class for reading Cherenkov photons
-            Currently one concrete class for reading GrISU format files.
-            Can read from stdin if no file is specified.
+            
+  Currently one concrete class for reading GrISU format files.
+  Can read from stdin if no file is specified.
  */
 
 #ifndef GREADPHOTONBASE
@@ -33,7 +34,11 @@ class GReadPhotonBase {
    */
   virtual bool setInputFile(const string &infile) = 0;
 
-  //! get header string (if header exists)
+  /*! get header string
+    \return header as a string
+    \return "" if no header found
+						
+   */
   virtual string getHeader() = 0;
 
   /*!  getPrimary
@@ -55,8 +60,8 @@ class GReadPhotonBase {
   /*!  getPhoton
        get cherenkov photon details from current record
        then call getLine() to read next record
-       \param pGrd vector of p loc. with respect to telescope (meters)
-       \param pDcos vector of photon direction cosines
+       \param pGrd vector of photon loc. in ground coor. (meters)
+       \param pDcos vector of photon direction cosines in ground coor.
        \param pAz photon azimuth (radians)
        \param pZn photon zenith angle (radians)
        \param pHgtEmiss photon emission height (meters)

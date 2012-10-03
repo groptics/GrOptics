@@ -16,3 +16,8 @@ ToDo list
 10. valgrind/alleyoop to remove memory leaks (Done 9/29)
 11. change deletes to SafeDelete's  / rerun valgrind (Done 9/29)
 12. determine memory usage (Done 9/28: 18 MB/telescopeSCorDC)
+13. facet number in editrecords start at 0 rather than 1 while
+    telescope numbers start at 1. Change facet numbering to 1...
+    May be easier to have defaults for reflectivity curve and for 
+    degradation factor - as is if no entries. Then easier to change
+    blur radius only.

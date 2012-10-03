@@ -362,8 +362,12 @@ void GDCTelescopeFactory::editWorkingTelescope(GDCTelescope *DCTel) {
            }
             else if (tokens[3]=="reflect") {
               DCTel->facet[facNum].roughness = atof(tokens[4].c_str());
-              DCTel->facet[facNum].reflect   = atof(tokens[5].c_str());
-              DCTel->facet[facNum]. rflctid  = atoi(tokens[6].c_str());
+	      if (tokens.size() > 5 ) {
+                DCTel->facet[facNum].reflect   = atof(tokens[5].c_str());
+	      }
+	      if (tokens.size() > 6 ) {	      
+		DCTel->facet[facNum]. rflctid  = atoi(tokens[6].c_str());
+	      }
               DCTel->bEditReflectFlag = true;
             }
           }
