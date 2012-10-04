@@ -15,7 +15,7 @@ GrOptics accepts input from GrISU compatible photon files.
 
 1. Version History
 
-       version 1.0 (v1.0)
+       VERSION 1.0 (v1.0)
        svn revision number: r1353
 
        version 2.0 (will update files to "v2.0" soon)
@@ -40,8 +40,8 @@ GrOptics accepts input from GrISU compatible photon files.
        mirror roughness and robast v1.5.0_beta. Code won't compile
        until AOpticsManager.h is updated in robast - that should 
        occur today or tonight: March 8 2012
-
-       version 2.2: 
+       -----------------------------------------------------------------------
+       VERSION 2.2: 
        main addition was a CAMRAD record in veritas.cfg file. 
        as follows:
        //////////////
@@ -62,7 +62,14 @@ GrOptics accepts input from GrISU compatible photon files.
        All files have this new version number and 10MAY2012 date.
 
        code cleanup in progress, no version number change as cleanup progresses
-       ////////////////
+       -------------------------------------------------------------------------
+       VERSION 2.3
+       fixing code hanging for large telescope arrays. Tested ok for up to 100 telescopes.
+       lots of code cleanup.
+       better documentation in README plus continued work on doxygen code documentation
+       see ArrayConfig.cfg file for using default values (no change) for degradation factor
+       and for mirrorReflCurveID for DC telescopes. Makes EDITDCTEL easier to use.
+       git tag "v2.3" 4Oct2012
 
 1. Installation
 
