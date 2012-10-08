@@ -439,7 +439,7 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
      // fill in the rest later if have time
   }
   // set number of photons
-  int nPhotons = 50000;
+  int nPhotons = 5000;
 
   vector<double> vDeg;
   double setdeg = 0.0;
@@ -473,6 +473,8 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
 
   // get focal length of telescope
   double fLgt = tel->getFocalLength();
+  double fPlateScaleFactor = tel->getPlateScaleFactor();
+  *oLog << "FPLATESCALE " << fPlateScaleFactor << endl;
   if (debug) *oLog << " focal length " << fLgt << endl;
   // get array of photon locations on circle on ground plane
   double fRadius = tel->getTelescopeRadius();
@@ -546,9 +548,13 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
 
       if (onCamera) {
 	// convert to minutes of arc, first subtract focus location since we just want spread
-	double xMin = (cameraLoc.X() / (fLgt*1000.))*TMath::RadToDeg();
-	double yMin = (cameraLoc.Y() / (fLgt*1000.))*TMath::RadToDeg();
-	xMin = (xMin - theta*TMath::RadToDeg()) * 60.0;
+	double xMin = (cameraLoc.X() / 10.0) / fPlateScaleFactor;  // xMin now in degrees
+	double yMin = (cameraLoc.Y() / 10.0) / fPlateScaleFactor;  // yMin now in degrees
+
+	//double xMin = (cameraLoc.X() / (fLgt*1000.))*TMath::RadToDeg();
+	//double yMin = (cameraLoc.Y() / (fLgt*1000.))*TMath::RadToDeg();
+	
+	xMin = (xMin - theta*TMath::RadToDeg()) * 60.0; // converting to minutes of arc
 	yMin = yMin*60.0;
 	if (0) {
 	  *oLog << "   onCamera location in minutes of arc "

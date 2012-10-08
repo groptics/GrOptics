@@ -62,6 +62,7 @@ DCStdOptics::DCStdOptics() {
   defoc           = 0.0;
   foclength       = 0.0;
   camRadius       = 0.0;
+  plateScaleFactor = 0.0;
   radius          = 0.0;
   rotation_offset = 0.0;
   xoff            = 0.0;
@@ -108,6 +109,7 @@ void DCStdOptics::printDCStdOptics() {
   *oStr << "       defoc           " << defoc << endl;
   *oStr << "       foclength       " << foclength << endl;
   *oStr << "       camRadius       " << camRadius << endl;
+  *oStr << " plateScaleFactor      " << plateScaleFactor << endl;
   *oStr << "       radius          " << radius << endl;
   *oStr << "       rotation_offset " << rotation_offset << endl;
   *oStr << "       xoff            " << xoff << endl;
@@ -264,6 +266,7 @@ GDCTelescope* GDCTelescopeFactory::makeTelescope(const int &id,
   DCTel->dRadius = opt->radius;
   DCTel->dFocLgt = opt->foclength;
   DCTel->dCamRad = opt->camRadius;
+  DCTel->dPlateScaleFactor = opt->plateScaleFactor;
   DCTel->dFocError = opt->defoc;
   DCTel->iTelID = idTel;
   DCTel->iStdID = iStd;

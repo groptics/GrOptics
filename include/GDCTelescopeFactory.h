@@ -69,6 +69,7 @@ struct DCStdOptics {
 			   away from the dish <0 when too close.*/
   double foclength;       //!< Focal length (meters)
   double camRadius;       //!< Radius of camera
+  double plateScaleFactor; //!< Plate scale factor (cm/deg).
   double radius;          //!< Radius of dish (meters) 
   double rotation_offset; /*!< distance between focal point and
                             rotation center (meters) */

@@ -222,6 +222,7 @@ int main(int argc, char *argv[]) {
   updatePilot(cline,&pilot);
 
   if ( (pilot.testTel) || (pilot.telToDraw) ) {
+    *oLog << "creating app " << endl;
     app = new TRint("app",&pseudo_argc, argv,0,0,kFALSE );
     runApp = true;
   }
@@ -467,7 +468,7 @@ int main(int argc, char *argv[]) {
   if (runApp) {
     app->Run(); 
   }
-  
+   
   // clean up. makes valgrind output easier to read
   SafeDelete(readP);  // delete photon reader
   
@@ -494,7 +495,7 @@ int main(int argc, char *argv[]) {
     SafeDelete(mRootWriterIter->second);
   } 
   SafeDelete(siO);
-  
+
   return 0;
 };
 /********************** end of main ***************************************/

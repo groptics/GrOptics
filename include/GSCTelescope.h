@@ -248,6 +248,10 @@ class GSCTelescope : public GTelescope {
     return fFocLgt;
   }
 
+  double getPlateScaleFactor() {
+    return 0.0;
+  }
+
   double getIdealTransitTime() {
     double tm = ( ( 2*fZs - fZp -fZf )* fFocLgt / TMath::C()) * 1.0e09;
     return tm;

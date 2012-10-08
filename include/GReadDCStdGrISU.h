@@ -46,7 +46,8 @@ class GReadDCStdGrISU : public GReadDCStdBase {
   int iGeoNum; //!< active geometry number, used in filling telescope entries
 
   double dFocLgt;  //!< temporary storage, focal length
-  double dCamRad;  //<! temporary storate, camera radius
+  double dCamRad;  //<! temporary storage, camera radius
+  double dPlateScaleFactor; //<! temporary storage
   double dFocError; //!< temporary for now
   double dTelRadius; //!< temporary
 

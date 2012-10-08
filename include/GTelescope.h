@@ -70,6 +70,8 @@ class GTelescope {
   virtual double getFocalLength() = 0;
 
   virtual double getIdealTransitTime() = 0;
+
+  virtual double getPlateScaleFactor() = 0;
 };
 
 #endif

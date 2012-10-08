@@ -125,6 +125,7 @@ class GDCTelescope : public GTelescope {
   double dRadius;          //!< telescope primary radius (meters)
   double dFocLgt;          //!< telescope focal length (meters)
   double dCamRad;          //!< camera radius (mm)
+  double dPlateScaleFactor; //!< plate scale factor (cm/deg)
   double dFocError;        //!< focusing error (meters) >0 camera too far
   
   double dCameraRadius;    //!< camera radius
@@ -283,6 +284,10 @@ double fTransitTime;                //!< photon total transit time (from inject 
 
   double getFocalLength() {
     return dFocLgt;
+  }
+
+  double getPlateScaleFactor() {
+    return dPlateScaleFactor;
   }
 
   double getCameraRadius() {
