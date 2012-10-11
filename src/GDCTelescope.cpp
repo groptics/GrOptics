@@ -207,7 +207,7 @@ void DCStdFacet::printDCStdFacet(ostream &oStr) {
       << mis_align*(TMath::RadToDeg()) << "  " 
       << ftprot  << "  " << ffprot << endl;
   oStr<<  "      roughness reflect reflctid  " 
-      << roughness << " "  << reflect 
+      << roughness*(TMath::RadToDeg()) << " "  << reflect 
       << "  " << rflctid << endl;
 
   oStr << "      vFacLoc ";

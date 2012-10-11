@@ -357,14 +357,16 @@ void GDCTelescopeFactory::editWorkingTelescope(GDCTelescope *DCTel) {
         vector<int>::iterator itfv;
         GUtilityFuncts::decodeMatlabString(tokens[2],listFacet);
         for (unsigned i = 0;i<listFacet.size();i++) {
-          unsigned facNum = listFacet[i];
+          unsigned facNum = listFacet[i] -1 ;
           if (facNum < DCTel->facet.size() ) {
             if (tokens[3]=="align") {
-              DCTel->facet[facNum].mis_align = atof(tokens[3].c_str());
-              DCTel->bEditAlignFlag = true;
+             DCTel->facet[facNum].mis_align = atof(tokens[4].c_str())
+		*(TMath::DegToRad());
+	     DCTel->bEditAlignFlag = true;
            }
             else if (tokens[3]=="reflect") {
-              DCTel->facet[facNum].roughness = atof(tokens[4].c_str());
+              DCTel->facet[facNum].roughness = atof(tokens[4].c_str())
+		*(TMath::DegToRad());
 	      if (tokens.size() > 5 ) {
                 DCTel->facet[facNum].reflect   = atof(tokens[5].c_str());
 	      }
