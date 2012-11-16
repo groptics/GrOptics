@@ -424,7 +424,7 @@ int main(int argc, char *argv[]) {
 					     &mRootWriter,pilot.outFileHeaderTree);
   siO->setWobble(pilot.wobble[0],pilot.wobble[1],
 		 pilot.wobble[2],pilot.latitude);
-  
+ 
   /////////////////////////////////////////////////////////////
   /////// do the simulations (where do we create the output class).
   ////////////////////////////////////////////////////////////

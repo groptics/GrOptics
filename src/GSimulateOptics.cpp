@@ -154,6 +154,8 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
     // get the wobble offset
     makeWobbleOffset();
 
+    
+
     if (debug) printDebugPrimary();
  
     // set primary in all ArrayTel elements
@@ -232,6 +234,13 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
       unsigned int tel = (iterRootWriter->second)->getTelID();
       fDelay = (*mArrayTel)[tel]->getTimingDelay();
       fDelay = fDelay * 1.0e9 / (TMath::C());
+      double azTel = 0.0;
+      double znTel = 0.0;
+      double srcX = 0.0;
+      double srcY = 0.0;
+      // get telescope zn/az and src relative to telescope for writer
+      (*mArrayTel)[tel]->getAzZnTelescope(&azTel,&znTel);
+      (*mArrayTel)[tel]->getScrRelativeToTelescope(&srcX,&srcY);
       (iterRootWriter->second)->addEvent(fEventNumber,
 					 fPrimaryType,
 					 fPrimaryEnergy,
@@ -240,10 +249,13 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
 					 fWobbleTE,
 					 fWobbleTN,
 					 fDelay,
-					 fPhotonToCameraTime);
+					 fPhotonToCameraTime,
+                                         azTel,znTel,
+                                         fAzPrim,fZnPrim,
+                                         srcX,srcY);
       
     }
-    
+   
   }  // end of shower loop
   
   // write all trees

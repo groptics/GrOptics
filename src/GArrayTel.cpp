@@ -93,23 +93,25 @@ GArrayTel::GArrayTel(const ROOT::Math::XYZVector telLocGrd,
     telID(telid), telStd(telstd), iPrintMode(printMode),
     tel(ctel) {
 
-  fDelay = 0;
+  fDelay   = 0;
   fWobbleN = 0.0;
   fWobbleE = 0.0;
   fLatitude = 0.0;
-  fAzPrim = 0.0;
-  fZnPrim = 0.0;
-  fEnergy = 0.0;
+  fAzPrim   = 0.0;
+  fZnPrim   = 0.0;
+  fEnergy   = 0.0;
   fAzTel = 0.0;
   fZnTel = 0.0;
   fAzPhotGr = 0.0;
   fZnPhotGr = 0.0;
   fPhotHgtEmiss = 0.0;
-  fPhotGrdTime = 0.0;
-  fPhotWaveLgt = 0.0;
-  iPhotType = 0;
-  iPhotTelHitNum = 0;
+  fPhotGrdTime  = 0.0;
+  fPhotWaveLgt     = 0.0;
+  iPhotType        = 0;
+  iPhotTelHitNum   = 0;
   fTotalPhotonTime = 0.0;
+  fSrcRelToTelescopeX = 0.0;
+  fSrcRelToTelescopeY = 0.0;
 
   dStoreLoc = 0;
   dStorePix = 0;
@@ -143,7 +145,7 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
                            const double &energyc,const double &WobbleTNc,
                            const double &WobbleTEc,
                            const double &Latitude) {
-  bool debug = false;
+  bool debug = true;
   
   vSCoreGC = vSCorec;
   vSDcosGC = vSDcosGdc;
@@ -164,15 +166,16 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
           << fWobbleN*(TMath::RadToDeg()) << "  " 
           << fWobbleE*(TMath::RadToDeg()) << endl;
     *oLog << "        primary energy  " << fEnergy << endl;
-    *oLog << "        fZnPrim   " << fZnPrim << endl;
     *oLog << "        telLocGrdGC.Z() " << telLocGrdGC.Z() << endl;
 
     *oLog << "              parameters for telescopeAzZnRot " << endl;
-    *oLog << "        fAzPrim, fZnPrim   " << fAzPrim << " " << fZnPrim << endl;
-    *oLog << "        fWobbleN, fWobbleE " << fWobbleN << " " << fWobbleE << endl;
+    *oLog << "        fAzPrim, fZnPrim   " << fAzPrim*(TMath::RadToDeg())
+          << " " << fZnPrim*(TMath::RadToDeg()) << endl;
+    *oLog << "        fWobbleN, fWobbleE " << fWobbleN*(TMath::RadToDeg())
+          << " " << fWobbleE*(TMath::RadToDeg()) << endl;
     *oLog << "        offsetX, offsetY   " << fpointingOffsetX << " "
 	  << fpointingOffsetY << endl;
-    *oLog << "        fLatitude " << fLatitude << endl;
+    *oLog << "        fLatitude " << fLatitude*(TMath::RadToDeg()) << endl;
   }
   
   // get telescope az and zn
@@ -183,7 +186,16 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
                                    fpointingOffsetX,
                                    fpointingOffsetY,
                                    fLatitude,
-                                   &fAzTel,&fZnTel);
+                                   &fAzTel,&fZnTel,
+                                   &fSrcRelToTelescopeX,
+                                   &fSrcRelToTelescopeY);
+
+  // see the coor.sys memo on README directory, minus sign
+  // required to give source location in telescope coordinates.
+  // and thus with respect to the telescope rather than the source
+  fSrcRelToTelescopeX = -fSrcRelToTelescopeX;
+  fSrcRelToTelescopeY = -fSrcRelToTelescopeY;
+ 
   // get telescope dir.cosines
   double xcos = 0.0;
   double ycos = 0.0;
@@ -195,11 +207,13 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
   vTelDcosGC.SetCoordinates(xcos,ycos,zcos); 
       
   if (debug) {
+    *oLog << "        telescope DCos ";
+    GUtilityFuncts::printGenVector(vTelDcosGC); *oLog << endl;
+    *oLog << "        fAzPrim, fZnPrim   " << fAzPrim*(TMath::RadToDeg())
+          << " " << fZnPrim*(TMath::RadToDeg()) << endl;
     *oLog << "        telescope Az Zn " 
           << fAzTel*(TMath::RadToDeg()) << "  " 
           << "  " << fZnTel*(TMath::RadToDeg()) << endl;
-    *oLog << "        telescope DCos ";
-    GUtilityFuncts::printGenVector(vTelDcosGC); *oLog << endl;
   }
 
   // get ground to telescope rotation matrix
@@ -213,6 +227,9 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
 
   // test rotation matrix, rotate telescope
   if (debug) {
+    *oLog << "        srcX/Y wrt telescope " 
+          << fSrcRelToTelescopeX*(TMath::RadToDeg()) 
+          << "  " << fSrcRelToTelescopeY*(TMath::RadToDeg()) << endl;
     ROOT::Math::XYZVector vTDCosT = rotGrdToTel*vTelDcosGC;
     GUtilityFuncts::zeroFloatVectorFix(&vTDCosT);
     *oLog << "        telescope dCos TelSys ";

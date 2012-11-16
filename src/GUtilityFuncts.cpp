@@ -771,7 +771,7 @@ void GUtilityFuncts::wobbleToAzZn(const double &wobbleN,
   // to the offset point in the tangent plane is (
 
 
-  bool debug = false;
+  bool debug = true;
   if (debug) {
     *oLog << "  -- GUtilityFuncts::wobbleToAzZn " << endl;
     *oLog << "     wobbleN / E " << wobbleN*(TMath::RadToDeg())
@@ -820,7 +820,8 @@ void GUtilityFuncts::telescopeAzZnRot(const double &primAz,
                                       const double &telOffsetX,
                                       const double &telOffsetY,
                                       const double &latitude,
-                                      double *telAz,double *telZn) {
+                                      double *telAz,double *telZn,
+                                      double *sourceX,double *sourceY) {
 
   bool debug = false;
   if (debug) {
@@ -829,6 +830,7 @@ void GUtilityFuncts::telescopeAzZnRot(const double &primAz,
           << "  /  " << primZn*(TMath::RadToDeg()) << endl;
     *oLog << "     wobbleN / E    " << wobbleN*(TMath::RadToDeg())
           << "  /  " << wobbleE*(TMath::RadToDeg()) << endl;
+    *oLog << "     latitude       " << latitude*(TMath::RadToDeg()) << endl;
     *oLog << "     telOffSetX / Y " << telOffsetX*(TMath::RadToDeg())
           << "  /  " << telOffsetY*(TMath::RadToDeg()) << endl;
   }
@@ -858,7 +860,9 @@ void GUtilityFuncts::telescopeAzZnRot(const double &primAz,
         wobbleX = - wobbleN*sin(fRot) - wobbleE*cos(fRot);
         xOffsetAll = wobbleX + telOffsetX;
         yOffsetAll = wobbleY + telOffsetY;
-        
+        *sourceX = xOffsetAll;
+        *sourceY = yOffsetAll;
+       
         if (debug) {
           *oLog << "     fRot           " << fRot*(TMath::RadToDeg()) << endl;
           *oLog << "     wobbleX / Y    " << wobbleX*(TMath::RadToDeg())

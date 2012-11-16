@@ -108,8 +108,14 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
   fTree->Branch( "Ycore", &fYcore, "Ycore/F" );
   fTree->Branch( "Xcos", &fXcos, "Xcos/F" );
   fTree->Branch( "Ycos", &fYcos, "Ycos/F" );
-  fTree->Branch( "Xsource", &fXsource, "Xsource/F" );
-  fTree->Branch( "Ysource", &fYsource, "Ysource/F" );
+  fTree->Branch( "Xsource", &fSrcRelTelX, "Xsource/F" );
+  fTree->Branch( "Ysource", &fSrcRelTelY, "Ysource/F" );
+  fTree->Branch( "AzPrim", &fAzPrim, "AzPrim/F" );
+  fTree->Branch( "ZnPrim", &fZnPrim, "ZnPrim/F" );
+  fTree->Branch( "AzTel", &fAzTel, "AzTel/F" );
+  fTree->Branch( "ZnTel", &fZnTel, "ZnTel/F" );
+
+
   fTree->Branch( "delay", &fDelay, "delay/F" );
   //fTree->Branch( "transit", &fTransit, "transit/F" );
   
@@ -146,7 +152,9 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
 			  const double &primaryEnergy,const ROOT::Math::XYZVector &vSCore,
 			  const ROOT::Math::XYZVector &vSDCore, const double &xSource,
 			  const double &ySource,const double &delayTime, 
-			  const double &transitTime) {
+			  const double &transitTime, const double &azTel,const double &znTel,
+                          const double &azPrim, const double &znPrim,
+                          const double &srcX,const double &srcY) {
 
 
   bool debug = false;
@@ -172,7 +180,13 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
   fYsource = (float)ySource*(TMath::RadToDeg());
   fDelay = (float)delayTime;
   fTransit = (float)transitTime;
-  
+  fAzPrim = (float)azPrim*(TMath::RadToDeg());
+  fZnPrim = (float)znPrim*(TMath::RadToDeg());
+  fAzTel = (float)azTel*(TMath::RadToDeg());
+  fZnTel = (float)znTel*(TMath::RadToDeg());
+  fSrcRelTelX = (float)srcX*(TMath::RadToDeg());
+  fSrcRelTelY = (float)srcY*(TMath::RadToDeg());
+
   fFile->cd();
   int r = fTree->Fill();
   if (debug ) {
