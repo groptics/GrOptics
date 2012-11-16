@@ -40,6 +40,14 @@ class GRootWriter
    float        fYsource;
    float        fDelay;
    float        fTransit;
+ 
+   float        fAzPrim;
+   float        fZnPrim;
+   float        fAzTel;
+   float        fZnTel;
+   float        fSrcRelTelX;
+   float        fSrcRelTelY;
+
 
    bool bStoreDcos;
 
@@ -58,7 +66,7 @@ class GRootWriter
 
    ~GRootWriter();
 
-  void addPhoton(const ROOT::Math::XYZVector &PhotonCameraLoc,
+   void addPhoton(const ROOT::Math::XYZVector &PhotonCameraLoc,
 		  const ROOT::Math::XYZVector &PhotonCameraDcos,
 		  const double &iPE_time, 
 		  const double &iPE_wl = 0. );
@@ -67,7 +75,10 @@ class GRootWriter
    int addEvent(const unsigned int &eventNumber, const unsigned int &primaryType, 
 		const double &primaryEnergy,const ROOT::Math::XYZVector &vSCore,
 		const ROOT::Math::XYZVector &vSDCore, const double &xSource,
-		const double &ySource,const double &delayTime, const double &transitTime);
+		const double &ySource,const double &delayTime, const double &transitTime,
+                const double &azTel,const double &znTel,
+                const double &azPrim, const double &znPrim,
+                const double &srcX,const double &srcY);
 
    TTree*  getDataTree() { return fTree; };
 

@@ -45,6 +45,8 @@ class GArrayTel {
   double fAzTel;          //!< azimuthal angle (radians) for telescope
   double fZnTel;          //!< zenith angle (radians) for telescope
   ROOT::Math::XYZVector vTelDcosGC; //!< tel.dirCos. ground coor.  
+  double fSrcRelToTelescopeX;
+  double fSrcRelToTelescopeY;
 
   // photon parameters
   ROOT::Math::XYZVector vPhotonGrdLocGC; //!< photon grd.loc.ground coors.
@@ -169,7 +171,21 @@ class GArrayTel {
     *telLocX = telLocGrdGC.X();
     *telLocY = telLocGrdGC.Y();
     *telLocZ = telLocGrdGC.Z();
-  }
+  };
+
+  void getAzZnTelescope(double *AzTel, double *ZnTel) {
+    // get telescope Azimuth and Zenith angle, includes telescope offsets
+    *AzTel = fAzTel;
+    *ZnTel = fZnTel;
+    return;
+  };
+
+  void getScrRelativeToTelescope(double *srcTelX, double *srcTelY) {
+    // get source location on sky relative to telescope, 
+    *srcTelX = fSrcRelToTelescopeX;
+    *srcTelY = fSrcRelToTelescopeY;
+    return;
+  };
 };
 
 #endif

@@ -185,7 +185,8 @@ namespace GUtilityFuncts {
                          const double &telOffsetX,
                          const double &telOffsetY,
                          const double &latitude,
-                         double *telAz,double *telZn);
+                         double *telAz,double *telZn,
+                         double *sourceX,double *sourceY);
    
    void XYZcosToRotMat(const double &xcos,
                                const double &ycos,
