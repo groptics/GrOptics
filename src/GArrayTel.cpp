@@ -145,7 +145,7 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
                            const double &energyc,const double &WobbleTNc,
                            const double &WobbleTEc,
                            const double &Latitude) {
-  bool debug = true;
+  bool debug = false;
   
   vSCoreGC = vSCorec;
   vSDcosGC = vSDcosGdc;
@@ -168,7 +168,7 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
     *oLog << "        primary energy  " << fEnergy << endl;
     *oLog << "        telLocGrdGC.Z() " << telLocGrdGC.Z() << endl;
 
-    *oLog << "              parameters for telescopeAzZnRot " << endl;
+    *oLog << "              parameters for telescopeAzZn " << endl;
     *oLog << "        fAzPrim, fZnPrim   " << fAzPrim*(TMath::RadToDeg())
           << " " << fZnPrim*(TMath::RadToDeg()) << endl;
     *oLog << "        fWobbleN, fWobbleE " << fWobbleN*(TMath::RadToDeg())
@@ -179,22 +179,22 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
   }
   
   // get telescope az and zn
-  GUtilityFuncts::telescopeAzZnRot(fAzPrim,
-                                   fZnPrim,
-                                   fWobbleN,
-                                   fWobbleE,
-                                   fpointingOffsetX,
-                                   fpointingOffsetY,
-                                   fLatitude,
-                                   &fAzTel,&fZnTel,
-                                   &fSrcRelToTelescopeX,
-                                   &fSrcRelToTelescopeY);
+  GUtilityFuncts::telescopeAzZn(fAzPrim,
+                                fZnPrim,
+                                fWobbleN,
+                                fWobbleE,
+                                fpointingOffsetX,
+                                fpointingOffsetY,
+                                fLatitude,
+                                &fAzTel,&fZnTel,
+                                &fSrcRelToTelescopeX,
+                                &fSrcRelToTelescopeY);
 
   // see the coor.sys memo on README directory, minus sign
   // required to give source location in telescope coordinates.
   // and thus with respect to the telescope rather than the source
   fSrcRelToTelescopeX = -fSrcRelToTelescopeX;
-  fSrcRelToTelescopeY = -fSrcRelToTelescopeY;
+  fSrcRelToTelescopeY = fSrcRelToTelescopeY;
  
   // get telescope dir.cosines
   double xcos = 0.0;

@@ -168,7 +168,7 @@ namespace GUtilityFuncts {
                    const double &latitude);
 
    int XYcosToAzZn(const double &xcos, const double &ycos,
-                   double *az,double *zn);
+                                      double *az,double *zn);
 
    int AzZnToXYcos(const double &az,const double &zn,
                    double *xcos, double *ycos);
@@ -178,6 +178,16 @@ namespace GUtilityFuncts {
                      const double &aZ, const double &zN,
                      double *aZNew, double *zNNew);
 
+   void telescopeAzZn(const double &primAz,
+                      const double &primZn,
+                      const double &wobbleN,
+                      const double &wobbleE,
+                      const double &telOffsetX,
+                      const double &telOffsetY,
+                      const double &latitude,
+                      double *telAz,double *telZn,
+                      double *sourceX,double *sourceY);
+   
    void telescopeAzZnRot(const double &primAz,
                          const double &primZn,
                          const double &wobbleN,
@@ -196,7 +206,10 @@ namespace GUtilityFuncts {
    void AzZnToRotMat(const double &az,
                      const double &zn,
                      ROOT::Math::Rotation3D *rotM);
-  
+   void offsetXYToAzZn(const double &offsetX, const double &offsetY,
+                       const double &az, const double &zn,
+                       double *azOffset, double *znOffset);
+
    bool testZeroFloat(const double &ax);
 
    bool zeroFloatVectorFix(ROOT::Math::XYZVector *vec);
