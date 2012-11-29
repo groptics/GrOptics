@@ -71,6 +71,17 @@ GrOptics accepts input from GrISU compatible photon files.
        and for mirrorReflCurveID for DC telescopes. Makes EDITDCTEL easier to use.
        git tag "v2.3" 4Oct2012
 
+       ------------------------------------------------------------------------
+       VERSION 2.4Beta
+       This is not yet a production version.
+       Fixed wobble offsets so that the wobble offsets in the
+       opticsSimulation file are in the camera coordinate system, y axis
+       up, and x axis to the East (increasing azimuth).  The source
+       location in the output root file is in camera coordinates.
+
+       rewrote az/zn/rotation procedures in GUtilityFuncts. All tests are
+       ok. Code needs to be checked elsewhere.
+       
 1. Installation
 
    Dependencies: ROOT, Gsl, robast	
