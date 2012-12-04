@@ -1,6 +1,6 @@
 # makefile
-#VERSION2.3 
-#1March2012
+#VERSION2.4 
+#3Dec2012
 #      C. Duke
 #  Grinnell College
 

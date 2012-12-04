@@ -72,16 +72,23 @@ GrOptics accepts input from GrISU compatible photon files.
        git tag "v2.3" 4Oct2012
 
        ------------------------------------------------------------------------
-       VERSION 2.4Beta
-       This is not yet a production version.
+       VERSION 2.4
        Fixed wobble offsets so that the wobble offsets in the
        opticsSimulation file are in the camera coordinate system, y axis
        up, and x axis to the East (increasing azimuth).  The source
        location in the output root file is in camera coordinates.
 
        rewrote az/zn/rotation procedures in GUtilityFuncts. All tests are
-       ok. Code needs to be checked elsewhere.
-       
+       ok.
+
+       tag name: v2.4
+       "git checkout v2.4" to access but will be master commit until merge
+       beta branch to create v2.5 after merging.        
+
+       -------------------------------------------------------------------------
+       BRANCH 2.5Beta: started beta branch, not for production.
+       tag name: 2.5Beta
+
 1. Installation
 
    Dependencies: ROOT, Gsl, robast	

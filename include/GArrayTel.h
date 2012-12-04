@@ -1,6 +1,6 @@
 /*
-VERSION2.3
-3OCT2012
+VERSION2.4
+3Dec2012
 */
 /*!  /brief GArrayTel class contains all telescope details 
             including a pointer to a GTelescope instance

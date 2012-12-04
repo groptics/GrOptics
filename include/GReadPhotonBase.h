@@ -1,6 +1,6 @@
 /*
-VERSION2.3
-3OCT2012
+VERSION2.4
+3Dec2012
 */
 /*!  \brief GReadPhotonBase:  base class for reading Cherenkov photons
             
