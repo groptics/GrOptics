@@ -219,11 +219,18 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
 
   // get ground to telescope rotation matrix
   GUtilityFuncts::AzZnToRotMat(fAzTel,fZnTel,&rotGrdToTel);
+  // get ground to shower coor. rotation matrix
+  GUtilityFuncts::AzZnToRotMat(fAzPrim,fZnPrim,&rotGrdToShower); 
 
   // get telescope grd.location in telescope coordinates
   telLocGrdTC = rotGrdToTel*telLocGrdGC;
+  // get core location in telescope coordinates
   vSCoreTC = rotGrdToTel*vSCoreGC;
   vSDcosTC = rotGrdToTel*vSDcosGC;
+
+  // get core location in shower coordinates
+  vSCoreSC = rotGrdToShower*vSCoreGC;
+  vSDcosSC = rotGrdToShower*vSDcosGC; 
 
   // get delay time for this telescope
   fDelay = telLocGrdTC.Z();  // convert to ns later
@@ -250,10 +257,16 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
     GUtilityFuncts::printGenVector(vSCoreGC); *oLog << endl;
     *oLog << "        Core Location tel.coor  " << endl;
     GUtilityFuncts::printGenVector(vSCoreTC); *oLog << endl;
-    *oLog << "        Core Direction grd.coor  " << endl;
+   *oLog << "        Core Location shower.coor  " << endl;
+    GUtilityFuncts::printGenVector(vSCoreSC); *oLog << endl;
+     *oLog << "        Core Direction grd.coor  " << endl;
     GUtilityFuncts::printGenVector(vSDcosGC); *oLog << endl;
     *oLog << "        Core Direction tel.coor  " << endl;
     GUtilityFuncts::printGenVector(vSDcosTC); *oLog << endl;
+    *oLog << "        Core Direction shower.coor  " << endl;
+    GUtilityFuncts::printGenVector(vSDcosSC); *oLog << endl;
+
+    
 
     *oLog << "        fDelay(meters): " << fDelay << endl;
   }

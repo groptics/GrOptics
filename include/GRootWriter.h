@@ -28,6 +28,7 @@ class GRootWriter
 
    TTree *fTree;
    string treeBaseName;
+   bool bDebugBranchesFlag;
 
    unsigned int fEventNumber;
    unsigned int fPrimaryType;
@@ -50,6 +51,17 @@ class GRootWriter
    float        fSrcRelToCameraX;
    float        fSrcRelToCameraY;
 
+   // debug branch variables
+   float        fXcoreTC;
+   float        fYcoreTC;
+   float        fXcosTC;
+   float        fYcosTC;
+   float        fXcoreSC;
+   float        fYcoreSC;
+   float        fXcosSC;
+   float        fYcosSC;
+
+
 
    bool bStoreDcos;
 
@@ -64,7 +76,8 @@ class GRootWriter
 
    GRootWriter( TFile *tfile, const unsigned int &iTelID, 
 		const string &treeBaseName, const bool &storePhotonDcos = false, 
-		const unsigned int &iNInitEvents = 100000 );
+		const unsigned int &iNInitEvents = 100000, 
+                const bool &debugBranchesFlag = false);
 
    ~GRootWriter();
 
@@ -80,7 +93,14 @@ class GRootWriter
 		const double &ySource,const double &delayTime, const double &transitTime,
                 const double &azTel,const double &znTel,
                 const double &azPrim, const double &znPrim,
-                const double &srcX,const double &srcY);
+                const double &srcX,const double &srcY,
+                
+                const ROOT::Math::XYZVector &vSCoreTC,
+                const ROOT::Math::XYZVector &vSDcosTC,
+                const ROOT::Math::XYZVector &vSCoreSC,
+                const ROOT::Math::XYZVector &vSDcosSC
+                
+                );
 
    TTree*  getDataTree() { return fTree; };
 

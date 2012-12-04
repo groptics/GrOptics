@@ -227,6 +227,9 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
     *oLog << "    EventNumber " << fEventNumber << "   nPhotons "
 	  << nPhotons << endl;     
     // add event to all writers here
+
+    ROOT::Math::XYZVector vTmp;
+
     for (iterRootWriter = mRootWriter->begin();
 	 iterRootWriter != mRootWriter->end();
 	 iterRootWriter++) {
@@ -252,7 +255,10 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
 					 fPhotonToCameraTime,
                                          azTel,znTel,
                                          fAzPrim,fZnPrim,
-                                         srcX,srcY);
+                                         srcX,srcY,
+                                         
+                                         vTmp,vTmp,vTmp,vTmp
+);
       
     }
    

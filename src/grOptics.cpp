@@ -107,6 +107,7 @@ struct Pilot {
   int testTel;  //!< telescope number for test graphs (>0). if zero no test produced
   string testTelFile; //!< base filename for test output
   bool debugBranchesFlag; //!< if true, create debug branches in output root file
+  unsigned iNInitEvents;
 };
 
 /*! \brief structure to hold telescope factory parameters
@@ -290,7 +291,8 @@ int main(int argc, char *argv[]) {
   for (mIter=mTelDetails.begin();mIter!=mTelDetails.end();mIter++) {
     int telID = mIter->first;
     mRootWriter[telID] = new GRootWriter(fO,telID,pilot.outFileTelTreeName,
-					 pilot.outFileDCos);
+					 pilot.outFileDCos, pilot.iNInitEvents,
+                                         pilot.debugBranchesFlag);
   }
   
   // set up factories
@@ -627,7 +629,7 @@ int pilotPrint(const Pilot &pilot) {
   *oLog << "         testTel base filename   " << pilot.testTelFile << endl;
   *oLog << "         debugBranchesFlag       " << pilot.debugBranchesFlag << endl;
   *oLog << endl;
-  exit(0);
+
   return 1;
 };
 /*********************** end of pilotPrint ***************************************/
@@ -660,7 +662,7 @@ int readPilot(Pilot *pilot) {
   pilot->testTel = 0;
   pilot->testTelFile = "";
   pilot->debugBranchesFlag = false;
-
+  pilot->iNInitEvents = 100000;
   vector<string> tokens;
   string spilotfile = pilot->pilotfile;
 

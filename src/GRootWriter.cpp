@@ -42,9 +42,10 @@ ClassImp(GRootWriter);
 GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
 			  const string &treeBaseName,
 			  const bool &storePhotonDcos,
-			  const unsigned int &iNInitEvents) 
+			  const unsigned int &iNInitEvents,
+                          const bool &debugBranchesFlag) 
   :fFile(tfile),fTelID(iTelID), treeBaseName(treeBaseName),
-   bStoreDcos(storePhotonDcos) {
+   bStoreDcos(storePhotonDcos),bDebugBranchesFlag(debugBranchesFlag) {
 
   bool debug = false;
   if (debug) {
@@ -60,6 +61,16 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
   fSrcRelTelY = 0.0;
   fSrcRelToCameraX = 0.0;
   fSrcRelToCameraY = 0.0;  
+
+  fXcoreTC = 0.0;
+  fYcoreTC = 0.0;
+  fXcosTC  = 0.0;
+  fYcosTC  = 0.0;
+  fXcoreSC = 0.0;
+  fYcoreSC = 0.0;
+  fXcosSC  = 0.0;
+  fYcosSC  = 0.0;
+
   //fFile = tfile;
   //fTelID = iTelID;
   //bStoreDcos = storePhotonDcos;
@@ -131,6 +142,18 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
     fTree->Branch( "photonDcosX", &fPE_DcosX );    
     fTree->Branch( "photonDcosY", &fPE_DcosY );    
   }
+
+  if (bDebugBranchesFlag) {
+    fTree->Branch( "XcoreTC", &fXcoreTC, "XcoreTC/F" );
+    fTree->Branch( "YcoreTC", &fYcoreTC, "YcoreTC/F" );
+    fTree->Branch( "XcosTC", &fXcosTC, "XcosTC/F" );
+    fTree->Branch( "YcosTC", &fYcosTC, "YcosTC/F" );
+    fTree->Branch( "XcoreSC", &fXcoreSC, "XcoreSC/F" );
+    fTree->Branch( "YcoreSC", &fYcoreSC, "YcoreSC/F" );
+    fTree->Branch( "XcosSC", &fXcosSC, "XcosSC/F" );
+    fTree->Branch( "YcosSC", &fYcosSC, "YcosSC/F" );
+    
+  }
   
 };
 //******************************** end of GRootWriter ********************
@@ -157,7 +180,16 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
 			  const double &ySource,const double &delayTime, 
 			  const double &transitTime, const double &azTel,const double &znTel,
                           const double &azPrim, const double &znPrim,
-                          const double &srcX,const double &srcY) {
+                          const double &srcX,const double &srcY,
+
+                          const ROOT::Math::XYZVector &vSCoreTC,
+                          const ROOT::Math::XYZVector &vSDcosTC,
+                          const ROOT::Math::XYZVector &vSCoreSC,
+                          const ROOT::Math::XYZVector &vSDcosSC
+                          
+
+
+                          ) {
 
 
   bool debug = false;

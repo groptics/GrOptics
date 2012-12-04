@@ -85,6 +85,10 @@ class GSimulateOptics {
   ROOT::Math::XYZVector vPhotonGrdLoc; // MAY WANT TO MAKE ALL VECTORS POINTERS
   ROOT::Math::XYZVector vPhotonDCosGd; // AND INSTANTIATE IN CONSTRUCTOR
   ROOT::Math::XYZVector vPhotonDCosTel; // AND INSTANTIATE IN CONSTRUCTOR
+
+  ROOT::Math::XYZVector vTmp;  // just temporary for now
+
+
   double fAzPhot;
   double fZnPhot;
   double fPhotHgtEmiss;
