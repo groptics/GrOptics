@@ -1,6 +1,6 @@
 /*
-VERSION2.4
-3Dec2012
+VERSION2.3
+3OCT2012
 */
 /*!  GTelArray.cpp
      Charlie Duke
@@ -240,7 +240,7 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
       double srcY = 0.0;
       // get telescope zn/az and src relative to telescope for writer
       (*mArrayTel)[tel]->getAzZnTelescope(&azTel,&znTel);
-      (*mArrayTel)[tel]->getScrRelativeToTelescope(&srcX,&srcY);
+      (*mArrayTel)[tel]->getSrcRelativeToCamera(&srcX,&srcY);
       (iterRootWriter->second)->addEvent(fEventNumber,
 					 fPrimaryType,
 					 fPrimaryEnergy,

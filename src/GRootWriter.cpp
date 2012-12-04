@@ -1,6 +1,6 @@
 /*
-VERSION2.4
-3Dec2012
+VERSION2.3
+3OCT2012
 */
 /*! \class GRootWriter
     \brief write for pe data to root files
@@ -56,7 +56,10 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
   fPE_DcosY = 0;
   fPE_time = 0;
   fPE_wl = 0;
-  
+  fSrcRelTelX = 0.0;
+  fSrcRelTelY = 0.0;
+  fSrcRelToCameraX = 0.0;
+  fSrcRelToCameraY = 0.0;  
   //fFile = tfile;
   //fTelID = iTelID;
   //bStoreDcos = storePhotonDcos;
@@ -108,8 +111,8 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
   fTree->Branch( "Ycore", &fYcore, "Ycore/F" );
   fTree->Branch( "Xcos", &fXcos, "Xcos/F" );
   fTree->Branch( "Ycos", &fYcos, "Ycos/F" );
-  fTree->Branch( "Xsource", &fSrcRelTelX, "Xsource/F" );
-  fTree->Branch( "Ysource", &fSrcRelTelY, "Ysource/F" );
+  fTree->Branch( "Xsource", &fSrcRelToCameraX, "Xsource/F" );
+  fTree->Branch( "Ysource", &fSrcRelToCameraY, "Ysource/F" );
   fTree->Branch( "AzPrim", &fAzPrim, "AzPrim/F" );
   fTree->Branch( "ZnPrim", &fZnPrim, "ZnPrim/F" );
   fTree->Branch( "AzTel", &fAzTel, "AzTel/F" );
@@ -184,8 +187,8 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
   fZnPrim = (float)znPrim*(TMath::RadToDeg());
   fAzTel = (float)azTel*(TMath::RadToDeg());
   fZnTel = (float)znTel*(TMath::RadToDeg());
-  fSrcRelTelX = (float)srcX*(TMath::RadToDeg());
-  fSrcRelTelY = (float)srcY*(TMath::RadToDeg());
+  fSrcRelToCameraX = (float)srcX*(TMath::RadToDeg());
+  fSrcRelToCameraY = (float)srcY*(TMath::RadToDeg());
 
   fFile->cd();
   int r = fTree->Fill();

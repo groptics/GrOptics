@@ -1,6 +1,6 @@
 /*
-VERSION2.4
-3Dec2012
+VERSION2.3
+3OCT2012
 */
 /*!  /brief GArrayTel class contains all telescope details 
             including a pointer to a GTelescope instance
@@ -36,6 +36,8 @@ class GArrayTel {
   // primary parameters
   ROOT::Math::XYZVector vSCoreGC;  //!< primary coreHit ground coor.
   ROOT::Math::XYZVector vSDcosGC;  //!< primary dirCos. ground coor.
+  ROOT::Math::XYZVector vSCoreTC;  //!< primary coreHit telescope coor.
+  ROOT::Math::XYZVector vSDcosTC;  //!< primary dirCos. telescope coor.
   double fAzPrim;                  //!< primary azimuth
   double fZnPrim;                  //!< primary zenith angle
   double fEnergy;                  //!< primary energy
@@ -47,6 +49,8 @@ class GArrayTel {
   ROOT::Math::XYZVector vTelDcosGC; //!< tel.dirCos. ground coor.  
   double fSrcRelToTelescopeX;
   double fSrcRelToTelescopeY;
+  double fSrcRelToCameraX;
+  double fSrcRelToCameraY;
 
   // photon parameters
   ROOT::Math::XYZVector vPhotonGrdLocGC; //!< photon grd.loc.ground coors.
@@ -180,10 +184,17 @@ class GArrayTel {
     return;
   };
 
-  void getScrRelativeToTelescope(double *srcTelX, double *srcTelY) {
+  void getSrcRelativeToTelescope(double *srcTelX, double *srcTelY) {
     // get source location on sky relative to telescope, 
     *srcTelX = fSrcRelToTelescopeX;
     *srcTelY = fSrcRelToTelescopeY;
+    return;
+  };
+
+  void getSrcRelativeToCamera(double *srcTelX, double *srcTelY) {
+    // get source location on sky relative to telescope, 
+    *srcTelX = fSrcRelToCameraX;
+    *srcTelY = fSrcRelToCameraY;
     return;
   };
 };

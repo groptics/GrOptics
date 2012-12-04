@@ -1,6 +1,6 @@
 # makefile
-#VERSION2.4 
-#3Dec2012
+#VERSION2.3 
+#1March2012
 #      C. Duke
 #  Grinnell College
 
@@ -43,7 +43,13 @@ OBJECTS =  $(OBJ)/GUtilityFuncts.o $(OBJ)/GPilot.o \
            $(OBJ)/GRootDCNavigatorDict.o \
            $(OBJ)/GRootWriterDict.o
 
+TESTOBJECTS = $(OBJ)/GUtilityFuncts.o $(OBJ)/GDefinition.o 
+
 # set target
+testUtilities: $(OBJ)/testUtilities.o  $(TESTOBJECTS)
+	@echo "building testUtilities"
+	$(LD) $(LDFLAGS) -pg $(LIBS) $^ $(OutPutOpt) $@
+
 
 grOptics: $(OBJ)/grOptics.o $(OBJECTS)
 	@echo "building grOptics"

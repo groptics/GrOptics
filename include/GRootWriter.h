@@ -1,6 +1,6 @@
 /*
-VERSION2.4
-3Dec2012
+VERSION2.3
+3OCT2012
 */
 //! GROOTWRITER writer for photon data to root files
 // adopted from VPEWriter in EVNDISP package
@@ -47,6 +47,8 @@ class GRootWriter
    float        fZnTel;
    float        fSrcRelTelX;
    float        fSrcRelTelY;
+   float        fSrcRelToCameraX;
+   float        fSrcRelToCameraY;
 
 
    bool bStoreDcos;
