@@ -1,6 +1,6 @@
 /*
-VERSION2.3
-3OCT2012
+VERSION2.4
+3Dec2012
 */
 /*! \brief GDefinition Functions: general definitions, enums and associated
   functions to return enum strings.      
