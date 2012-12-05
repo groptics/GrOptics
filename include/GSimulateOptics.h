@@ -76,7 +76,6 @@ class GSimulateOptics {
   double fAzTel;  //!< azimuthal angle of telescop (radians)
   
   ROOT::Math::XYZVector *vTelDcosGrd;
-  ROOT::Math::Rotation3D *rotCoorGrdToSky;
   ROOT::Math::Rotation3D *rotGrdToTel; //!< rotation matrix: GrdCoor to TelCoor.
   double fEnergy;  //!< 
 

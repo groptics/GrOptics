@@ -174,6 +174,10 @@ class GArrayTel {
 
   void makeTelescopeTest(const string& testfile);
 
+  void getTelLocTC(ROOT::Math::XYZVector *telLocTC) {
+    *telLocTC = telLocGrdTC;
+  };
+
   void getTelLocGC(double *telLocX, double *telLocY, double *telLocZ) {
     *telLocX = telLocGrdGC.X();
     *telLocY = telLocGrdGC.Y();
@@ -200,6 +204,19 @@ class GArrayTel {
     *srcTelY = fSrcRelToCameraY;
     return;
   };
+
+  void getCoreLocDCosTC(ROOT::Math::XYZVector *coreLocTC,
+                        ROOT::Math::XYZVector *coreDcosTC) {
+    *coreLocTC = vSCoreTC;
+    *coreDcosTC = vSDcosTC;
+  };
+ 
+ void getCoreLocDCosSC(ROOT::Math::XYZVector *coreLocSC,
+                        ROOT::Math::XYZVector *coreDcosSC) {
+    *coreLocSC = vSCoreSC;
+    *coreDcosSC = vSDcosSC;
+  };
+  
 };
 
 #endif

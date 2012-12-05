@@ -70,6 +70,9 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
   fYcoreSC = 0.0;
   fXcosSC  = 0.0;
   fYcosSC  = 0.0;
+  fXTelTC  = 0.0;
+  fYTelTC  = 0.0;
+  fZTelTC  = 0.0;
 
   //fFile = tfile;
   //fTelID = iTelID;
@@ -152,6 +155,9 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
     fTree->Branch( "YcoreSC", &fYcoreSC, "YcoreSC/F" );
     fTree->Branch( "XcosSC", &fXcosSC, "XcosSC/F" );
     fTree->Branch( "YcosSC", &fYcosSC, "YcosSC/F" );
+    fTree->Branch( "XTelTC", &fXTelTC, "XTelTC/F" );
+    fTree->Branch( "YTelTC", &fYTelTC, "YTelTC/F" );
+    fTree->Branch( "ZTelTC", &fZTelTC, "ZTelTC/F" );
     
   }
   
@@ -185,9 +191,9 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
                           const ROOT::Math::XYZVector &vSCoreTC,
                           const ROOT::Math::XYZVector &vSDcosTC,
                           const ROOT::Math::XYZVector &vSCoreSC,
-                          const ROOT::Math::XYZVector &vSDcosSC
+                          const ROOT::Math::XYZVector &vSDcosSC,
                           
-
+                          const ROOT::Math::XYZVector &vTelLocTC
 
                           ) {
 
@@ -221,6 +227,19 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
   fZnTel = (float)znTel*(TMath::RadToDeg());
   fSrcRelToCameraX = (float)srcX*(TMath::RadToDeg());
   fSrcRelToCameraY = (float)srcY*(TMath::RadToDeg());
+
+  // debug branches
+  fXcoreTC = (float)vSCoreTC.X();
+  fYcoreTC = (float)vSCoreTC.Y();
+  fXcosTC = (float)vSDcosTC.X();
+  fYcosTC = (float)vSDcosTC.Y();
+  fXcoreSC = (float)vSCoreSC.X();
+  fYcoreSC = (float)vSCoreSC.Y();
+  fXcosSC = (float)vSDcosSC.X();
+  fYcosSC = (float)vSDcosSC.Y();
+  fXTelTC = (float)vTelLocTC.X();
+  fYTelTC = (float)vTelLocTC.Y();
+  fZTelTC = (float)vTelLocTC.Z();
 
   fFile->cd();
   int r = fTree->Fill();

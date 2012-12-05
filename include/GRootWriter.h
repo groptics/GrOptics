@@ -60,7 +60,9 @@ class GRootWriter
    float        fYcoreSC;
    float        fXcosSC;
    float        fYcosSC;
-
+   float        fXTelTC;
+   float        fYTelTC;
+   float        fZTelTC;
 
 
    bool bStoreDcos;
@@ -98,8 +100,8 @@ class GRootWriter
                 const ROOT::Math::XYZVector &vSCoreTC,
                 const ROOT::Math::XYZVector &vSDcosTC,
                 const ROOT::Math::XYZVector &vSCoreSC,
-                const ROOT::Math::XYZVector &vSDcosSC
-                
+                const ROOT::Math::XYZVector &vSDcosSC,
+                 const ROOT::Math::XYZVector &vTelLocTC
                 );
 
    TTree*  getDataTree() { return fTree; };

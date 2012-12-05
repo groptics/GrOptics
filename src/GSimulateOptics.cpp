@@ -71,7 +71,6 @@ GSimulateOptics::GSimulateOptics(GReadPhotonBase *read,
   iterRootWriter = mRootWriter->begin();
   rootWriter = iterRootWriter->second;
   vTelDcosGrd = 0;
-  rotCoorGrdToSky = 0;
   rotGrdToTel = 0;
 
   sFileHeader  = "";
@@ -107,7 +106,6 @@ GSimulateOptics::~GSimulateOptics() {
     *oLog << "  -- GSimulateOptics::~GSimulateOptics " << endl;
   }
   if (vTelDcosGrd) SafeDelete(vTelDcosGrd);
-  if (rotCoorGrdToSky) SafeDelete(rotCoorGrdToSky);
   if (rotGrdToTel) SafeDelete(rotGrdToTel);
 
 };
@@ -244,6 +242,15 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
       // get telescope zn/az and src relative to telescope for writer
       (*mArrayTel)[tel]->getAzZnTelescope(&azTel,&znTel);
       (*mArrayTel)[tel]->getSrcRelativeToCamera(&srcX,&srcY);
+      // get core locations for debug branches
+      ROOT::Math::XYZVector vSCoreTC;
+      ROOT::Math::XYZVector vSDcosTC;
+      ROOT::Math::XYZVector vSCoreSC;  //!< primary coreHit primary(shower) coor.
+      ROOT::Math::XYZVector vSDcosSC;  //!< primary dirCos. primary(shower) coor.
+      ROOT::Math::XYZVector vTelLocTC;
+      (*mArrayTel)[tel]->getCoreLocDCosTC(&vSCoreTC,&vSDcosTC);
+      (*mArrayTel)[tel]->getCoreLocDCosSC(&vSCoreSC,&vSDcosSC);
+      (*mArrayTel)[tel]->getTelLocTC(&vTelLocTC);
       (iterRootWriter->second)->addEvent(fEventNumber,
 					 fPrimaryType,
 					 fPrimaryEnergy,
@@ -256,9 +263,10 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
                                          azTel,znTel,
                                          fAzPrim,fZnPrim,
                                          srcX,srcY,
-                                         
-                                         vTmp,vTmp,vTmp,vTmp
-);
+                                         vSCoreTC,vSDcosTC,
+                                         vSCoreSC,vSDcosSC,
+                                         vTelLocTC
+                                         );
       
     }
    
