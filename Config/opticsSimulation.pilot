@@ -31,14 +31,18 @@ number of showers/photons, defaults -1
 
 x and y coordinates of the source in the field
 of view followed by the source extention radius (all in degrees). The fourth
-parameter is the latitude of the observatory in degrees. If the latitude is
-set to 90 degrees the source position is given in camera corrdinates. If the
-latitude is less than 90 degrees, the source position in x corresponds to an
-offset in the east west direction while the y position corresponds to north 
-south.
+parameter is the latitude of the observatory in degrees. 
+
+If the latitude is
+set to 90 degrees wobble X and wobble Y give the source position along the
+camera axes.  If the latitude is less than 90 degrees, wobble Y is an
+offset along the hour circle toward Polaris; wobble X is an offset along 
+a perpendicular to the hour circle in the direction of increasing azimuth.
+These offsets are thus not parallel to the camera axes.
+
 Example: 
-wobble North: WOBBLE 0.0 0.5 0.0 31.675  
-wobble East : WOBBLE 0.5 0.0 0.0 31.675  
+wobble North: WOBBLE 0.0 0.5 0.0 31.675  (offset toward Polaris)  
+wobble East : WOBBLE 0.5 0.0 0.0 31.675  (offset perpendicular to hour circle)
 * WOBBLE 0.0 0.5 0.0 90.0
 
 array configuration file
@@ -56,7 +60,8 @@ Very useful for debugging
                <tree name: default = "his">
 * PHOTONHISTORY photonhistory.root his
 
-core/telescope location in grd.and tel.system branches added for debuging
+core/telescope location in grd.and tel.system branches added for debuging.
+default 0 for compatibility with earlier opticsSimulation.pilot versions.
 * DEBUGBRANCHES 0
 ///////////////  draw possibilities for checking configuration and
                                debugging

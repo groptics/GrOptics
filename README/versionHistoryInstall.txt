@@ -86,9 +86,15 @@ GrOptics accepts input from GrISU compatible photon files.
        beta branch to create v2.5 after merging.        
 
        -------------------------------------------------------------------------
-       BRANCH 2.5Beta: started beta branch, not for production.
-       tag name: 2.5Beta
+       VERSION 2.5
+       added DEBUGBRANCHES option in opticsSimulation.pilot to provide
+       additional branches carrying details of the core location in
+       telescope coordinates and in shower coordinates to each telescope
+       tree (useful for testing). No change in logic from v2.4.
+       Continued to clean up the code.
 
+       tag name v2.5
+ 
 1. Installation
 
    Dependencies: ROOT, Gsl, robast	
