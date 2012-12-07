@@ -72,7 +72,8 @@ GSimulateOptics::GSimulateOptics(GReadPhotonBase *read,
   rootWriter = iterRootWriter->second;
   vTelDcosGrd = 0;
   rotGrdToTel = 0;
-
+  
+  sVersion = VERSN;
   sFileHeader  = "";
   fObsHgt      = 0.0;
   fGlobalEffic = 0.0;
@@ -445,6 +446,7 @@ void GSimulateOptics::fillAllTelTree() {
   // use a string instead of a character array for the
   // file header.
   string *strP = &sFileHeader;
+  string *strV = &sVersion;
 
   vector<int> telIDVector;
   vector<float> transitTimeVector;
@@ -480,6 +482,7 @@ void GSimulateOptics::fillAllTelTree() {
   allTel = new TTree(treeH.c_str(),treeH.c_str());
  
   allTel->Branch("fileHeader",&strP);
+  allTel->Branch("GrOpticsVersion",&sVersion);
   allTel->Branch("globalEffic",&fGlobalEffic,"globalEffic/D");
   allTel->Branch("obsHgt",&fObsHgt,"obsHgt/D");
   allTel->Branch("telIDVector",&telIDVector);

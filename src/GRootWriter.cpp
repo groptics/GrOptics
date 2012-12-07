@@ -47,10 +47,15 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
   :fFile(tfile),fTelID(iTelID), treeBaseName(treeBaseName),
    bStoreDcos(storePhotonDcos),bDebugBranchesFlag(debugBranchesFlag) {
 
-  bool debug = false;
+  
+  strcpy(version,VERSN.c_str());
+
+  bool debug = true;
   if (debug) {
     *oLog << "  -- GRootWriter::GRootWriter " << endl;
+    *oLog << "     version: " << version << endl;
   }
+
   fPE_photonX = 0;
   fPE_photonY = 0;
   fPE_DcosX = 0;

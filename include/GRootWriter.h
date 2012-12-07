@@ -30,6 +30,7 @@ class GRootWriter
    string treeBaseName;
    bool bDebugBranchesFlag;
 
+   char version[20];
    unsigned int fEventNumber;
    unsigned int fPrimaryType;
    float        fPrimaryEnergy;

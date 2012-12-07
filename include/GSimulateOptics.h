@@ -28,6 +28,7 @@ class GSimulateOptics {
 
   //string sHeaderTree;  //!< header tree name
   string sFileHeader;  //!< input file header string
+  string sVersion;
   double fObsHgt;      //!< observatory height from input record
   double fGlobalEffic;   //!< global efficiency from input record
 
