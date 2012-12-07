@@ -1,5 +1,5 @@
 /*
-VERSION2.3
+VERSION2.5
 3OCT2012
 VERSION with reordered calls to open output file and rootwriter instances
 */
