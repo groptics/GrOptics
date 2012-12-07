@@ -47,11 +47,11 @@ OBJECTS =  $(OBJ)/GUtilityFuncts.o $(OBJ)/GPilot.o \
 
 grOptics: $(OBJ)/grOptics.o $(OBJECTS)
 	@echo "building grOptics"
-	$(LD) $(LDFLAGS) -pg $(LIBS) $^ $(OutPutOpt) $@
+	$(LD) $(LDFLAGS) $(LIBS) $^ $(OutPutOpt) $@
 
 %:$(OBJ)/%.o 
 	@echo "Building $@ ... "
-	$(LD) $(LDFLAGS) -pg  $^ $(LIBS) $(OutPutOpt) $@
+	$(LD) $(LDFLAGS) $^ $(LIBS) $(OutPutOpt) $@
 	@echo "Done"
 	@echo ""
 
@@ -64,13 +64,13 @@ $(OBJ)/%.o : %.cpp
 # to create root dictionary using rootcint
 src/GRootDCNavigatorDict.cpp: GRootDCNavigator.h GRootDCNavigatorLinkDef.h
 	@echo "Generating dictionary $< ... "
-	rootcint -v -f $@ -c -p $^
+	rootcint -v -f $@ -c  $^
 	mv src/GRootDCNavigatorDict.h include/.
 	@echo "Done"
 
 src/GRootWriterDict.cpp: GRootWriter.h GRootWriterLinkDef.h
 	@echo "Generating dictionary $< ... "
-	rootcint -v -f $@ -c -p $^
+	rootcint -v -f $@ -c  $^
 	mv src/GRootWriterDict.h include/.
 	@echo "Done"
 
