@@ -1,6 +1,6 @@
 /*
-VERSION2.4
-3Dec2012
+VERSION2.5
+3OCT2012
 */
 //! GROOTWRITER writer for photon data to root files
 // adopted from VPEWriter in EVNDISP package
@@ -29,6 +29,7 @@ class GRootWriter
    TTree *fTree;
    string treeBaseName;
 
+   char version[20];
    unsigned int fEventNumber;
    unsigned int fPrimaryType;
    float        fPrimaryEnergy;
@@ -47,9 +48,25 @@ class GRootWriter
    float        fZnTel;
    float        fSrcRelTelX;
    float        fSrcRelTelY;
+   float        fSrcRelToCameraX;
+   float        fSrcRelToCameraY;
+
+   // debug branch variables
+   float        fXcoreTC;
+   float        fYcoreTC;
+   float        fXcosTC;
+   float        fYcosTC;
+   float        fXcoreSC;
+   float        fYcoreSC;
+   float        fXcosSC;
+   float        fYcosSC;
+   float        fXTelTC;
+   float        fYTelTC;
+   float        fZTelTC;
 
 
    bool bStoreDcos;
+   bool bDebugBranchesFlag;
 
    std::vector< float > *fPE_photonX;
    std::vector< float > *fPE_photonY;
@@ -62,7 +79,8 @@ class GRootWriter
 
    GRootWriter( TFile *tfile, const unsigned int &iTelID, 
 		const string &treeBaseName, const bool &storePhotonDcos = false, 
-		const unsigned int &iNInitEvents = 100000 );
+		const unsigned int &iNInitEvents = 100000, 
+                const bool &debugBranchesFlag = false);
 
    ~GRootWriter();
 
@@ -78,7 +96,14 @@ class GRootWriter
 		const double &ySource,const double &delayTime, const double &transitTime,
                 const double &azTel,const double &znTel,
                 const double &azPrim, const double &znPrim,
-                const double &srcX,const double &srcY);
+                const double &srcX,const double &srcY,
+                
+                const ROOT::Math::XYZVector &vSCoreTC,
+                const ROOT::Math::XYZVector &vSDcosTC,
+                const ROOT::Math::XYZVector &vSCoreSC,
+                const ROOT::Math::XYZVector &vSDcosSC,
+                 const ROOT::Math::XYZVector &vTelLocTC
+                );
 
    TTree*  getDataTree() { return fTree; };
 

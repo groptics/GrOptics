@@ -1,6 +1,6 @@
 /*
-VERSION2.4
-3Dec2012
+VERSION2.5
+3OCT2012
 */
 /*! \class GRootWriter
     \brief write for pe data to root files
@@ -42,21 +42,43 @@ ClassImp(GRootWriter);
 GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
 			  const string &treeBaseName,
 			  const bool &storePhotonDcos,
-			  const unsigned int &iNInitEvents) 
+			  const unsigned int &iNInitEvents,
+                          const bool &debugBranchesFlag) 
   :fFile(tfile),fTelID(iTelID), treeBaseName(treeBaseName),
-   bStoreDcos(storePhotonDcos) {
+   bStoreDcos(storePhotonDcos),bDebugBranchesFlag(debugBranchesFlag) {
 
-  bool debug = false;
+  
+  strcpy(version,VERSN.c_str());
+
+  bool debug = true;
   if (debug) {
     *oLog << "  -- GRootWriter::GRootWriter " << endl;
+    *oLog << "     version: " << version << endl;
   }
+
   fPE_photonX = 0;
   fPE_photonY = 0;
   fPE_DcosX = 0;
   fPE_DcosY = 0;
   fPE_time = 0;
   fPE_wl = 0;
-  
+  fSrcRelTelX = 0.0;
+  fSrcRelTelY = 0.0;
+  fSrcRelToCameraX = 0.0;
+  fSrcRelToCameraY = 0.0;  
+
+  fXcoreTC = 0.0;
+  fYcoreTC = 0.0;
+  fXcosTC  = 0.0;
+  fYcosTC  = 0.0;
+  fXcoreSC = 0.0;
+  fYcoreSC = 0.0;
+  fXcosSC  = 0.0;
+  fYcosSC  = 0.0;
+  fXTelTC  = 0.0;
+  fYTelTC  = 0.0;
+  fZTelTC  = 0.0;
+
   //fFile = tfile;
   //fTelID = iTelID;
   //bStoreDcos = storePhotonDcos;
@@ -108,8 +130,8 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
   fTree->Branch( "Ycore", &fYcore, "Ycore/F" );
   fTree->Branch( "Xcos", &fXcos, "Xcos/F" );
   fTree->Branch( "Ycos", &fYcos, "Ycos/F" );
-  fTree->Branch( "Xsource", &fSrcRelTelX, "Xsource/F" );
-  fTree->Branch( "Ysource", &fSrcRelTelY, "Ysource/F" );
+  fTree->Branch( "Xsource", &fSrcRelToCameraX, "Xsource/F" );
+  fTree->Branch( "Ysource", &fSrcRelToCameraY, "Ysource/F" );
   fTree->Branch( "AzPrim", &fAzPrim, "AzPrim/F" );
   fTree->Branch( "ZnPrim", &fZnPrim, "ZnPrim/F" );
   fTree->Branch( "AzTel", &fAzTel, "AzTel/F" );
@@ -127,6 +149,22 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
   if (bStoreDcos) {
     fTree->Branch( "photonDcosX", &fPE_DcosX );    
     fTree->Branch( "photonDcosY", &fPE_DcosY );    
+  }
+
+  if (bDebugBranchesFlag) {
+    fTree->Branch( "TelID", &fTelID, "TelID/i" );
+    fTree->Branch( "XcoreTC", &fXcoreTC, "XcoreTC/F" );
+    fTree->Branch( "YcoreTC", &fYcoreTC, "YcoreTC/F" );
+    fTree->Branch( "XcosTC", &fXcosTC, "XcosTC/F" );
+    fTree->Branch( "YcosTC", &fYcosTC, "YcosTC/F" );
+    fTree->Branch( "XcoreSC", &fXcoreSC, "XcoreSC/F" );
+    fTree->Branch( "YcoreSC", &fYcoreSC, "YcoreSC/F" );
+    fTree->Branch( "XcosSC", &fXcosSC, "XcosSC/F" );
+    fTree->Branch( "YcosSC", &fYcosSC, "YcosSC/F" );
+    fTree->Branch( "XTelTC", &fXTelTC, "XTelTC/F" );
+    fTree->Branch( "YTelTC", &fYTelTC, "YTelTC/F" );
+    fTree->Branch( "ZTelTC", &fZTelTC, "ZTelTC/F" );
+    
   }
   
 };
@@ -154,7 +192,16 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
 			  const double &ySource,const double &delayTime, 
 			  const double &transitTime, const double &azTel,const double &znTel,
                           const double &azPrim, const double &znPrim,
-                          const double &srcX,const double &srcY) {
+                          const double &srcX,const double &srcY,
+
+                          const ROOT::Math::XYZVector &vSCoreTC,
+                          const ROOT::Math::XYZVector &vSDcosTC,
+                          const ROOT::Math::XYZVector &vSCoreSC,
+                          const ROOT::Math::XYZVector &vSDcosSC,
+                          
+                          const ROOT::Math::XYZVector &vTelLocTC
+
+                          ) {
 
 
   bool debug = false;
@@ -184,8 +231,21 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
   fZnPrim = (float)znPrim*(TMath::RadToDeg());
   fAzTel = (float)azTel*(TMath::RadToDeg());
   fZnTel = (float)znTel*(TMath::RadToDeg());
-  fSrcRelTelX = (float)srcX*(TMath::RadToDeg());
-  fSrcRelTelY = (float)srcY*(TMath::RadToDeg());
+  fSrcRelToCameraX = (float)srcX*(TMath::RadToDeg());
+  fSrcRelToCameraY = (float)srcY*(TMath::RadToDeg());
+
+  // debug branches
+  fXcoreTC = (float)vSCoreTC.X();
+  fYcoreTC = (float)vSCoreTC.Y();
+  fXcosTC = (float)vSDcosTC.X();
+  fYcosTC = (float)vSDcosTC.Y();
+  fXcoreSC = (float)vSCoreSC.X();
+  fYcoreSC = (float)vSCoreSC.Y();
+  fXcosSC = (float)vSDcosSC.X();
+  fYcosSC = (float)vSDcosSC.Y();
+  fXTelTC = (float)vTelLocTC.X();
+  fYTelTC = (float)vTelLocTC.Y();
+  fZTelTC = (float)vTelLocTC.Z();
 
   fFile->cd();
   int r = fTree->Fill();

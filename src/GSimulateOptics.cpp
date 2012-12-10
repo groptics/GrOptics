@@ -1,6 +1,6 @@
 /*
-VERSION2.4
-3Dec2012
+VERSION2.5
+3OCT2012
 */
 /*!  GTelArray.cpp
      Charlie Duke
@@ -71,9 +71,9 @@ GSimulateOptics::GSimulateOptics(GReadPhotonBase *read,
   iterRootWriter = mRootWriter->begin();
   rootWriter = iterRootWriter->second;
   vTelDcosGrd = 0;
-  rotCoorGrdToSky = 0;
   rotGrdToTel = 0;
-
+  
+  sVersion = VERSN;
   sFileHeader  = "";
   fObsHgt      = 0.0;
   fGlobalEffic = 0.0;
@@ -107,7 +107,6 @@ GSimulateOptics::~GSimulateOptics() {
     *oLog << "  -- GSimulateOptics::~GSimulateOptics " << endl;
   }
   if (vTelDcosGrd) SafeDelete(vTelDcosGrd);
-  if (rotCoorGrdToSky) SafeDelete(rotCoorGrdToSky);
   if (rotGrdToTel) SafeDelete(rotGrdToTel);
 
 };
@@ -227,6 +226,9 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
     *oLog << "    EventNumber " << fEventNumber << "   nPhotons "
 	  << nPhotons << endl;     
     // add event to all writers here
+
+    ROOT::Math::XYZVector vTmp;
+
     for (iterRootWriter = mRootWriter->begin();
 	 iterRootWriter != mRootWriter->end();
 	 iterRootWriter++) {
@@ -240,7 +242,16 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
       double srcY = 0.0;
       // get telescope zn/az and src relative to telescope for writer
       (*mArrayTel)[tel]->getAzZnTelescope(&azTel,&znTel);
-      (*mArrayTel)[tel]->getScrRelativeToTelescope(&srcX,&srcY);
+      (*mArrayTel)[tel]->getSrcRelativeToCamera(&srcX,&srcY);
+      // get core locations for debug branches
+      ROOT::Math::XYZVector vSCoreTC;
+      ROOT::Math::XYZVector vSDcosTC;
+      ROOT::Math::XYZVector vSCoreSC;  //!< primary coreHit primary(shower) coor.
+      ROOT::Math::XYZVector vSDcosSC;  //!< primary dirCos. primary(shower) coor.
+      ROOT::Math::XYZVector vTelLocTC;
+      (*mArrayTel)[tel]->getCoreLocDCosTC(&vSCoreTC,&vSDcosTC);
+      (*mArrayTel)[tel]->getCoreLocDCosSC(&vSCoreSC,&vSDcosSC);
+      (*mArrayTel)[tel]->getTelLocTC(&vTelLocTC);
       (iterRootWriter->second)->addEvent(fEventNumber,
 					 fPrimaryType,
 					 fPrimaryEnergy,
@@ -252,7 +263,11 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
 					 fPhotonToCameraTime,
                                          azTel,znTel,
                                          fAzPrim,fZnPrim,
-                                         srcX,srcY);
+                                         srcX,srcY,
+                                         vSCoreTC,vSDcosTC,
+                                         vSCoreSC,vSDcosSC,
+                                         vTelLocTC
+                                         );
       
     }
    
@@ -431,6 +446,7 @@ void GSimulateOptics::fillAllTelTree() {
   // use a string instead of a character array for the
   // file header.
   string *strP = &sFileHeader;
+  string *strV = &sVersion;
 
   vector<int> telIDVector;
   vector<float> transitTimeVector;
@@ -466,6 +482,7 @@ void GSimulateOptics::fillAllTelTree() {
   allTel = new TTree(treeH.c_str(),treeH.c_str());
  
   allTel->Branch("fileHeader",&strP);
+  allTel->Branch("GrOpticsVersion",&sVersion);
   allTel->Branch("globalEffic",&fGlobalEffic,"globalEffic/D");
   allTel->Branch("obsHgt",&fObsHgt,"obsHgt/D");
   allTel->Branch("telIDVector",&telIDVector);

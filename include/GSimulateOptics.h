@@ -1,6 +1,6 @@
 /*
-VERSION2.4
-3Dec2012
+VERSION2.5
+7Dec2012
 */
 /*!  /brief GSimulateOptics class directs optical simulations 
             
@@ -28,6 +28,7 @@ class GSimulateOptics {
 
   //string sHeaderTree;  //!< header tree name
   string sFileHeader;  //!< input file header string
+  string sVersion;
   double fObsHgt;      //!< observatory height from input record
   double fGlobalEffic;   //!< global efficiency from input record
 
@@ -76,7 +77,6 @@ class GSimulateOptics {
   double fAzTel;  //!< azimuthal angle of telescop (radians)
   
   ROOT::Math::XYZVector *vTelDcosGrd;
-  ROOT::Math::Rotation3D *rotCoorGrdToSky;
   ROOT::Math::Rotation3D *rotGrdToTel; //!< rotation matrix: GrdCoor to TelCoor.
   double fEnergy;  //!< 
 
@@ -85,6 +85,10 @@ class GSimulateOptics {
   ROOT::Math::XYZVector vPhotonGrdLoc; // MAY WANT TO MAKE ALL VECTORS POINTERS
   ROOT::Math::XYZVector vPhotonDCosGd; // AND INSTANTIATE IN CONSTRUCTOR
   ROOT::Math::XYZVector vPhotonDCosTel; // AND INSTANTIATE IN CONSTRUCTOR
+
+  ROOT::Math::XYZVector vTmp;  // just temporary for now
+
+
   double fAzPhot;
   double fZnPhot;
   double fPhotHgtEmiss;

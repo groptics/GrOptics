@@ -37,5 +37,4 @@ sed  -i "s/$3/$4/g" Config/*.pilot
 sed  -i "s/$1/$2/g" Config/*.cfg
 sed  -i "s/$3/$4/g" Config/*.cfg
 
-
-
+echo "BE SURE TO MANUALLY CHANGE VERSION IN GDEFINITION.H"

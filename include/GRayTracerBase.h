@@ -1,6 +1,6 @@
 /*
-VERSION2.4
-3Dec2012
+VERSION2.5
+7Dec2012
 */
 /*!  GRayTracerBase class for raytracing though any telescope.
   for use with both ROOT geometry ray tracing and with no ROOT

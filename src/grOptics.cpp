@@ -1,6 +1,6 @@
 /*
-VERSION2.4
-3Dec2012
+VERSION2.5
+3OCT2012
 VERSION with reordered calls to open output file and rootwriter instances
 */
 /*!  gropt.cpp
@@ -106,6 +106,8 @@ struct Pilot {
   int telToDraw;
   int testTel;  //!< telescope number for test graphs (>0). if zero no test produced
   string testTelFile; //!< base filename for test output
+  bool debugBranchesFlag; //!< if true, create debug branches in output root file
+  unsigned iNInitEvents;
 };
 
 /*! \brief structure to hold telescope factory parameters
@@ -289,7 +291,8 @@ int main(int argc, char *argv[]) {
   for (mIter=mTelDetails.begin();mIter!=mTelDetails.end();mIter++) {
     int telID = mIter->first;
     mRootWriter[telID] = new GRootWriter(fO,telID,pilot.outFileTelTreeName,
-					 pilot.outFileDCos);
+					 pilot.outFileDCos, pilot.iNInitEvents,
+                                         pilot.debugBranchesFlag);
   }
   
   // set up factories
@@ -624,6 +627,7 @@ int pilotPrint(const Pilot &pilot) {
   *oLog << "         telToDraw " << pilot.telToDraw << endl;
   *oLog << "         testTel   " << pilot.testTel << endl;
   *oLog << "         testTel base filename   " << pilot.testTelFile << endl;
+  *oLog << "         debugBranchesFlag       " << pilot.debugBranchesFlag << endl;
   *oLog << endl;
 
   return 1;
@@ -657,6 +661,8 @@ int readPilot(Pilot *pilot) {
   pilot->telToDraw = 0;
   pilot->testTel = 0;
   pilot->testTelFile = "";
+  pilot->debugBranchesFlag = false;
+  pilot->iNInitEvents = 100000;
   vector<string> tokens;
   string spilotfile = pilot->pilotfile;
 
@@ -700,7 +706,6 @@ int readPilot(Pilot *pilot) {
            << " STANDARD TELESCOPE NUMBERING STARTS AT 1"
            << " PROBLEM IN PILOT FILE, PRINTSTDTEL RECORD" << endl;
       *oLog << "    ending code now" << endl;
-      exit(0);
     }
   }
 
@@ -737,6 +742,12 @@ int readPilot(Pilot *pilot) {
   pi->set_flag(flag);
   while (pi->get_line_vector(tokens) >=0) {
     pilot->seed = (UInt_t)atoi(tokens.at(0).c_str());
+  }
+  flag = "DEBUGBRANCHES";
+  pi->set_flag(flag);
+  while (pi->get_line_vector(tokens) >=0) {
+    int tmp = (Int_t)atoi(tokens.at(0).c_str());
+    if (tmp > 0) pilot->debugBranchesFlag = true;
   }  
   flag = "DRAWTEL";
   pi->set_flag(flag);
