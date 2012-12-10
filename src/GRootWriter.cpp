@@ -152,6 +152,7 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
   }
 
   if (bDebugBranchesFlag) {
+    fTree->Branch( "TelID", &fTelID, "TelID/i" );
     fTree->Branch( "XcoreTC", &fXcoreTC, "XcoreTC/F" );
     fTree->Branch( "YcoreTC", &fYcoreTC, "YcoreTC/F" );
     fTree->Branch( "XcosTC", &fXcosTC, "XcosTC/F" );

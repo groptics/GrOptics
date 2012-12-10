@@ -1,4 +1,5 @@
   Steering pilot file for GrOptics
+  Used for testing versions
 VERSION2.5 
 3OCT2012
 
@@ -19,7 +20,7 @@ camera output root file specification type
         telescope number appended to base name
       - photonDirCosine flag: 0/1, if 1 add dirCosineCamera branches
 FILEOUT <root filename> <TreeName> <telBaseTreeName> <photonDirCosBranchFlag>
-* FILEOUT photonLocation.root allT T 0
+* FILEOUT photonLocation.root allT T 1
 
 name of grOptics log file, default use cerr (if no asterisk)
  LOGFILE logTest.log
@@ -27,7 +28,7 @@ name of grOptics log file, default use cerr (if no asterisk)
 number of showers/photons, defaults -1
   NSHOWER <numShowers, <0, no limit>
           <numPhotons, <0, no limit>
-* NSHOWER -1 -1
+* NSHOWER -1 500
 
 x and y coordinates of the source in the field
 of view followed by the source extention radius (all in degrees). The fourth
@@ -43,7 +44,7 @@ These offsets are thus not parallel to the camera axes.
 Example: 
 wobble North: WOBBLE 0.0 0.5 0.0 31.675  (offset toward Polaris)  
 wobble East : WOBBLE 0.5 0.0 0.0 31.675  (offset perpendicular to hour circle)
-* WOBBLE 0.0 0.5 0.0 90.0
+* WOBBLE 0.5 0.5 0.0 90.0
 
 array configuration file
  ARRAYCONFIG <filename: default ./Config/arrayConfig.cfg>

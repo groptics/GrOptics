@@ -28,7 +28,6 @@ class GRootWriter
 
    TTree *fTree;
    string treeBaseName;
-   bool bDebugBranchesFlag;
 
    char version[20];
    unsigned int fEventNumber;
@@ -67,6 +66,7 @@ class GRootWriter
 
 
    bool bStoreDcos;
+   bool bDebugBranchesFlag;
 
    std::vector< float > *fPE_photonX;
    std::vector< float > *fPE_photonY;
