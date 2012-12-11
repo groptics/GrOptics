@@ -78,7 +78,7 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
   fXTelTC  = 0.0;
   fYTelTC  = 0.0;
   fZTelTC  = 0.0;
-
+  numPhotonX = 0.0;
   //fFile = tfile;
   //fTelID = iTelID;
   //bStoreDcos = storePhotonDcos;
@@ -204,6 +204,7 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
                           ) {
 
 
+  bool debug1 = false;
   bool debug = false;
   if (debug) {
     *oLog << "  -- GRootWriter::addEvent; telnumber  " << fTelID << endl;
@@ -248,6 +249,9 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
   fZTelTC = (float)vTelLocTC.Z();
 
   fFile->cd();
+
+  numPhotonX = fPE_photonX->size();
+
   int r = fTree->Fill();
   if (debug ) {
     *oLog << "       r after tree fill " << r << endl;
@@ -256,6 +260,11 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
     *oLog << "       fPE_photonY->size():  " << fPE_photonY->size() << endl;
     *oLog << "       fPE_time->size():  " << fPE_time->size() << endl;
     *oLog << "       fPE_wl->size():  " << fPE_wl->size() << endl;
+  }
+
+  if (debug1) {
+    
+    *oLog << "telid photonX.size " << fTelID << " " << fPE_photonX->size() << endl;
   }
 
   fPE_photonX->clear();
@@ -270,6 +279,13 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
   
   return r;
 };
+//******************************** end of add_event **********************************
+
+bool GRootWriter::sortPair(const pair<int,int> i , const pair<int,int> j) {
+  bool test = (i.second < j.second);
+  return test;
+};
+
 //******************************** end of add_event **********************************
 void GRootWriter::addPhoton(const ROOT::Math::XYZVector &PhotonCameraLoc,
 			    const ROOT::Math::XYZVector &PhotonCameraDcos,

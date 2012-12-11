@@ -75,6 +75,10 @@ class GRootWriter
    std::vector< float > *fPE_time;
    std::vector< float > *fPE_wl;
 
+   unsigned numPhotonX;
+
+   bool sortPair(const pair<int,int> i , const pair<int,int> j);
+
  public:
 
    GRootWriter( TFile *tfile, const unsigned int &iTelID, 
@@ -119,7 +123,12 @@ class GRootWriter
    void cdToWriteRootFile() {
      fFile->cd();
    }
-  ClassDef(GRootWriter,1);
+   
+   unsigned getPhotonXSize() {
+     return numPhotonX;
+   }
+   
+   ClassDef(GRootWriter,1);
 };
 
 #endif
