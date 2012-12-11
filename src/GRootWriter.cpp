@@ -85,6 +85,7 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
   
   // data vectors
   fPE_photonX = new std::vector< float >();
+
   if( iNInitEvents < fPE_photonX->max_size() ) fPE_photonX->reserve( iNInitEvents );
   else                                         fPE_photonX->reserve( fPE_photonX->max_size() - 1 );
   fPE_photonY = new std::vector< float >();
@@ -292,6 +293,7 @@ void GRootWriter::addPhoton(const ROOT::Math::XYZVector &PhotonCameraLoc,
 			    const double &iPE_time, 
 			    const double &iPE_wl) {
  
+  //return;
   float phox = (float) PhotonCameraLoc.X();
   // camera y-axis is opposite to telescope y-axis.
   float phoy = -(float)PhotonCameraLoc.Y();

@@ -662,7 +662,7 @@ int readPilot(Pilot *pilot) {
   pilot->testTel = 0;
   pilot->testTelFile = "";
   pilot->debugBranchesFlag = false;
-  pilot->iNInitEvents = 100000;
+  pilot->iNInitEvents = 100;
   vector<string> tokens;
   string spilotfile = pilot->pilotfile;
 
