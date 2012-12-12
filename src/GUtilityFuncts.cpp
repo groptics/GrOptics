@@ -1246,3 +1246,7 @@ void GUtilityFuncts::reflectDirection(const ROOT::Math::XYZVector &vnormUnit,
 
 };
 /******************* end of reflectDirection ***************/ 
+bool GUtilityFuncts::sortPair(const pair<int,int> i , 
+                              const pair<int,int> j)  {
+  return (j.second < i.second);
+};

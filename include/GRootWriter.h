@@ -74,10 +74,10 @@ class GRootWriter
    std::vector< float > *fPE_DcosY;
    std::vector< float > *fPE_time;
    std::vector< float > *fPE_wl;
+   int iNInitReserve;
+   bool bReserveFlag;
 
    unsigned numPhotonX;
-
-   bool sortPair(const pair<int,int> i , const pair<int,int> j);
 
  public:
 

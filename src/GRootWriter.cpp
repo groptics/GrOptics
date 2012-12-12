@@ -45,7 +45,9 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
 			  const unsigned int &iNInitEvents,
                           const bool &debugBranchesFlag) 
   :fFile(tfile),fTelID(iTelID), treeBaseName(treeBaseName),
-   bStoreDcos(storePhotonDcos),bDebugBranchesFlag(debugBranchesFlag) {
+   bStoreDcos(storePhotonDcos),bDebugBranchesFlag(debugBranchesFlag),
+   iNInitReserve(iNInitEvents)
+{
 
   
   strcpy(version,VERSN.c_str());
@@ -79,43 +81,38 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
   fYTelTC  = 0.0;
   fZTelTC  = 0.0;
   numPhotonX = 0.0;
-  //fFile = tfile;
-  //fTelID = iTelID;
-  //bStoreDcos = storePhotonDcos;
-  
+  bReserveFlag = false;
+    
   // data vectors
-  fPE_photonX = new std::vector< float >();
+  if (iNInitReserve > 1) bReserveFlag = true;
 
-  if( iNInitEvents < fPE_photonX->max_size() ) fPE_photonX->reserve( iNInitEvents );
-  else                                         fPE_photonX->reserve( fPE_photonX->max_size() - 1 );
+  fPE_photonX = new std::vector< float >();
   fPE_photonY = new std::vector< float >();
-  
-  if( iNInitEvents < fPE_photonY->max_size() ) fPE_photonY->reserve( iNInitEvents );
-  else                                         fPE_photonY->reserve( fPE_photonY->max_size() - 1 );
-  
   fPE_time = new std::vector< float >();
-  if( iNInitEvents < fPE_time->max_size() ) fPE_time->reserve( iNInitEvents );
-  else                                      fPE_time->reserve( fPE_time->max_size() - 1 );
-  
   fPE_wl = new std::vector< float >();
-  if( iNInitEvents < fPE_wl->max_size() ) fPE_wl->reserve( iNInitEvents );
-  else                                    fPE_wl->reserve( fPE_wl->max_size() - 1 );
-  
+
+  if(bReserveFlag) {
+    fPE_photonX->reserve( iNInitReserve );
+    fPE_photonY->reserve( iNInitReserve );
+    fPE_time->reserve( iNInitReserve );
+    fPE_wl->reserve( iNInitReserve );
+
+  }
+
   if (bStoreDcos) {
     fPE_DcosX = new std::vector< float >(); 
-    if( iNInitEvents < fPE_DcosX->max_size() ) fPE_DcosX->reserve( iNInitEvents );
-    else                                      fPE_DcosX->reserve( fPE_DcosX->max_size() - 1 );
     fPE_DcosY = new std::vector< float >(); 
-    if( iNInitEvents < fPE_DcosY->max_size() ) fPE_DcosY->reserve( iNInitEvents );
-    else                                      fPE_DcosY->reserve( fPE_DcosY->max_size() - 1 );
-  } 
+    if(bReserveFlag) {
+      fPE_DcosX->reserve( iNInitReserve );
+      fPE_DcosY->reserve( iNInitReserve );
+    }
+  }
 
  // define trees with pe data
   char hname[400];
   char htitle[400];
  
   sprintf(hname,"%s%d",treeBaseName.c_str(),fTelID);
-  //sprintf( hname, "tPH_T%d", fTelID );
   sprintf( htitle, "photon data for telescope %d", fTelID );
 
   if (debug) {  
@@ -138,9 +135,7 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
   fTree->Branch( "AzTel", &fAzTel, "AzTel/F" );
   fTree->Branch( "ZnTel", &fZnTel, "ZnTel/F" );
 
-
   fTree->Branch( "delay", &fDelay, "delay/F" );
-  //fTree->Branch( "transit", &fTransit, "transit/F" );
   
   fTree->Branch( "photonX", &fPE_photonX );
   fTree->Branch( "photonY", &fPE_photonY );
@@ -277,15 +272,28 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
     fPE_DcosX->clear();
     fPE_DcosY->clear();
   }
-  
-  return r;
+
+  if(bReserveFlag) {
+    fPE_photonX->reserve( iNInitReserve );
+    fPE_photonY->reserve( iNInitReserve );
+    fPE_time->reserve( iNInitReserve );
+    fPE_wl->reserve( iNInitReserve );
+
+    if (bStoreDcos) {
+      fPE_DcosX->reserve( iNInitReserve );
+      fPE_DcosY->reserve( iNInitReserve );
+      
+    }
+  }
+    
+    return r;
 };
 //******************************** end of add_event **********************************
 
-bool GRootWriter::sortPair(const pair<int,int> i , const pair<int,int> j) {
-  bool test = (i.second < j.second);
-  return test;
-};
+//bool GRootWriter::sortPair(const pair<int,int> i , const pair<int,int> j) {
+//bool test = (i.second < j.second);
+//return test;
+//};
 
 //******************************** end of add_event **********************************
 void GRootWriter::addPhoton(const ROOT::Math::XYZVector &PhotonCameraLoc,

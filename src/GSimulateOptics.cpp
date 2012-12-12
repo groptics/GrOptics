@@ -277,7 +277,8 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
       telPhotonXSize.push_back(make_pair(tel,photonXNum) );
    }
     if (debug1) {
-      sort(telPhotonXSize.begin(),telPhotonXSize.end(),sortPair); 
+      sort(telPhotonXSize.begin(),telPhotonXSize.end(),
+           GUtilityFuncts::sortPair); 
       *oLog << "          telNum      photonNumber" << endl;
       for (unsigned i=0;i< telPhotonXSize.size();i++) {
         *oLog << "            " << telPhotonXSize[i].first 

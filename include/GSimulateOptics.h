@@ -102,10 +102,10 @@ class GSimulateOptics {
    */
   void fillAllTelTree();
 
-  static bool sortPair(const pair<int,unsigned> &i , const pair<int,unsigned> &j) {
-    bool test = (j.second < i.second);
-    return test;
-  };
+  //static bool sortPair(const pair<int,unsigned> &i , const pair<int,unsigned> &j) {
+  //bool test = (j.second < i.second);
+  //return test;
+  //};
 
  
  public:
