@@ -35,7 +35,8 @@ struct SCStdOptics {
   double fFocLgt;
   double fAvgTransitTime;
   Double_t fRotationOffset;
- 
+  Double_t fPlateScaleFactor;
+
   // primary
   double fDp;
   double fDpinner;

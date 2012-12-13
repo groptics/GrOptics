@@ -87,4 +87,4 @@ DO THAT.
 The graphs and histograms are printed to png files using the base filenames.
 
 TESTTEL <telescope number> <baseFileName for histograms>   
- TESTTEL 1  DCSpot
+* TESTTEL 1  DCSpot

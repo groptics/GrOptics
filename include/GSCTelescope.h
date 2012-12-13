@@ -91,6 +91,7 @@ class GSCTelescope : public GTelescope {
   Double_t fRotationOffset;
 
   double fFocLgt;
+  double fPlateScaleFactor;
   // primary
   double fDp;
   double fDpinner;
@@ -249,7 +250,7 @@ class GSCTelescope : public GTelescope {
   }
 
   double getPlateScaleFactor() {
-    return 0.0;
+    return fPlateScaleFactor;
   }
 
   double getIdealTransitTime() {

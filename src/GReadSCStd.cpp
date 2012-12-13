@@ -165,6 +165,14 @@ void GReadSCStd::setupSCFactory() {
       opt->iPrtMode = iprintmode;
     }
   }
+  flag = "PLATESCALE";
+  pi->set_flag(flag);
+
+  while (pi->get_line_vector(tokens) >=0) {
+    int iStdOptNum = atoi(tokens.at(0).c_str() );
+    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt->fPlateScaleFactor = atof(tokens.at(1).c_str() );
+  }
 
   flag = "PRIMARY"; 
   pi->set_flag(flag);

@@ -62,6 +62,7 @@ SCStdOptics::SCStdOptics() {
   stdType  = SC; 
   fRotationOffset = 0.0;
   fFocLgt = 0.0;
+  fPlateScaleFactor = 0.0;
 
   // primary
   fDp = 0.0;
@@ -140,6 +141,7 @@ void SCStdOptics::printSCStdOptics() {
  *oLog << "        telType " << getTelType(stdType) << endl;
  *oLog << "        stdNum  " << stdNum << endl;
  *oLog << "        fFocLgt    " << fFocLgt << endl;
+ *oLog << "        fPlateScaleFactor " <<  fPlateScaleFactor << endl;
  *oLog << "        fAvgTransitTime " << fAvgTransitTime << endl;
  *oLog << "        Primary/Secondary mirror refl.ID " 
        << iPrimReflID << "  /  " << iSecReflID << endl;
@@ -174,6 +176,7 @@ void SCStdOptics::printSCStdOptics() {
      *oLog << "               " << i << "    "  << fzp[i] << endl;
    }
  }
+
  *oLog << "        iNParS " << iNParS << endl;
  if (iNParS > 0) {
    *oLog << "          secondaryPolyCoeff " << endl;
@@ -295,6 +298,7 @@ GSCTelescope* GSCTelescopeFactory::makeTelescope(const int &id,
   SCTel->fRotationOffset = opt->fRotationOffset;
 
   SCTel->fFocLgt = opt->fFocLgt;
+  SCTel->fPlateScaleFactor = opt->fPlateScaleFactor;
   SCTel->fDp = opt->fDp;
   SCTel-> fDpinner= opt->fDpinner;
   SCTel->fZp = opt->fZp;

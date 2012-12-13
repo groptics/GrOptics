@@ -129,6 +129,7 @@ GSCTelescope::GSCTelescope() {
   eTelType     = SC;
   //initialization();
   fFocLgt = 0.0;
+  fPlateScaleFactor = 0.0;
   // primary
   fDp = 0.0;
   fDpinner = 0.0;
