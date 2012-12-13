@@ -28,20 +28,24 @@ all: robast grOptics
 OBJ := obj
 
 OBJECTS =  $(OBJ)/GUtilityFuncts.o $(OBJ)/GPilot.o \
-           $(OBJ)/GTelescope.o $(OBJ)/GDCTelescope.o \
-           $(OBJ)/GTelescopeFactory.o $(OBJ)/GDCTelescopeFactory.o \
-           $(OBJ)/GReadDCStdBase.o  $(OBJ)/GReadDCStdGrISU.o \
-           $(OBJ)/GDCGeometry.o  $(OBJ)/GGeometryBase.o \
-           $(OBJ)/GRayTracerBase.o  \
-           $(OBJ)/GDCRayTracer.o  \
-           $(OBJ)/GDefinition.o \
-           $(OBJ)/GReadPhotonGrISU.o $(OBJ)/GReadPhotonBase.o \
-           $(OBJ)/GArrayTel.o $(OBJ)/GSimulateOptics.o \
-           $(OBJ)/GOrderedGrid.o $(OBJ)/GRootDCNavigator.o \
-           $(OBJ)/GRootWriter.o  $(OBJ)/GSCTelescope.o \
-           $(OBJ)/GReadSCStd.o  $(OBJ)/GSCTelescopeFactory.o \
-           $(OBJ)/GRootDCNavigatorDict.o \
-           $(OBJ)/GRootWriterDict.o
+$(OBJ)/GTelescope.o $(OBJ)/GDCTelescope.o \
+$(OBJ)/GTelescopeFactory.o $(OBJ)/GDCTelescopeFactory.o \
+$(OBJ)/GReadDCStdBase.o  $(OBJ)/GReadDCStdGrISU.o \
+$(OBJ)/GDCGeometry.o  $(OBJ)/GGeometryBase.o \
+$(OBJ)/GRayTracerBase.o  \
+$(OBJ)/GDCRayTracer.o  \
+$(OBJ)/GDefinition.o \
+$(OBJ)/GReadPhotonGrISU.o $(OBJ)/GReadPhotonBase.o \
+$(OBJ)/GArrayTel.o $(OBJ)/GSimulateOptics.o \
+$(OBJ)/GOrderedGrid.o $(OBJ)/GRootDCNavigator.o \
+$(OBJ)/GRootWriter.o  $(OBJ)/GSCTelescope.o \
+$(OBJ)/GReadSCStd.o  $(OBJ)/GSCTelescopeFactory.o \
+$(OBJ)/GRootDCNavigatorDict.o \
+$(OBJ)/GRootWriterDict.o \
+#$(OBJ)/GNewSCTelescope.o \
+#$(OBJ)/GNewSCTelescopeFactory \
+#$(OBJ)/GReadNewSCStd.o $(OBJ)/GNewSCTelescopeFactory 
+
 
 TESTOBJECTS = $(OBJ)/GUtilityFuncts.o $(OBJ)/GDefinition.o 
 

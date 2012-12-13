@@ -273,16 +273,29 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
     fPE_DcosY->clear();
   }
 
+  // set vector capacities if necessary
   if(bReserveFlag) {
-    fPE_photonX->reserve( iNInitReserve );
-    fPE_photonY->reserve( iNInitReserve );
-    fPE_time->reserve( iNInitReserve );
-    fPE_wl->reserve( iNInitReserve );
+    if ( (unsigned)fPE_photonX->capacity() > iNInitReserve ) {
+      vector<float>().swap(*fPE_photonX);
+      fPE_photonX->reserve( iNInitReserve );
 
-    if (bStoreDcos) {
-      fPE_DcosX->reserve( iNInitReserve );
-      fPE_DcosY->reserve( iNInitReserve );
-      
+      vector<float>().swap(*fPE_photonY);
+      fPE_photonY->reserve( iNInitReserve );
+
+      vector<float>().swap(*fPE_time);
+      fPE_time->reserve( iNInitReserve );
+
+      vector<float>().swap(*fPE_wl);
+      fPE_wl->reserve( iNInitReserve );
+    
+      if (bStoreDcos) {
+       vector<float>().swap(*fPE_DcosX);
+       fPE_DcosX->reserve( iNInitReserve );
+
+       vector<float>().swap(*fPE_DcosY);
+       fPE_DcosY->reserve( iNInitReserve );
+        
+      }
     }
   }
     

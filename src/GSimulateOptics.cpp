@@ -115,7 +115,7 @@ GSimulateOptics::~GSimulateOptics() {
 bool GSimulateOptics::startSimulations(const int &numShowers,
                                          const int &numPhotons) {
 
-  bool debug1 = true;  // print out number of photons in each telescope, ordered by 
+  bool debug1 = false;  // print out number of photons in each telescope, ordered by 
   //                      number of photons: output <telNum> <photonX.size()>
   bool debug = false;
   if (debug) {
