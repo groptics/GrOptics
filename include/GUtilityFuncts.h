@@ -225,9 +225,8 @@ namespace GUtilityFuncts {
                          ROOT::Math::XYZVector *vphotonReflDcos,
                          const double &roughness, const int &option=0);
 
-
-
+   bool sortPair(const pair<int,int> i , const pair<int,int> j);
+   
 };
-
 
 #endif

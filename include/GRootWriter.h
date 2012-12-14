@@ -74,6 +74,10 @@ class GRootWriter
    std::vector< float > *fPE_DcosY;
    std::vector< float > *fPE_time;
    std::vector< float > *fPE_wl;
+   int iNInitReserve;
+   bool bReserveFlag;
+
+   unsigned numPhotonX;
 
  public:
 
@@ -119,7 +123,12 @@ class GRootWriter
    void cdToWriteRootFile() {
      fFile->cd();
    }
-  ClassDef(GRootWriter,1);
+   
+   unsigned getPhotonXSize() {
+     return numPhotonX;
+   }
+   
+   ClassDef(GRootWriter,1);
 };
 
 #endif

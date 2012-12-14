@@ -254,7 +254,7 @@ int main(int argc, char *argv[]) {
     UInt_t tr3Seed = TR3.GetSeed();
     *oLog << "         seed set by machineClock to " << tr3Seed << endl;
   }
-  
+
   *oLog << endl 
 	<< "============= finished read command line and pilot file" 
 	<< endl << endl;
@@ -624,6 +624,7 @@ int pilotPrint(const Pilot &pilot) {
   *oLog << "         photonHistoryFile/Tree " << pilot.photonHistoryFile
        << " / " << pilot.photonHistoryTree << endl;
   *oLog << "         random number seed " << pilot.seed << endl;
+  *oLog << "         vector capacities  " << pilot.iNInitEvents << endl;
   *oLog << "         telToDraw " << pilot.telToDraw << endl;
   *oLog << "         testTel   " << pilot.testTel << endl;
   *oLog << "         testTel base filename   " << pilot.testTelFile << endl;
@@ -662,7 +663,7 @@ int readPilot(Pilot *pilot) {
   pilot->testTel = 0;
   pilot->testTelFile = "";
   pilot->debugBranchesFlag = false;
-  pilot->iNInitEvents = 100000;
+  pilot->iNInitEvents = 100;
   vector<string> tokens;
   string spilotfile = pilot->pilotfile;
 
@@ -742,6 +743,11 @@ int readPilot(Pilot *pilot) {
   pi->set_flag(flag);
   while (pi->get_line_vector(tokens) >=0) {
     pilot->seed = (UInt_t)atoi(tokens.at(0).c_str());
+  }
+  flag = "VECCAPACITY";
+  pi->set_flag(flag);
+  while (pi->get_line_vector(tokens) >=0) {
+    pilot->iNInitEvents = (UInt_t)atoi(tokens.at(0).c_str());
   }
   flag = "DEBUGBRANCHES";
   pi->set_flag(flag);

@@ -24,7 +24,7 @@ DLLSUFF :=
 ifeq ($(ARCH),Linux)
 DLLSUFF       =.so
 CXX           = g++ 
-//ARCHCFLAGS    = -pg -Wall -fPIC  -fno-strict-aliasing  -D_FILE_OFFSET_BITS=64 -D_LARGE_FILE_SOURCE -D_LARGEFILE64_SOURCE 
+//ARCHCFLAGS    = -pg -Wall -fPIC  -fno-strict-aliasing -D_FILE_OFFSET_BITS=64 -D_LARGE_FILE_SOURCE -D_LARGEFILE64_SOURCE 
 ARCHCFLAGS    = -g  -O2 -Wall -fPIC  -fno-strict-aliasing  -D_FILE_OFFSET_BITS=64 -D_LARGE_FILE_SOURCE -D_LARGEFILE64_SOURCE 
 LD            = g++
 //ARCHLDFLAGS   = -pg

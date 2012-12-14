@@ -115,6 +115,8 @@ GSimulateOptics::~GSimulateOptics() {
 bool GSimulateOptics::startSimulations(const int &numShowers,
                                          const int &numPhotons) {
 
+  bool debug1 = false;  // print out number of photons in each telescope, ordered by 
+  //                      number of photons: output <telNum> <photonX.size()>
   bool debug = false;
   if (debug) {
     *oLog << "  -- GSimulateOptics::startSimulations " << endl;
@@ -229,6 +231,8 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
 
     ROOT::Math::XYZVector vTmp;
 
+    vector< pair<int,unsigned> > telPhotonXSize;
+
     for (iterRootWriter = mRootWriter->begin();
 	 iterRootWriter != mRootWriter->end();
 	 iterRootWriter++) {
@@ -269,9 +273,22 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
                                          vTelLocTC
                                          );
       
+      unsigned photonXNum = (iterRootWriter->second)->getPhotonXSize();
+      telPhotonXSize.push_back(make_pair(tel,photonXNum) );
+   }
+    if (debug1) {
+      sort(telPhotonXSize.begin(),telPhotonXSize.end(),
+           GUtilityFuncts::sortPair); 
+      *oLog << "          telNum      photonNumber" << endl;
+      for (unsigned i=0;i< telPhotonXSize.size();i++) {
+        *oLog << "            " << telPhotonXSize[i].first 
+              << "           " 
+              << telPhotonXSize[i].second << endl;
+      }
     }
    
   }  // end of shower loop
+  
   
   // write all trees
   for (iterRootWriter = mRootWriter->begin(); 
@@ -499,3 +516,8 @@ void GSimulateOptics::fillAllTelTree() {
   //delete[] cstr;
 }
 /************** end of fillAllTelTree ******************/
+//bool GSimulateOptics::sortPair(const pair<int,unsigned> &i , const pair<int,unsigned> &j) {
+  
+//bool test = (i.second < j.second);
+//return test;
+//};
