@@ -365,6 +365,15 @@ void GReadDCStdGrISU::makeStdTelescope() {
       (telp->facet)[numf - 1] = f;
     }
   }
+  //telp->foclength
+  //telp->plateScaleFactor
+
+   double tmpPlate = telp->plateScaleFactor;
+   if (tmpPlate == 0.0) {
+     tmpPlate = tan( 1.0*(TMath::DegToRad())) * (telp->foclength)*100.0;
+     telp->plateScaleFactor = tmpPlate;
+   }
+ 
 
   if ( (int)numf != telp->nbr_mir) {
     *oLog << "incorrect number of facets in config.file" << endl;

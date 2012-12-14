@@ -385,7 +385,7 @@ void GDCTelescope::printTelescope() {
   *oPrtStrm<< "         dRadius:          " << dRadius << endl;
   *oPrtStrm<< "         dFocLgt:           " << dFocLgt << endl;    
   *oPrtStrm<< "         dCamRad:         " << dCamRad << endl;          
-  *oPrtStrm<< "     dPlateScaleFactor:   " << dPlateScaleFactor << endl;
+  *oPrtStrm<< "         dPlateScaleFactor:   " << dPlateScaleFactor << endl;
   *oPrtStrm<< "         dFocError:         " << dFocError << endl;          
   *oPrtStrm<< "         eTelType:          " << eTelType << endl;
   *oPrtStrm<< "         eRayTracerType:    " << eRayTracerType << endl;

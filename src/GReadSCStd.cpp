@@ -281,6 +281,12 @@ void GReadSCStd::setupSCFactory() {
     opt->iSecReflID = atoi(tokens.at(2).c_str());
   }
 
+  double tmpPlate = opt->fPlateScaleFactor;
+  if (tmpPlate == 0.0) {
+    tmpPlate = tan(1.0*(TMath::DegToRad())) * (opt->fFocLgt) *100.0; 
+    opt->fPlateScaleFactor = tmpPlate; 
+  } 
+
   SafeDelete(pi);
 
   getPolyCoeffs();

@@ -830,6 +830,8 @@ void GSCTelescope::printTelescope() {
   *oPrtStrm << "        constructed from standard SC telescope: " 
 	    << iStdID << endl << endl;;
   *oPrtStrm << "        AFTER ALL EDITS " << endl;
+  *oPrtStrm << "        fFocLgt " << fFocLgt << endl;
+  *oPrtStrm << "        fPlateScaleFactor " << fPlateScaleFactor << endl;
   *oPrtStrm << "        fAvgTransitTime " << fAvgTransitTime << endl;
   *oPrtStrm << "        fRotationOffset " << fRotationOffset << endl;
   *oPrtStrm << "        Primary   fDp fDpinner fZp " << fDp << " " 
