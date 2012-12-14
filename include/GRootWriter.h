@@ -1,5 +1,5 @@
 /*
-VERSION2.5
+VERSION2.6a
 3OCT2012
 */
 //! GROOTWRITER writer for photon data to root files

@@ -1,6 +1,6 @@
 /*
-VERSION2.5
-7Dec2012
+VERSION2.6a
+14Dec2012
 */
 /*! \brief GDCTelescope concrete class for ACT telescopes
   inherits from GTelescope

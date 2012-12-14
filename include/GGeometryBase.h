@@ -1,6 +1,6 @@
 /*
-VERSION2.5
-7Dec2012
+VERSION2.6a
+14Dec2012
 */
 /*!  GGeometryBase base class for holding telescope structure data
   for use in ROOT geometry and navigation classes. No facet information
