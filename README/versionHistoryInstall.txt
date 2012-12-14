@@ -94,7 +94,26 @@ GrOptics accepts input from GrISU compatible photon files.
        Continued to clean up the code.
 
        tag name v2.5
- 
+       --------------------------------------------------------------------------
+       VERSION 2.6
+       fixed spot plots for SC telescope by adding platescale record in
+       stdTelescope.cfg file. But, I forgot to make the version change in
+       each file.  I'll fix that next.
+       
+       tag name v2.6
+       --------------------------------------------------------------------------
+       VERSION 2.6a
+       version change now 2.6a in each code file and pilot/cfg file.  Added
+       optional record to set space to reserve prior to each shower for
+       photon vectors (can take default - this is mostly for checking
+       memory use). Set defaults for plateScaleFactor entries in
+       veritas.cfg and in stdSCTelescopes.cfg (can just take default to get
+       usual values) - this is only for making spot plots; has no effect on
+       ray tracing.
+
+       tag name: v2.6a
+
+
 1. Installation
 
    Dependencies: ROOT, Gsl, robast	
