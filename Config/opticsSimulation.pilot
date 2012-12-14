@@ -11,7 +11,7 @@ Only records with an initial "*" are active.
 cherenkov photon GRISU-type input file, 
 same type input file as for grisudet. 
 FILEIN <filename>  
-* FILEIN ./Config/photon61Tel00.cph
+* FILEIN ./Config/photon.cph
 
 camera output root file specification type
       - root file name
@@ -20,7 +20,7 @@ camera output root file specification type
         telescope number appended to base name
       - photonDirCosine flag: 0/1, if 1 add dirCosineCamera branches
 FILEOUT <root filename> <TreeName> <telBaseTreeName> <photonDirCosBranchFlag>
-* FILEOUT photonLocation61Tel00.root allT T 1
+* FILEOUT photonLocation.root allT T 1
 
 name of grOptics log file, default use cerr (if no asterisk)
  LOGFILE logTest.log
@@ -49,7 +49,7 @@ wobble East : WOBBLE 0.5 0.0 0.0 31.675  (offset perpendicular to hour circle)
 array configuration file
  ARRAYCONFIG <filename: default ./Config/arrayConfig.cfg>
  ARRAYCONFIG ./Config/arrayConfigSC61.cfg
-* ARRAYCONFIG ./Config/arrayConfigDC61.cfg
+* ARRAYCONFIG ./Config/arrayConfig.cfg
 
 random number seed for TRandom3: default seed = 0, set by machine clock.
 seed must be an unsigned integer
@@ -93,4 +93,4 @@ DO THAT.
 The graphs and histograms are printed to png files using the base filenames.
 
 TESTTEL <telescope number> <baseFileName for histograms>   
- TESTTEL 1  DCSpot
+* TESTTEL 1  DCSpot
