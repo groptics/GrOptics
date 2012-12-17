@@ -1,5 +1,5 @@
 /*
-VERSION2.6a
+VERSION2.7aBeta
 3OCT2012
 */
 /*!  GTelArray.cpp

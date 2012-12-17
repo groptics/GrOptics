@@ -1,6 +1,6 @@
 /*
-VERSION2.6a
-14Dec2012
+VERSION2.7aBeta
+17Dec2012
 */
 /*!  /brief GOrderedGrid class for created an ordered 2D
      hash table, e.g. used for quickly finding facet number
