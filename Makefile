@@ -41,10 +41,10 @@ $(OBJ)/GOrderedGrid.o $(OBJ)/GRootDCNavigator.o \
 $(OBJ)/GRootWriter.o  $(OBJ)/GSCTelescope.o \
 $(OBJ)/GReadSCStd.o  $(OBJ)/GSCTelescopeFactory.o \
 $(OBJ)/GRootDCNavigatorDict.o \
-$(OBJ)/GRootWriterDict.o \
-$(OBJ)/GSegSCTelescope.o \
-$(OBJ)/GSegSCTelescopeFactory.o \
-$(OBJ)/GReadSegSCStd.o
+$(OBJ)/GRootWriterDict.o 
+#$(OBJ)/GSegSCTelescope.o \
+#$(OBJ)/GSegSCTelescopeFactory.o \
+#$(OBJ)/GReadSegSCStd.o
 
 TESTOBJECTS = $(OBJ)/GUtilityFuncts.o $(OBJ)/GDefinition.o 
 
