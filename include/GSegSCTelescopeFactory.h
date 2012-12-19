@@ -20,6 +20,22 @@ class GSegSCTelescope;
 class GTelescope;
 class GReadSegSCStd;
 
+struct mirrorSegmentDetails {
+  Double_t rmin;
+  Double_t rmax;
+  Double_t margin;
+  Double_t delPhi;
+  Int_t reflect;
+  Double_t posErrorX;
+  Double_t posErrorY;
+  Double_t posErrorZ;
+  Double_t rotErrorX;
+  Double_t rotErrorY;
+  Double_t rotErrorZ;
+  Double_t roughness;
+  Int_t bRead; // if 0, set from BASIC; if 1, set from CHANGE
+};
+
 /*!  /brief SegSCStdOptics structure stores details of a standard 
      Davis-Cotton telescope
  */
@@ -79,22 +95,10 @@ struct SegSCStdOptics {
   Int_t iNumS1Mirrors;
   Int_t iNumS2Mirrors;
 
-  struct mirrorSegmentDetails {
-    Double_t rmin;
-    Double_t rmax;
-    Double_t margin;
-    Double_t phimin;
-    Double_t phimax;
-    Double_t posErrorX;
-    Double_t posErrorY;
-    Double_t posErrorZ;
-    Double_t rotErrorX;
-    Double_t rotErrorY;
-    Double_t rotErrorZ;
-    Double_t roughness;
-  };
-
-  map<string,mirrorSegmentDetails> mMirrorDetails;// entries P1,P2,S1,S2
+  vector<mirrorSegmentDetails> vSegP1;
+  vector<mirrorSegmentDetails> vSegP2;
+  vector<mirrorSegmentDetails> vSegS1;
+  vector<mirrorSegmentDetails> vSegS2;
 
   SegSCStdOptics(); 
 
@@ -109,7 +113,7 @@ struct SegSCStdOptics {
   };
 
   void printSegSCStdOptics();
-
+  void printSegVector (const vector<mirrorSegmentDetails> &vec);
 };
 
 ////////////////////////////////////////////////////////////////
@@ -146,7 +150,7 @@ class GSegSCTelescopeFactory : public GTelescopeFactory {
            \param SCTel pointer to current telescope
    */
   void editWorkingTelescope(GSegSCTelescope *SCTel1);
- 
+
  public:
 
   /*!  GSegSCTelescopeFactory constructs a SC telescope from 

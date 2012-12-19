@@ -155,39 +155,57 @@ void SegSCStdOptics::printSegSCStdOptics() {
   *oLog << "        Secondary fRsMax/Min fZs " << fRsMax << " " 
         << fRsMin  << " " << fZs << endl;
   *oLog << "        iNParP " << iNParP << endl;
- if (iNParP > 0) {
-   *oLog << "          primPolyCoeff " << endl;
-   for (int i = 0;i<iNParP;i++) {
-     *oLog << "               " << i << "    "  << fzp[i] << endl;
-   }
- }
-
- *oLog << "        iNParS " << iNParS << endl;
- if (iNParS > 0) {
-   *oLog << "          secondaryPolyCoeff " << endl;
-   for (int i = 0;i<iNParS;i++) {
-     *oLog << "               " << i << "    " << fzs[i] << endl;
-   }
- }
-*oLog << "        Focal Surface fKappa1 fKappa2 fRf " 
-      << fKappa1 << " " << fKappa2 << " " 
-      << fRf << endl;
-   
-*oLog << "        bCameraFlag  " << bCameraFlag << endl;
- *oLog << "        fPixelSize   " << fPixelSize << endl;
- *oLog << "        fPixelPitch  " << fPixelPitch  << endl;
- *oLog << "        fMAPMTWidth   " << fMAPMTWidth << endl;
- *oLog << "        fMAPMTLength   " << fMAPMTLength << endl;
- *oLog << "        fInputWindowThickness   " << fInputWindowThickness << endl;
- *oLog << "        fMAPMTAngularSize   " << fMAPMTAngularSize << endl;
- *oLog << "        fMAPMTOffset        " << fMAPMTOffset << endl;
- *oLog << "        fMAPMTGap        " << fMAPMTGap << endl;
- *oLog << "        fMAPMTRefIndex        " << fMAPMTRefIndex << endl;
-
- 
+  if (iNParP > 0) {
+    *oLog << "          primPolyCoeff " << endl;
+    for (int i = 0;i<iNParP;i++) {
+      *oLog << "               " << i << "    "  << fzp[i] << endl;
+    }
+  }
+  
+  *oLog << "        iNParS " << iNParS << endl;
+  if (iNParS > 0) {
+    *oLog << "          secondaryPolyCoeff " << endl;
+    for (int i = 0;i<iNParS;i++) {
+      *oLog << "               " << i << "    " << fzs[i] << endl;
+    }
+  }
+  *oLog << "        Focal Surface fKappa1 fKappa2 fRf " 
+        << fKappa1 << " " << fKappa2 << " " 
+        << fRf << endl;
+  
+  *oLog << "        bCameraFlag  " << bCameraFlag << endl;
+  *oLog << "        fPixelSize   " << fPixelSize << endl;
+  *oLog << "        fPixelPitch  " << fPixelPitch  << endl;
+  *oLog << "        fMAPMTWidth   " << fMAPMTWidth << endl;
+  *oLog << "        fMAPMTLength   " << fMAPMTLength << endl;
+  *oLog << "        fInputWindowThickness   " << fInputWindowThickness << endl;
+  *oLog << "        fMAPMTAngularSize   " << fMAPMTAngularSize << endl;
+  *oLog << "        fMAPMTOffset        " << fMAPMTOffset << endl;
+  *oLog << "        fMAPMTGap        " << fMAPMTGap << endl;
+  *oLog << "        fMAPMTRefIndex        " << fMAPMTRefIndex << endl;
+  
+  // print P1 segment details
+  *oLog << "       Number of P1 segments " << iNumP1Mirrors << endl;
+  printSegVector(vSegP1);  
+    
 };
 /************** end of printSegSCStdOptics ***********************/
+void SegSCStdOptics::printSegVector (const vector<mirrorSegmentDetails> &vec) {
+  *oLog << "        num rmin    rmax marg dPhi refl rough errXYZ rotErrABC"
+        << endl;
+  int numElem = vec.size();
+  for (int i = 0;i<numElem; i++) {
+    mirrorSegmentDetails t = vec[i];
+    *oLog << "         " << i+1 << "  " 
+          << t.rmin << "  " << t.rmax << "  " << t.margin << "  " 
+          << t.delPhi << "  " << t.reflect << "   " << t.roughness
+          << "      " << t.posErrorX
+          << " " << t.posErrorY << " " << t.posErrorZ << "    " 
+          << t.rotErrorX << " " << t.rotErrorY << " " << t.rotErrorZ
+          << endl;
+  }
 
+};
 //////////////////////////////////////////////////////////////////////////
 
 GSegSCTelescopeFactory::

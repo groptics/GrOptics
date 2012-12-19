@@ -112,7 +112,9 @@ int GPilot::set_flag(const string flagname) {
 
 int GPilot::get_line_vector(vector<string> &line_vector) {
 
+  // clear vector and reduce its capacity to zero.
   line_vector.clear();
+  vector<string>().swap(line_vector);
 
   vector<string>::iterator viter;
 
