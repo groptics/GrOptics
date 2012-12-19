@@ -43,14 +43,14 @@ using namespace std;
 #define DEBUG(x) *oLog << #x << " = " << x << endl
 #define DEBUGS(x) *oLog << "       "<< #x << " = " << x << endl
 
-GReadSegSCStd::GReadSegSCStd(const string pilotfile,GSegSCTelescopeFactory *SCFactory  ) {
+GReadSegSCStd::GReadSegSCStd(const string &pilotfile,GSegSCTelescopeFactory *SCFactory  ) {
 
   // initialize variables
   bool debug = true;
   if (debug) {
     *oLog << "  -- GReadSegSCStd::GReadSegSCStd" << endl;
   }
-  /*
+
   SCFac = 0;
   spilotfile = "";
   pi = 0;
@@ -60,13 +60,13 @@ GReadSegSCStd::GReadSegSCStd(const string pilotfile,GSegSCTelescopeFactory *SCFa
   
   SCFac = SCFactory;
   spilotfile = pilotfile;
-  
+  *oLog << "spilotfile " << spilotfile << endl;
   setupSCFactory();
-  */
+
 };
 /****************** end of GReadSegSCStd **********/
 
-GReadSegSCStd::GReadSegSCStd(const string pilotfile) {
+GReadSegSCStd::GReadSegSCStd(const string &pilotfile) {
 
   bool debug = true;
   if (debug) {
@@ -87,8 +87,9 @@ GReadSegSCStd::GReadSegSCStd(const string pilotfile) {
   }
 
   SCFac = 0;
+  */ 
   spilotfile = pilotfile;
-  */
+  
 };
 /****************** end of GReadSegSCStd **********/
 
@@ -103,14 +104,13 @@ GReadSegSCStd::~GReadSegSCStd() {
 /****************** end of ~GReadSegSCStd **********/
 
 void GReadSegSCStd::
-setSCTelescopeFactory(GSegSCTelescopeFactory *SCFactory) {
+setSegSCTelescopeFactory(GSegSCTelescopeFactory *SCFactory) {
 
   bool debug = true;
   if (debug) {
-    *oLog << "  -- GReadSegSCStd::setSCTelescopeFactory" << endl;
+    *oLog << "  -- GReadSegSCStd::setSegSCTelescopeFactory" << endl;
   }
 
-  /*
   if (SCFac != 0 ) {
     cerr << "GReadSegSCStd::setSCTelescopeFactory " << endl;
     cerr << "   ERROR: SCFac pointer to SCFactory previously set" << endl;
@@ -120,7 +120,7 @@ setSCTelescopeFactory(GSegSCTelescopeFactory *SCFactory) {
 
   SCFac = SCFactory;
   setupSCFactory();
-  */  
+  
 };
 
 /****************** end of setSCTelescopeFactory **********/
@@ -132,12 +132,13 @@ void GReadSegSCStd::setupSCFactory() {
     *oLog << "  -- GReadSegSCStd::setupSCFactory" << endl;
     //*oLog << "       spilotfile " << spilotfile << endl;
   }
-  /*
+
   if (SCFac == 0) {
     cerr << " GReadSegSCStd doesn't have a SCFactory object" << endl;
     cerr << "exiting code" << endl;
     exit(0);
   }
+
   getReflCoeff();
 
   pi = new GPilot(spilotfile);
@@ -150,13 +151,13 @@ void GReadSegSCStd::setupSCFactory() {
     pi->addPilotFile(newPilotFile);
   }
 
-  flag = "TELSCSTD";
+  flag = "TELSEGSCSTD";
   pi->set_flag(flag);
 
   while (pi->get_line_vector(tokens) >=0) {
 
     int iStdOptNum = atoi(tokens.at(0).c_str());
-    SCFac->mStdOptics[iStdOptNum] =  new SCStdOptics();
+    SCFac->mStdOptics[iStdOptNum] =  new SegSCStdOptics();
     opt = SCFac->mStdOptics[iStdOptNum];
 
     // set pointer in SCStdOptics for reflection coefficients.
@@ -168,7 +169,7 @@ void GReadSegSCStd::setupSCFactory() {
     opt->stdNum = iStdOptNum;
 
     double fFocLgt = atof(tokens.at(1).c_str());
-    opt->fFocLgt = fFocLgt;
+    opt->fF = fFocLgt;
 
     double fAvgTransitTime = atof(tokens.at(2).c_str());
     opt->fAvgTransitTime = fAvgTransitTime;
@@ -188,10 +189,11 @@ void GReadSegSCStd::setupSCFactory() {
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
     opt = SCFac->mStdOptics[iStdOptNum];   
-    opt->fDp = atof(tokens.at(1).c_str() );
-    opt->fDpinner = atof(tokens.at(2).c_str());
+    opt->fRpMax = atof(tokens.at(1).c_str() );
+    opt->fRpMin = atof(tokens.at(2).c_str());
     opt->fZp = atof(tokens.at(3).c_str());
   }
+  /*
   flag = "PRIMARYOFFSET"; 
   pi->set_flag(flag);
 
@@ -206,6 +208,7 @@ void GReadSegSCStd::setupSCFactory() {
     if (tokens.size() > 6) 
       opt->fPrimRoughSigma = atof(tokens.at(6).c_str() );
   }
+  */
 
    flag = "SECONDARY"; 
    pi->set_flag(flag);
@@ -213,10 +216,11 @@ void GReadSegSCStd::setupSCFactory() {
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
     opt = SCFac->mStdOptics[iStdOptNum];   
-    opt->fDs = atof(tokens.at(1).c_str() );
-    opt->fDsinner = atof(tokens.at(2).c_str());
+    opt->fRsMax = atof(tokens.at(1).c_str() );
+    opt->fRsMin = atof(tokens.at(2).c_str());
     opt->fZs = atof(tokens.at(3).c_str());
   }
+  /*
   flag = "SECONDARYOFFSET"; 
   pi->set_flag(flag);
 
@@ -231,16 +235,19 @@ void GReadSegSCStd::setupSCFactory() {
     if (tokens.size() > 6) 
       opt->fSecondRoughSigma = atof(tokens.at(6).c_str() );
   }
+  */
+
   flag = "FOCALPLANE"; 
   pi->set_flag(flag);
 
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
     opt = SCFac->mStdOptics[iStdOptNum];   
-    opt->fk1 = atof(tokens.at(1).c_str() );
-    opt->fk2 = atof(tokens.at(2).c_str());
-    opt->fZf = atof(tokens.at(3).c_str());
+    opt->fKappa1 = atof(tokens.at(1).c_str() );
+    opt->fKappa2 = atof(tokens.at(2).c_str());
+    opt->fRf = atof(tokens.at(3).c_str());
   }
+  /*
   flag = "FOCALPLANEOFFSET"; 
   pi->set_flag(flag);
 
@@ -253,6 +260,7 @@ void GReadSegSCStd::setupSCFactory() {
     opt->fFocalPlThetaOffset = atof(tokens.at(4).c_str() );
     opt->fFocalPlPhiAngle = atof(tokens.at(5).c_str() );
   }
+  */
   flag = "CAMERA"; 
   pi->set_flag(flag);
 
@@ -278,7 +286,7 @@ void GReadSegSCStd::setupSCFactory() {
       opt->fMAPMTRefIndex =  atof(tokens.at(10).c_str());
     }
   }
-
+  /*
   flag = "REFLID"; 
   pi->set_flag(flag);
 
@@ -288,27 +296,28 @@ void GReadSegSCStd::setupSCFactory() {
     opt->iPrimReflID = atoi(tokens.at(1).c_str() );
     opt->iSecReflID = atoi(tokens.at(2).c_str());
   }
-
+  */
   SafeDelete(pi);
 
   getPolyCoeffs();
   // 
 
   //if (iPrtMode > 0) {
+
   if (1) {
     *oLog << endl;
     *oLog << "       printing all SC standard optics objects" << endl;
     for (SCFac->itmStdOp = SCFac->mStdOptics.begin();
     	 SCFac->itmStdOp != SCFac->mStdOptics.end();
     	 SCFac->itmStdOp++) {
-      (*(SCFac->itmStdOp)).second->printSCStdOptics();
+      (*(SCFac->itmStdOp)).second->printSegSCStdOptics();
     }
   }
 
   if (debug) {
     *oLog << "  -- end of setupSCFactory" << endl;
   }
-  */
+
 };
 /******************** end of setupSCFactory ****************/
 void GReadSegSCStd::getPolyCoeffs() {
@@ -317,13 +326,14 @@ void GReadSegSCStd::getPolyCoeffs() {
   if (debug) {
     *oLog << "  -- GReadSegSCStd::getPolyCoeffs " << endl;
   }
-  /*
+
   ifstream inFile(spilotfile.c_str(),ios::in);
   if (! inFile) {
     cerr << "  -- GReadSegSCStd::getReflCoeff " << endl;
     cerr << "    could not open file: " << spilotfile << endl;
     exit(0);
   }
+
   string pilotline;
 
   // get primary polynomial coefficients
@@ -367,7 +377,7 @@ void GReadSegSCStd::getPolyCoeffs() {
       }
     }
   }       
-  */
+  
 };
 /******************** end of getPolyCoeffs ****************/
 
@@ -375,12 +385,13 @@ void GReadSegSCStd::getReflCoeff() {
 
   // wavelengths in the config. file have nm units
   // here convert to cm as required robast usage
-  bool debug = true;
+  bool debug = false;
 
   if (debug) {
     *oLog << "  -- GReadSegSCStd::getReflCoeff() " << endl;
+    *oLog << "       spilotfile " << spilotfile << endl;
   }
-  /*
+
   ifstream inFile(spilotfile.c_str(),ios::in);
   if (! inFile) {
     cerr << "  -- GReadSegSCStd::getReflCoeff " << endl;
@@ -447,5 +458,5 @@ void GReadSegSCStd::getReflCoeff() {
     *oLog << "    STOPPING CODE" << endl;
     exit(0);
   }
-  */  
+  
 };

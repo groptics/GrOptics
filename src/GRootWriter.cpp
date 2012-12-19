@@ -1,6 +1,6 @@
 /*
 VERSION2.7aBeta
-3OCT2012
+17Dec2012
 */
 /*! \class GRootWriter
     \brief write for pe data to root files

@@ -1,6 +1,6 @@
 /*
 VERSION2.7aBeta
-3OCT2012
+17Dec2012
 */
 //! GROOTWRITER writer for photon data to root files
 // adopted from VPEWriter in EVNDISP package

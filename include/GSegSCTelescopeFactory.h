@@ -25,67 +25,76 @@ class GReadSegSCStd;
  */
 struct SegSCStdOptics {
 
-  int iPrimReflID;
-  int iSecReflID;
+  Int_t iPrimReflID;
+  Int_t iSecReflID;
   ostream *oStr;
-  int iPrtMode;
+  Int_t iPrtMode;
 
   TelType stdType; 
-  int stdNum;
-  double fFocLgt;
-  double fAvgTransitTime;
+  Int_t stdNum;
+  Double_t fAvgTransitTime;
   Double_t fRotationOffset;
- 
-  // primary
-  double fDp;
-  double fDpinner;
-  double fZp;
-  Double_t fPrimXoffset;
-  Double_t fPrimYoffset;
-  Double_t fPrimZoffset;
-  Double_t fPrimThetaOffset;
-  Double_t fPrimPhiAngle;
-  Double_t fPrimRoughSigma;
-  Double_t fPrimRoughMax;
+  Double_t fPlateScaleFactor;
 
-  // secondary
-  double fZs;
-  double fDs;
-  double fDsinner;
-  Double_t fSecondXoffset;
-  Double_t fSecondYoffset;
-  Double_t fSecondZoffset;
-  Double_t fSecondThetaOffset;
-  Double_t fSecondPhiAngle;
-  Double_t fSecondRoughSigma;
-  Double_t fSecondRoughMax;
+  Double_t fF;     // Focal length
+  Double_t fAlpha; // \alpha
+  Double_t fQ;     // q
+  Double_t fRpMax; // Primary radius max
+  Double_t fRpMin; // Primary radius min
+  Double_t fRsMax; // Secondary radius max
+  Double_t fRsMin; // Secondary radius min
 
-  // focal plane
-  double fZf;
-  double fk1;
-  double fk2;
-  Double_t fFocalPlXoffset;
-  Double_t fFocalPlYoffset;
-  Double_t fFocalPlZoffset;
-  Double_t fFocalPlThetaOffset;
-  Double_t fFocalPlPhiAngle;
+  Double_t fKappa1;// Focal plane sag constant
+  Double_t fKappa2;// Focal plane sag constant
+  Double_t fRf;  // focal surface radius
 
-  // camera
-  double fPixelSize;
-  double fPixelPitch;
-  double fMAPMTWidth;
-  double fMAPMTLength;
-  double fInputWindowThickness;
-  double fMAPMTAngularSize;
-  double fMAPMTOffset;
-  double fMAPMTGap;
-  double fMAPMTRefIndex;
+  Double_t fZp;  // primary position on z axis
+  Double_t fZs;  // primary position on z axis
+
+  Int_t     fNp;   // Number of coefficients for the primary
+  Int_t     fNs;   // Number of coefficients for the secondary
+  Double_t* fP;   // Polynomial coefficients (p0, p1 ...)
+  Double_t* fS;   // Polynomial coefficients (s0, s1 ...)
+
+  // MAPMT Parameters
   bool bCameraFlag;
+  Double_t fPixelSize;            // Width of a MAPMT pixel
+  Double_t fPixelPitch;           // Pitch of MAPMT pixels
+  Double_t fMAPMTWidth;           // Housing width
+  Double_t fMAPMTLength;          // between input window and anode pins
+  Double_t fInputWindowThickness; // Thickness of the input window
+  Double_t fMAPMTGap;
+  Double_t fMAPMTRefIndex;
 
-  int iNParP;
-  vector<double> fzp;
-  int iNParS;
-  vector<double> fzs;
+  Double_t fMAPMTAngularSize;
+  Double_t fMAPMTOffset;
+ 
+  Int_t iNParP;
+  vector<Double_t> fzp;
+  Int_t iNParS;
+  vector<Double_t> fzs;
+
+  Int_t iNumP1Mirrors;
+  Int_t iNumP2Mirrors;
+  Int_t iNumS1Mirrors;
+  Int_t iNumS2Mirrors;
+
+  struct mirrorSegmentDetails {
+    Double_t rmin;
+    Double_t rmax;
+    Double_t margin;
+    Double_t phimin;
+    Double_t phimax;
+    Double_t posErrorX;
+    Double_t posErrorY;
+    Double_t posErrorZ;
+    Double_t rotErrorX;
+    Double_t rotErrorY;
+    Double_t rotErrorZ;
+    Double_t roughness;
+  };
+
+  map<string,mirrorSegmentDetails> mMirrorDetails;// entries P1,P2,S1,S2
 
   SegSCStdOptics(); 
 

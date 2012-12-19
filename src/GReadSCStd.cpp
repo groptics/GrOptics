@@ -43,7 +43,7 @@ using namespace std;
 #define DEBUG(x) *oLog << #x << " = " << x << endl
 #define DEBUGS(x) *oLog << "       "<< #x << " = " << x << endl
 
-GReadSCStd::GReadSCStd(const string pilotfile,GSCTelescopeFactory *SCFactory  ) {
+GReadSCStd::GReadSCStd(const string &pilotfile,GSCTelescopeFactory *SCFactory  ) {
 
   // initialize variables
   SCFac = 0;
@@ -61,7 +61,7 @@ GReadSCStd::GReadSCStd(const string pilotfile,GSCTelescopeFactory *SCFactory  ) 
 };
 /****************** end of GReadSCStd **********/
 
-GReadSCStd::GReadSCStd(const string pilotfile) {
+GReadSCStd::GReadSCStd(const string &pilotfile) {
 
  // initialize variables
   SCFac = 0;

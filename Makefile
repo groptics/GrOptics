@@ -22,7 +22,8 @@ vpath %.cpp src
 CXXFLAGS += $(INCLUDEFLAGS)
 
 .PHONY:	all
-all: robast grOptics
+all: robast grReaderFactory
+#all: robast grOptics
 
 # directory to receive all .o files
 OBJ := obj
@@ -41,10 +42,11 @@ $(OBJ)/GOrderedGrid.o $(OBJ)/GRootDCNavigator.o \
 $(OBJ)/GRootWriter.o  $(OBJ)/GSCTelescope.o \
 $(OBJ)/GReadSCStd.o  $(OBJ)/GSCTelescopeFactory.o \
 $(OBJ)/GRootDCNavigatorDict.o \
-$(OBJ)/GRootWriterDict.o 
-#$(OBJ)/GSegSCTelescope.o \
-#$(OBJ)/GSegSCTelescopeFactory.o \
-#$(OBJ)/GReadSegSCStd.o
+$(OBJ)/GRootWriterDict.o \
+$(OBJ)/GSegSCTelescope.o \
+$(OBJ)/GSegSCTelescopeFactory.o \
+$(OBJ)/GReadSegSCStd.o \
+$(OBJ)/GSegmentedMirror.o
 
 TESTOBJECTS = $(OBJ)/GUtilityFuncts.o $(OBJ)/GDefinition.o 
 
@@ -56,6 +58,10 @@ testUtilities: $(OBJ)/testUtilities.o  $(TESTOBJECTS)
 
 grOptics: $(OBJ)/grOptics.o $(OBJECTS)
 	@echo "building grOptics"
+	$(LD) $(LDFLAGS) $(LIBS) $^ $(OutPutOpt) $@
+
+grReaderFactory: $(OBJ)/grReaderFactory.o $(OBJECTS)
+	@echo "building grTestSegReaderFactory"
 	$(LD) $(LDFLAGS) $(LIBS) $^ $(OutPutOpt) $@
 
 %:$(OBJ)/%.o 

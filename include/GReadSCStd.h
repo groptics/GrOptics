@@ -44,9 +44,9 @@ class GReadSCStd {
 
  public:
 
-  GReadSCStd(const string pilotfile,GSCTelescopeFactory *SCFactory );
+  GReadSCStd(const string &pilotfile,GSCTelescopeFactory *SCFactory );
 
-  GReadSCStd(const string pilotfile);
+  GReadSCStd(const string &pilotfile);
 
   ~GReadSCStd();
 

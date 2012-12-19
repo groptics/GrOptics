@@ -45,13 +45,13 @@ class GReadSegSCStd {
 
  public:
 
-  GReadSegSCStd(const string pilotfile,GSegSCTelescopeFactory *SCFactory );
+  GReadSegSCStd(const string &pilotfile,GSegSCTelescopeFactory *SCFactory );
 
-  GReadSegSCStd(const string pilotfile);
+  GReadSegSCStd(const string &pilotfile);
 
   ~GReadSegSCStd();
 
-  void setSCTelescopeFactory(GSegSCTelescopeFactory *SCFactory);  
+  void setSegSCTelescopeFactory(GSegSCTelescopeFactory *SCFactory);  
 
   //void setPrintMode(ostream &oStr=cout,const int prtMode=0);
 

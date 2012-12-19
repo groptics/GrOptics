@@ -21,7 +21,7 @@ extern ostream *oLog;
 /*! telescope type enum
     DC == Davis Cotton, SC == Swartzshield/Coudee
 */
-enum TelType {DC,SC};
+enum TelType {DC,SC,SEGSC};
 
 /*! facet shape enum
      CIR == circle, HEX == hexagon, SQR == square
