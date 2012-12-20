@@ -182,7 +182,7 @@ void GReadSegSCStd::setupSCFactory() {
       opt->iPrtMode = iprintmode;
     }
   }
-
+  // read PRIMARY record ///////////////
   flag = "PRIMARY"; 
   pi->set_flag(flag);
 
@@ -194,65 +194,76 @@ void GReadSegSCStd::setupSCFactory() {
     opt->fRpMin = atof(tokens.at(2).c_str());
     opt->fZp = atof(tokens.at(3).c_str());
   }
-  flag = "PRIMSEGP1";
-  pi->set_flag(flag);
-  bool bSegP1Basic = false;
+
+  // read SECONDARY record ///////////////// 
+  flag = "SECONDARY"; 
+   pi->set_flag(flag);
 
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];
-    
-    if (tokens.at(1) == "BASIC") {
-      bSegP1Basic = true;
-      mirrorSegmentDetails segTmp;
-      opt->iNumP1Mirrors = atoi(tokens.at(2).c_str());
-      *oLog << " nummir " <<tokens.at(2) << endl; 
-      segTmp.rmin =  atof(tokens.at(3).c_str());
-      segTmp.rmax =  atof(tokens.at(4).c_str());
-      segTmp.margin =  atof(tokens.at(5).c_str());
-      segTmp.delPhi =  atof(tokens.at(6).c_str());
-      segTmp.reflect = atoi(tokens.at(7).c_str() );
-      segTmp.roughness =  atof(tokens.at(8).c_str());
-      segTmp.posErrorX =  atof(tokens.at(9).c_str());
-      segTmp.posErrorY =  atof(tokens.at(10).c_str());
-      segTmp.posErrorZ =  atof(tokens.at(11).c_str());
-      segTmp.rotErrorX =  atof(tokens.at(12).c_str());
-      segTmp.rotErrorY =  atof(tokens.at(13).c_str());
-      segTmp.rotErrorZ =  atof(tokens.at(14).c_str());
-      segTmp.bRead = 0;
-      for (int i = 0;i<opt->iNumP1Mirrors;i++) {
-        (opt->vSegP1).push_back(segTmp);
-      }
-    }
-    else if (tokens.at(1) == "CHANGE") {
-      mirrorSegmentDetails segTmp;
-      vector<int> vListSeg;    
-      vector<int>::iterator itv;
-      GUtilityFuncts::decodeMatlabString(tokens[2],vListSeg);
-      *oLog << "VLISTSEG " << endl;
-      GUtilityFuncts::printVector(vListSeg);
-      for (int i = 0;i<vListSeg.size();i++) {
-        int ix = vListSeg[i];
-        segTmp.rmin =  atof(tokens.at(3).c_str());
-        segTmp.rmax =  atof(tokens.at(4).c_str());
-        segTmp.margin =  atof(tokens.at(5).c_str());
-        segTmp.delPhi =  atof(tokens.at(6).c_str());
-        segTmp.reflect = atoi(tokens.at(7).c_str() );
-        segTmp.roughness =  atof(tokens.at(8).c_str());
-        segTmp.posErrorX =  atof(tokens.at(9).c_str());
-        segTmp.posErrorY =  atof(tokens.at(10).c_str());
-        segTmp.posErrorZ =  atof(tokens.at(11).c_str());
-        segTmp.rotErrorX =  atof(tokens.at(12).c_str());
-        segTmp.rotErrorY =  atof(tokens.at(13).c_str());
-        segTmp.rotErrorZ =  atof(tokens.at(14).c_str());
-        segTmp.bRead = 1;
-        (opt->vSegP1)[ix -1] = segTmp;
-     }
-    }
-    
-
-   
+    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt->fRsMax = atof(tokens.at(1).c_str() );
+    opt->fRsMin = atof(tokens.at(2).c_str());
+    opt->fZs = atof(tokens.at(3).c_str());
   }
+
+  // read PRIMSEGP1, both BASIC and CHANGE
+  flag = "PRIMSEGP1"; 
+  pi->set_flag(flag);
+  while (pi->get_line_vector(tokens) >=0) {
+    int iStdOptNum = atoi(tokens.at(0).c_str() );
+    opt = SCFac->mStdOptics[iStdOptNum];   
+
+    if (tokens[1] == "BASIC") {
+      readBasicRecord(tokens,P1,opt);
+    }
+    else if (tokens[1] == "CHANGE") {
+      readChangeRecord(tokens,P1,opt);
+    }
+  }
+  // read PRIMSEGP2, both BASIC and CHANGE
+  flag = "PRIMSEGP2"; 
+  pi->set_flag(flag);
+  while (pi->get_line_vector(tokens) >=0) {
+    int iStdOptNum = atoi(tokens.at(0).c_str() );
+    opt = SCFac->mStdOptics[iStdOptNum];   
+
+    if (tokens[1] == "BASIC") {
+      readBasicRecord(tokens,P2,opt);
+    }
+    else if (tokens[1] == "CHANGE") {
+      readChangeRecord(tokens,P2,opt);
+    }
+  }
+  // read SECONDSEGS1, both BASIC and CHANGE
+  flag = "SECONDSEGS1"; 
+  pi->set_flag(flag);
+  while (pi->get_line_vector(tokens) >=0) {
+    int iStdOptNum = atoi(tokens.at(0).c_str() );
+    opt = SCFac->mStdOptics[iStdOptNum];   
+
+    if (tokens[1] == "BASIC") {
+      readBasicRecord(tokens,S1,opt);
+    }
+    else if (tokens[1] == "CHANGE") {
+      readChangeRecord(tokens,S1,opt);
+    }
+  }
+  // read SECONDSEGS2, both BASIC and CHANGE
+  flag = "SECONDSEGS2"; 
+  pi->set_flag(flag);
+  while (pi->get_line_vector(tokens) >=0) {
+    int iStdOptNum = atoi(tokens.at(0).c_str() );
+    opt = SCFac->mStdOptics[iStdOptNum];   
+
+    if (tokens[1] == "BASIC") {
+      readBasicRecord(tokens,S2,opt);
+    }
+    else if (tokens[1] == "CHANGE") {
+      readChangeRecord(tokens,S2,opt);
+    }
+  }
+    
   /*
   flag = "PRIMARYOFFSET"; 
   pi->set_flag(flag);
@@ -270,17 +281,7 @@ void GReadSegSCStd::setupSCFactory() {
   }
   */
 
-   flag = "SECONDARY"; 
-   pi->set_flag(flag);
-
-  while (pi->get_line_vector(tokens) >=0) {
-    int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
-    opt->fRsMax = atof(tokens.at(1).c_str() );
-    opt->fRsMin = atof(tokens.at(2).c_str());
-    opt->fZs = atof(tokens.at(3).c_str());
-  }
-  /*
+   /*
   flag = "SECONDARYOFFSET"; 
   pi->set_flag(flag);
 
@@ -379,7 +380,99 @@ void GReadSegSCStd::setupSCFactory() {
   }
 
 };
+
 /******************** end of setupSCFactory ****************/
+ void GReadSegSCStd::readBasicRecord(const vector<string> &tokens,
+                                     const MirSeg &eMirPS,
+                                     SegSCStdOptics *opt) {
+   mirrorSegmentDetails segTmp;
+   Int_t numMirrors = atoi(tokens.at(2).c_str());  
+
+   //opt->iNumP1Mirrors = atoi(tokens.at(2).c_str()); 
+   segTmp.rmin =  atof(tokens.at(3).c_str());
+   segTmp.rmax =  atof(tokens.at(4).c_str());
+   segTmp.margin =  atof(tokens.at(5).c_str());
+   segTmp.delPhi =  atof(tokens.at(6).c_str());
+   segTmp.reflect = atoi(tokens.at(7).c_str() );
+   segTmp.roughness =  atof(tokens.at(8).c_str());
+   segTmp.posErrorX =  atof(tokens.at(9).c_str());
+   segTmp.posErrorY =  atof(tokens.at(10).c_str());
+   segTmp.posErrorZ =  atof(tokens.at(11).c_str());
+   segTmp.rotErrorX =  atof(tokens.at(12).c_str());
+   segTmp.rotErrorY =  atof(tokens.at(13).c_str());
+   segTmp.rotErrorZ =  atof(tokens.at(14).c_str());
+   segTmp.bRead = 0;
+
+   vector<mirrorSegmentDetails> vSeg;
+   for (int i = 0;i<numMirrors;i++) {
+     vSeg.push_back(segTmp);
+   }
+
+   if (eMirPS == P1) {
+     opt->iNumP1Mirrors = numMirrors;
+     opt->vSegP1 = vSeg;
+   }
+   else if (eMirPS == P2) {
+     opt->iNumP2Mirrors = numMirrors;
+     opt->vSegP2 = vSeg;
+
+   }
+   else if (eMirPS == S1) {
+     opt->iNumS1Mirrors = numMirrors;
+     opt->vSegS1 = vSeg;
+
+   }
+
+  else if (eMirPS == S2) {
+     opt->iNumS2Mirrors = numMirrors;
+     opt->vSegS2 = vSeg;
+
+   }  
+ };
+
+/******************** end of readBasicRecord ****************/
+void GReadSegSCStd::readChangeRecord(const vector<string> &tokens,
+                       const MirSeg &eMirPS,
+                                     SegSCStdOptics *opt) {
+  mirrorSegmentDetails segTmp;
+  vector<int> vListSeg;    
+  vector<int>::iterator itv;
+  GUtilityFuncts::decodeMatlabString(tokens[2],vListSeg);
+  *oLog << "VLISTSEG " << endl;
+  GUtilityFuncts::printVector(vListSeg);
+  for (int i = 0;i<vListSeg.size();i++) {
+    int ix = vListSeg[i];
+    segTmp.rmin =  atof(tokens.at(3).c_str());
+    segTmp.rmax =  atof(tokens.at(4).c_str());
+    segTmp.margin =  atof(tokens.at(5).c_str());
+    segTmp.delPhi =  atof(tokens.at(6).c_str());
+    segTmp.reflect = atoi(tokens.at(7).c_str() );
+    segTmp.roughness =  atof(tokens.at(8).c_str());
+    segTmp.posErrorX =  atof(tokens.at(9).c_str());
+    segTmp.posErrorY =  atof(tokens.at(10).c_str());
+    segTmp.posErrorZ =  atof(tokens.at(11).c_str());
+    segTmp.rotErrorX =  atof(tokens.at(12).c_str());
+    segTmp.rotErrorY =  atof(tokens.at(13).c_str());
+    segTmp.rotErrorZ =  atof(tokens.at(14).c_str());
+    segTmp.bRead = 1;
+  
+    if (eMirPS == P1) {
+      (opt->vSegP1)[ix -1] = segTmp;
+    }
+    else if (eMirPS == P2) {
+      (opt->vSegP2)[ix -1] = segTmp;
+    }
+    else if (eMirPS == S1) {
+      (opt->vSegS1)[ix -1] = segTmp;
+    }
+    else if (eMirPS == S2) {
+      (opt->vSegS2)[ix -1] = segTmp;
+    }
+  } 
+
+};
+
+/******************** end of readChangeRecord ****************/
 void GReadSegSCStd::getPolyCoeffs() {
 
   bool debug = true;

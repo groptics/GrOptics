@@ -43,6 +43,13 @@ class GReadSegSCStd {
 
   void getPolyCoeffs();
 
+  void readBasicRecord(const vector<string> &tokens,
+                       const MirSeg &eMirPS,
+                       SegSCStdOptics *opt);
+ 
+void readChangeRecord(const vector<string> &tokens,
+                       const MirSeg &eMirPS,
+                       SegSCStdOptics *opt);
  public:
 
   GReadSegSCStd(const string &pilotfile,GSegSCTelescopeFactory *SCFactory );

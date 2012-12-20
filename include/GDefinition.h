@@ -50,6 +50,8 @@ enum RdType {GRISU,CORSIKA};
  */
 enum OfType {ASCI, ROOTLOC,ROOTPIX};
 
+enum MirSeg {P1,P2,S1,S2};
+
 /*!// record type for GrISU input files,S,P,R,H,eof lines
  */
 enum GrISURecType {SREC,PREC,RREC,HREC,EOFREC};

@@ -187,6 +187,15 @@ void SegSCStdOptics::printSegSCStdOptics() {
   // print P1 segment details
   *oLog << "       Number of P1 segments " << iNumP1Mirrors << endl;
   printSegVector(vSegP1);  
+  // print P2 segment details
+  *oLog << "       Number of P2 segments " << iNumP2Mirrors << endl;
+  printSegVector(vSegP2);  
+  // print S1 segment details
+  *oLog << "       Number of S1 segments " << iNumS1Mirrors << endl;
+  printSegVector(vSegS1);  
+  // print P2 segment details
+  *oLog << "       Number of S2 segments " << iNumS2Mirrors << endl;
+  printSegVector(vSegS2);  
     
 };
 /************** end of printSegSCStdOptics ***********************/
