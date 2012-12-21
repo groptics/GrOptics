@@ -14,12 +14,6 @@ telescope.  Inherits from GTelescope base class.
 
 #include "TGraph.h"
 
-// forward declarations
-class TFile;
-class TTree;
-class ARay;
-class TGraph;
-
 #include "Math/Vector3Dfwd.h"
 #include "Math/GenVector/Rotation3Dfwd.h"
 #include "Math/GenVector/RotationXfwd.h"
@@ -34,28 +28,33 @@ class TGraph;
 
 // forward declarations
 enum TelType;
+class mirrorSegmentDetails;
+class TFile;
+class TTree;
+class ARay;
+class TGraph;
+class AGeoAsphericDisk;
 
 // stubs for all methods
 class GSegSCTelescope : public GTelescope {
 
-  friend class GSCTelescopeFactory;
+  friend class GSegSCTelescopeFactory;
  
-  AOpticsManager* manager;
+  AOpticsManager* fManager;
+  AGeoAsphericDisk * fPrimaryV;
+  AGeoAsphericDisk * fSecondaryV;
+
   ARay *ray;
   TFile *hisF;
   TTree *hisT;
 
-  double fTX;  //!< top volume dimensions
-  double fTY;
-  double fTZ;
-
-  //double fDummy;  // dummy parameters from factory.
-  //int iDummy;
+  //!< top volume dimensions
   
   int iTelID;  //!< telescope id in the array.
   int iStdID;  //!< telescope standard number from the telescope factory
 
   double fAvgTransitTime;
+  Double_t fPlateScaleFactor;
 
   double fphotonInjectLoc[3];
   double fphotonInjectDir[3];
@@ -66,7 +65,43 @@ class GSegSCTelescope : public GTelescope {
   Double_t fInjectDir[3];
   Double_t fInjectTime;  // only sent to history file
   Double_t fInjectLambda;
-   
+ 
+  // general telescope parameters
+  Double_t fF;     // Focal length
+  Double_t fAlpha; // \alpha
+  Double_t fQ;     // q
+
+  // primary parameters
+  Double_t fRpMax; // Primary radius max
+  Double_t fRpMin; // Primary radius min
+  Double_t fZp;  // primary position on z axis
+  Int_t     fNp;   // Number of coefficients for the primary
+  Double_t* fP;   // Polynomial coefficients (p0, p1 ...)
+  Int_t iNParP;
+  vector<Double_t> fzp;
+
+  // secondary parameters
+  Double_t fRsMax; // Secondary radius max
+  Double_t fRsMin; // Secondary radius min
+  Double_t fZs;  // secondary position on z axis
+  Int_t     fNs;   // Number of coefficients for the secondary
+  Double_t* fS;   // Polynomial coefficients (s0, s1 ...)
+  Int_t iNParS;
+  vector<Double_t> fzs;
+
+  // primary segment details
+  Int_t iNumP1Mirrors;
+  Int_t iNumP2Mirrors;
+  vector<mirrorSegmentDetails *> vSegP1;
+  vector<mirrorSegmentDetails *> vSegP2;
+
+  // secondary segment details
+  Int_t iNumS1Mirrors;
+  Int_t iNumS2Mirrors;
+  vector<mirrorSegmentDetails *> vSegS1;
+  vector<mirrorSegmentDetails *> vSegS2;
+
+   map<int, TGraph *> *mGRefl;
   TGraph *gPrimRefl;
   double fPrimMaxLmda;
   double fPrimMinLmda;
@@ -90,57 +125,19 @@ class GSegSCTelescope : public GTelescope {
 
   Double_t fRotationOffset;
 
-  double fFocLgt;
+
   // primary
-  double fDp;
-  double fDpinner;
-  double fZp;
-  Double_t fPrimXoffset;
-  Double_t fPrimYoffset;
-  Double_t fPrimZoffset;
-  Double_t fPrimThetaOffset;
-  Double_t fPrimPhiAngle;
-  Double_t fPrimRoughSigma;
-  Double_t fPrimRoughMax;
 
   // secondary
-  double fZs;
-  double fDs;
-  double fDsinner;
-  Double_t fSecondXoffset;
-  Double_t fSecondYoffset;
-  Double_t fSecondZoffset;
-  Double_t fSecondThetaOffset;
-  Double_t fSecondPhiAngle;
-  Double_t fSecondRoughSigma;
-  Double_t fSecondRoughMax;
 
   // focal plane
-  double fZf;
-  double fk1;
-  double fk2;
-  Double_t fFocalPlXoffset;
-  Double_t fFocalPlYoffset;
-  Double_t fFocalPlZoffset;
-  Double_t fFocalPlThetaOffset;
-  Double_t fFocalPlPhiAngle;
 
   // camera
-  double fPixelSize;
-  double fPixelPitch;
-  double fMAPMTWidth;
-  double fMAPMTLength;
-  double fInputWindowThickness;
-  double fMAPMTAngularSize;
-  double fMAPMTOffset;
-  double fMAPMTGap;
-  double fMAPMTRefIndex;
-  bool bCameraFlag;
 
-  int iNParP;
-  vector<double> fzp;
-  int iNParS;
-  vector<double> fzs;
+  //int iNParP;
+  //vector<double> fzp;
+  //int iNParS;
+  //vector<double> fzs;
 
 
   TelType eTelType; //!< telescope type enum (here will be SC)
@@ -153,7 +150,7 @@ class GSegSCTelescope : public GTelescope {
 
   void movePositionToTopOfTopVol();
 
-  void initialization();
+  void initialize();
 
  public:
 
@@ -234,18 +231,16 @@ class GSegSCTelescope : public GTelescope {
   void setStdID(const int &stdID) {
     iStdID = stdID; };
  
-  void setReflCv(const int &primID, const int &secondID,
-		 map<int, TGraph *> *mGRefl);
-  
+  void setReflCoeffMap(map<int, TGraph *> *mGRefl);
 
   void testFocalPlane();
 
   double getTelescopeRadius() {
-    return fDp;  // this is the radius not the diameter
+    return 0.0;  // this is the radius not the diameter
   }
 
   double getFocalLength() {
-    return fFocLgt;
+    return 0.0;
   }
 
   double getPlateScaleFactor() {
@@ -257,6 +252,7 @@ class GSegSCTelescope : public GTelescope {
     //return tm;
     return 0.0;
   }
+  void CloseGeometry(); 
 };
 
 

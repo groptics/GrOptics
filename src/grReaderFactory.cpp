@@ -173,6 +173,7 @@ ostream *oLog;
 /**************************   main   *****************************/
 int main(int argc, char *argv[]) {
 
+  bool bDrawTel = false;
   // log file output stream, initialize
   oLog = &cerr;
 
@@ -183,11 +184,31 @@ int main(int argc, char *argv[]) {
   GReadSegSCStd *readerSegSC = new GReadSegSCStd(readerFile);
   *oLog << "making factory " << endl;
   string editFile = "./Config/arrayConfig.cfg";
+
+  TRint *app = 0;
+  Int_t pseudo_argc = 1;
+  if (bDrawTel) {
+    *oLog << "creating app " << endl;
+    app = new TRint("app",&pseudo_argc, argv,0,0,kFALSE );
+    //runApp = true;
+  }
   GSegSCTelescopeFactory *SegSCFac = new GSegSCTelescopeFactory
     (*readerSegSC,editFile);
 
+  int id = 1;
+  int std = 1;
+  *oLog << "READY to build TELESCOPE" << endl;
+  GSegSCTelescope *segTel = SegSCFac->makeTelescope(id,std);
+  *oLog << "TELESCOPE built" << endl;
+  if (bDrawTel) {
+	segTel->drawTelescope();
+	app->Run(); 
+	return 0;
+      }
+ 
   SafeDelete(readerSegSC);
   SafeDelete(SegSCFac);
+  SafeDelete(segTel);
   return 0;
 };
 /********************** end of main ***************************************/

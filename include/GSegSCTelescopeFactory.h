@@ -65,7 +65,7 @@ struct SegSCStdOptics {
   Double_t fRf;  // focal surface radius
 
   Double_t fZp;  // primary position on z axis
-  Double_t fZs;  // primary position on z axis
+  Double_t fZs;  // secondary position on z axis
 
   Int_t     fNp;   // Number of coefficients for the primary
   Int_t     fNs;   // Number of coefficients for the secondary
@@ -95,10 +95,10 @@ struct SegSCStdOptics {
   Int_t iNumS1Mirrors;
   Int_t iNumS2Mirrors;
 
-  vector<mirrorSegmentDetails> vSegP1;
-  vector<mirrorSegmentDetails> vSegP2;
-  vector<mirrorSegmentDetails> vSegS1;
-  vector<mirrorSegmentDetails> vSegS2;
+  vector<mirrorSegmentDetails *> vSegP1;
+  vector<mirrorSegmentDetails *> vSegP2;
+  vector<mirrorSegmentDetails *> vSegS1;
+  vector<mirrorSegmentDetails *> vSegS2;
 
   SegSCStdOptics(); 
 
@@ -113,7 +113,7 @@ struct SegSCStdOptics {
   };
 
   void printSegSCStdOptics();
-  void printSegVector (const vector<mirrorSegmentDetails> &vec);
+  void printSegVector (const vector<mirrorSegmentDetails *> &vec);
 };
 
 ////////////////////////////////////////////////////////////////

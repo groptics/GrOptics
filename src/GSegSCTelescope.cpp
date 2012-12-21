@@ -83,7 +83,7 @@ GSegSCTelescope::GSegSCTelescope() {
   if (debug) {
     *oLog << "  -- GSegSCTelescope::GSegSCTelescope() " << endl;
   }
-
+  initialize();
   };
 /********************** end of GSegSCTelescope *****************/
 GSegSCTelescope::~GSegSCTelescope() {
@@ -92,7 +92,10 @@ GSegSCTelescope::~GSegSCTelescope() {
   if (debug) {
     *oLog << "  -- GSegSCTelescope::~GSegSCTelescope " << endl;
   }
-
+  if (fManager !=0) {
+    gGeoManager = fManager;
+    SafeDelete(fManager);
+  }
  
 };
 /********************** end of ~GSegSCTelescope *****************/
@@ -104,6 +107,36 @@ void GSegSCTelescope::buildTelescope(bool os8)
   if (debug) {
     *oLog << "  -- GSegSCTelescope::buildTelescope" << endl;
   }
+  gGeoManager = 0;
+  fManager = new AOpticsManager("manager","The optics manager of SEGSC");
+  fManager->SetVisLevel(5);
+  fManager->SetNsegments(50);
+
+  // Make dummy material
+  TGeoMaterial* mat = new TGeoMaterial("mat", 0, 0, 0);
+  mat->SetTransparency(70); // needed in OpenGL view
+  new TGeoMedium("med", 1, mat);
+
+  // Make the world
+  TGeoBBox* worldbox = new TGeoBBox("worldbox", 30*m, 30*m, 30*m);
+  AOpticalComponent* world = new AOpticalComponent("world", worldbox);
+  fManager->SetTopVolume(world);
+
+  const Double_t kZp = fZp*m;
+  const Double_t kZs = fF/fQ;
+  fPrimaryV = new AGeoAsphericDisk("primaryV",
+                                   kZp + fP[0] - 1*um, 0,
+                                   kZp + fP[0] , 0, 
+                                   fRpMax, fRpMin);
+  fPrimaryV->SetPolynomials(fNp - 1, &fP[1], fNp - 1, &fP[1]);
+
+  // Make the ideal volume of the secondary mirror
+  fSecondaryV = new AGeoAsphericDisk("secondaryV",
+                                     kZs + fS[0], 0, 
+                                     kZs + fS[0]  + 1*um, 
+                                     0, fRsMax, fRsMin);
+  fSecondaryV->SetPolynomials(fNs - 1, &fS[1], fNs - 1, &fS[1]);
+
   return;
 };
 /*************************************************************************************/
@@ -180,7 +213,7 @@ void GSegSCTelescope::printTelescope() {
   if (debug) {
     *oPrtStrm << " -- GSegSCTelescope::printTelescope" << endl;
   }
-
+  *oLog << "    fF " << fF << endl;
 };
 /********************** end of printTelescope *****************/
 
@@ -190,7 +223,8 @@ void GSegSCTelescope::drawTelescope() {
   if (debug) {
     *oLog << "  -- GSegSCTelescope::drawTelescope" << endl; 
   }
-
+  gGeoManager = fManager;
+  gGeoManager->GetMasterVolume()->Draw("ogl");
 };
 /********************** end of drawTelescope *****************/
 
@@ -198,9 +232,7 @@ void GSegSCTelescope::setPrintMode(ostream &oStr,const int prtMode) {
   bool debug = true;
   if (debug) {
     *oLog << " -- GSegSCTelescope::setPrintMode" << endl;
-  }
-
- 
+  } 
 };
 /********************** end of setPrintMode *****************/
 
@@ -249,21 +281,97 @@ void GSegSCTelescope::writePhotonHistory() {
  
 };
 /************************* end of writePhotonHistory *****/
-void GSegSCTelescope::setReflCv(const int &primID, const int &secondID,
-			     map<int, TGraph *> *mGRefl) {
+void GSegSCTelescope::setReflCoeffMap(map<int, TGraph *> *mGRefl) {
+
   bool debug = true;
   if (debug) {
-    *oLog << "  -- GSegSCTelescope::setReflCv" << endl;
+    *oLog << "  -- GSegSCTelescope::setReflCoeffMap" << endl;
   }
-  
+  // make a copy of the map
+  map<int, TGraph *>::iterator iter;
+  for (iter = mGRefl->begin();iter != mGRefl->end(); iter++) {
+    Int_t id = iter->first;
+    TGraph *tmpOld = iter->second;
+    TGraph *tmpNew = new TGraph(*tmpOld);
+    (*mGRefl)[id] = tmpNew;
+  }
+  if (debug) {
+    *oLog << "      size of mGRefl " << mGRefl->size() << endl;
+  }
 };
 /************************* end of writePhotonHistory *****/
 
-void GSegSCTelescope::initialization() {
+void GSegSCTelescope::initialize() {
   bool debug = true;
 
   if (debug) {
     *oLog << "  -- GSegSCTelescope::initialization " << endl;
   }
 
+  fManager = 0;
+  ray = 0;
+  hisF = 0;
+  hisT = 0;
+
+  iTelID = 0;
+  iStdID = 0;
+
+  fAvgTransitTime = 0.0;
+  fPlateScaleFactor = 0.0;
+  fphotWaveLgt = 0.0;
+  fphotonToTopVolTime = 0.0;
+  fInjectTime = 0.0; 
+  fInjectLambda = 0.0;
+  fF = 0.0;
+  fAlpha = 0.0;
+  fQ = 0.0;
+  fRpMax = 0.0; 
+  fRpMin = 0.0; 
+  fZp = 0.0;
+  fP = 0;
+  fRsMax = 0.0;
+  fRsMin = 0.0;
+  fZs = 0.0;
+  fNs = 0;
+  iNParP = 0;
+  iNumP1Mirrors = 0;
+  iNumP2Mirrors = 0;
+  iNParS = 0;
+  iNumS1Mirrors = 0;
+  iNumS2Mirrors = 0;
+  gPrimRefl = 0;
+  fPrimMaxLmda = 0.0;
+  fPrimMinLmda = 0.0;
+  gSeconRefl = 0;
+  fSeconMaxLmda = 0.0;
+  fSeconMinLmda = 0.0;
+  historyFileName = "";
+  fTimeLast = 0.0;
+  iHistoryOption = 0;
+  fStatusLast = 0;
+  fNPoints = 0;
+  fRotationOffset = 0.0;
+
+  eTelType = SEGSC;
+
+  for (int i = 0;i<3;i++) {
+    fphotonInjectLoc[i] = 0.0;
+    fphotonInjectDir[i] = 0.0;
+    fInjectLoc[i] = 0.0;
+    fInjectDir[i] = 0.0;
+    fLocLast[i] = 0.0;
+    fDirLast[i] = 0.0;
+    fInitialInjectLoc[i] = 0.0;
+  }
 };
+/************************* end of writePhotonHistory *****/
+
+void GSegSCTelescope::CloseGeometry() {
+  bool debug = true;
+  if (debug) {
+    *oLog << "  -- GSegSCTelescope::CloseGeometry" << endl;
+  }
+  gGeoManager = fManager;
+  fManager->CloseGeometry();
+}; 
+/************************* end of CloseGeometry *****/
