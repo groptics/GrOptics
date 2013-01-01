@@ -8,6 +8,12 @@ VERSION2.7aBeta
 
 #ifndef GARRAYTEL
 #define GARRAYTEL
+
+// forward declarations
+class AMirror;
+class AGeoAsphericDisk;
+class TGeoCombiTrans;
+
 class SegmentedMirror
 {
   // The base class for segmented mirrors. This class holds some Parameters
