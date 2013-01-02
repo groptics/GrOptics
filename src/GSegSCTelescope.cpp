@@ -118,9 +118,37 @@ void GSegSCTelescope::buildTelescope(bool os8)
   new TGeoMedium("med", 1, mat);
 
   // Make the world
-  TGeoBBox* worldbox = new TGeoBBox("worldbox", 30*m, 30*m, 30*m);
+  TGeoBBox* worldbox = new TGeoBBox("worldbox", fTX*m, fTY*m, fTZ*m);
   AOpticalComponent* world = new AOpticalComponent("world", worldbox);
   fManager->SetTopVolume(world);
+
+  makePrimarySecondaryDisks();
+  /*
+  const Double_t kZp = fZp*m;
+  const Double_t kZs = fF/fQ;
+  fPrimaryV = new AGeoAsphericDisk("primaryV",
+                                   kZp + fP[0] - 1*um, 0,
+                                   kZp + fP[0] , 0, 
+                                   fRpMax, fRpMin);
+  fPrimaryV->SetPolynomials(fNp - 1, &fP[1], fNp - 1, &fP[1]);
+
+  // Make the ideal volume of the secondary mirror
+  fSecondaryV = new AGeoAsphericDisk("secondaryV",
+                                     kZs + fS[0], 0, 
+                                     kZs + fS[0]  + 1*um, 
+                                     0, fRsMax, fRsMin);
+  fSecondaryV->SetPolynomials(fNs - 1, &fS[1], fNs - 1, &fS[1]);
+  */
+  return;
+};
+/*************************************************************************************/
+void GSegSCTelescope::makePrimarySecondaryDisks() {
+
+  bool debug = true;
+
+  if (debug) {
+    *oLog << "  --  GSegSCTelescope::makePrimarySecondaryDisks" << endl;
+  }
 
   const Double_t kZp = fZp*m;
   const Double_t kZs = fF/fQ;
@@ -140,11 +168,201 @@ void GSegSCTelescope::buildTelescope(bool os8)
   return;
 };
 /*************************************************************************************/
+
+void GSegSCTelescope::addPrimaryF() {
+  Int_t count = 0;
+  /*
+  // P1 mirrors
+  for(Int_t i = 0; i < 16; i++){
+    Double_t rmin = 2.19350*m - margin/TMath::Cos(11.25/2.*TMath::DegToRad());
+    Double_t rmax = 3.40000*m;
+
+    Double_t phimin = 22.5*i;
+    Double_t phimax = 22.5*(i + 1);
+    PentagonSegmentedMirror mirror(rmin + margin, rmax, phimin, phimax);
+    mirror.SetPositionErrors(0*mm, 0*mm, 0*mm);
+    mirror.SetRotationErrors(0., 0., 0.);
+    mirror.SetRougness(0.);
+    mirror.SetMargin(margin);
+    sct->AddPrimaryMirror(Form("primary%d", count), &mirror);
+    count++;
+  } // i
+ 
+  // P2 mirrors
+  for(Int_t i = 0; i < 32; i++){
+    Double_t rmin = 3.40000*m;
+    Double_t rmax = 4.831875*m + margin/TMath::Cos(11.25/2.*TMath::DegToRad());
+
+    Double_t phimin = 11.25*i;
+    Double_t phimax = 11.25*(i + 1);
+    TetragonSegmentedMirror mirror(rmin, rmax + margin, phimin, phimax);
+    mirror.SetPositionErrors(0*mm, 0*mm, 0*mm);
+    mirror.SetRotationErrors(0., 0., 0.);
+    mirror.SetRougness(0.);
+    mirror.SetMargin(margin);
+    sct->AddPrimaryMirror(Form("primary%d", count), &mirror);
+    count++;
+  } // i
+  */
+};
+/*******************************************************************/
+void GSegSCTelescope::addPrimaryMirror() {
+  /*
+  AMirror* mir = mirror->BuildMirror(name, fPrimaryV, kTRUE);
+  TGeoCombiTrans* combi = mirror->BuildMirrorCombiTrans(fPrimaryV, kTRUE);
+
+  ABorderSurfaceCondition * condition
+    = new ABorderSurfaceCondition(fManager->GetTopVolume(), mir);
+  condition->SetGaussianRoughness(mirror->GetRoughness()*TMath::DegToRad());
+  fManager->GetTopVolume()->AddNode(mir, 1, combi);
+  */
+};
+
+
+void GSegSCTelescope::addSecondaryJ() {
+  Int_t count = 0;
+  /*
+  // S1 mirrors
+  for(Int_t i = 0; i < 8; i++){
+    Double_t rmin = 0.3945*m;
+    Double_t rmax = 1.5965*m;
+
+    Double_t phimin = 45.*i;
+    Double_t phimax = 45.*(i + 1);
+    SectorSegmentedMirror mirror(rmin + margin, rmax, phimin, phimax);
+    mirror.SetPositionErrors(0*mm, 0*mm, 0*mm);
+    mirror.SetRotationErrors(0., 0., 0.);
+    mirror.SetRougness(0.);
+    mirror.SetMargin(margin);
+    sct->AddSecondaryMirror(Form("secondary%d", count), &mirror);
+    count++;
+  } // i
+
+  // S2 mirrors
+  for(Int_t i = 0; i < 16; i++){
+    Double_t rmin = 1.5965*m;
+    Double_t rmax = 2.7083*m;
+
+    Double_t phimin = 22.5*i;
+    Double_t phimax = 22.5*(i + 1);
+    SectorSegmentedMirror mirror(rmin, rmax + margin, phimin, phimax);
+    mirror.SetPositionErrors(0*mm, 0*mm, 0*mm);
+    mirror.SetRotationErrors(0., 0., 0.);
+    mirror.SetRougness(0.);
+    mirror.SetMargin(margin);
+    sct->AddSecondaryMirror(Form("secondary%d", count), &mirror);
+    count++;
+  } // i
+  */
+};
+/*******************************************************************/
+
+void GSegSCTelescope::AddSecondaryObscuration() {
+  /*
+  const Double_t kZs = fF/fQ;
+  AGeoAsphericDisk* disk
+    = new AGeoAsphericDisk("secondaryObsV", kZs + fS[0] + 1.*cm, 0, kZs + fS[0]  + 1*cm, 0, fRsMax, 0);
+  disk->SetPolynomials(fNs - 1, &fS[1], fNs - 1, &fS[1]);
+
+  TGeoMedium* med = fManager->GetMedium("med");
+  AObscuration* secondaryObs = new AObscuration("secondaryObs", disk, med);
+  fManager->GetTopVolume()->AddNode(secondaryObs, 1);
+  */
+};
+
+/*******************************************************************/
+void GSegSCTelescope::addSecondaryMirror() {
+  /*
+  AMirror* mir = mirror->BuildMirror(name, fSecondaryV, kFALSE);
+  TGeoCombiTrans* combi = mirror->BuildMirrorCombiTrans(fSecondaryV, kFALSE);
+
+  ABorderSurfaceCondition * condition
+    = new ABorderSurfaceCondition(fManager->GetTopVolume(), mir);
+  condition->SetGaussianRoughness(mirror->GetRoughness()*TMath::DegToRad());
+
+  fManager->GetTopVolume()->AddNode(mir, 1, combi);
+  */
+};
+/*************************************************************************************/
+void GSegSCTelescope::addIdealFocalPlane()  {
+  /*
+  const Double_t kZs = fF/fQ;
+  const Double_t kZf = kZs - (1 - fAlpha)*fF;
+
+  AGeoAsphericDisk* idealCameraV = new AGeoAsphericDisk("idealCameraV", kZf - 1*um, 0, kZf, 0, fRf, 0);
+  Double_t sagPar[2] = {fKappa1*TMath::Power(fF, -1),
+                        fKappa2*TMath::Power(fF, -3)};
+  idealCameraV->SetPolynomials(2, sagPar, 2, sagPar);
+  AFocalSurface* idealCamera = new AFocalSurface("idealCamera", idealCameraV);
+  AObscuration* idealCameraObs = new AObscuration("idealCameraObs", idealCameraV);
+  fManager->GetTopVolume()->AddNode(idealCamera, 1);
+  fManager->GetTopVolume()->AddNode(idealCameraObs, 1, new TGeoTranslation(0, 0, -1*um));
+  */
+};
+/*************************************************************************************/
+
+void GSegSCTelescope::addMAPMTFocalPlane()  {
+  /*
+  // Make MAPMT photocathode without pixel structure
+  TGeoBBox* mapmtCathodeV = new TGeoBBox("mapmtCathodeV", fPixelSize*4, fPixelSize*4, 100*um); // very thin box
+  AFocalSurface* mapmtCathode = new AFocalSurface("mapmtCathode", mapmtCathodeV);
+
+  // Make a single MAPMT
+  TGeoBBox* mapmtV = new TGeoBBox("mapmtV", fMAPMTWidth/2., fMAPMTWidth/2.,
+                                  fMAPMTLength/2.);
+  AOpticalComponent* mapmt = new AOpticalComponent("mapmt", mapmtV);
+  TGeoBBox* mapmtInputWindowV = new TGeoBBox("mapmtInputWindowV",
+                                             fMAPMTWidth/2., fMAPMTWidth/2.,
+                                             fInputWindowThickness/2.);
+
+  TGeoMedium* med = fManager->GetMedium("med");
+  ALens* mapmtInputWindow = new ALens("mapmtInputWindow", mapmtInputWindowV, med);
+  ARefractiveIndex* bk7 = AGlassCatalog::GetRefractiveIndex("N-BK7");
+  mapmtInputWindow->SetRefractiveIndex(bk7);
+  mapmt->AddNodeOverlap(mapmtInputWindow, 1, new TGeoTranslation(0, 0, fMAPMTLength/2. - fInputWindowThickness/2.));
+
+  mapmt->AddNode(mapmtCathode, 1, new TGeoTranslation(0, 0, fMAPMTLength/2. - fInputWindowThickness - 100*um));
+
+  TGeoBBox* mapmtBackObsV = new TGeoBBox("mapmtBackObsV",
+                                         fMAPMTWidth/2., fMAPMTWidth/2.,
+                                         15*mm);
+  AObscuration* mapmtBackObs = new AObscuration("mapmtBackObs", mapmtBackObsV);
+  mapmt->AddNode(mapmtBackObs, 1, new TGeoTranslation(0, 0, -fMAPMTLength/2. + 15*mm));
+
+  const Double_t kZs = fF/fQ;
+  const Double_t kZf = kZs - (1 - fAlpha)*fF;
+
+  // Make the focal plane
+  Int_t n = 1;
+  for(Int_t i = -7; i <= 7; i++){
+    Double_t dx = i*fMAPMTWidth;
+    for(Int_t j = -7; j <= 7; j++){
+      if((TMath::Abs(i) + TMath::Abs(j) >= 11) || (TMath::Abs(i)*TMath::Abs(j) == 21)){
+        continue;
+      } // if
+      Double_t dy = j*fMAPMTWidth;
+      Double_t r2 = (i*i + j*j)*fMAPMTWidth*fMAPMTWidth;
+      Double_t dz = fKappa1*TMath::Power(fF, -1)*r2 + fKappa2*TMath::Power(fF, -3)*r2*r2;
+      fManager->GetTopVolume()->AddNode(mapmt, n, new TGeoTranslation(dx, dy, kZf - fMAPMTLength/2. + dz));
+      n++;
+    } // y
+  } // x
+*/
+};
+/*************************************************************************************/
+
+void GSegSCTelescope::closeGeometry()  {
+  gGeoManager = fManager;
+  fManager->CloseGeometry();
+};
+/*************************************************************************************/
+
 void GSegSCTelescope::testFocalPlane() {
 
   // inject photons 
 
 };
+/****************************************************************************************/
 
 void GSegSCTelescope::injectPhoton(const ROOT::Math::XYZVector &photonLocT,
                                 const ROOT::Math::XYZVector &photonDirT,
@@ -165,7 +383,7 @@ void GSegSCTelescope::injectPhoton(const ROOT::Math::XYZVector &photonLocT,
 /********************** end of injectPhoton *****************/
 void GSegSCTelescope::movePositionToTopOfTopVol() {
 
-  //gGeoManager = manager;
+  gGeoManager = fManager;
 
   bool debug = false;
   if (debug) {
@@ -175,6 +393,38 @@ void GSegSCTelescope::movePositionToTopOfTopVol() {
 	  << fphotonInjectLoc[2] << endl;
   }
 
+  Double_t rfx = fphotonInjectLoc[0];
+  Double_t rfy = fphotonInjectLoc[1];
+  Double_t rfz = fphotonInjectLoc[2];
+
+  Double_t Z = fTZ; // just inside top volume
+
+  Double_t dl = fphotonInjectDir[0];
+  Double_t dm = fphotonInjectDir[1];
+  Double_t dn = fphotonInjectDir[2];
+
+  Double_t Rx = rfx - (rfz - Z)*dl/dn;
+  Double_t Ry = rfy - (rfz - Z)*dm/dn;
+  Double_t Rz = Z;
+
+  fphotonInjectLoc[0] = Rx;
+  fphotonInjectLoc[1] = Ry;
+  fphotonInjectLoc[2] = Rz;
+
+  // distance traveled from top to inject location
+  Double_t dist = (rfz - Z)/dn;
+  fphotonToTopVolTime = - dist/(TMath::C());
+  if (debug) {
+    *oLog << "        TopVolPos in focal point coor.  ";
+    for (int i = 0;i<3;i++) {
+      *oLog << fphotonInjectLoc[i] << " ";
+    }
+    *oLog << endl;
+    *oLog << "        distance from top to inject loc " << dist << endl;
+    *oLog << "        fphotonToTopVolTime " << fphotonToTopVolTime << endl;
+    *oLog << endl;
+  }
+ 
   
 };
 //****************************************************
@@ -315,6 +565,10 @@ void GSegSCTelescope::initialize() {
 
   iTelID = 0;
   iStdID = 0;
+
+  fTX = 30.0;  // set to 15 later, after confirming code
+  fTY = 30.0;
+  fTZ = 30.0;
 
   fAvgTransitTime = 0.0;
   fPlateScaleFactor = 0.0;

@@ -31,6 +31,7 @@
 #include "ARay.h"
 #include "ARayArray.h"
 #include "ARayShooter.h"
+#include "GSegmentedMirror.h"
 
 #include <iostream>
 
