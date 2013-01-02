@@ -49,7 +49,10 @@ class GSegSCTelescope : public GTelescope {
   TTree *hisT;
 
   //!< top volume dimensions
-  
+  Double_t fTX;  // set at 30.0 for now, in SCTelescope = 15.0. make graphs first
+  Double_t fTY;
+  Double_t fTZ;
+
   int iTelID;  //!< telescope id in the array.
   int iStdID;  //!< telescope standard number from the telescope factory
 
@@ -152,6 +155,12 @@ class GSegSCTelescope : public GTelescope {
 
   void initialize();
 
+  void makePrimarySecondaryDisks();
+
+  void addPrimaryF();
+
+  void addSecondaryJ();
+
  public:
 
   /*! \brief GSCTelescope constructor
@@ -169,6 +178,12 @@ class GSegSCTelescope : public GTelescope {
       \param os8 If true, OS8 parameters in the PDF will be used, or else OS10
    */
   void buildTelescope(bool os8 = true);
+
+  void addIdealFocalPlane();
+
+  void addMAPMTFocalPlane();
+
+  void closeGeometry();
 
   /*! \brief injectPhoton for ray tracing through telescope
 

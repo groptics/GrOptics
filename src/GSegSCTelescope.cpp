@@ -118,9 +118,37 @@ void GSegSCTelescope::buildTelescope(bool os8)
   new TGeoMedium("med", 1, mat);
 
   // Make the world
-  TGeoBBox* worldbox = new TGeoBBox("worldbox", 30*m, 30*m, 30*m);
+  TGeoBBox* worldbox = new TGeoBBox("worldbox", fTX*m, fTY*m, fTZ*m);
   AOpticalComponent* world = new AOpticalComponent("world", worldbox);
   fManager->SetTopVolume(world);
+
+  makePrimarySecondaryDisks();
+  /*
+  const Double_t kZp = fZp*m;
+  const Double_t kZs = fF/fQ;
+  fPrimaryV = new AGeoAsphericDisk("primaryV",
+                                   kZp + fP[0] - 1*um, 0,
+                                   kZp + fP[0] , 0, 
+                                   fRpMax, fRpMin);
+  fPrimaryV->SetPolynomials(fNp - 1, &fP[1], fNp - 1, &fP[1]);
+
+  // Make the ideal volume of the secondary mirror
+  fSecondaryV = new AGeoAsphericDisk("secondaryV",
+                                     kZs + fS[0], 0, 
+                                     kZs + fS[0]  + 1*um, 
+                                     0, fRsMax, fRsMin);
+  fSecondaryV->SetPolynomials(fNs - 1, &fS[1], fNs - 1, &fS[1]);
+  */
+  return;
+};
+/*************************************************************************************/
+void GSegSCTelescope::makePrimarySecondaryDisks() {
+
+  bool debug = true;
+
+  if (debug) {
+    *oLog << "  --  GSegSCTelescope::makePrimarySecondaryDisks" << endl;
+  }
 
   const Double_t kZp = fZp*m;
   const Double_t kZs = fF/fQ;
@@ -140,11 +168,37 @@ void GSegSCTelescope::buildTelescope(bool os8)
   return;
 };
 /*************************************************************************************/
+
+void GSegSCTelescope::addPrimaryF() {
+
+};
+/*************************************************************************************/
+
+void GSegSCTelescope::addSecondaryJ() {
+
+};
+/*************************************************************************************/
+void GSegSCTelescope::addIdealFocalPlane()  {
+
+};
+/*************************************************************************************/
+
+void GSegSCTelescope::addMAPMTFocalPlane()  {
+
+};
+/*************************************************************************************/
+
+void GSegSCTelescope::closeGeometry()  {
+
+};
+/*************************************************************************************/
+
 void GSegSCTelescope::testFocalPlane() {
 
   // inject photons 
 
 };
+/****************************************************************************************/
 
 void GSegSCTelescope::injectPhoton(const ROOT::Math::XYZVector &photonLocT,
                                 const ROOT::Math::XYZVector &photonDirT,
@@ -165,7 +219,7 @@ void GSegSCTelescope::injectPhoton(const ROOT::Math::XYZVector &photonLocT,
 /********************** end of injectPhoton *****************/
 void GSegSCTelescope::movePositionToTopOfTopVol() {
 
-  //gGeoManager = manager;
+  gGeoManager = fManager;
 
   bool debug = false;
   if (debug) {
@@ -175,6 +229,38 @@ void GSegSCTelescope::movePositionToTopOfTopVol() {
 	  << fphotonInjectLoc[2] << endl;
   }
 
+  Double_t rfx = fphotonInjectLoc[0];
+  Double_t rfy = fphotonInjectLoc[1];
+  Double_t rfz = fphotonInjectLoc[2];
+
+  Double_t Z = fTZ; // just inside top volume
+
+  Double_t dl = fphotonInjectDir[0];
+  Double_t dm = fphotonInjectDir[1];
+  Double_t dn = fphotonInjectDir[2];
+
+  Double_t Rx = rfx - (rfz - Z)*dl/dn;
+  Double_t Ry = rfy - (rfz - Z)*dm/dn;
+  Double_t Rz = Z;
+
+  fphotonInjectLoc[0] = Rx;
+  fphotonInjectLoc[1] = Ry;
+  fphotonInjectLoc[2] = Rz;
+
+  // distance traveled from top to inject location
+  Double_t dist = (rfz - Z)/dn;
+  fphotonToTopVolTime = - dist/(TMath::C());
+  if (debug) {
+    *oLog << "        TopVolPos in focal point coor.  ";
+    for (int i = 0;i<3;i++) {
+      *oLog << fphotonInjectLoc[i] << " ";
+    }
+    *oLog << endl;
+    *oLog << "        distance from top to inject loc " << dist << endl;
+    *oLog << "        fphotonToTopVolTime " << fphotonToTopVolTime << endl;
+    *oLog << endl;
+  }
+ 
   
 };
 //****************************************************
@@ -315,6 +401,10 @@ void GSegSCTelescope::initialize() {
 
   iTelID = 0;
   iStdID = 0;
+
+  fTX = 30.0;  // set to 15 later, after confirming code
+  fTY = 30.0;
+  fTZ = 30.0;
 
   fAvgTransitTime = 0.0;
   fPlateScaleFactor = 0.0;
