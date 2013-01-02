@@ -159,7 +159,13 @@ class GSegSCTelescope : public GTelescope {
 
   void addPrimaryF();
 
+  void addPrimaryMirror();
+
   void addSecondaryJ();
+
+  void addSecondaryMirror();
+
+  void AddSecondaryObscuration();
 
  public:
 
