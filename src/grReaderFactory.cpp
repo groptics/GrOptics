@@ -43,6 +43,11 @@ using namespace std;
 #include "GUtilityFuncts.h"
 #include "GPilot.h"
 
+//#include "GTelescopeFactory.h"
+//#include "GDCTelescopeFactory.h"
+//#include "GSCTelescopeFactory.h"
+//#include "GSegSCTelescopeFactory.h"
+
 #include "GSegmentedMirror.h"
 #include "GTelescope.h"
 #include "GDCTelescope.h"
@@ -173,7 +178,8 @@ ostream *oLog;
 /**************************   main   *****************************/
 int main(int argc, char *argv[]) {
 
-  bool bDrawTel = false;
+  //bool bDrawTel = false;
+  bool bDrawTel = true;
   // log file output stream, initialize
   oLog = &cerr;
 
@@ -201,10 +207,11 @@ int main(int argc, char *argv[]) {
   GSegSCTelescope *segTel = SegSCFac->makeTelescope(id,std);
   *oLog << "TELESCOPE built" << endl;
   if (bDrawTel) {
-	segTel->drawTelescope();
-	app->Run(); 
-	return 0;
-      }
+    segTel->drawTelescope();
+    //segTel->getManager()->GetTopVolume()->Draw("ogl");
+    app->Run(); 
+    //return 0;
+  }
  
   SafeDelete(readerSegSC);
   SafeDelete(SegSCFac);

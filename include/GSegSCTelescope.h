@@ -34,6 +34,7 @@ class TTree;
 class ARay;
 class TGraph;
 class AGeoAsphericDisk;
+class SegmentedMirror;
 
 // stubs for all methods
 class GSegSCTelescope : public GTelescope {
@@ -159,7 +160,7 @@ class GSegSCTelescope : public GTelescope {
 
   void addPrimaryF();
 
-  void addPrimaryMirror();
+  void addPrimaryMirror(const char*name, SegmentedMirror *mirror);
 
   void addSecondaryJ();
 
@@ -274,6 +275,8 @@ class GSegSCTelescope : public GTelescope {
     return 0.0;
   }
   void CloseGeometry(); 
+
+  AOpticsManager *getManager() const { return fManager;};
 };
 
 

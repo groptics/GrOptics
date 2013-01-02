@@ -37,6 +37,7 @@ using namespace std;
 #include "Math/Vector3D.h"
 #include "TRandom3.h"
 #include "TPolyLine3D.h"
+#include "TString.h"
 
 #include "AOpticsManager.h"
 #include "ABorderSurfaceCondition.h"
@@ -64,6 +65,8 @@ using namespace std;
 
 #include "GUtilityFuncts.h"
 #include "GDefinition.h"
+
+#include "GSegmentedMirror.h"
 #include "GTelescope.h"
 #include "GSegSCTelescope.h"
 
@@ -121,24 +124,13 @@ void GSegSCTelescope::buildTelescope(bool os8)
   TGeoBBox* worldbox = new TGeoBBox("worldbox", fTX*m, fTY*m, fTZ*m);
   AOpticalComponent* world = new AOpticalComponent("world", worldbox);
   fManager->SetTopVolume(world);
+  //manager->SetTopVisible(0); 
+  //fManager->SetTopVisible(.5); 
 
   makePrimarySecondaryDisks();
-  /*
-  const Double_t kZp = fZp*m;
-  const Double_t kZs = fF/fQ;
-  fPrimaryV = new AGeoAsphericDisk("primaryV",
-                                   kZp + fP[0] - 1*um, 0,
-                                   kZp + fP[0] , 0, 
-                                   fRpMax, fRpMin);
-  fPrimaryV->SetPolynomials(fNp - 1, &fP[1], fNp - 1, &fP[1]);
-
-  // Make the ideal volume of the secondary mirror
-  fSecondaryV = new AGeoAsphericDisk("secondaryV",
-                                     kZs + fS[0], 0, 
-                                     kZs + fS[0]  + 1*um, 
-                                     0, fRsMax, fRsMin);
-  fSecondaryV->SetPolynomials(fNs - 1, &fS[1], fNs - 1, &fS[1]);
-  */
+  addPrimaryF();
+  
+  closeGeometry();
   return;
 };
 /*************************************************************************************/
@@ -150,15 +142,41 @@ void GSegSCTelescope::makePrimarySecondaryDisks() {
     *oLog << "  --  GSegSCTelescope::makePrimarySecondaryDisks" << endl;
   }
 
-  const Double_t kZp = fZp*m;
-  const Double_t kZs = fF/fQ;
+  const Double_t kZp = fZp;
+  const Double_t kZs = (fF)/fQ;
+  if (debug) {
+    *oLog << "   fF " << fF << endl;
+    *oLog << " primary" << endl;
+    *oLog << "   kZp+fP[0]      " << kZp + fP[0] << endl;
+    *oLog << "   kZp+fP[0]-1*um " << kZp + fP[0] - 1*um << endl;
+    *oLog << "   fRpMax, fRpMin " << fRpMax << " " << fRpMin << endl;
+    *oLog << " secondary" << endl;
+    *oLog << "   kZs + fS[0]    " << kZs + fS[0] << endl;
+    *oLog << "   kZs + fS[0]  + 1*um " << kZs + fS[0]  + 1*um << endl;
+    *oLog << "   fRsMax, fRsMin " << fRsMax << "  " << fRsMin << endl;
+  }
   fPrimaryV = new AGeoAsphericDisk("primaryV",
                                    kZp + fP[0] - 1*um, 0,
                                    kZp + fP[0] , 0, 
-                                   fRpMax, fRpMin);
+                                    fRpMax, fRpMin);
+
+  if (debug) {
+    *oLog << "   primary coefficients " << endl;
+    *oLog << "   fNp " << fNp << endl;
+    for (int i = 0;i<fNp; i++ ) {
+      *oLog << "   i/fNp " << i << " " << fP[i] << endl;
+    }
+  }
   fPrimaryV->SetPolynomials(fNp - 1, &fP[1], fNp - 1, &fP[1]);
 
   // Make the ideal volume of the secondary mirror
+  if (debug) {
+    *oLog << "   secondary coefficients " << endl;
+    *oLog << "   fNs " << fNs << endl;
+    for (int i = 0;i<fNs; i++ ) {
+      *oLog << "   i/fNs " << i << " " << fS[i] << endl;
+    }
+  }
   fSecondaryV = new AGeoAsphericDisk("secondaryV",
                                      kZs + fS[0], 0, 
                                      kZs + fS[0]  + 1*um, 
@@ -170,7 +188,57 @@ void GSegSCTelescope::makePrimarySecondaryDisks() {
 /*************************************************************************************/
 
 void GSegSCTelescope::addPrimaryF() {
+  bool debug = true;
+
+  if (debug) {
+    *oLog << "  --  GSegSCTelescope::addPrimaryF" << endl;
+    /*
+    *oLog << "     primaryF parameters " << endl;
+    *oLog << "       rmin/rmax " <<  (*(vSegP1.at(0))).rmin << "  "
+          << (*(vSegP1.at(0))).rmax << endl;
+    
+    *oLog << "       delPhi " << (*(vSegP1.at(0))).delPhi << endl;
+    *oLog << "       margin " << (*(vSegP1.at(0))).margin << endl;
+    *oLog << "       pos.errors " << (*(vSegP1.at(0))).posErrorX << "  "
+          << (*(vSegP1.at(0))).posErrorY << "  " << (*(vSegP1.at(0))).posErrorZ
+          << endl;
+    *oLog << "       rot.errors " << (*(vSegP1.at(0))).rotErrorX << "  "
+          << (*(vSegP1.at(0))).rotErrorY << "  " << (*(vSegP1.at(0))).rotErrorZ
+          << endl;
+    *oLog << "       reflect curve " << (*(vSegP1.at(0))).reflect << endl;
+    *oLog << "       iNumP1Mirrors " << iNumP1Mirrors << endl;
+    */
+   }
   Int_t count = 0;
+
+  // segment not created if reflect = 0
+  // P1 mirrors
+  for (Int_t i = 0; i < iNumP1Mirrors; i++) {
+    if ( ( (*(vSegP1.at(i))).reflect) > 0) {
+      Double_t rmin = (*(vSegP1.at(0))).rmin;
+      Double_t rmax = (*(vSegP1.at(0))).rmax;
+      Double_t margin = (*(vSegP1.at(0))).margin;
+      rmin = rmin*m - margin/TMath::Cos(11.25/2.*TMath::DegToRad());
+      rmax = rmax*m;
+      
+      Double_t phimin = ( (*(vSegP1.at(0))).delPhi)*i;
+      Double_t phimax = ( (*(vSegP1.at(0))).delPhi)*(i+1);
+      if (debug) {
+        *oLog << "    P1 pentagon segmented mirror number " << i << endl;
+        *oLog << "        rmin/rmax " << rmin << " " << rmax << endl;
+        *oLog << "        margin    " << margin << endl;
+        *oLog << "        phimin/max " << phimin << "  " << phimax << endl;
+      }
+    PentagonSegmentedMirror mirror(rmin + margin, rmax, phimin, phimax);
+    mirror.SetPositionErrors(0*mm, 0*mm, 0*mm);
+    mirror.SetRotationErrors(0., 0., 0.);
+    mirror.SetRougness(0.);
+    mirror.SetMargin(margin);
+    // add mirror segment
+    addPrimaryMirror(Form("primary%d", count), &mirror);
+    count++;
+    } 
+  }
   /*
   // P1 mirrors
   for(Int_t i = 0; i < 16; i++){
@@ -206,8 +274,16 @@ void GSegSCTelescope::addPrimaryF() {
   */
 };
 /*******************************************************************/
-void GSegSCTelescope::addPrimaryMirror() {
-  /*
+void GSegSCTelescope::addPrimaryMirror(const char*name,
+                                       SegmentedMirror *mirror) {
+
+  gGeoManager = fManager;
+  
+  bool debug = true;
+  if (debug) {
+    *oLog << "  --  GSegSCTelescope::addPrimaryMirror" << endl;
+  }
+  
   AMirror* mir = mirror->BuildMirror(name, fPrimaryV, kTRUE);
   TGeoCombiTrans* combi = mirror->BuildMirrorCombiTrans(fPrimaryV, kTRUE);
 
@@ -215,9 +291,9 @@ void GSegSCTelescope::addPrimaryMirror() {
     = new ABorderSurfaceCondition(fManager->GetTopVolume(), mir);
   condition->SetGaussianRoughness(mirror->GetRoughness()*TMath::DegToRad());
   fManager->GetTopVolume()->AddNode(mir, 1, combi);
-  */
+  
 };
-
+/*******************************************************************/
 
 void GSegSCTelescope::addSecondaryJ() {
   Int_t count = 0;
@@ -474,7 +550,8 @@ void GSegSCTelescope::drawTelescope() {
     *oLog << "  -- GSegSCTelescope::drawTelescope" << endl; 
   }
   gGeoManager = fManager;
-  gGeoManager->GetMasterVolume()->Draw("ogl");
+  //gGeoManager->GetMasterVolume()->Draw("ogl");
+  gGeoManager->GetTopVolume()->Draw("ogl");
 };
 /********************** end of drawTelescope *****************/
 

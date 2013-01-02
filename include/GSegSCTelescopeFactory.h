@@ -19,8 +19,13 @@ class GPilot;
 class GSegSCTelescope;
 class GTelescope;
 class GReadSegSCStd;
+class mirrorSegmentDetails;
 
-struct mirrorSegmentDetails {
+// move following declaration to GDefinition.h
+// if a structure/variable used in more than one file
+// put the declaration in GDefinition.h
+/*
+  struct mirrorSegmentDetails {
   Double_t rmin;
   Double_t rmax;
   Double_t margin;
@@ -35,6 +40,7 @@ struct mirrorSegmentDetails {
   Double_t roughness;
   Int_t bRead; // if 0, set from BASIC; if 1, set from CHANGE
 };
+*/
 
 /*!  /brief SegSCStdOptics structure stores details of a standard 
      Davis-Cotton telescope

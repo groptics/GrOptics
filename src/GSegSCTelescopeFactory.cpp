@@ -50,6 +50,13 @@ using namespace std;
 #define DEBUG(x) *oLog << #x << " = " << x << endl
 #define DEBUGS(x) *oLog << "       "<< #x << " = " << x << endl
 
+// define useful units
+static const double cm = AOpticsManager::cm();
+static const double mm = AOpticsManager::mm();
+static const double um = AOpticsManager::um();
+static const double nm = AOpticsManager::nm();
+static const double  m = AOpticsManager::m();
+
 /*!  /brief SegSCStdOptics structure stores details of a standard 
      Davis-Cotton telescope
  */
@@ -301,20 +308,22 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SCTel->fRotationOffset = opt->fRotationOffset;
 
   // general telescope parameters
-  SCTel->fF = opt->fF;
+  SCTel->fF = (opt->fF)*m;
   SCTel->fAlpha = opt->fAlpha;
   SCTel->fQ = opt->fQ;
 
   // primary parameters
-  SCTel->fRpMax = opt->fRpMax;
-  SCTel->fRpMin = opt->fRpMin;
-  SCTel->fZp = opt->fZp;
-  SCTel->fNp = opt->fNp;
+  SCTel->fRpMax = (opt->fRpMax)*m;
+  SCTel->fRpMin = (opt->fRpMin)*m;
+  SCTel->fZp = (opt->fZp)*m;
+  //SCTel->fNp = opt->fNp;
+  SCTel->fNp = opt->iNParP;
   SCTel->iNParP = opt->iNParP;
   SCTel->fzp = opt->fzp;
   // make primary poly coefficients
   SCTel->fP = new Double_t[SCTel->iNParP];
-  Double_t fF = opt->fF;
+  Double_t fF = SCTel->fF;
+  *oLog << " +++++++++ fF " << fF << endl;
   (SCTel->fP)[0] = TMath::Power(fF,  1)* ((opt->fzp[0]));
   (SCTel->fP)[1] = TMath::Power(fF,  -1)* ((opt->fzp[1]));
   (SCTel->fP)[2] = TMath::Power(fF,  -3)* ((opt->fzp[2]));
@@ -325,16 +334,17 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   (SCTel->fP)[7] = TMath::Power(fF,  -13)* ((opt->fzp[7]));
   
   // secondary parameters
-  SCTel->fRsMax = opt->fRsMax;
-  SCTel->fRsMin = opt->fRsMin;
-  SCTel->fZs = opt->fZs;
+  SCTel->fRsMax = (opt->fRsMax)*m;
+  SCTel->fRsMin = (opt->fRsMin)*m;
+  SCTel->fZs = (opt->fZs)*m;
   SCTel->fNs = opt->fNs;
   SCTel->fS = opt->fS;
   SCTel->iNParS = opt->iNParS;
+  SCTel->fNs = opt->iNParS;
   SCTel->fzs = opt->fzs;
   // make secondary poly coefficients
   SCTel->fS = new Double_t[SCTel->iNParS];
-  fF = opt->fF;
+  fF = SCTel->fF;
   (SCTel->fS)[0] = TMath::Power(fF,  1)* ((opt->fzs[0]));
   (SCTel->fS)[1] = TMath::Power(fF,  -1)* ((opt->fzs[1]));
   (SCTel->fS)[2] = TMath::Power(fF,  -3)* ((opt->fzs[2]));

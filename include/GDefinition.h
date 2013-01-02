@@ -127,4 +127,19 @@ enum GeoType getGeoTypeEnum(const string &geoTypeStr);
 
 extern std::string TESTSR;
 
+struct mirrorSegmentDetails {
+  Double_t rmin;
+  Double_t rmax;
+  Double_t margin;
+  Double_t delPhi;
+  Int_t reflect;
+  Double_t posErrorX;
+  Double_t posErrorY;
+  Double_t posErrorZ;
+  Double_t rotErrorX;
+  Double_t rotErrorY;
+  Double_t rotErrorZ;
+  Double_t roughness;
+  Int_t bRead; // if 0, set from BASIC; if 1, set from CHANGE
+};
 #endif
