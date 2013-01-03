@@ -67,6 +67,7 @@ using namespace std;
 #include "GDefinition.h"
 
 #include "GSegmentedMirror.h"
+#include "GSegmentedObscuration.h"
 #include "GTelescope.h"
 #include "GSegSCTelescope.h"
 
@@ -132,7 +133,7 @@ void GSegSCTelescope::buildTelescope(bool os8)
   makePrimarySecondaryDisks();
   addPrimaryF();
   addSecondaryJ();
-  AddSecondaryObscuration();
+  //addSecondaryObscuration();
   //printTelescope();
 
   addIdealFocalPlane();
@@ -185,10 +186,18 @@ void GSegSCTelescope::makePrimarySecondaryDisks() {
     }
   }
   fSecondaryV = new AGeoAsphericDisk("secondaryV",
-                                     kZs + fS[0], 0, 
-                                     kZs + fS[0]  + 1*um, 
+                                     kZs + fS[0] , 0, 
+                                     kZs + fS[0]  + 1*um , 
                                      0, fRsMax*m, fRsMin*m);
   fSecondaryV->SetPolynomials(fNs - 1, &fS[1], fNs - 1, &fS[1]);
+
+  // make volume for secondary obscurations
+  fSecondaryObsV = new AGeoAsphericDisk("secondaryObsV",
+                                     kZs + fS[0] + 5.*cm, 0, 
+                                     kZs + fS[0] + 5.*cm + 1*um, 
+                                     0, fRsMax*m, fRsMin*m);
+
+  fSecondaryObsV->SetPolynomials(fNs - 1, &fS[1], fNs - 1, &fS[1]);
 
   return;
 };
@@ -305,6 +314,7 @@ void GSegSCTelescope::addSecondaryJ() {
     *oLog << "  --  GSegSCTelescope::addSecondaryJ" << endl;
   }
   Int_t count = 0;
+  Int_t count1 = 0;
 
   // S1 mirrors
   for (Int_t i = 0; i < iNumS1Mirrors; i++) {
@@ -329,9 +339,15 @@ void GSegSCTelescope::addSecondaryJ() {
     mirror.SetRougness(0.);
     mirror.SetMargin(margin);
     // add mirror segment
-    addSecondaryMirror(Form("secondary%d", count), &mirror);    
+    addSecondaryMirror(Form("secondary%d", count1), &mirror);    
+
+    SectorSegmentedObscuration  obscuration(rmin + margin, rmax, phimin, phimax);
+    obscuration.SetPositionErrors(0*mm, 0*mm, 0*mm);
+    obscuration.SetRotationErrors(0., 0., 0.);
+    obscuration.SetMargin(margin);
+    addSecondaryObscurationSeg(Form("secondaryObs%d", count1), &obscuration);    
     count++;
-    
+    count1++;
     }
   }
 
@@ -367,7 +383,7 @@ void GSegSCTelescope::addSecondaryJ() {
 };
 /*******************************************************************/
 
-void GSegSCTelescope::AddSecondaryObscuration() {
+void GSegSCTelescope::addSecondaryObscuration() {
 
   bool debug = true;
   if (debug) {
@@ -383,8 +399,37 @@ void GSegSCTelescope::AddSecondaryObscuration() {
 
   TGeoMedium* med = fManager->GetMedium("med");
   AObscuration* secondaryObs = new AObscuration("secondaryObs", disk, med);
+  secondaryObs->SetLineColor(2);
   fManager->GetTopVolume()->AddNode(secondaryObs, 1);
 
+};
+/*******************************************************************/
+void GSegSCTelescope::addSecondaryObscurationSeg(const char*name, 
+                               SegmentedObscuration *obscuration) {
+
+  gGeoManager = fManager;
+  
+  bool debug = true;
+  if (debug) {
+    *oLog << "  --  GSegSCTelescope::addSecondaryObscurationSeg" << endl;
+  }
+  // static int i = 0;
+  //if (i == 0) {
+  //i = 1;
+  //}
+  //else {
+  //return; 
+  //}
+  AObscuration* obs = obscuration->BuildObscuration(name, fSecondaryObsV, kFALSE);
+  obs->SetLineColor(2);
+  TGeoCombiTrans* combi = obscuration->BuildObscurationCombiTrans(fSecondaryObsV, kFALSE);
+
+  //ABorderSurfaceCondition * condition
+  //= new ABorderSurfaceCondition(fManager->GetTopVolume(), obs);
+  //condition->SetGaussianRoughness(mirror->GetRoughness()*TMath::DegToRad());
+
+  fManager->GetTopVolume()->AddNode(obs, 1, combi);
+  
 };
 
 /*******************************************************************/
@@ -699,6 +744,10 @@ void GSegSCTelescope::initialize() {
   }
 
   fManager = 0;
+  fPrimaryV      = 0;
+  fSecondaryV    = 0;
+  fSecondaryObsV = 0;
+
   ray = 0;
   hisF = 0;
   hisT = 0;

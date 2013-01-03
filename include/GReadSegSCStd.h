@@ -7,8 +7,8 @@ VERSION2.7aBeta
 
  */
 
-#ifndef GREADNEWSCSTD
-#define GREADNEWSCSTD
+#ifndef GREADSEGSCSTD
+#define GREADSEGSCSTD
 
 class GPilot; 
 class GSegSCTelescopeFactory;

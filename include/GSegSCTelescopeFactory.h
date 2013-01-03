@@ -10,8 +10,8 @@ the base class for DC and SC telescope concrete factories.
 GSegSCTelescopeFactory produces the SC telescopes.
 
 */
-#ifndef GNEWSCTELESCOPEFACTORY
-#define GNEWSCTELESCOPEFACTORY
+#ifndef GSEGSCTELESCOPEFACTORY
+#define GSEGSCTELESCOPEFACTORY
 
 // forward declarations
 class TGraph;

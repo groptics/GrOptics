@@ -46,7 +46,8 @@ $(OBJ)/GRootWriterDict.o \
 $(OBJ)/GSegSCTelescope.o \
 $(OBJ)/GSegSCTelescopeFactory.o \
 $(OBJ)/GReadSegSCStd.o \
-$(OBJ)/GSegmentedMirror.o
+$(OBJ)/GSegmentedMirror.o \
+$(OBJ)/GSegmentedObscuration.o
 
 TESTOBJECTS = $(OBJ)/GUtilityFuncts.o $(OBJ)/GDefinition.o 
 

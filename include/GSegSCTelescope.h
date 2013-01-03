@@ -9,8 +9,8 @@ GSCTelescope provides the concrete class for a Schwarzschild-Couder
 telescope.  Inherits from GTelescope base class.
 
 */
-#ifndef GNEWSCTELESCOPE
-#define GNEWSCTELESCOPE
+#ifndef GSEGSCTELESCOPE
+#define GSEGSCTELESCOPE
 
 #include "TGraph.h"
 
@@ -35,8 +35,8 @@ class ARay;
 class TGraph;
 class AGeoAsphericDisk;
 class SegmentedMirror;
+class SegmentedObscuration;
 
-// stubs for all methods
 class GSegSCTelescope : public GTelescope {
 
   friend class GSegSCTelescopeFactory;
@@ -44,6 +44,7 @@ class GSegSCTelescope : public GTelescope {
   AOpticsManager* fManager;
   AGeoAsphericDisk * fPrimaryV;
   AGeoAsphericDisk * fSecondaryV;
+  AGeoAsphericDisk * fSecondaryObsV;
 
   ARay *ray;
   TFile *hisF;
@@ -164,7 +165,11 @@ class GSegSCTelescope : public GTelescope {
 
   void addSecondaryMirror(const char*name, SegmentedMirror *mirror);
 
-  void AddSecondaryObscuration();
+  void addSecondaryObscuration();
+
+  void addSecondaryObscurationSeg(const char*name, 
+                                  SegmentedObscuration *obscuration);
+ 
 
  public:
 

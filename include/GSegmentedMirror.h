@@ -6,8 +6,8 @@ VERSION2.7aBeta
             including a pointer to a GTelescope instance
  */
 
-#ifndef GARRAYTEL
-#define GARRAYTEL
+#ifndef GSEGMENTEDMIRROR
+#define GSEGMENTEDMIRROR
 
 // forward declarations
 class AMirror;
