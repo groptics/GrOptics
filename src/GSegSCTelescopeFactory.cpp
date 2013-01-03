@@ -308,22 +308,21 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SCTel->fRotationOffset = opt->fRotationOffset;
 
   // general telescope parameters
-  SCTel->fF = (opt->fF)*m;
+  SCTel->fF = (opt->fF);
   SCTel->fAlpha = opt->fAlpha;
   SCTel->fQ = opt->fQ;
 
   // primary parameters
-  SCTel->fRpMax = (opt->fRpMax)*m;
-  SCTel->fRpMin = (opt->fRpMin)*m;
-  SCTel->fZp = (opt->fZp)*m;
+  SCTel->fRpMax = (opt->fRpMax);
+  SCTel->fRpMin = (opt->fRpMin);
+  SCTel->fZp = (opt->fZp);
   //SCTel->fNp = opt->fNp;
   SCTel->fNp = opt->iNParP;
   SCTel->iNParP = opt->iNParP;
   SCTel->fzp = opt->fzp;
   // make primary poly coefficients
   SCTel->fP = new Double_t[SCTel->iNParP];
-  Double_t fF = SCTel->fF;
-  *oLog << " +++++++++ fF " << fF << endl;
+  Double_t fF = (SCTel->fF)*m;
   (SCTel->fP)[0] = TMath::Power(fF,  1)* ((opt->fzp[0]));
   (SCTel->fP)[1] = TMath::Power(fF,  -1)* ((opt->fzp[1]));
   (SCTel->fP)[2] = TMath::Power(fF,  -3)* ((opt->fzp[2]));
@@ -334,9 +333,9 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   (SCTel->fP)[7] = TMath::Power(fF,  -13)* ((opt->fzp[7]));
   
   // secondary parameters
-  SCTel->fRsMax = (opt->fRsMax)*m;
-  SCTel->fRsMin = (opt->fRsMin)*m;
-  SCTel->fZs = (opt->fZs)*m;
+  SCTel->fRsMax = (opt->fRsMax);
+  SCTel->fRsMin = (opt->fRsMin);
+  SCTel->fZs = (opt->fZs);
   SCTel->fNs = opt->fNs;
   SCTel->fS = opt->fS;
   SCTel->iNParS = opt->iNParS;
@@ -344,7 +343,7 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SCTel->fzs = opt->fzs;
   // make secondary poly coefficients
   SCTel->fS = new Double_t[SCTel->iNParS];
-  fF = SCTel->fF;
+  fF = (SCTel->fF)*m;
   (SCTel->fS)[0] = TMath::Power(fF,  1)* ((opt->fzs[0]));
   (SCTel->fS)[1] = TMath::Power(fF,  -1)* ((opt->fzs[1]));
   (SCTel->fS)[2] = TMath::Power(fF,  -3)* ((opt->fzs[2]));
@@ -360,15 +359,21 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SCTel->vSegP1 = opt->vSegP1;
   SCTel->vSegP2 = opt->vSegP2;
 
- // secondary segment details
+ // secondary segment S1details
   SCTel->iNumS1Mirrors = opt->iNumS1Mirrors;
+  SCTel->iNumS2Mirrors = opt->iNumS2Mirrors;
   SCTel->vSegS1 = opt->vSegS1;
   SCTel->vSegS2 = opt->vSegS2;
+
+  // focal plane
+  SCTel->fKappa1 = opt->fKappa1;
+  SCTel->fKappa2 = opt->fKappa2;
+  SCTel->fRf     = opt->fRf;
+
   SCTel->printTelescope();
   SCTel->buildTelescope();
 
-  return SCTel;
- 
+  return SCTel; 
 };
 /************** end of makeTelescope ***********************/
 

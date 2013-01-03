@@ -137,12 +137,10 @@ class GSegSCTelescope : public GTelescope {
   // focal plane
 
   // camera
-
-  //int iNParP;
-  //vector<double> fzp;
-  //int iNParS;
-  //vector<double> fzs;
-
+  Double_t fKappa1;
+  Double_t fKappa2;
+  Double_t fRf;
+  Double_t fZf;
 
   TelType eTelType; //!< telescope type enum (here will be SC)
 
@@ -164,7 +162,7 @@ class GSegSCTelescope : public GTelescope {
 
   void addSecondaryJ();
 
-  void addSecondaryMirror();
+  void addSecondaryMirror(const char*name, SegmentedMirror *mirror);
 
   void AddSecondaryObscuration();
 
