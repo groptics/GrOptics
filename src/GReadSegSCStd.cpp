@@ -182,6 +182,16 @@ void GReadSegSCStd::setupSCFactory() {
       opt->iPrtMode = iprintmode;
     }
   }
+  // read PLATESCALE record ///////////////
+  flag = "PLATESCALE"; 
+  pi->set_flag(flag);
+
+  while (pi->get_line_vector(tokens) >=0) {
+    int iStdOptNum = atoi(tokens.at(0).c_str() );
+    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt->fPlateScaleFactor = atof(tokens.at(1).c_str() );
+  }
+
   // read PRIMARY record ///////////////
   flag = "PRIMARY"; 
   pi->set_flag(flag);

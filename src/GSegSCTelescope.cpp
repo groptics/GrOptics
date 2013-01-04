@@ -38,9 +38,9 @@ using namespace std;
 #include "TRandom3.h"
 #include "TPolyLine3D.h"
 #include "TString.h"
-
-#include "AOpticsManager.h"
-#include "ABorderSurfaceCondition.h"
+#include "TH1D.h"
+#include "TH2D.h"
+#include "TGraph.h"
 
 #include "TGeoManager.h"
 #include "TGeoBBox.h"
@@ -62,6 +62,17 @@ using namespace std;
 #include "TGeoPgon.h"
 #include "TVersionCheck.h"
 #include "TGraph.h"
+
+#include "ABorderSurfaceCondition.h"
+#include "AGeoAsphericDisk.h"
+#include "AGlassCatalog.h"
+#include "ALens.h"
+#include "AMirror.h"
+#include "AObscuration.h"
+#include "AOpticsManager.h"
+#include "ARay.h"
+#include "ARayArray.h"
+#include "ARayShooter.h"
 
 #include "GUtilityFuncts.h"
 #include "GDefinition.h"
@@ -109,6 +120,13 @@ void GSegSCTelescope::buildTelescope(bool os8)
 {
   // fix units
   fF = fF*m;
+  fRpMax = fRpMax*m;
+  fRpMin = fRpMin*m;
+  fRsMax = fRsMax*m;
+  fRsMin = fRsMin*m;
+  fTX = fTX*m;
+  fTY = fTY*m;
+  fTZ = fTZ*m;
 
   bool debug = true;
   if (debug) {
@@ -118,6 +136,7 @@ void GSegSCTelescope::buildTelescope(bool os8)
   fManager = new AOpticsManager("manager","The optics manager of SEGSC");
   fManager->SetVisLevel(5);
   fManager->SetNsegments(50);
+  fManager->DisableFresnelReflection(1);
 
   // Make dummy material
   TGeoMaterial* mat = new TGeoMaterial("mat", 0, 0, 0);
@@ -125,7 +144,7 @@ void GSegSCTelescope::buildTelescope(bool os8)
   new TGeoMedium("med", 1, mat);
 
   // Make the world
-  TGeoBBox* worldbox = new TGeoBBox("worldbox", fTX*m, fTY*m, fTZ*m);
+  TGeoBBox* worldbox = new TGeoBBox("worldbox", fTX, fTY, fTZ);
   AOpticalComponent* world = new AOpticalComponent("world", worldbox);
   fManager->SetTopVolume(world);
   //fManager->SetTopVisible(7); 
@@ -140,6 +159,9 @@ void GSegSCTelescope::buildTelescope(bool os8)
   addIdealFocalPlane();
 
   closeGeometry();
+
+  testPerformance();
+
   return;
 };
 /*************************************************************************************/
@@ -153,6 +175,7 @@ void GSegSCTelescope::makePrimarySecondaryDisks() {
 
   const Double_t kZp = fZp*m;
   const Double_t kZs = (fF)/fQ;
+  
   if (0) {
     *oLog << "   fF " << fF << endl;
     *oLog << " primary" << endl;
@@ -167,7 +190,7 @@ void GSegSCTelescope::makePrimarySecondaryDisks() {
   fPrimaryV = new AGeoAsphericDisk("primaryV",
                                    kZp + fP[0] - 1*um, 0,
                                    kZp + fP[0] , 0, 
-                                    fRpMax*m, fRpMin*m);
+                                    fRpMax, fRpMin);
 
   if (0) {
     *oLog << "   primary coefficients " << endl;
@@ -189,14 +212,14 @@ void GSegSCTelescope::makePrimarySecondaryDisks() {
   fSecondaryV = new AGeoAsphericDisk("secondaryV",
                                      kZs + fS[0] , 0, 
                                      kZs + fS[0]  + 1*um , 
-                                     0, fRsMax*m, fRsMin*m);
+                                     0, fRsMax, fRsMin);
   fSecondaryV->SetPolynomials(fNs - 1, &fS[1], fNs - 1, &fS[1]);
 
   // make volume for secondary obscurations
   fSecondaryObsV = new AGeoAsphericDisk("secondaryObsV",
                                      kZs + fS[0] + 5.*cm, 0, 
                                      kZs + fS[0] + 5.*cm + 1*um, 
-                                     0, fRsMax*m, fRsMin*m);
+                                     0, fRsMax, fRsMin);
 
   fSecondaryObsV->SetPolynomials(fNs - 1, &fS[1], fNs - 1, &fS[1]);
 
@@ -410,7 +433,7 @@ void GSegSCTelescope::addSecondaryObscuration() {
   AGeoAsphericDisk* disk
     = new AGeoAsphericDisk("secondaryObsV", 
                            kZs + fS[0] + 1.*cm, 0, 
-                           kZs + fS[0]  + 1*cm, 0, fRsMax*m, 0);
+                           kZs + fS[0]  + 1*cm, 0, fRsMax, 0);
   disk->SetPolynomials(fNs - 1, &fS[1], fNs - 1, &fS[1]);
 
   TGeoMedium* med = fManager->GetMedium("med");
@@ -567,7 +590,7 @@ void GSegSCTelescope::testFocalPlane() {
 void GSegSCTelescope::injectPhoton(const ROOT::Math::XYZVector &photonLocT,
                                 const ROOT::Math::XYZVector &photonDirT,
 				const double &photWaveLgt) {
-  //gGeoManager = manager;
+  gGeoManager = fManager;
 
   bool debug = true;
   if (debug) {
@@ -578,6 +601,69 @@ void GSegSCTelescope::injectPhoton(const ROOT::Math::XYZVector &photonLocT,
     GUtilityFuncts::printGenVector(photonDirT); *oLog << endl;
     *oLog << "      bPhotonHistoryFlag " << bPhotonHistoryFlag << endl;
   } 
+  // for debugging and testing only
+
+  fphotonInjectLoc[0] = 3.0;
+  fphotonInjectLoc[1] = 0.0;
+  fphotonInjectLoc[2] = 0.0;
+
+  fphotonInjectDir[0] = 0.0;
+  fphotonInjectDir[1] = 0.0;
+  fphotonInjectDir[2] = -1.0;
+
+  *oLog << "        TESTING WITH THESE VALUES" << endl;
+  *oLog << "             specified location and direction " << endl;
+  for (int i = 0;i<3;i++) {
+    *oLog << i << "  " << fphotonInjectLoc[i] << "  " 
+  	  << fphotonInjectDir[i] << endl;
+  }
+
+  photonLocT.GetCoordinates(fInitialInjectLoc);
+  photonLocT.GetCoordinates(fphotonInjectLoc);
+  photonDirT.GetCoordinates(fphotonInjectDir); 
+
+  // convert to cm as required for robast
+  fphotWaveLgt = photWaveLgt*nm;
+
+  // move base of injection location vector to center of primary mirror
+  // (add rotation offset)
+  fphotonInjectLoc[2] = fphotonInjectLoc[2] + fRotationOffset;
+
+  movePositionToTopOfTopVol();
+ 
+  // initialize photonHistory parameters if necessary
+  if (bPhotonHistoryFlag) {
+    initializePhotonHistoryParms();    
+  }
+  
+  // Assuming that three arguments are given in units of (m), (m), (nm)
+  double t = 0;
+  double x  = fphotonInjectLoc[0];
+  double y  = fphotonInjectLoc[1];
+  double z  = fphotonInjectLoc[2];
+  double dx = fphotonInjectDir[0];
+  double dy = fphotonInjectDir[1];
+  double dz = fphotonInjectDir[2];
+
+  SafeDelete(ray);
+  ray = new ARay(0, fphotWaveLgt, x*m, y*m, z*m, t, dx, dy, dz);
+
+  gGeoManager = fManager;
+
+  fManager->TraceNonSequential(*ray);
+ 
+  // Here you can get the traced result
+  double new_xyzt[4];
+  ray->GetLastPoint(new_xyzt);
+  fNPoints = ray->GetNpoints();
+  double new_x = new_xyzt[0];
+  double new_y = new_xyzt[1];
+  double new_z = new_xyzt[2];
+  double new_t = new_xyzt[3];
+  if (debug) {
+    *oLog << " from GetLastPoint " << new_x << " " << new_y 
+	  << " " << new_z << " " << new_t << endl;
+  }
 
 };
 /********************** end of injectPhoton *****************/
@@ -585,7 +671,7 @@ void GSegSCTelescope::movePositionToTopOfTopVol() {
 
   gGeoManager = fManager;
 
-  bool debug = false;
+  bool debug = true;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::movePositionToTopOfTopVol " << endl;
     *oLog << "        position prior to move to top ";
@@ -632,19 +718,95 @@ bool GSegSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
                                            ROOT::Math::XYZVector *photonDcos,
                                            double *photonTime) {
   
-  //gGeoManager = manager;
+  gGeoManager = fManager;
 
   bool debug = true;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::getCameraPhotonLocation " << endl;
   }
-  // just return zeros
+
   photonLoc->SetCoordinates(0.0,0.0,0.0);
   photonDcos->SetCoordinates(0.0,0.0,-1.0);
   *photonTime = 10.0;
   
-  return true;
+  //return true;
+  double x[4],dir[3];
+  for (int i = 0;i<3;i++) {
+    x[i] = 0.0;
+    dir[i] = 0.0;
+  }
+  x[3] = 0.0;
 
+  ray->GetLastPoint(x);
+  ray->GetDirection(dir);
+  fStatusLast = -1;
+
+  // convert distances to mm from cm.
+  for (int i = 0;i<3;i++) {
+    x[i] = x[i] * 10.0;
+  }
+  photonLoc->SetCoordinates(x[0],x[1],x[2]);
+  photonDcos->SetCoordinates(dir[0],dir[1],dir[2]);
+  *photonTime = (x[3] + fphotonToTopVolTime)*1.0e09;
+ 
+  enum {kRun, kStop, kExit, kFocus, kSuspend, kAbsorb};
+  
+  if (ray->IsExited()) fStatusLast = kExit;
+  else if (ray->IsFocused()) {
+    fStatusLast = kFocus;
+  }
+  else if (ray->IsStopped()) fStatusLast = kStop;
+  else if (ray->IsSuspended()) fStatusLast = kSuspend;
+  else if (ray->IsAbsorbed() ) fStatusLast = kAbsorb;
+  
+  if (debug) {
+    *oLog << "       GetLastPOint " << endl;
+    for (int i = 0; i < 3; i++) {
+      *oLog << "            " << i << "  loc " << x[i] << endl;
+      *oLog << "            " << i << "  dir " << dir[i] << endl;
+    }
+    *oLog <<   "            time " << x[3] << endl;
+    *oLog <<   "            fStatus " << fStatusLast << endl;
+    *oLog <<   "            enum for fStatus {kRun, kStop, kExit, kFocus, kSuspend, kAbsorb} " << endl;
+    *oLog <<   "            *photonTime " << *photonTime << endl;
+  }
+
+  if (bPhotonHistoryFlag) {
+    for (int i = 0;i<3;i++) {
+      fLocLast[i] = x[i];
+      fDirLast[i] = dir[i];
+    }
+    
+    fTimeLast = (x[3] + fphotonToTopVolTime)*1.0e09;
+    fillPhotonHistory();
+  }
+
+  // the following will draw polylines that end up on the camera/focal plane.
+  // you have to instantiate app and do a app.run in grOptics.cpp by 
+  // uncommenting these lines in grOptics (shortly after the start of main
+  // shortly before the end of main.
+  // This also works with the testtel option; however, you have to set
+  // nPhotons to a small number, e.g. 10 or less in GArrayTel.cpp (in 
+  // the testTelescope method. The TPolyLine3D::Print("all") will print
+  // the start of the line, the intermediate points, and the end of the 
+  // line.  A good way to test the code.
+  if (0) {
+    static int idraw = 1;
+    if (idraw) {
+      drawTelescope();
+      idraw = 0;
+    }
+    if (fStatusLast == 3) {
+      *oLog << " ready to draw polyline" << endl;
+      TPolyLine3D *pol = ray->MakePolyLine3D();
+      pol->Print("all");
+      cout << " fStatusLast " << fStatusLast << endl;
+      pol->SetLineColor(2);
+      pol->Draw();
+    }
+  }
+
+  return ray->IsFocused();
 };
 /********************** end of getCameraPhotonLocation *****************/
 
@@ -663,10 +825,11 @@ void GSegSCTelescope::printTelescope() {
   if (debug) {
     *oPrtStrm << " -- GSegSCTelescope::printTelescope" << endl;
   }
-  *oLog << "    fF " << fF << endl;
-  *oLog << "    focal surface " << endl;
-  *oLog << "        fKappa1/2 fZf fRf " << fKappa1 << " " << fKappa2 << " " 
+  *oLog << "      fF " << fF << endl;
+  *oLog << "      focal surface " << endl;
+  *oLog << "          fKappa1/2 fZf fRf " << fKappa1 << " " << fKappa2 << " " 
         << fRf << endl;
+  *oLog << "      fPlateScaleFactor " << fPlateScaleFactor << endl;
 };
 /********************** end of printTelescope *****************/
 
@@ -864,6 +1027,7 @@ void GSegSCTelescope::initialize() {
 /************************* end of writePhotonHistory *****/
 
 void GSegSCTelescope::CloseGeometry() {
+
   bool debug = true;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::CloseGeometry" << endl;
@@ -872,3 +1036,161 @@ void GSegSCTelescope::CloseGeometry() {
   fManager->CloseGeometry();
 }; 
 /************************* end of CloseGeometry *****/
+
+void GSegSCTelescope::testPerformance() {
+
+  bool debug = true;
+  if (debug) {
+    *oLog << "  -- GSegSCTelescope::testPerformance " << endl;
+  }
+
+  gGeoManager = fManager;
+
+  const Int_t kN = 42; // 0 to 4.1 [deg]
+  const Double_t kDegStep = 0.1;
+  TH2D* histSpot[kN];
+  TH1D* histTime[kN];
+
+  TGraph* graEffArea = new TGraph;
+  graEffArea->SetTitle(";Field angle (deg);Effective Area (m^{2})");
+
+  TGraph* graSigma[2];
+  for(Int_t i = 0; i < 2; i++){
+    graSigma[i] = new TGraph;
+    graSigma[i]->SetTitle(";Field angle (deg);2 #times max{#sigma_{sagital}, #sigma_{tangential}} (arcmin)");
+    graSigma[i]->SetLineStyle(i + 1);
+  } // i
+
+  TGraph* graTime = new TGraph;
+  graTime->SetTitle(";Field angle (deg);Photon propagation time spread (#sigma) (ns)");
+
+  for(Int_t i = 0; i < kN; i++){
+    Double_t deg = i*kDegStep;
+
+    TObject* obj;
+    
+    obj = gROOT->Get(Form("histSpot%d", i));
+    if(obj){
+      delete obj;
+      obj = 0;
+    } // if
+      
+    histSpot[i] = new TH2D(Form("histSpot%d", i), Form("#it{#theta} = %.1f (deg);X (arcmin);Y (arcmin)", deg), 1000, -10, 10, 1000, -10, 10);
+
+    obj = gROOT->Get(Form("histTime%d", i));
+    if(obj){
+      delete obj;
+      obj = 0;
+    } // if
+    
+    histTime[i]= new TH1D(Form("histTime%d",i), Form("#it{#theta} = %.1f (deg);Propagation delay (ns);Entries", deg), 120, -6, 6);
+
+    const Double_t kZs = fF/fQ;
+    const Double_t kZf = kZs - (1 - fAlpha)*fF;
+
+    TGeoTranslation raytr("raytr", -2*kZs*TMath::Sin(deg*TMath::DegToRad()), 0, 2*kZs*TMath::Cos(deg*TMath::DegToRad()));
+
+    TVector3 dir;
+    dir.SetMagThetaPhi(1, TMath::Pi() - deg*TMath::DegToRad(), 0);
+    Double_t lambda = 400*nm;
+    ARayArray* array = ARayShooter::Square(lambda, 2*fRpMax, 401, 0, &raytr, &dir);
+    //    ARayArray* array = ARayShooter::Square(lambda, 2*fRpMax, 11, 0, &raytr, &dir);
+    fManager->TraceNonSequential(*array);
+    TObjArray* focused = array->GetFocused();
+
+    Double_t Aeff = 0.;
+    for(Int_t j = 0; j <= focused->GetLast(); j++){
+      ARay* ray = (ARay*)(*focused)[j];
+      if(!ray) continue;
+      
+      // Calculate the effective area from the number of focused photons
+      Aeff += 2*fRpMax*2*fRpMax/400./400./m/m;
+      //      Aeff += 2*fRpMax*2*fRpMax/10./10./m/m;
+      
+      Double_t p[4];
+      ray->GetLastPoint(p);
+      ray->SetLineWidth(1);
+      if(deg == 0 && gRandom->Uniform(1) < 0.01){
+        TPolyLine3D* pol = ray->MakePolyLine3D();
+        pol->SetLineColor(4);
+        pol->SetLineStyle(2);
+        pol->Draw();
+      } // if
+
+      Double_t deg2dist = 1.62499*mm*60.;
+      Double_t x = deg*deg2dist;
+      histSpot[i]->Fill((p[0] - x)/deg2dist*60, p[1]/deg2dist*60);
+      histTime[i]->Fill((p[3] - (4*kZs - kZf)/(TMath::C()*m))/1e-9); // ns
+    } // j
+
+    graEffArea->SetPoint(graEffArea->GetN(), deg, Aeff);
+
+    Double_t rmsx = histSpot[i]->GetRMS(1);
+    Double_t rmsy = histSpot[i]->GetRMS(2);
+
+    graSigma[0]->SetPoint(graSigma[0]->GetN(), deg, 2*rmsx);
+    graSigma[1]->SetPoint(graSigma[1]->GetN(), deg, 2*rmsy);
+
+    graTime->SetPoint(graTime->GetN(), deg, histTime[i]->GetRMS());
+
+    delete array;
+  } // n
+
+  TCanvas* canSpot = new TCanvas("canSpot", "canSpot", 900, 900);
+  canSpot->Divide(3, 3, 1e-10, 1e-10);
+
+  //  TCanvas* canTime = ExactSizeCanvas("canTime", "canTime", 900, 900);
+  TCanvas* canTime = new TCanvas("canTime", "canTime", 900, 900);
+  canTime->Divide(3, 3, 1e-10, 1e-10);
+
+  for(Int_t i = 0; i < kN; i += 5){
+    canSpot->cd(i/5 + 1);
+    histSpot[i]->Draw("colz");
+
+    canTime->cd(i/5 + 1);
+    histTime[i]->Draw();
+  } // i
+
+  // Figure 5 in the paper
+  TCanvas* canFig5 = new TCanvas("canFig5", "canFig5", 1200, 600);
+  canFig5->Divide(2, 1);
+  canFig5->cd(1);
+  gPad->SetGridx();
+  gPad->SetGridy();
+  graEffArea->Draw("apl");
+  graEffArea->SetMarkerStyle(25);
+  graEffArea->GetXaxis()->SetLimits(0, 5);
+  graEffArea->GetYaxis()->SetRangeUser(0, 60);
+
+  // PSF is not consistent with the original paper, but the spot diagram at
+  // 5 (deg) is consistent with each other by eye comparison. There may be a
+  // difference between calculations of RMS in my code and the paper
+  canFig5->cd(2);
+  gPad->SetGridx();
+  gPad->SetGridy();
+  graSigma[0]->Draw("apl");
+  graSigma[1]->Draw("pl same");
+  graSigma[0]->SetMarkerStyle(25);
+  graSigma[1]->SetMarkerStyle(20);
+  graSigma[0]->GetXaxis()->SetLimits(0, 5);
+  graSigma[0]->GetYaxis()->SetRangeUser(0, 10);
+
+  // Figure 10 in the paper
+  // Time spread is 2 times larger in the original paper. I believe the paper
+  // is wrong. You can roughly calculate the spread width by
+  // Dp * sin(angle)/c ~ 2.5 (ns)
+  TCanvas* canFig10 = new TCanvas("canFig10", "canFig10", 1200, 600);
+  canFig10->Divide(2, 1);
+  canFig10->cd(1);
+  gPad->SetGridx();
+  gPad->SetGridy();
+  graTime->Draw("apl");
+  graTime->SetMarkerStyle(25);
+  graTime->GetXaxis()->SetLimits(0, 5);
+  graTime->GetYaxis()->SetRangeUser(0, 1.8);
+
+  canFig10->cd(2);
+  histTime[5]->Draw();
+
+};
+/************************* end of testPerformance *****/

@@ -281,6 +281,8 @@ class GSegSCTelescope : public GTelescope {
 
   TGraph * makeReflectivityGraph(const Int_t &irefl);
 
+  void testPerformance();
+
   void CloseGeometry(); 
 
   AOpticsManager *getManager() const { return fManager;};

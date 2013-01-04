@@ -306,6 +306,7 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SCTel->eTelType = opt->stdType;
   SCTel->fAvgTransitTime = opt->fAvgTransitTime;
   SCTel->fRotationOffset = opt->fRotationOffset;
+  SCTel->fPlateScaleFactor = opt->fPlateScaleFactor;
 
   // general telescope parameters
   SCTel->fF = (opt->fF);
