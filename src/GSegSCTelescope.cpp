@@ -100,6 +100,7 @@ GSegSCTelescope::~GSegSCTelescope() {
     gGeoManager = fManager;
     SafeDelete(fManager);
   }
+
  
 };
 /********************** end of ~GSegSCTelescope *****************/
@@ -120,15 +121,15 @@ void GSegSCTelescope::buildTelescope(bool os8)
 
   // Make dummy material
   TGeoMaterial* mat = new TGeoMaterial("mat", 0, 0, 0);
-  mat->SetTransparency(70); // needed in OpenGL view
+  mat->SetTransparency(70); // needed in OpenGL view, 70
   new TGeoMedium("med", 1, mat);
 
   // Make the world
   TGeoBBox* worldbox = new TGeoBBox("worldbox", fTX*m, fTY*m, fTZ*m);
   AOpticalComponent* world = new AOpticalComponent("world", worldbox);
   fManager->SetTopVolume(world);
-  //manager->SetTopVisible(0); 
-  //fManager->SetTopVisible(.5); 
+  //fManager->SetTopVisible(7); 
+  //fManager->SetTopVisible(.9); 
 
   makePrimarySecondaryDisks();
   addPrimaryF();
@@ -250,7 +251,8 @@ void GSegSCTelescope::addPrimaryF() {
     mirror.SetRotationErrors(0., 0., 0.);
     mirror.SetRougness(0.);
     mirror.SetMargin(margin);
-    // add mirror segment
+    iReflect = (*(vSegP1.at(i))).reflect;
+   // add mirror segment
     addPrimaryMirror(Form("primary%d", count), &mirror);
     count++;
     } 
@@ -278,6 +280,7 @@ void GSegSCTelescope::addPrimaryF() {
     mirror.SetRotationErrors(0., 0., 0.);
     mirror.SetRougness(0.);
     mirror.SetMargin(margin);
+    iReflect = (*(vSegP2.at(i))).reflect;
     // add mirror segment
     addPrimaryMirror(Form("primary%d", count), &mirror);
     count++;
@@ -296,6 +299,10 @@ void GSegSCTelescope::addPrimaryMirror(const char*name,
   }
   
   AMirror* mir = mirror->BuildMirror(name, fPrimaryV, kTRUE);
+  // get and add TGraph for reflectivity mir->SetReflectivity(TGraph *)
+
+  TGraph * graph = makeReflectivityGraph(iReflect);
+  mir->SetReflectivity(graph);
   TGeoCombiTrans* combi = mirror->BuildMirrorCombiTrans(fPrimaryV, kTRUE);
 
   ABorderSurfaceCondition * condition
@@ -338,6 +345,7 @@ void GSegSCTelescope::addSecondaryJ() {
     mirror.SetRotationErrors(0., 0., 0.);
     mirror.SetRougness(0.);
     mirror.SetMargin(margin);
+    iReflect = (*(vSegS1.at(i))).reflect;
     // add mirror segment
     addSecondaryMirror(Form("secondary%d", count1), &mirror);    
 
@@ -373,9 +381,17 @@ void GSegSCTelescope::addSecondaryJ() {
     mirror.SetRotationErrors(0., 0., 0.);
     mirror.SetRougness(0.);
     mirror.SetMargin(margin);
+    iReflect = (*(vSegS2.at(i))).reflect;
     // add mirror segment
-    addSecondaryMirror(Form("secondary%d", count), &mirror);    
+    addSecondaryMirror(Form("secondary%d", count), &mirror);  
+  
+    SectorSegmentedObscuration  obscuration(rmin + margin, rmax, phimin, phimax);
+    obscuration.SetPositionErrors(0*mm, 0*mm, 0*mm);
+    obscuration.SetRotationErrors(0., 0., 0.);
+    obscuration.SetMargin(margin);
+    addSecondaryObscurationSeg(Form("secondaryObs%d", count1), &obscuration);    
     count++;
+    count1++;
     
     }
   }
@@ -409,7 +425,7 @@ void GSegSCTelescope::addSecondaryObscurationSeg(const char*name,
 
   gGeoManager = fManager;
   
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  --  GSegSCTelescope::addSecondaryObscurationSeg" << endl;
   }
@@ -442,6 +458,9 @@ void GSegSCTelescope::addSecondaryMirror(const char*name, SegmentedMirror *mirro
   }
 
   AMirror* mir = mirror->BuildMirror(name, fSecondaryV, kFALSE);
+  TGraph * graph = makeReflectivityGraph(iReflect);
+  mir->SetReflectivity(graph);
+
   TGeoCombiTrans* combi = mirror->BuildMirrorCombiTrans(fSecondaryV, kFALSE);
 
   ABorderSurfaceCondition * condition
@@ -716,16 +735,22 @@ void GSegSCTelescope::writePhotonHistory() {
  
 };
 /************************* end of writePhotonHistory *****/
-void GSegSCTelescope::setReflCoeffMap(map<int, TGraph *> *mGRefl) {
+void GSegSCTelescope::setReflCoeffMap(map<int, TGraph *> *mGr) {
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::setReflCoeffMap" << endl;
+    *oLog << "       mGr->size() " << mGr->size() << endl;
   }
+  mGRefl = new map<int, TGraph *>;
+
   // make a copy of the map
   map<int, TGraph *>::iterator iter;
-  for (iter = mGRefl->begin();iter != mGRefl->end(); iter++) {
+  for (iter = mGr->begin();iter != mGr->end(); iter++) {
     Int_t id = iter->first;
+    if (debug) {
+      *oLog << " building new graph " << iter->first << endl;
+    }
     TGraph *tmpOld = iter->second;
     TGraph *tmpNew = new TGraph(*tmpOld);
     (*mGRefl)[id] = tmpNew;
@@ -734,7 +759,32 @@ void GSegSCTelescope::setReflCoeffMap(map<int, TGraph *> *mGRefl) {
     *oLog << "      size of mGRefl " << mGRefl->size() << endl;
   }
 };
-/************************* end of writePhotonHistory *****/
+/************************* end of setReflCoeffMap *****/
+
+TGraph * GSegSCTelescope::makeReflectivityGraph(const Int_t &irefl) {
+
+  bool debug = false;
+  if (debug) {
+    *oLog << "  -- GSegSCTelescope::makeReflectivityGraph" << endl;
+    *oLog << "    size of mGRefl " << mGRefl->size() << endl;
+  }
+  Int_t id = irefl;
+  TGraph *tmpNew;
+  tmpNew = 0;
+
+  map<int, TGraph *>::iterator iter;
+  if ( (iter = mGRefl->find(irefl) ) != mGRefl->end() ) {
+    TGraph *tmpOld = iter->second;
+    tmpNew = new TGraph(*tmpOld);
+    if (debug) {
+      *oLog << "     ready to print TGraph: reflect curve = " << id << endl;
+      tmpNew->Print();
+    }
+
+  }
+  return tmpNew;
+};
+/************************* end of makeReflectivityGraph *****/
 
 void GSegSCTelescope::initialize() {
   bool debug = true;

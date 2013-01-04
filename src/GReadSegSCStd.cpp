@@ -606,6 +606,7 @@ void GReadSegSCStd::getReflCoeff() {
       }        
     }
   }
+
   if (SCFac->mGRefl->size() == 0) {
     *oLog << "no reflection coeffient table found in config file" << endl;
     *oLog << "    STOPPING CODE" << endl;

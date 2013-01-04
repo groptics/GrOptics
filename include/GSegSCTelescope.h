@@ -106,7 +106,8 @@ class GSegSCTelescope : public GTelescope {
   vector<mirrorSegmentDetails *> vSegS1;
   vector<mirrorSegmentDetails *> vSegS2;
 
-   map<int, TGraph *> *mGRefl;
+  map<int, TGraph *> *mGRefl;
+  Int_t iReflect;
   TGraph *gPrimRefl;
   double fPrimMaxLmda;
   double fPrimMinLmda;
@@ -256,7 +257,7 @@ class GSegSCTelescope : public GTelescope {
   void setStdID(const int &stdID) {
     iStdID = stdID; };
  
-  void setReflCoeffMap(map<int, TGraph *> *mGRefl);
+  void setReflCoeffMap(map<int, TGraph *> *mGr);
 
   void testFocalPlane();
 
@@ -277,6 +278,9 @@ class GSegSCTelescope : public GTelescope {
     //return tm;
     return 0.0;
   }
+
+  TGraph * makeReflectivityGraph(const Int_t &irefl);
+
   void CloseGeometry(); 
 
   AOpticsManager *getManager() const { return fManager;};
