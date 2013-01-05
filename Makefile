@@ -22,7 +22,7 @@ vpath %.cpp src
 CXXFLAGS += $(INCLUDEFLAGS)
 
 .PHONY:	all
-all: robast grReaderFactory
+all: robast grReaderFactory grOptics
 #all: robast grOptics
 
 # directory to receive all .o files

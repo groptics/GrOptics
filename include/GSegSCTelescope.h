@@ -230,6 +230,8 @@ class GSegSCTelescope : public GTelescope {
   */
   void printTelescope();
 
+  void printmirrorSegmentDetails(const mirrorSegmentDetails *mirDetails);
+
   void drawTelescope();
 
   /*! \brief setPrintMode used for setting printing details

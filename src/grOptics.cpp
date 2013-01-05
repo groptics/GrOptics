@@ -381,12 +381,31 @@ int main(int argc, char *argv[]) {
       }
       
     }
+
+else if (telType==SEGSC) {
+
+      GTelescope *tel = SegSCFac->makeTelescope(telId,telStd);
+      if (pilot.telToDraw == telId) {
+	tel->drawTelescope();
+	app->Run(); 
+	return 0;
+      }
+      mArrayTel[telId] = new GArrayTel(telLocGrd,xoffsettel,
+                                       yoffsettel,telType,
+                                       telId,telStd,printMode,tel);
+
+      if (pilot.photonHistoryFile != "") {
+        mArrayTel[telId]->setPhotonHistory(pilot.photonHistoryFile,
+                                           pilot.photonHistoryTree);
+      }
+      
+    }
   }
+
   *oLog << endl
 	<< "============= finished factories and telescope making" 
 	<< endl << endl;
-  *oLog << "EXIT11" << endl;
-  exit(0);
+
   // ready to run telescope test here using mArrayTel[telTestNum]
   if (pilot.testTel) {
     mArrayTel[pilot.testTel]->makeTelescopeTest(pilot.testTelFile);

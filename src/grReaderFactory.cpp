@@ -207,7 +207,7 @@ int main(int argc, char *argv[]) {
   GSegSCTelescope *segTel = SegSCFac->makeTelescope(id,std);
   *oLog << "TELESCOPE built" << endl;
   if (bDrawTel) {
-    segTel->drawTelescope();
+    //segTel->drawTelescope();
     //segTel->getManager()->GetTopVolume()->Draw("ogl");
     app->Run(); 
     //return 0;

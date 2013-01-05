@@ -160,7 +160,7 @@ void GSegSCTelescope::buildTelescope(bool os8)
 
   closeGeometry();
 
-  testPerformance();
+  //testPerformance();
 
   return;
 };
@@ -823,16 +823,74 @@ void GSegSCTelescope::printTelescope() {
 
   bool debug = true;
   if (debug) {
-    *oPrtStrm << " -- GSegSCTelescope::printTelescope" << endl;
+    *oLog << " -- GSegSCTelescope::printTelescope" << endl;
   }
   *oLog << "      fF " << fF << endl;
   *oLog << "      focal surface " << endl;
   *oLog << "          fKappa1/2 fZf fRf " << fKappa1 << " " << fKappa2 << " " 
         << fRf << endl;
   *oLog << "      fPlateScaleFactor " << fPlateScaleFactor << endl;
+
+  *oLog << "     ******* Primary P1 mirror " << endl;
+  *oLog << "         vSegP1 vector " << endl;
+  for (int i = 0;i<vSegP1.size(); i++ ) {
+    *oLog << "         P1 segment number " << i << endl;
+    printmirrorSegmentDetails(vSegP1.at(i));
+    *oLog << endl;
+ }
+  *oLog << "     ******* Primary P2 mirror " << endl;
+  *oLog << "         vSegP2 vector " << endl;
+  for (int i = 0;i<vSegP2.size(); i++ ) {
+    *oLog << "         P2 segment number " << i << endl;
+    printmirrorSegmentDetails(vSegP2.at(i));
+    *oLog << endl;
+ }
+  *oLog << "     ******* Secondary S1 mirror " << endl;
+  *oLog << "         vSegS1 vector " << endl;
+  for (int i = 0;i<vSegS1.size(); i++ ) {
+    *oLog << "         S1 segment number " << i << endl;
+    printmirrorSegmentDetails(vSegS1.at(i));
+    *oLog << endl;
+ }
+  *oLog << "     ******* Secondary S2 mirror " << endl;
+  *oLog << "         vSegS2 vector " << endl;
+  for (int i = 0;i<vSegS2.size(); i++ ) {
+    *oLog << "         S2 segment number " << i << endl;
+    printmirrorSegmentDetails(vSegS2.at(i));
+    *oLog << endl;
+ }
+
 };
 /********************** end of printTelescope *****************/
 
+void GSegSCTelescope::printmirrorSegmentDetails(const mirrorSegmentDetails *mirDetails) {
+ 
+  *oLog << "  --  GSegSCTelescope::printmirrorSegmentDetails   " << endl;
+  *oLog << "         rmin, rmax, margin " << mirDetails->rmin << "  " << mirDetails->rmax << "  "
+	<< mirDetails->margin << endl;
+  *oLog << "         delPhi " << mirDetails->delPhi << endl;
+  *oLog << "         reflect, roughness " << mirDetails->reflect << "  "
+	<< mirDetails->roughness << endl;
+  *oLog << "         posErrorX/Y/Z " << mirDetails->posErrorX << "  " << mirDetails->posErrorY
+	<< "  " << mirDetails->posErrorZ << endl;
+  *oLog << "         rotErrorX/Y/Z " << mirDetails->rotErrorX << "  " << mirDetails->rotErrorY
+	<< "  " << mirDetails->rotErrorZ << endl;
+};
+/*
+ Double_t rmin;
+  Double_t rmax;
+  Double_t margin;
+  Double_t delPhi;
+  Int_t reflect;
+  Double_t posErrorX;
+  Double_t posErrorY;
+  Double_t posErrorZ;
+  Double_t rotErrorX;
+  Double_t rotErrorY;
+  Double_t rotErrorZ;
+  Double_t roughness;
+  Int_t bRead; // if 0, set from BASIC; if 1, set from CHANGE
+*/
 void GSegSCTelescope::drawTelescope() {
 
   bool debug = true;
