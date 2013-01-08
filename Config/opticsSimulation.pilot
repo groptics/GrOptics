@@ -28,7 +28,7 @@ name of grOptics log file, default use cerr (if no asterisk)
 number of showers/photons, defaults -1
   NSHOWER <numShowers, <0, no limit>
           <numPhotons, <0, no limit>
-* NSHOWER 1 1
+* NSHOWER 1 200
 
 x and y coordinates of the source in the field
 of view followed by the source extention radius (all in degrees). The fourth
@@ -65,11 +65,11 @@ a history file
 Very useful for debugging
  PHOTONHISTORY <root file, tel.number appended to base name> 
                <tree name: default = "his">
- PHOTONHISTORY photonhistory61Tel00.root his
+* PHOTONHISTORY photonhistory61Tel00.root his
 
 core/telescope location in grd.and tel.system branches added for debuging.
 default 0 for compatibility with earlier opticsSimulation.pilot versions.
-* DEBUGBRANCHES 0
+* DEBUGBRANCHES 1
 ///////////////  draw possibilities for checking configuration and
                                debugging
 			       
@@ -93,4 +93,4 @@ DO THAT.
 The graphs and histograms are printed to png files using the base filenames.
 
 TESTTEL <telescope number> <baseFileName for histograms>   
- TESTTEL 1  DCSpot
+* TESTTEL 1  DCSpot

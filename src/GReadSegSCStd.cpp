@@ -67,28 +67,21 @@ GReadSegSCStd::GReadSegSCStd(const string &pilotfile,GSegSCTelescopeFactory *SCF
 /****************** end of GReadSegSCStd **********/
 
 GReadSegSCStd::GReadSegSCStd(const string &pilotfile) {
+  spilotfile = pilotfile;
 
   bool debug = true;
   if (debug) {
-    *oLog << "  -- GReadSegSCStd::GReadSegSCStd" << endl;
+    *oLog << "  -- GReadSegSCStd::GReadSegSCStd(const string pilotfile) " 
+          << pilotfile << endl;
   }
-  /*
+
  // initialize variables
   SCFac = 0;
-  spilotfile = "";
   pi = 0;
   flagline = "";
   iStdNum = 0;
   opt = 0;
  
-  bool debug = false;
-  if (debug) {
-    *oLog << "  -- GReadSegSCStd(const string pilotfile) " << pilotfile << endl;
-  }
-
-  SCFac = 0;
-  */ 
-  spilotfile = pilotfile;
   
 };
 /****************** end of GReadSegSCStd **********/
@@ -492,7 +485,7 @@ void GReadSegSCStd::getPolyCoeffs() {
 
   ifstream inFile(spilotfile.c_str(),ios::in);
   if (! inFile) {
-    cerr << "  -- GReadSegSCStd::getReflCoeff " << endl;
+    cerr << "  -- GReadSegSCStd::getPolyCoeffs " << endl;
     cerr << "    could not open file: " << spilotfile << endl;
     exit(0);
   }

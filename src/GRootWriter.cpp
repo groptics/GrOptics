@@ -148,6 +148,7 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
   }
 
   if (bDebugBranchesFlag) {
+    *oLog << "making debug branches" << endl;
     fTree->Branch( "TelID", &fTelID, "TelID/i" );
     fTree->Branch( "XcoreTC", &fXcoreTC, "XcoreTC/F" );
     fTree->Branch( "YcoreTC", &fYcoreTC, "YcoreTC/F" );
@@ -161,8 +162,7 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
     fTree->Branch( "YTelTC", &fYTelTC, "YTelTC/F" );
     fTree->Branch( "ZTelTC", &fZTelTC, "ZTelTC/F" );
     
-  }
-  
+  }  
 };
 //******************************** end of GRootWriter ********************
 

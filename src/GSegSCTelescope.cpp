@@ -592,7 +592,7 @@ void GSegSCTelescope::injectPhoton(const ROOT::Math::XYZVector &photonLocT,
 				const double &photWaveLgt) {
   gGeoManager = fManager;
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << " -- GSegSCTelescope::injectPhoton " << endl;
     *oLog << "       photonLocT  ";
@@ -611,12 +611,12 @@ void GSegSCTelescope::injectPhoton(const ROOT::Math::XYZVector &photonLocT,
   fphotonInjectDir[1] = 0.0;
   fphotonInjectDir[2] = -1.0;
 
-  *oLog << "        TESTING WITH THESE VALUES" << endl;
-  *oLog << "             specified location and direction " << endl;
-  for (int i = 0;i<3;i++) {
-    *oLog << i << "  " << fphotonInjectLoc[i] << "  " 
-  	  << fphotonInjectDir[i] << endl;
-  }
+  //*oLog << "        TESTING WITH THESE VALUES" << endl;
+  //*oLog << "             specified location and direction " << endl;
+  //for (int i = 0;i<3;i++) {
+  //*oLog << i << "  " << fphotonInjectLoc[i] << "  " 
+  //	  << fphotonInjectDir[i] << endl;
+  //}
 
   photonLocT.GetCoordinates(fInitialInjectLoc);
   photonLocT.GetCoordinates(fphotonInjectLoc);
@@ -671,7 +671,7 @@ void GSegSCTelescope::movePositionToTopOfTopVol() {
 
   gGeoManager = fManager;
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::movePositionToTopOfTopVol " << endl;
     *oLog << "        position prior to move to top ";
@@ -720,7 +720,7 @@ bool GSegSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
   
   gGeoManager = fManager;
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::getCameraPhotonLocation " << endl;
   }
@@ -916,28 +916,81 @@ void GSegSCTelescope::setPhotonHistory(const string &rootFile,
                                        const int &option) {
   bool debug = true;
 
+  
+  bPhotonHistoryFlag = true;
+
+  historyFileName = rootFile;
+  historyTreeName = treeName;
+  iHistoryOption = option;
+  
+  if (debug) {
+    *oLog << "  -- setPhotonHistory " << endl;
+    *oLog << "        historyFileName / rootTree " <<  historyFileName 
+          << "  " << historyTreeName << " /option " << option 
+          << endl;
+  }
+  // add telID to historyFileName
+  //   make string to insert
+  stringstream osTmp;
+  osTmp << "_Tel" << iTelID;
+  string strInsert = osTmp.str();
+
+  // find insertion point, append if . isn't found
+  size_t idx = historyFileName.rfind('.');
+  
+  if (idx != string::npos) {
+    historyFileName.insert(idx,strInsert);
+    if (debug) *oLog << historyFileName << endl;
+  }
+  else {
+    historyFileName = historyFileName + strInsert;
+  }
+
+  if (debug) {
+    *oLog << "     opening photon history file / tree:  " 
+          << historyFileName << " / " << historyTreeName << endl;
+  }
+  hisF = new TFile(historyFileName.c_str(),"RECREATE");
+  hisT = new TTree(historyTreeName.c_str(),historyTreeName.c_str());
+
+  makePhotonHistoryBranches();
+  initializePhotonHistoryParms();
+  
 };
 /********************** end of setPhotonHistory *****************/
 
 void GSegSCTelescope::makePhotonHistoryBranches() {
 
-  //hisF->cd();
-  bool debug = true;
+  hisF->cd();
+  bool debug = false;
   if (debug) {
     *oLog << "  -- makePhotonHistoryBranches " << endl;
   }
- 
+
+  hisT->Branch("status",&fStatusLast,"status/I");
+  hisT->Branch("nPoints",&fNPoints,"nPoints/I");
+  hisT->Branch("injectX",&fInitialInjectLoc[0],"injectX/D");
+  hisT->Branch("injectY",&fInitialInjectLoc[1],"injectY/D");
+  hisT->Branch("injectZ",&fInitialInjectLoc[2],"injectZ/D");
+
+  hisT->Branch("xLast",&fLocLast[0],"xLast/D");
+  hisT->Branch("yLast",&fLocLast[1],"yLast/D");
+  hisT->Branch("zLast",&fLocLast[2],"zLast/D");
+  hisT->Branch("xLastDir",&fDirLast[0],"xLastDir/D");
+  hisT->Branch("yLastDir",&fDirLast[1],"yLastDir/D");
+  hisT->Branch("zLastDir",&fDirLast[2],"zLastDir/D");
+  hisT->Branch("timeLast",&fTimeLast,"timeLast/D");
 };
 /************************* end of makePhotonHistoryBranches *****/
 
 void GSegSCTelescope::fillPhotonHistory() {
 
-  // careful have to move to correct hisF ?, do a changedirectory?
-
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- fillPhotonHistory " << endl;
   }
+  hisF->cd();
+  hisT->Fill();
 
 };
 /************************* end of fillPhotonHistory *****/
@@ -949,10 +1002,17 @@ void GSegSCTelescope::initializePhotonHistoryParms() {
 
 void GSegSCTelescope::writePhotonHistory() {
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- in GSegSCTelescope::writePhotonHistory " << endl;
   }
+  if (hisF != 0) {
+    hisF->cd();  
+    hisT->Write();
+    // deleting the file will close the file;
+    // the file owns the tree and will delete it
+    SafeDelete(hisF);
+ }
  
 };
 /************************* end of writePhotonHistory *****/
