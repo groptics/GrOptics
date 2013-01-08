@@ -426,7 +426,7 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
   ttree->Branch("rmsY",&rmsXT,"rmsY/D");
   ttree->Branch("deg",&degT,"deg/D");
 
-  bool debug = false;
+  bool debug = true;
   if (1) {
     *oLog << "  -- GArrayTel::makeTelescopeTest " << endl;
     *oLog << "           baseName " << baseName << endl;
@@ -458,7 +458,7 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
   string imageFileType = "png";
 
   // use these values for SC telescope (telType ==1)
-  if (telType ==1) {
+  if (telType > 0) {
     numDegBins = 8;
     deltaDeg = 0.5;
  
@@ -485,7 +485,7 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
      // fill in the rest later if have time
   }
   // set number of photons
-  int nPhotons = 5000;
+  int nPhotons = 5;
 
   vector<double> vDeg;
   double setdeg = 0.0;
@@ -520,14 +520,17 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
   // get focal length of telescope
   double fLgt = tel->getFocalLength();
   double fPlateScaleFactor = tel->getPlateScaleFactor();
-  *oLog << "FPLATESCALE " << fPlateScaleFactor << endl;
-  if (debug) *oLog << " focal length " << fLgt << endl;
+  if (debug) {
+    *oLog << "          focal length " << fLgt << endl;
+    *oLog << "          FPLATESCALE " << fPlateScaleFactor << endl;
+  } 
+
   // get array of photon locations on circle on ground plane
   double fRadius = tel->getTelescopeRadius();
   fRadius = fRadius*1.10;  // increase by 10 percent
   if (debug) {
-    *oLog << "         telescope radius " << fRadius << endl;
-    *oLog << "         number of photons " << nPhotons << endl;
+    *oLog << "          telescope radius " << fRadius << endl;
+    *oLog << "          number of photons " << nPhotons << endl;
   }
   
   // vectors for incoming photons
@@ -602,12 +605,14 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
 	
 	xMin = (xMin - theta*TMath::RadToDeg()) * 60.0; // converting to minutes of arc
 	yMin = yMin*60.0;
-	if (0) {
-	  *oLog << "   onCamera location in minutes of arc "
+	if (1) {
+          *oLog << "              camera location from telescope " << cameraLoc.X()
+                << "  " << cameraLoc.Y() << endl;
+	  *oLog << "              onCamera location in minutes of arc "
 		<< xMin << "  " << yMin << endl;
-	  *oLog << "         cameraDir  ";       
+	  *oLog << "              cameraDir  ";       
 	  GUtilityFuncts::printGenVector(cameraDir); *oLog << endl;
-	  *oLog << "         cameraTime " << cameraTime << endl;
+	  *oLog << "              cameraTime " << cameraTime << endl << endl;
 	}
 	vHist[ideg]->Fill(xMin,yMin);
 	vHistT[ideg]->Fill(cameraTime - idealTransitTime);

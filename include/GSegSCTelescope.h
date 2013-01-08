@@ -73,8 +73,10 @@ class GSegSCTelescope : public GTelescope {
  
   // general telescope parameters
   Double_t fF;     // Focal length
+  Double_t fFMeters; // focal length in meters
   Double_t fAlpha; // \alpha
   Double_t fQ;     // q
+  Double_t fTelRadius;
 
   // primary parameters
   Double_t fRpMax; // Primary radius max
@@ -264,21 +266,21 @@ class GSegSCTelescope : public GTelescope {
   void testFocalPlane();
 
   double getTelescopeRadius() {
-    return 0.0;  // this is the radius not the diameter
+    return fTelRadius;  // max radius of primary
   }
 
   double getFocalLength() {
-    return 0.0;
+    return fFMeters;
   }
 
   double getPlateScaleFactor() {
-    return 0.0;
+    return fPlateScaleFactor;
   }
 
   double getIdealTransitTime() {
     //double tm = ( ( 2*fZs - fZp -fZf )* fFocLgt / TMath::C()) * 1.0e09;
     //return tm;
-    return 0.0;
+    return fAvgTransitTime;
   }
 
   TGraph * makeReflectivityGraph(const Int_t &irefl);

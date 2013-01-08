@@ -119,7 +119,9 @@ GSegSCTelescope::~GSegSCTelescope() {
 void GSegSCTelescope::buildTelescope(bool os8)
 {
   // fix units
+  fFMeters = fF;
   fF = fF*m;
+  fTelRadius = fRpMax;
   fRpMax = fRpMax*m;
   fRpMin = fRpMin*m;
   fRsMax = fRsMax*m;
@@ -1089,6 +1091,9 @@ void GSegSCTelescope::initialize() {
   fTX = 30.0;  // set to 15 later, after confirming code
   fTY = 30.0;
   fTZ = 30.0;
+
+  fTelRadius = 0.0;
+  fFMeters = 0.0;
 
   fAvgTransitTime = 0.0;
   fPlateScaleFactor = 0.0;
