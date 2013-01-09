@@ -100,13 +100,11 @@ SegSCStdOptics::SegSCStdOptics() {
   // MAPMT Parameters
   bCameraFlag = false;
   fPixelSize = 0.0;            // Width of a MAPMT pixel
-  fPixelPitch = 0.0;           // Pitch of MAPMT pixels
   fMAPMTWidth = 0.0;           // Housing width
   fMAPMTLength = 0.0;          // between input window and anode pins
   fInputWindowThickness = 0.0; // Thickness of the input window
   fMAPMTGap = 0.0;
   fMAPMTRefIndex = 0.0;
-  fMAPMTAngularSize = 0.0;
   fMAPMTOffset = 0.0;
 
   iNParP = 0;
@@ -182,11 +180,9 @@ void SegSCStdOptics::printSegSCStdOptics() {
   
   *oLog << "        bCameraFlag  " << bCameraFlag << endl;
   *oLog << "        fPixelSize   " << fPixelSize << endl;
-  *oLog << "        fPixelPitch  " << fPixelPitch  << endl;
   *oLog << "        fMAPMTWidth   " << fMAPMTWidth << endl;
   *oLog << "        fMAPMTLength   " << fMAPMTLength << endl;
   *oLog << "        fInputWindowThickness   " << fInputWindowThickness << endl;
-  *oLog << "        fMAPMTAngularSize   " << fMAPMTAngularSize << endl;
   *oLog << "        fMAPMTOffset        " << fMAPMTOffset << endl;
   *oLog << "        fMAPMTGap        " << fMAPMTGap << endl;
   *oLog << "        fMAPMTRefIndex        " << fMAPMTRefIndex << endl;
@@ -370,6 +366,15 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SCTel->fKappa1 = opt->fKappa1;
   SCTel->fKappa2 = opt->fKappa2;
   SCTel->fRf     = opt->fRf;
+
+  // camera
+  SCTel->fPixelSize   = opt->fPixelSize;
+  SCTel->fMAPMTWidth  = opt->fMAPMTWidth;
+  SCTel->fMAPMTLength = opt->fMAPMTLength;
+  SCTel->fInputWindowThickness   = opt->fInputWindowThickness;
+  SCTel->fMAPMTOffset = opt->fMAPMTOffset;
+  SCTel->fMAPMTGap    = opt->fMAPMTGap;
+  SCTel->fMAPMTRefIndex   = opt->fMAPMTRefIndex;
 
   SCTel->printTelescope();
   SCTel->buildTelescope();

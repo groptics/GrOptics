@@ -523,7 +523,7 @@ void GSCTelescope::buildTelescope(bool os8)
     Double_t beta[2];
     beta[0] = tmp2*kk1;
     beta[1] = tmp2*tmp2*kk2;
-    //*oLog << "  beta[0]  beta[1] " << beta[0] << "  " << beta[1] << endl;
+    *oLog << "  beta[0]  beta[1] " << beta[0] << "  " << beta[1] << endl;
     //double planeRad = 38.*cm;
     double planeRad = 38.*cm;
     //*oLog << " planeRad " << planeRad << endl;

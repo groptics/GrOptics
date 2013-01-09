@@ -130,6 +130,13 @@ void GSegSCTelescope::buildTelescope(bool os8)
   fTY = fTY*m;
   fTZ = fTZ*m;
 
+  fPixelSize = fPixelSize*mm;
+  fMAPMTWidth = fMAPMTWidth*mm;
+  fMAPMTLength = fMAPMTLength*mm;
+  fInputWindowThickness = fInputWindowThickness*mm;
+  fMAPMTOffset = fMAPMTOffset*mm;
+  fMAPMTGap = fMAPMTGap*mm;
+
   bool debug = true;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::buildTelescope" << endl;
@@ -526,6 +533,19 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
   if (debug) {
     *oLog << "  --  GSegSCTelescope::addMAPMTFocalPlane" << endl;
   }
+  Double_t fWidthBox = 50.0*cm;
+  Double_t fHeightBox = 10.*cm;
+  TGeoMedium* med = fManager->GetMedium("med");
+
+ // make a new volume for the camera
+  // size adequately covers os8 camera/focal surface 
+  TGeoVolume *focVol = gGeoManager->MakeBox("focVol",med,fWidthBox,
+                                            fWidthBox,fHeightBox);
+
+  // Make MAPMT photocathode without pixel structure 
+  TGeoBBox* mapmtCathodeV = new TGeoBBox("mapmtCathodeV", fPixelSize*4, 
+                                         fPixelSize*4, 100*um); // very thin box
+  AFocalSurface* mapmtCathode = new AFocalSurface("mapmtCathode", mapmtCathodeV);
 
   /*
   // Make MAPMT photocathode without pixel structure
@@ -605,6 +625,7 @@ void GSegSCTelescope::injectPhoton(const ROOT::Math::XYZVector &photonLocT,
   } 
   // for debugging and testing only
 
+  /*
   fphotonInjectLoc[0] = 3.0;
   fphotonInjectLoc[1] = 0.0;
   fphotonInjectLoc[2] = 0.0;
@@ -612,7 +633,7 @@ void GSegSCTelescope::injectPhoton(const ROOT::Math::XYZVector &photonLocT,
   fphotonInjectDir[0] = 0.0;
   fphotonInjectDir[1] = 0.0;
   fphotonInjectDir[2] = -1.0;
-
+  */
   //*oLog << "        TESTING WITH THESE VALUES" << endl;
   //*oLog << "             specified location and direction " << endl;
   //for (int i = 0;i<3;i++) {
@@ -828,40 +849,55 @@ void GSegSCTelescope::printTelescope() {
     *oLog << " -- GSegSCTelescope::printTelescope" << endl;
   }
   *oLog << "      fF " << fF << endl;
-  *oLog << "      focal surface " << endl;
-  *oLog << "          fKappa1/2 fZf fRf " << fKappa1 << " " << fKappa2 << " " 
-        << fRf << endl;
   *oLog << "      fPlateScaleFactor " << fPlateScaleFactor << endl;
+  *oLog << "      fAvgTransitTime   " << fAvgTransitTime << endl;
+  *oLog << "      fRotationOffset   " << fRotationOffset << endl;
 
-  *oLog << "     ******* Primary P1 mirror " << endl;
-  *oLog << "         vSegP1 vector " << endl;
-  for (int i = 0;i<vSegP1.size(); i++ ) {
-    *oLog << "         P1 segment number " << i << endl;
-    printmirrorSegmentDetails(vSegP1.at(i));
-    *oLog << endl;
- }
-  *oLog << "     ******* Primary P2 mirror " << endl;
-  *oLog << "         vSegP2 vector " << endl;
-  for (int i = 0;i<vSegP2.size(); i++ ) {
-    *oLog << "         P2 segment number " << i << endl;
-    printmirrorSegmentDetails(vSegP2.at(i));
-    *oLog << endl;
- }
-  *oLog << "     ******* Secondary S1 mirror " << endl;
-  *oLog << "         vSegS1 vector " << endl;
-  for (int i = 0;i<vSegS1.size(); i++ ) {
-    *oLog << "         S1 segment number " << i << endl;
-    printmirrorSegmentDetails(vSegS1.at(i));
-    *oLog << endl;
- }
-  *oLog << "     ******* Secondary S2 mirror " << endl;
-  *oLog << "         vSegS2 vector " << endl;
-  for (int i = 0;i<vSegS2.size(); i++ ) {
-    *oLog << "         S2 segment number " << i << endl;
-    printmirrorSegmentDetails(vSegS2.at(i));
-    *oLog << endl;
- }
+  if (0) {
+    *oLog << "     ******* Primary P1 mirror " << endl;
+    *oLog << "         vSegP1 vector " << endl;
+    for (int i = 0;i<vSegP1.size(); i++ ) {
+      *oLog << "         P1 segment number " << i << endl;
+      printmirrorSegmentDetails(vSegP1.at(i));
+      *oLog << endl;
+    }
+    *oLog << "     ******* Primary P2 mirror " << endl;
+    *oLog << "         vSegP2 vector " << endl;
+    for (int i = 0;i<vSegP2.size(); i++ ) {
+      *oLog << "         P2 segment number " << i << endl;
+      printmirrorSegmentDetails(vSegP2.at(i));
+      *oLog << endl;
+    }
+    *oLog << "     ******* Secondary S1 mirror " << endl;
+    *oLog << "         vSegS1 vector " << endl;
+    for (int i = 0;i<vSegS1.size(); i++ ) {
+      *oLog << "         S1 segment number " << i << endl;
+      printmirrorSegmentDetails(vSegS1.at(i));
+      *oLog << endl;
+    }
+    *oLog << "     ******* Secondary S2 mirror " << endl;
+    *oLog << "         vSegS2 vector " << endl;
+    for (int i = 0;i<vSegS2.size(); i++ ) {
+      *oLog << "         S2 segment number " << i << endl;
+      printmirrorSegmentDetails(vSegS2.at(i));
+      *oLog << endl;
+    }
+  }
 
+  *oLog << "      ******* Focal Surface " << endl;
+  *oLog << "      focal surface " << endl;
+  *oLog << "        fKappa1 fKappa2 " << fKappa1 << " " << fKappa2 << " " 
+        << fRf << endl;
+  *oLog << "        fZf fRf " << fRf << endl;
+  *oLog << "      ******* Camera " << endl;
+  *oLog << "        fPixelSize  " << fPixelSize << endl;
+  *oLog << "        fMAPMTWidth  " << fMAPMTWidth  << endl;
+  *oLog << "        fMAPMTLength  " << fMAPMTLength << endl;
+  *oLog << "        fInputWindowThickness  " << fInputWindowThickness << endl;
+  *oLog << "        fMAPMTOffset  " << fMAPMTOffset << endl;
+  *oLog << "        fMAPMTGap  " << fMAPMTGap << endl;
+  *oLog << "        fMAPMTRefIndex  " << fMAPMTRefIndex << endl;
+ 
 };
 /********************** end of printTelescope *****************/
 
@@ -1134,6 +1170,14 @@ void GSegSCTelescope::initialize() {
   fKappa2 = 0.0;
   fRf = 0.0;
   fZf = 0.0;
+
+  fPixelSize   = 0.0;
+  fMAPMTWidth  = 0.0;
+  fMAPMTLength = 0.0;
+  fInputWindowThickness = 0.0;
+  fMAPMTOffset = 0.0;
+  fMAPMTGap    = 0.0;
+  fMAPMTRefIndex        = 0.0;
 
   eTelType = SEGSC;
 

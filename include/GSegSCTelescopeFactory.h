@@ -81,14 +81,11 @@ struct SegSCStdOptics {
   // MAPMT Parameters
   bool bCameraFlag;
   Double_t fPixelSize;            // Width of a MAPMT pixel
-  Double_t fPixelPitch;           // Pitch of MAPMT pixels
   Double_t fMAPMTWidth;           // Housing width
   Double_t fMAPMTLength;          // between input window and anode pins
   Double_t fInputWindowThickness; // Thickness of the input window
   Double_t fMAPMTGap;
   Double_t fMAPMTRefIndex;
-
-  Double_t fMAPMTAngularSize;
   Double_t fMAPMTOffset;
  
   Int_t iNParP;

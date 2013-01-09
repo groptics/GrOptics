@@ -28,7 +28,7 @@ name of grOptics log file, default use cerr (if no asterisk)
 number of showers/photons, defaults -1
   NSHOWER <numShowers, <0, no limit>
           <numPhotons, <0, no limit>
-* NSHOWER 1 200
+* NSHOWER 1 -1
 
 x and y coordinates of the source in the field
 of view followed by the source extention radius (all in degrees). The fourth
@@ -93,4 +93,4 @@ DO THAT.
 The graphs and histograms are printed to png files using the base filenames.
 
 TESTTEL <telescope number> <baseFileName for histograms>   
-* TESTTEL 1  DCSpot
+ TESTTEL 1  DCSpot

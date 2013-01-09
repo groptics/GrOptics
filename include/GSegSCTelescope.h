@@ -133,18 +133,19 @@ class GSegSCTelescope : public GTelescope {
 
   Double_t fRotationOffset;
 
-
-  // primary
-
-  // secondary
-
-  // focal plane
-
-  // camera
+  // camera and focal surface
   Double_t fKappa1;
   Double_t fKappa2;
   Double_t fRf;
   Double_t fZf;
+
+  Double_t fPixelSize; 
+  Double_t fMAPMTWidth; 
+  Double_t fMAPMTLength; 
+  Double_t fInputWindowThickness; 
+  Double_t fMAPMTOffset; 
+  Double_t fMAPMTGap; 
+  Double_t fMAPMTRefIndex;  
 
   TelType eTelType; //!< telescope type enum (here will be SC)
 
