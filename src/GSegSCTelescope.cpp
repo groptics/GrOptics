@@ -547,11 +547,6 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
                                          fPixelSize*4, 100*um); // very thin box
   AFocalSurface* mapmtCathode = new AFocalSurface("mapmtCathode", mapmtCathodeV);
 
-  /*
-  // Make MAPMT photocathode without pixel structure
-  TGeoBBox* mapmtCathodeV = new TGeoBBox("mapmtCathodeV", fPixelSize*4, fPixelSize*4, 100*um); // very thin box
-  AFocalSurface* mapmtCathode = new AFocalSurface("mapmtCathode", mapmtCathodeV);
-
   // Make a single MAPMT
   TGeoBBox* mapmtV = new TGeoBBox("mapmtV", fMAPMTWidth/2., fMAPMTWidth/2.,
                                   fMAPMTLength/2.);
@@ -560,10 +555,12 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
                                              fMAPMTWidth/2., fMAPMTWidth/2.,
                                              fInputWindowThickness/2.);
 
-  TGeoMedium* med = fManager->GetMedium("med");
   ALens* mapmtInputWindow = new ALens("mapmtInputWindow", mapmtInputWindowV, med);
   ARefractiveIndex* bk7 = AGlassCatalog::GetRefractiveIndex("N-BK7");
   mapmtInputWindow->SetRefractiveIndex(bk7);
+  mapmt->AddNodeOverlap(mapmtInputWindow, 
+                        1, new TGeoTranslation(0, 0, fMAPMTLength/2. - fInputWindowThickness/2.));
+
   mapmt->AddNodeOverlap(mapmtInputWindow, 1, new TGeoTranslation(0, 0, fMAPMTLength/2. - fInputWindowThickness/2.));
 
   mapmt->AddNode(mapmtCathode, 1, new TGeoTranslation(0, 0, fMAPMTLength/2. - fInputWindowThickness - 100*um));
@@ -573,6 +570,37 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
                                          15*mm);
   AObscuration* mapmtBackObs = new AObscuration("mapmtBackObs", mapmtBackObsV);
   mapmt->AddNode(mapmtBackObs, 1, new TGeoTranslation(0, 0, -fMAPMTLength/2. + 15*mm));
+
+  const Double_t kZs = fF/fQ;
+  const Double_t kZf = kZs - (1 - fAlpha)*fF;
+
+  // Make the focal plane
+  Int_t n = 1;
+  for(Int_t i = -7; i <= 7; i++){
+    Double_t dx = i*fMAPMTWidth;
+    for(Int_t j = -7; j <= 7; j++){
+      if((TMath::Abs(i) + TMath::Abs(j) >= 11) || (TMath::Abs(i)*TMath::Abs(j) == 21)){
+        continue;
+      } // if
+      Double_t dy = j*fMAPMTWidth;
+      Double_t r2 = (i*i + j*j)*fMAPMTWidth*fMAPMTWidth;
+      Double_t dz = fKappa1*TMath::Power(fF, -1)*r2 + fKappa2*TMath::Power(fF, -3)*r2*r2;
+      focVol->AddNode(mapmt, n, new TGeoTranslation(dx, dy, - fMAPMTLength/2. + dz));
+      n++;
+    } // y
+  } // x
+
+  fManager->GetTopVolume()->AddNode(focVol,1,new TGeoCombiTrans("cFocS",
+                                                               0.0,
+                                                               0.0,
+                                                               kZf,
+                                                               new TGeoRotation("rFocS",
+                                                                                0.0,
+                                                                                0.0,
+                                                                                0.0)));
+                                                               
+
+  /*
 
   const Double_t kZs = fF/fQ;
   const Double_t kZf = kZs - (1 - fAlpha)*fF;
