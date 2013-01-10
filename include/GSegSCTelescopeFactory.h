@@ -34,9 +34,9 @@ class mirrorSegmentDetails;
   Double_t posErrorX;
   Double_t posErrorY;
   Double_t posErrorZ;
-  Double_t rotErrorX;
-  Double_t rotErrorY;
-  Double_t rotErrorZ;
+  Double_t rotErrorPhi;
+  Double_t rotErrorTheta;
+  Double_t rotErrorPsi;
   Double_t roughness;
   Int_t bRead; // if 0, set from BASIC; if 1, set from CHANGE
 };
@@ -71,7 +71,8 @@ struct SegSCStdOptics {
   Double_t fRf;  // focal surface radius
 
   Double_t fZp;  // primary position on z axis
-  Double_t fZs;  // secondary position on z axis
+  Double_t fZs;  // secondary position on z axis, foc.length units
+  Double_t fZf;  // focal surf. position on z axis, foc.length units
 
   Int_t     fNp;   // Number of coefficients for the primary
   Int_t     fNs;   // Number of coefficients for the secondary

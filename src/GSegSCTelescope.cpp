@@ -121,6 +121,8 @@ void GSegSCTelescope::buildTelescope(bool os8)
   // fix units
   fFMeters = fF;
   fF = fF*m;
+  fZp = fZp*m;
+
   fTelRadius = fRpMax;
   fRpMax = fRpMax*m;
   fRpMin = fRpMin*m;
@@ -136,6 +138,8 @@ void GSegSCTelescope::buildTelescope(bool os8)
   fInputWindowThickness = fInputWindowThickness*mm;
   fMAPMTOffset = fMAPMTOffset*mm;
   fMAPMTGap = fMAPMTGap*mm;
+
+  
 
   bool debug = true;
   if (debug) {
@@ -182,8 +186,8 @@ void GSegSCTelescope::makePrimarySecondaryDisks() {
     *oLog << "  --  GSegSCTelescope::makePrimarySecondaryDisks" << endl;
   }
 
-  const Double_t kZp = fZp*m;
-  const Double_t kZs = (fF)/fQ;
+  const Double_t kZp = fZp;
+  const Double_t kZs = (fF)*fZs;
   
   if (0) {
     *oLog << "   fF " << fF << endl;
@@ -251,8 +255,8 @@ void GSegSCTelescope::addPrimaryF() {
     *oLog << "       pos.errors " << (*(vSegP1.at(0))).posErrorX << "  "
           << (*(vSegP1.at(0))).posErrorY << "  " << (*(vSegP1.at(0))).posErrorZ
           << endl;
-    *oLog << "       rot.errors " << (*(vSegP1.at(0))).rotErrorX << "  "
-          << (*(vSegP1.at(0))).rotErrorY << "  " << (*(vSegP1.at(0))).rotErrorZ
+    *oLog << "       rot.errors " << (*(vSegP1.at(0))).rotErrorPhi << "  "
+          << (*(vSegP1.at(0))).rotErrorTheta << "  " << (*(vSegP1.at(0))).rotErrorPsi
           << endl;
     *oLog << "       reflect curve " << (*(vSegP1.at(0))).reflect << endl;
     *oLog << "       iNumP1Mirrors " << iNumP1Mirrors << endl;
@@ -438,7 +442,8 @@ void GSegSCTelescope::addSecondaryObscuration() {
     *oLog << "  -- GSegSCTelescope::AddSecondaryObscuration " << endl;
   }
 
-  const Double_t kZs = fF/fQ;
+  //const Double_t kZs = fF/fQ;
+  const Double_t kZs = fF*fZf;
   AGeoAsphericDisk* disk
     = new AGeoAsphericDisk("secondaryObsV", 
                            kZs + fS[0] + 1.*cm, 0, 
@@ -512,8 +517,9 @@ void GSegSCTelescope::addIdealFocalPlane()  {
           << endl;
   }
 
-  const Double_t kZs = (fF)/fQ;
-  const Double_t kZf = kZs - (1 - fAlpha)*fF;
+  //const Double_t kZs = (fF)/fQ;
+  //const Double_t kZf = kZs - (1 - fAlpha)*fF;
+  const Double_t kZf = fF * fZf;
 
   AGeoAsphericDisk* idealCameraV = new AGeoAsphericDisk("idealCameraV", kZf - 1*um, 0, kZf, 0, fRf*m, 0);
   Double_t sagPar[2] = {fKappa1*TMath::Power(fF, -1),
@@ -571,8 +577,9 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
   AObscuration* mapmtBackObs = new AObscuration("mapmtBackObs", mapmtBackObsV);
   mapmt->AddNode(mapmtBackObs, 1, new TGeoTranslation(0, 0, -fMAPMTLength/2. + 15*mm));
 
-  const Double_t kZs = fF/fQ;
-  const Double_t kZf = kZs - (1 - fAlpha)*fF;
+  //const Double_t kZs = fF/fQ;
+  //const Double_t kZf = kZs - (1 - fAlpha)*fF;
+  const Double_t kZf = fF * fZf;
 
   // Make the focal plane
   Int_t n = 1;
@@ -876,12 +883,22 @@ void GSegSCTelescope::printTelescope() {
   if (debug) {
     *oLog << " -- GSegSCTelescope::printTelescope" << endl;
   }
-  *oLog << "      fF " << fF << endl;
-  *oLog << "      fPlateScaleFactor " << fPlateScaleFactor << endl;
-  *oLog << "      fAvgTransitTime   " << fAvgTransitTime << endl;
-  *oLog << "      fRotationOffset   " << fRotationOffset << endl;
+  if (iPrtMode > 0) {
+    *oLog << "      fF " << fF << endl;
+    *oLog << "      fPlateScaleFactor " << fPlateScaleFactor << endl;
+    *oLog << "      fAvgTransitTime   " << fAvgTransitTime << endl;
+    *oLog << "      fRotationOffset   " << fRotationOffset << endl;
+    *oLog << "      fZp               " << fZp << endl;
+    *oLog << "      fZs               " << fZs << endl;
+    *oLog << "      number of P1 segments " << vSegP1.size() << endl;
+    *oLog << "      number of P2 segments " << vSegP2.size() << endl;
+    *oLog << "      number of S1 segments " << vSegS1.size() << endl;
+    *oLog << "      number of S2 segments " << vSegS2.size() << endl;
+    *oLog << "      fZf                   " << fZf << endl;
+    *oLog << "      fRf                   " << fRf << endl;
+  }
 
-  if (0) {
+  if ( iPrtMode == 2) {
     *oLog << "     ******* Primary P1 mirror " << endl;
     *oLog << "         vSegP1 vector " << endl;
     for (int i = 0;i<vSegP1.size(); i++ ) {
@@ -912,20 +929,22 @@ void GSegSCTelescope::printTelescope() {
     }
   }
 
-  *oLog << "      ******* Focal Surface " << endl;
-  *oLog << "      focal surface " << endl;
-  *oLog << "        fKappa1 fKappa2 " << fKappa1 << " " << fKappa2 << " " 
-        << fRf << endl;
-  *oLog << "        fZf fRf " << fRf << endl;
-  *oLog << "      ******* Camera " << endl;
-  *oLog << "        fPixelSize  " << fPixelSize << endl;
-  *oLog << "        fMAPMTWidth  " << fMAPMTWidth  << endl;
-  *oLog << "        fMAPMTLength  " << fMAPMTLength << endl;
-  *oLog << "        fInputWindowThickness  " << fInputWindowThickness << endl;
-  *oLog << "        fMAPMTOffset  " << fMAPMTOffset << endl;
-  *oLog << "        fMAPMTGap  " << fMAPMTGap << endl;
-  *oLog << "        fMAPMTRefIndex  " << fMAPMTRefIndex << endl;
- 
+  if (iPrtMode >0 ) {  
+
+    *oLog << "      ******* Focal Surface " << endl;
+    *oLog << "      focal surface " << endl;
+    *oLog << "        fKappa1 fKappa2 " << fKappa1 << " " << fKappa2 << " " 
+          << fRf << endl;
+    *oLog << "        fZf fRf " << fRf << endl;
+    *oLog << "      ******* Camera " << endl;
+    *oLog << "        fPixelSize  " << fPixelSize << endl;
+    *oLog << "        fMAPMTWidth  " << fMAPMTWidth  << endl;
+    *oLog << "        fMAPMTLength  " << fMAPMTLength << endl;
+    *oLog << "        fInputWindowThickness  " << fInputWindowThickness << endl;
+    *oLog << "        fMAPMTOffset  " << fMAPMTOffset << endl;
+    *oLog << "        fMAPMTGap  " << fMAPMTGap << endl;
+    *oLog << "        fMAPMTRefIndex  " << fMAPMTRefIndex << endl;
+  }
 };
 /********************** end of printTelescope *****************/
 
@@ -939,8 +958,9 @@ void GSegSCTelescope::printmirrorSegmentDetails(const mirrorSegmentDetails *mirD
 	<< mirDetails->roughness << endl;
   *oLog << "         posErrorX/Y/Z " << mirDetails->posErrorX << "  " << mirDetails->posErrorY
 	<< "  " << mirDetails->posErrorZ << endl;
-  *oLog << "         rotErrorX/Y/Z " << mirDetails->rotErrorX << "  " << mirDetails->rotErrorY
-	<< "  " << mirDetails->rotErrorZ << endl;
+  *oLog << "         rotErrorPhi/Y/Z " << mirDetails->rotErrorPhi << "  " << mirDetails->rotErrorTheta
+	<< "  " << mirDetails->rotErrorPsi << endl;
+
 };
 /*
  Double_t rmin;
@@ -951,9 +971,9 @@ void GSegSCTelescope::printmirrorSegmentDetails(const mirrorSegmentDetails *mirD
   Double_t posErrorX;
   Double_t posErrorY;
   Double_t posErrorZ;
-  Double_t rotErrorX;
-  Double_t rotErrorY;
-  Double_t rotErrorZ;
+  Double_t rotErrorPhi;
+  Double_t rotErrorTheta;
+  Double_t rotErrorPsi;
   Double_t roughness;
   Int_t bRead; // if 0, set from BASIC; if 1, set from CHANGE
 */
@@ -970,9 +990,10 @@ void GSegSCTelescope::drawTelescope() {
 /********************** end of drawTelescope *****************/
 
 void GSegSCTelescope::setPrintMode(ostream &oStr,const int prtMode) {
-  bool debug = true;
+  bool debug = false;
+  iPrtMode = prtMode;
   if (debug) {
-    *oLog << " -- GSegSCTelescope::setPrintMode" << endl;
+    *oLog << " -- GSegSCTelescope::setPrintMode " << iPrtMode << endl;
   } 
 };
 /********************** end of setPrintMode *****************/
@@ -1144,6 +1165,7 @@ void GSegSCTelescope::initialize() {
   fPrimaryV      = 0;
   fSecondaryV    = 0;
   fSecondaryObsV = 0;
+  iPrtMode = 0;
 
   ray = 0;
   hisF = 0;

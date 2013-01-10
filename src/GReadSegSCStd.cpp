@@ -195,7 +195,9 @@ void GReadSegSCStd::setupSCFactory() {
  
     opt->fRpMax = atof(tokens.at(1).c_str() );
     opt->fRpMin = atof(tokens.at(2).c_str());
-    opt->fZp = atof(tokens.at(3).c_str());
+    if (tokens.size() == 4) {
+      opt->fZp = atof(tokens.at(3).c_str());
+    }
   }
 
   // read SECONDARY record ///////////////// 
@@ -207,7 +209,10 @@ void GReadSegSCStd::setupSCFactory() {
     opt = SCFac->mStdOptics[iStdOptNum];   
     opt->fRsMax = atof(tokens.at(1).c_str() );
     opt->fRsMin = atof(tokens.at(2).c_str());
-    opt->fZs = atof(tokens.at(3).c_str());
+    // initialized to 1.5 meters in opt
+    if (tokens.size() == 4) {
+      opt->fZs = atof(tokens.at(3).c_str());
+    }
   }
 
   // read PRIMSEGP1, both BASIC and CHANGE
@@ -310,6 +315,10 @@ void GReadSegSCStd::setupSCFactory() {
     opt->fKappa1 = atof(tokens.at(1).c_str() );
     opt->fKappa2 = atof(tokens.at(2).c_str());
     opt->fRf = atof(tokens.at(3).c_str());
+    // see initialization in opt 
+    if ( tokens.size() == 5) {
+      opt->fZf = atof(tokens.at(3).c_str());
+    }
   }
   /*
   flag = "FOCALPLANEOFFSET"; 
@@ -361,6 +370,13 @@ void GReadSegSCStd::setupSCFactory() {
     opt->iSecReflID = atoi(tokens.at(2).c_str());
   }
   */
+
+  // calculate plate scale factor if no record present.
+  if ( (opt->fPlateScaleFactor) < 0.00001) {
+    opt->fPlateScaleFactor = tan( 1.0*(TMath::DegToRad())) *
+      opt->fF * 100.0;
+  }  
+ 
   SafeDelete(pi);
 
   getPolyCoeffs();
@@ -401,9 +417,9 @@ void GReadSegSCStd::setupSCFactory() {
    segTmp->posErrorX =  atof(tokens.at(9).c_str());
    segTmp->posErrorY =  atof(tokens.at(10).c_str());
    segTmp->posErrorZ =  atof(tokens.at(11).c_str());
-   segTmp->rotErrorX =  atof(tokens.at(12).c_str());
-   segTmp->rotErrorY =  atof(tokens.at(13).c_str());
-   segTmp->rotErrorZ =  atof(tokens.at(14).c_str());
+   segTmp->rotErrorPhi =  atof(tokens.at(12).c_str());
+   segTmp->rotErrorTheta =  atof(tokens.at(13).c_str());
+   segTmp->rotErrorPsi =  atof(tokens.at(14).c_str());
    segTmp->bRead = 0;
 
    vector<mirrorSegmentDetails *> vSeg;
@@ -454,9 +470,9 @@ void GReadSegSCStd::readChangeRecord(const vector<string> &tokens,
     segTmp->posErrorX =  atof(tokens.at(9).c_str());
     segTmp->posErrorY =  atof(tokens.at(10).c_str());
     segTmp->posErrorZ =  atof(tokens.at(11).c_str());
-    segTmp->rotErrorX =  atof(tokens.at(12).c_str());
-    segTmp->rotErrorY =  atof(tokens.at(13).c_str());
-    segTmp->rotErrorZ =  atof(tokens.at(14).c_str());
+    segTmp->rotErrorPhi =  atof(tokens.at(12).c_str());
+    segTmp->rotErrorTheta =  atof(tokens.at(13).c_str());
+    segTmp->rotErrorPsi =  atof(tokens.at(14).c_str());
     segTmp->bRead = 1;
   
     if (eMirPS == P1) {

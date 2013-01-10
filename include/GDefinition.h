@@ -136,9 +136,9 @@ struct mirrorSegmentDetails {
   Double_t posErrorX;
   Double_t posErrorY;
   Double_t posErrorZ;
-  Double_t rotErrorX;
-  Double_t rotErrorY;
-  Double_t rotErrorZ;
+  Double_t rotErrorPhi;
+  Double_t rotErrorTheta;
+  Double_t rotErrorPsi;
   Double_t roughness;
   Int_t bRead; // if 0, set from BASIC; if 1, set from CHANGE
 };

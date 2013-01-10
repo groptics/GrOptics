@@ -90,7 +90,8 @@ SegSCStdOptics::SegSCStdOptics() {
   fRf = 0.0;
 
   fZp = 0.0;
-  fZs = 0.0;
+  fZs = 1.5;
+  fZf = (1./fQ) - (1 - fAlpha);
   
   fNp = 0;   // Number of coefficients for the primary
   fNs = 0;   // Number of coefficients for the secondary
@@ -213,7 +214,7 @@ void SegSCStdOptics::printSegVector (const vector<mirrorSegmentDetails *> &vec) 
           << t->delPhi << "  " << t->reflect << "   " << t->roughness
           << "      " << t->posErrorX
           << " " << t->posErrorY << " " << t->posErrorZ << "    " 
-          << t->rotErrorX << " " << t->rotErrorY << " " << t->rotErrorZ
+          << t->rotErrorPhi << " " << t->rotErrorTheta << " " << t->rotErrorPsi
           << endl;
   }
 
@@ -366,6 +367,7 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SCTel->fKappa1 = opt->fKappa1;
   SCTel->fKappa2 = opt->fKappa2;
   SCTel->fRf     = opt->fRf;
+  SCTel->fZf     = opt->fZf;
 
   // camera
   SCTel->fPixelSize   = opt->fPixelSize;

@@ -147,6 +147,8 @@ class GSegSCTelescope : public GTelescope {
   Double_t fMAPMTGap; 
   Double_t fMAPMTRefIndex;  
 
+  Int_t iPrtMode;
+
   TelType eTelType; //!< telescope type enum (here will be SC)
 
   void makePhotonHistoryBranches();
