@@ -272,41 +272,7 @@ void GReadSegSCStd::setupSCFactory() {
     }
   }
     
-  /*
-  flag = "PRIMARYOFFSET"; 
-  pi->set_flag(flag);
-
-  while (pi->get_line_vector(tokens) >=0) {
-    int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
-    opt->fPrimXoffset = atof(tokens.at(1).c_str() );
-    opt->fPrimYoffset = atof(tokens.at(2).c_str() );
-    opt->fPrimZoffset = atof(tokens.at(3).c_str() );
-    opt->fPrimThetaOffset = atof(tokens.at(4).c_str() );
-    opt->fPrimPhiAngle = atof(tokens.at(5).c_str() );
-    if (tokens.size() > 6) 
-      opt->fPrimRoughSigma = atof(tokens.at(6).c_str() );
-  }
-  */
-
-   /*
-  flag = "SECONDARYOFFSET"; 
-  pi->set_flag(flag);
-
-  while (pi->get_line_vector(tokens) >=0) {
-    int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
-    opt->fSecondXoffset = atof(tokens.at(1).c_str() );
-    opt->fSecondYoffset = atof(tokens.at(2).c_str() );
-    opt->fSecondZoffset = atof(tokens.at(3).c_str() );
-    opt->fSecondThetaOffset = atof(tokens.at(4).c_str() );
-    opt->fSecondPhiAngle = atof(tokens.at(5).c_str() );
-    if (tokens.size() > 6) 
-      opt->fSecondRoughSigma = atof(tokens.at(6).c_str() );
-  }
-  */
-
-  flag = "FOCALPLANE"; 
+  flag = "FOCALSURFACE"; 
   pi->set_flag(flag);
 
   while (pi->get_line_vector(tokens) >=0) {
@@ -321,7 +287,7 @@ void GReadSegSCStd::setupSCFactory() {
     }
   }
   /*
-  flag = "FOCALPLANEOFFSET"; 
+  flag = "FOCALSURFACEOFFSET"; 
   pi->set_flag(flag);
 
   while (pi->get_line_vector(tokens) >=0) {
