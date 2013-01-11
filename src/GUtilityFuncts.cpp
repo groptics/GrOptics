@@ -1250,3 +1250,21 @@ bool GUtilityFuncts::sortPair(const pair<int,int> i ,
                               const pair<int,int> j)  {
   return (j.second < i.second);
 };
+/*****************************************************/
+
+void GUtilityFuncts::printSegVector (const vector<mirrorSegmentDetails *> &vec) {
+  *oLog << "        num rmin    rmax marg dPhi refl rough errXYZ rotErrABC"
+        << endl;
+  int numElem = vec.size();
+  for (int i = 0;i<numElem; i++) {
+    mirrorSegmentDetails *t = vec[i];
+    *oLog << "         " << i+1 << "  " 
+          << t->rmin << "  " << t->rmax << "  " << t->margin << "  " 
+          << t->delPhi << "  " << t->reflect << "   " << t->roughness
+          << "      " << t->posErrorX
+          << " " << t->posErrorY << " " << t->posErrorZ << "    " 
+          << t->rotErrorPhi << " " << t->rotErrorTheta << " " << t->rotErrorPsi
+          << endl;
+  }
+
+};

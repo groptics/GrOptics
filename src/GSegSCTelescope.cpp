@@ -245,22 +245,6 @@ void GSegSCTelescope::addPrimaryF() {
 
   if (debug) {
     *oLog << "  --  GSegSCTelescope::addPrimaryF" << endl;
-    /*
-    *oLog << "     primaryF parameters " << endl;
-    *oLog << "       rmin/rmax " <<  (*(vSegP1.at(0))).rmin << "  "
-          << (*(vSegP1.at(0))).rmax << endl;
-    
-    *oLog << "       delPhi " << (*(vSegP1.at(0))).delPhi << endl;
-    *oLog << "       margin " << (*(vSegP1.at(0))).margin << endl;
-    *oLog << "       pos.errors " << (*(vSegP1.at(0))).posErrorX << "  "
-          << (*(vSegP1.at(0))).posErrorY << "  " << (*(vSegP1.at(0))).posErrorZ
-          << endl;
-    *oLog << "       rot.errors " << (*(vSegP1.at(0))).rotErrorPhi << "  "
-          << (*(vSegP1.at(0))).rotErrorTheta << "  " << (*(vSegP1.at(0))).rotErrorPsi
-          << endl;
-    *oLog << "       reflect curve " << (*(vSegP1.at(0))).reflect << endl;
-    *oLog << "       iNumP1Mirrors " << iNumP1Mirrors << endl;
-    */
    }
   Int_t count = 0;
 
@@ -283,9 +267,20 @@ void GSegSCTelescope::addPrimaryF() {
         *oLog << "        phimin/max " << phimin << "  " << phimax << endl;
       }
     PentagonSegmentedMirror mirror(rmin + margin, rmax, phimin, phimax);
-    mirror.SetPositionErrors(0*mm, 0*mm, 0*mm);
-    mirror.SetRotationErrors(0., 0., 0.);
-    mirror.SetRougness(0.);
+    Double_t posErrorX = (*(vSegP1.at(i))).posErrorX;
+    Double_t posErrorY = (*(vSegP1.at(i))).posErrorY;
+    Double_t posErrorZ = (*(vSegP1.at(i))).posErrorZ;
+    mirror.SetPositionErrors(posErrorX*mm, posErrorY*mm, posErrorZ*mm);
+ 
+    Double_t rotErrorPhi = (*(vSegP1.at(i))).rotErrorPhi;
+    Double_t rotErrorTheta = (*(vSegP1.at(i))).rotErrorTheta;
+    Double_t rotErrorPsi = (*(vSegP1.at(i))).rotErrorPsi;
+    mirror.SetRotationErrors(rotErrorPhi, rotErrorTheta,
+                             rotErrorPsi);
+ 
+    Double_t roughness = (*(vSegP1.at(i))).roughness; 
+    mirror.SetRougness(roughness);
+
     mirror.SetMargin(margin);
     iReflect = (*(vSegP1.at(i))).reflect;
    // add mirror segment
@@ -312,9 +307,20 @@ void GSegSCTelescope::addPrimaryF() {
         *oLog << "        phimin/max " << phimin << "  " << phimax << endl;
       }
     PentagonSegmentedMirror mirror(rmin + margin, rmax, phimin, phimax);
-    mirror.SetPositionErrors(0*mm, 0*mm, 0*mm);
-    mirror.SetRotationErrors(0., 0., 0.);
-    mirror.SetRougness(0.);
+    Double_t posErrorX = (*(vSegP2.at(i))).posErrorX;
+    Double_t posErrorY = (*(vSegP2.at(i))).posErrorY;
+    Double_t posErrorZ = (*(vSegP2.at(i))).posErrorZ;
+    mirror.SetPositionErrors(posErrorX*mm, posErrorY*mm, posErrorZ*mm);
+ 
+    Double_t rotErrorPhi = (*(vSegP2.at(i))).rotErrorPhi;
+    Double_t rotErrorTheta = (*(vSegP2.at(i))).rotErrorTheta;
+    Double_t rotErrorPsi = (*(vSegP2.at(i))).rotErrorPsi;
+    mirror.SetRotationErrors(rotErrorPhi, rotErrorTheta,
+                             rotErrorPsi);
+ 
+    Double_t roughness = (*(vSegP2.at(i))).roughness; 
+    mirror.SetRougness(roughness);
+
     mirror.SetMargin(margin);
     iReflect = (*(vSegP2.at(i))).reflect;
     // add mirror segment
@@ -370,28 +376,35 @@ void GSegSCTelescope::addSecondaryJ() {
       
       Double_t phimin = ( (*(vSegS1.at(i))).delPhi)*i;
       Double_t phimax = ( (*(vSegS1.at(i))).delPhi)*(i+1);
-      if (0) {
-        *oLog << "    P1 pentagon segmented mirror number " << i << endl;
-        *oLog << "        rmin/rmax " << rmin << " " << rmax << endl;
-        *oLog << "        margin    " << margin << endl;
-        *oLog << "        phimin/max " << phimin << "  " << phimax << endl;
-      }
-    SectorSegmentedMirror mirror(rmin + margin, rmax, phimin, phimax);
-    mirror.SetPositionErrors(0*mm, 0*mm, 0*mm);
-    mirror.SetRotationErrors(0., 0., 0.);
-    mirror.SetRougness(0.);
-    mirror.SetMargin(margin);
-    iReflect = (*(vSegS1.at(i))).reflect;
-    // add mirror segment
-    addSecondaryMirror(Form("secondary%d", count1), &mirror);    
-
-    SectorSegmentedObscuration  obscuration(rmin + margin, rmax, phimin, phimax);
-    obscuration.SetPositionErrors(0*mm, 0*mm, 0*mm);
-    obscuration.SetRotationErrors(0., 0., 0.);
-    obscuration.SetMargin(margin);
-    addSecondaryObscurationSeg(Form("secondaryObs%d", count1), &obscuration);    
-    count++;
-    count1++;
+      SectorSegmentedMirror mirror(rmin + margin, rmax, phimin, phimax);
+      Double_t posErrorX = (*(vSegS1.at(i))).posErrorX;
+      Double_t posErrorY = (*(vSegS1.at(i))).posErrorY;
+      Double_t posErrorZ = (*(vSegS1.at(i))).posErrorZ;
+      mirror.SetPositionErrors(posErrorX*mm, posErrorY*mm, posErrorZ*mm);
+      
+      Double_t rotErrorPhi = (*(vSegS1.at(i))).rotErrorPhi;
+      Double_t rotErrorTheta = (*(vSegS1.at(i))).rotErrorTheta;
+      Double_t rotErrorPsi = (*(vSegS1.at(i))).rotErrorPsi;
+      mirror.SetRotationErrors(rotErrorPhi, rotErrorTheta,
+                               rotErrorPsi);
+      
+      Double_t roughness = (*(vSegS1.at(i))).roughness; 
+      mirror.SetRougness(roughness);
+      
+      mirror.SetMargin(margin);
+      iReflect = (*(vSegS1.at(i))).reflect;
+      // add mirror segment
+      addSecondaryMirror(Form("secondary%d", count1), &mirror);    
+      
+      SectorSegmentedObscuration  obscuration(rmin + margin, rmax,phimin,phimax);
+      obscuration.SetPositionErrors(posErrorX*mm, posErrorY*mm, 
+                                    posErrorZ*mm);
+      obscuration.SetRotationErrors(rotErrorPhi, rotErrorTheta,
+                                    rotErrorPsi);
+      obscuration.SetMargin(margin);
+      addSecondaryObscurationSeg(Form("secondaryObs%d", count1), &obscuration);    
+      count++;
+      count1++;
     }
   }
 
@@ -406,29 +419,35 @@ void GSegSCTelescope::addSecondaryJ() {
       
       Double_t phimin = ( (*(vSegS2.at(i))).delPhi)*i;
       Double_t phimax = ( (*(vSegS2.at(i))).delPhi)*(i+1);
-      if (0) {
-        *oLog << "    S2  segmented mirror number " << i << endl;
-        *oLog << "        rmin/rmax " << rmin << " " << rmax << endl;
-        *oLog << "        margin    " << margin << endl;
-        *oLog << "        phimin/max " << phimin << "  " << phimax << endl;
-      }
-    SectorSegmentedMirror mirror(rmin + margin, rmax, phimin, phimax);
-    mirror.SetPositionErrors(0*mm, 0*mm, 0*mm);
-    mirror.SetRotationErrors(0., 0., 0.);
-    mirror.SetRougness(0.);
-    mirror.SetMargin(margin);
-    iReflect = (*(vSegS2.at(i))).reflect;
-    // add mirror segment
-    addSecondaryMirror(Form("secondary%d", count), &mirror);  
-  
-    SectorSegmentedObscuration  obscuration(rmin + margin, rmax, phimin, phimax);
-    obscuration.SetPositionErrors(0*mm, 0*mm, 0*mm);
-    obscuration.SetRotationErrors(0., 0., 0.);
-    obscuration.SetMargin(margin);
-    addSecondaryObscurationSeg(Form("secondaryObs%d", count1), &obscuration);    
-    count++;
-    count1++;
-    
+      SectorSegmentedMirror mirror(rmin + margin, rmax, phimin, phimax);
+      Double_t posErrorX = (*(vSegS2.at(i))).posErrorX;
+      Double_t posErrorY = (*(vSegS2.at(i))).posErrorY;
+      Double_t posErrorZ = (*(vSegS2.at(i))).posErrorZ;
+      mirror.SetPositionErrors(posErrorX*mm, posErrorY*mm, posErrorZ*mm);
+      
+      Double_t rotErrorPhi = (*(vSegS2.at(i))).rotErrorPhi;
+      Double_t rotErrorTheta = (*(vSegS2.at(i))).rotErrorTheta;
+      Double_t rotErrorPsi = (*(vSegS2.at(i))).rotErrorPsi;
+      mirror.SetRotationErrors(rotErrorPhi, rotErrorTheta,
+                               rotErrorPsi);
+      
+      Double_t roughness = (*(vSegS2.at(i))).roughness; 
+      mirror.SetRougness(roughness);
+      
+      mirror.SetMargin(margin);
+      iReflect = (*(vSegS2.at(i))).reflect;
+      // add mirror segment
+      addSecondaryMirror(Form("secondary%d", count), &mirror);  
+      
+      SectorSegmentedObscuration  obscuration(rmin + margin, rmax, phimin, phimax);
+      obscuration.SetPositionErrors(posErrorX*mm, posErrorY*mm, posErrorZ*mm);
+      obscuration.SetRotationErrors(rotErrorPhi, rotErrorTheta,
+                                    rotErrorPsi);
+      obscuration.SetMargin(margin);
+      addSecondaryObscurationSeg(Form("secondaryObs%d", count1), &obscuration);    
+      count++;
+      count1++;
+      
     }
   }
 
@@ -437,6 +456,7 @@ void GSegSCTelescope::addSecondaryJ() {
 
 void GSegSCTelescope::addSecondaryObscuration() {
 
+  // not currently used (full secondary disk)
   bool debug = true;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::AddSecondaryObscuration " << endl;
@@ -466,20 +486,11 @@ void GSegSCTelescope::addSecondaryObscurationSeg(const char*name,
   if (debug) {
     *oLog << "  --  GSegSCTelescope::addSecondaryObscurationSeg" << endl;
   }
-  // static int i = 0;
-  //if (i == 0) {
-  //i = 1;
-  //}
-  //else {
-  //return; 
-  //}
+
   AObscuration* obs = obscuration->BuildObscuration(name, fSecondaryObsV, kFALSE);
   obs->SetLineColor(2);
   TGeoCombiTrans* combi = obscuration->BuildObscurationCombiTrans(fSecondaryObsV, kFALSE);
 
-  //ABorderSurfaceCondition * condition
-  //= new ABorderSurfaceCondition(fManager->GetTopVolume(), obs);
-  //condition->SetGaussianRoughness(mirror->GetRoughness()*TMath::DegToRad());
 
   fManager->GetTopVolume()->AddNode(obs, 1, combi);
   
@@ -899,36 +910,21 @@ void GSegSCTelescope::printTelescope() {
   }
 
   if ( iPrtMode == 2) {
-    *oLog << "     ******* Primary P1 mirror " << endl;
-    *oLog << "         vSegP1 vector " << endl;
-    for (int i = 0;i<vSegP1.size(); i++ ) {
-      *oLog << "         P1 segment number " << i << endl;
-      printmirrorSegmentDetails(vSegP1.at(i));
-      *oLog << endl;
-    }
-    *oLog << "     ******* Primary P2 mirror " << endl;
-    *oLog << "         vSegP2 vector " << endl;
-    for (int i = 0;i<vSegP2.size(); i++ ) {
-      *oLog << "         P2 segment number " << i << endl;
-      printmirrorSegmentDetails(vSegP2.at(i));
-      *oLog << endl;
-    }
-    *oLog << "     ******* Secondary S1 mirror " << endl;
-    *oLog << "         vSegS1 vector " << endl;
-    for (int i = 0;i<vSegS1.size(); i++ ) {
-      *oLog << "         S1 segment number " << i << endl;
-      printmirrorSegmentDetails(vSegS1.at(i));
-      *oLog << endl;
-    }
-    *oLog << "     ******* Secondary S2 mirror " << endl;
-    *oLog << "         vSegS2 vector " << endl;
-    for (int i = 0;i<vSegS2.size(); i++ ) {
-      *oLog << "         S2 segment number " << i << endl;
-      printmirrorSegmentDetails(vSegS2.at(i));
-      *oLog << endl;
-    }
+    // print P1 segment details
+    *oLog << "       Number of P1 segments " << iNumP1Mirrors << endl;
+    GUtilityFuncts::printSegVector(vSegP1);  
+    // print P2 segment details
+    *oLog << "       Number of P2 segments " << iNumP2Mirrors << endl;
+    GUtilityFuncts::printSegVector(vSegP2);  
+    // print S1 segment details
+    *oLog << "       Number of S1 segments " << iNumS1Mirrors << endl;
+    GUtilityFuncts::printSegVector(vSegS1);  
+    // print P2 segment details
+    *oLog << "       Number of S2 segments " << iNumS2Mirrors << endl;
+    GUtilityFuncts::printSegVector(vSegS2);  
+    
   }
-
+    
   if (iPrtMode >0 ) {  
 
     *oLog << "      ******* Focal Surface " << endl;
@@ -948,35 +944,6 @@ void GSegSCTelescope::printTelescope() {
 };
 /********************** end of printTelescope *****************/
 
-void GSegSCTelescope::printmirrorSegmentDetails(const mirrorSegmentDetails *mirDetails) {
- 
-  *oLog << "  --  GSegSCTelescope::printmirrorSegmentDetails   " << endl;
-  *oLog << "         rmin, rmax, margin " << mirDetails->rmin << "  " << mirDetails->rmax << "  "
-	<< mirDetails->margin << endl;
-  *oLog << "         delPhi " << mirDetails->delPhi << endl;
-  *oLog << "         reflect, roughness " << mirDetails->reflect << "  "
-	<< mirDetails->roughness << endl;
-  *oLog << "         posErrorX/Y/Z " << mirDetails->posErrorX << "  " << mirDetails->posErrorY
-	<< "  " << mirDetails->posErrorZ << endl;
-  *oLog << "         rotErrorPhi/Y/Z " << mirDetails->rotErrorPhi << "  " << mirDetails->rotErrorTheta
-	<< "  " << mirDetails->rotErrorPsi << endl;
-
-};
-/*
- Double_t rmin;
-  Double_t rmax;
-  Double_t margin;
-  Double_t delPhi;
-  Int_t reflect;
-  Double_t posErrorX;
-  Double_t posErrorY;
-  Double_t posErrorZ;
-  Double_t rotErrorPhi;
-  Double_t rotErrorTheta;
-  Double_t rotErrorPsi;
-  Double_t roughness;
-  Int_t bRead; // if 0, set from BASIC; if 1, set from CHANGE
-*/
 void GSegSCTelescope::drawTelescope() {
 
   bool debug = true;

@@ -20,9 +20,10 @@ VERSION2.7aBeta
 #include "Math/Vector3D.h"
 
 extern ostream *oLog;
+class mirrorSegmentDetails;
 
 namespace GUtilityFuncts {
-
+  
   /*! \brief polyInside function of testing regular polygon pixel or
     facet shapes
 
@@ -226,7 +227,7 @@ namespace GUtilityFuncts {
                          const double &roughness, const int &option=0);
 
    bool sortPair(const pair<int,int> i , const pair<int,int> j);
-   
-};
 
+   void printSegVector (const vector<mirrorSegmentDetails *> &vec);
+};
 #endif

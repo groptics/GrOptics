@@ -477,7 +477,7 @@ void GReadSegSCStd::readChangeRecord(const vector<string> &tokens,
   
     if (eMirPS == P1) {
       (opt->vSegP1)[ix -1] = segTmp;
-    }
+   }
     else if (eMirPS == P2) {
       (opt->vSegP2)[ix -1] = segTmp;
     }
