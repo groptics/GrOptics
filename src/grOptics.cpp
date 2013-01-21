@@ -107,6 +107,7 @@ struct Pilot {
   UInt_t seed;  //!< 
 
   int telToDraw;
+  int telDrawOption;
   int testTel;  //!< telescope number for test graphs (>0). if zero no test produced
   string testTelFile; //!< base filename for test output
   bool debugBranchesFlag; //!< if true, create debug branches in output root file
@@ -350,7 +351,7 @@ int main(int argc, char *argv[]) {
     if (telType==DC) {
       GTelescope *tel = DCFac->makeTelescope(telId,telStd);
       if (pilot.telToDraw == telId) {
-	tel->drawTelescope();
+	tel->drawTelescope(pilot.telDrawOption);
 	app->Run(); 
 	return 0;
       }
@@ -367,7 +368,7 @@ int main(int argc, char *argv[]) {
 
       GTelescope *tel = SCFac->makeTelescope(telId,telStd);
       if (pilot.telToDraw == telId) {
-	tel->drawTelescope();
+	tel->drawTelescope(pilot.telDrawOption);
 	app->Run(); 
 	return 0;
       }
@@ -386,7 +387,7 @@ else if (telType==SEGSC) {
 
       GTelescope *tel = SegSCFac->makeTelescope(telId,telStd);
       if (pilot.telToDraw == telId) {
-	tel->drawTelescope();
+	tel->drawTelescope(pilot.telDrawOption);
 	app->Run(); 
 	return 0;
       }
@@ -658,6 +659,7 @@ int pilotPrint(const Pilot &pilot) {
   *oLog << "         random number seed " << pilot.seed << endl;
   *oLog << "         vector capacities  " << pilot.iNInitEvents << endl;
   *oLog << "         telToDraw " << pilot.telToDraw << endl;
+  *oLog << "         telDrawOption " << pilot.telDrawOption << endl;
   *oLog << "         testTel   " << pilot.testTel << endl;
   *oLog << "         testTel base filename   " << pilot.testTelFile << endl;
   *oLog << "         debugBranchesFlag       " << pilot.debugBranchesFlag << endl;
@@ -692,6 +694,7 @@ int readPilot(Pilot *pilot) {
 
   pilot->seed = 0;
   pilot->telToDraw = 0;
+  pilot->telDrawOption = 0;
   pilot->testTel = 0;
   pilot->testTelFile = "";
   pilot->debugBranchesFlag = false;
@@ -791,6 +794,9 @@ int readPilot(Pilot *pilot) {
   pi->set_flag(flag);
   while (pi->get_line_vector(tokens) >=0) {
     pilot->telToDraw = atoi(tokens.at(0).c_str());
+    if (tokens.size() == 2) {
+    pilot->telDrawOption = atoi(tokens.at(1).c_str());
+    }
   }  
   flag = "TESTTEL";
   pi->set_flag(flag);

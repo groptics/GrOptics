@@ -73,10 +73,11 @@ default 0 for compatibility with earlier opticsSimulation.pilot versions.
 ///////////////  draw possibilities for checking configuration and
                                debugging
 			       
-DRAWTEL <telescope number to draw>, default 0 (no drawing)
+DRAWTEL <telescope number to draw: default 0 (no drawing)> <drawtel option:
+                                   default 0, applicable in specific cases>          
 code makes an opengl drawing of the telescope and immediately 
 stops with the root prompt. These are cool drawings. 
- DRAWTEL 1
+* DRAWTEL 1 2
 
 TESTTEL <telescope number> <baseFileName for histograms>   
 THis is a very useful option for producing spot histograms and spot rms
@@ -93,4 +94,4 @@ DO THAT.
 The graphs and histograms are printed to png files using the base filenames.
 
 TESTTEL <telescope number> <baseFileName for histograms>   
-* TESTTEL 1  DCSpot
+ TESTTEL 1  DCSpot

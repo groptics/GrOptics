@@ -176,7 +176,6 @@ class GSegSCTelescope : public GTelescope {
 
   void addSecondaryObscurationSeg(const char*name, 
                                   SegmentedObscuration *obscuration);
- 
 
  public:
 
@@ -236,7 +235,7 @@ class GSegSCTelescope : public GTelescope {
   */
   void printTelescope();
 
-  void drawTelescope();
+  void drawTelescope(const int &option = 0);
 
   /*! \brief setPrintMode used for setting printing details
     

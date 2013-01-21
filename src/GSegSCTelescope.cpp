@@ -139,8 +139,6 @@ void GSegSCTelescope::buildTelescope(bool os8)
   fMAPMTOffset = fMAPMTOffset*mm;
   fMAPMTGap = fMAPMTGap*mm;
 
-  
-
   bool debug = true;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::buildTelescope" << endl;
@@ -166,7 +164,7 @@ void GSegSCTelescope::buildTelescope(bool os8)
   makePrimarySecondaryDisks();
   addPrimaryF();
   addSecondaryJ();
-  //addSecondaryObscuration();
+  addSecondaryObscuration();
   //printTelescope();
 
   if (bCameraFlag) {
@@ -240,7 +238,7 @@ void GSegSCTelescope::makePrimarySecondaryDisks() {
                                      0, fRsMax, fRsMin);
 
   fSecondaryObsV->SetPolynomials(fNs - 1, &fS[1], fNs - 1, &fS[1]);
-
+    
   return;
 };
 /*************************************************************************************/
@@ -401,13 +399,13 @@ void GSegSCTelescope::addSecondaryJ() {
       // add mirror segment
       addSecondaryMirror(Form("secondary%d", count1), &mirror);    
       
-      SectorSegmentedObscuration  obscuration(rmin + margin, rmax,phimin,phimax);
-      obscuration.SetPositionErrors(posErrorX*mm, posErrorY*mm, 
-                                    posErrorZ*mm);
-      obscuration.SetRotationErrors(rotErrorPhi, rotErrorTheta,
-                                    rotErrorPsi);
-      obscuration.SetMargin(margin);
-      addSecondaryObscurationSeg(Form("secondaryObs%d", count1), &obscuration);    
+      //SectorSegmentedObscuration  obscuration(rmin + margin, rmax,phimin,phimax);
+      //obscuration.SetPositionErrors(posErrorX*mm, posErrorY*mm, 
+      //                            posErrorZ*mm);
+      //obscuration.SetRotationErrors(rotErrorPhi, rotErrorTheta,
+      //                               rotErrorPsi);
+      //obscuration.SetMargin(margin);
+      //addSecondaryObscurationSeg(Form("secondaryObs%d", count1), &obscuration);    
       count++;
       count1++;
     }
@@ -444,12 +442,12 @@ void GSegSCTelescope::addSecondaryJ() {
       // add mirror segment
       addSecondaryMirror(Form("secondary%d", count), &mirror);  
       
-      SectorSegmentedObscuration  obscuration(rmin + margin, rmax, phimin, phimax);
-      obscuration.SetPositionErrors(posErrorX*mm, posErrorY*mm, posErrorZ*mm);
-      obscuration.SetRotationErrors(rotErrorPhi, rotErrorTheta,
-                                    rotErrorPsi);
-      obscuration.SetMargin(margin);
-      addSecondaryObscurationSeg(Form("secondaryObs%d", count1), &obscuration);    
+      //SectorSegmentedObscuration  obscuration(rmin + margin, rmax, phimin, phimax);
+      //obscuration.SetPositionErrors(posErrorX*mm, posErrorY*mm, posErrorZ*mm);
+      //obscuration.SetRotationErrors(rotErrorPhi, rotErrorTheta,
+      //                            rotErrorPsi);
+      //obscuration.SetMargin(margin);
+      //addSecondaryObscurationSeg(Form("secondaryObs%d", count1), &obscuration);    
       count++;
       count1++;
       
@@ -468,7 +466,7 @@ void GSegSCTelescope::addSecondaryObscuration() {
   }
 
   //const Double_t kZs = fF/fQ;
-  const Double_t kZs = fF*fZf;
+  const Double_t kZs = fF*fZs;
   AGeoAsphericDisk* disk
     = new AGeoAsphericDisk("secondaryObsV", 
                            kZs + fS[0] + 1.*cm, 0, 
@@ -542,9 +540,11 @@ void GSegSCTelescope::addIdealFocalPlane()  {
                         fKappa2*TMath::Power(fF, -3)};
   idealCameraV->SetPolynomials(2, sagPar, 2, sagPar);
   AFocalSurface* idealCamera = new AFocalSurface("idealCamera", idealCameraV);
+  idealCamera->SetLineColor(3);
   AObscuration* idealCameraObs = new AObscuration("idealCameraObs", idealCameraV);
+  idealCameraObs->SetLineColor(2);
   fManager->GetTopVolume()->AddNode(idealCamera, 1);
-  fManager->GetTopVolume()->AddNode(idealCameraObs, 1, new TGeoTranslation(0, 0, -1*um));
+  fManager->GetTopVolume()->AddNode(idealCameraObs, 1, new TGeoTranslation(0, 0, -100*um));
 
 };
 /*************************************************************************************/
@@ -589,9 +589,9 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
 
   TGeoBBox* mapmtBackObsV = new TGeoBBox("mapmtBackObsV",
                                          fMAPMTWidth/2., fMAPMTWidth/2.,
-                                         15*mm);
+                                         5*mm);
   AObscuration* mapmtBackObs = new AObscuration("mapmtBackObs", mapmtBackObsV);
-  mapmt->AddNode(mapmtBackObs, 1, new TGeoTranslation(0, 0, -fMAPMTLength/2. + 15*mm));
+  mapmt->AddNode(mapmtBackObs, 1, new TGeoTranslation(0, 0, -fMAPMTLength/2. + 1*mm));
 
   //const Double_t kZs = fF/fQ;
   //const Double_t kZf = kZs - (1 - fAlpha)*fF;
@@ -956,15 +956,30 @@ void GSegSCTelescope::printTelescope() {
 };
 /********************** end of printTelescope *****************/
 
-void GSegSCTelescope::drawTelescope() {
+void GSegSCTelescope::drawTelescope(const int &option) {
 
   bool debug = true;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::drawTelescope" << endl; 
+    *oLog << "       option: "  << option << endl;
   }
   gGeoManager = fManager;
   //gGeoManager->GetMasterVolume()->Draw("ogl");
-  gGeoManager->GetTopVolume()->Draw("ogl");
+  if ( (option == 0) || (option == 2) ){
+    TCanvas * cTelescope = new TCanvas("cTelescope","cTelescope",300,300);
+    gGeoManager->GetTopVolume()->Draw("ogl");
+  }
+  if (bCameraFlag) {
+    if ( (option == 1) || (option == 2)) {
+      TCanvas * cCamera = new TCanvas("cCamera","cCamera",300,300);
+      gGeoManager->GetVolume("focVol")->Draw("ogl");
+      
+      TCanvas * cMAPMT = new TCanvas("cMAPMT","cMAPMT",300,300);
+      gGeoManager->GetVolume("focVol")->GetNode(1)->GetVolume()->Draw("ogl");;
+      
+    }
+  }
+      
 };
 /********************** end of drawTelescope *****************/
 

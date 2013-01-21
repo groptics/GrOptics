@@ -208,7 +208,7 @@ class GSCTelescope : public GTelescope {
   */
   void printTelescope();
 
-  void drawTelescope();
+  void drawTelescope(const int &option = 0);
 
   /*! \brief setPrintMode used for setting printing details
     

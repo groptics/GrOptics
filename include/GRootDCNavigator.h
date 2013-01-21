@@ -105,7 +105,7 @@ class GRootDCNavigator {
   void movePositionToTopOfTopVol();
 
   // draw the telescope volumes
-  void drawTelescope();
+  void drawTelescope(const int &option = 0);
   
   // print out position, direction, and node name in telescope coordinates
   void setTrackingDebug(bool setDebug);

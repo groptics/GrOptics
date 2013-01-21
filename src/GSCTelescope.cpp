@@ -914,7 +914,7 @@ void GSCTelescope::printTelescope() {
 };
 /********************** end of printTelescope *****************/
 
-void GSCTelescope::drawTelescope() {
+void GSCTelescope::drawTelescope(const int &option) {
 
   bool debug = false;
   if (debug) {

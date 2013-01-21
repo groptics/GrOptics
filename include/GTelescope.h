@@ -54,7 +54,7 @@ class GTelescope {
 
   virtual void printTelescope() = 0;
 
-  virtual void drawTelescope() = 0;
+  virtual void drawTelescope(const int &option = 0) = 0;
 
   virtual void setPrintMode(ostream &oStr=cout,const int prtMode=0) = 0;
 

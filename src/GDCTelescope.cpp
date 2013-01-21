@@ -474,7 +474,7 @@ void GDCTelescope::printTelescope() {
 };
 /********************** end of printTelescope *****************/
 
-void GDCTelescope::drawTelescope() {
+void GDCTelescope::drawTelescope(const int &option) {
   if (eRayTracerType == RTDCROOT ) {
     rayTracer->printRayTracer();
     *oLog << " ready to draw the telescope" << endl;

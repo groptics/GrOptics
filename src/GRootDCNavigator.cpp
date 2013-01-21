@@ -1160,7 +1160,7 @@ const char * GRootDCNavigator::getPositionDirection(double *pos1,
 };
 
 //****************************************************
-void GRootDCNavigator::drawTelescope() {
+void GRootDCNavigator::drawTelescope(const int &option) {
   gGeoManager = fGeom;
   gGeoManager->GetMasterVolume()->Draw("ogl");
 
