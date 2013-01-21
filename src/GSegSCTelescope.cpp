@@ -169,7 +169,12 @@ void GSegSCTelescope::buildTelescope(bool os8)
   //addSecondaryObscuration();
   //printTelescope();
 
-  addIdealFocalPlane();
+  if (bCameraFlag) {
+    addMAPMTFocalPlane();
+  }
+  else {
+    addIdealFocalPlane();
+  }
 
   closeGeometry();
 
@@ -907,6 +912,13 @@ void GSegSCTelescope::printTelescope() {
     *oLog << "      number of S2 segments " << vSegS2.size() << endl;
     *oLog << "      fZf                   " << fZf << endl;
     *oLog << "      fRf                   " << fRf << endl;
+    if (bCameraFlag) {
+      *oLog << "      build MAPMT camera " << endl;
+    }
+    else {
+      *oLog << "      build ideal focal plane " << endl;
+    }
+        
   }
 
   if ( iPrtMode == 2) {
@@ -1187,6 +1199,8 @@ void GSegSCTelescope::initialize() {
   fKappa2 = 0.0;
   fRf = 0.0;
   fZf = 0.0;
+
+  bCameraFlag = false;
 
   fPixelSize   = 0.0;
   fMAPMTWidth  = 0.0;

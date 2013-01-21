@@ -139,6 +139,7 @@ class GSegSCTelescope : public GTelescope {
   Double_t fRf;
   Double_t fZf;
 
+  bool bCameraFlag; //*< if true, use MAPMT camera; false: ideal focal surface
   Double_t fPixelSize; 
   Double_t fMAPMTWidth; 
   Double_t fMAPMTLength; 

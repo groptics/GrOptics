@@ -369,6 +369,8 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SCTel->fRf     = opt->fRf;
   SCTel->fZf     = opt->fZf;
 
+  SCTel->bCameraFlag = opt->bCameraFlag;
+
   // camera
   SCTel->fPixelSize   = opt->fPixelSize;
   SCTel->fMAPMTWidth  = opt->fMAPMTWidth;
