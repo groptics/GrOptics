@@ -200,6 +200,8 @@ void SegSCStdOptics::printSegSCStdOptics() {
   // print P2 segment details
   *oLog << "       Number of S2 segments " << iNumS2Mirrors << endl;
   GUtilityFuncts::printSegVector(vSegS2);  
+
+  *oLog << "       iPrtMode " << iPrtMode << endl;
     
 };
 /************** end of printSegSCStdOptics ***********************/
@@ -294,6 +296,8 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
 
   // make the telescope
   SCTel = new GSegSCTelescope;
+
+  SCTel->iPrtMode = opt->iPrtMode;
 
   // move over all reflection coefficients (the entire map)
   SCTel->setReflCoeffMap(mGRefl);

@@ -148,6 +148,11 @@ class GSegSCTelescope : public GTelescope {
   Double_t fMAPMTGap; 
   Double_t fMAPMTRefIndex;  
 
+  Double_t fCathodeTopRelToFocalSurface;
+  Double_t fWindowBottomRelToFocalSurface;
+  Double_t fMAPOscurationTopRelToFocalSurface;
+  Double_t fCathodeBottomRelToOscurationTop;
+ 
   Int_t iPrtMode;
 
   TelType eTelType; //!< telescope type enum (here will be SC)

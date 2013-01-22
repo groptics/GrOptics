@@ -350,6 +350,7 @@ int main(int argc, char *argv[]) {
     yoffsettel = mIter->second->telOffSetY;
     if (telType==DC) {
       GTelescope *tel = DCFac->makeTelescope(telId,telStd);
+      tel->setPrintMode(*oLog,printMode);
       if (pilot.telToDraw == telId) {
 	tel->drawTelescope(pilot.telDrawOption);
 	app->Run(); 
@@ -367,6 +368,7 @@ int main(int argc, char *argv[]) {
     else if (telType==SC) {
 
       GTelescope *tel = SCFac->makeTelescope(telId,telStd);
+      tel->setPrintMode(*oLog,printMode);
       if (pilot.telToDraw == telId) {
 	tel->drawTelescope(pilot.telDrawOption);
 	app->Run(); 
@@ -386,6 +388,7 @@ int main(int argc, char *argv[]) {
 else if (telType==SEGSC) {
 
       GTelescope *tel = SegSCFac->makeTelescope(telId,telStd);
+      tel->setPrintMode(*oLog,printMode);
       if (pilot.telToDraw == telId) {
 	tel->drawTelescope(pilot.telDrawOption);
 	app->Run(); 

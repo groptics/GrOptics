@@ -62,6 +62,7 @@ using namespace std;
 #include "TGeoPgon.h"
 #include "TVersionCheck.h"
 #include "TGraph.h"
+#include "TBrowser.h"
 
 #include "ABorderSurfaceCondition.h"
 #include "AGeoAsphericDisk.h"
@@ -176,6 +177,7 @@ void GSegSCTelescope::buildTelescope(bool os8)
 
   closeGeometry();
 
+  printTelescope();
   //testPerformance();
 
   return;
@@ -564,18 +566,28 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
   TGeoVolume *focVol = gGeoManager->MakeBox("focVol",med,fWidthBox,
                                             fWidthBox,fHeightBox);
 
+  ////////////////////////////////////////////////////////////////////////
   // Make MAPMT photocathode without pixel structure 
+  //Double_t cathodeHalfThick = 100*um;
+  Double_t cathodeHalfThick = 2.0*mm;
   TGeoBBox* mapmtCathodeV = new TGeoBBox("mapmtCathodeV", fPixelSize*4, 
-                                         fPixelSize*4, 100*um); // very thin box
+                                         fPixelSize*4, cathodeHalfThick); // very thin box
   AFocalSurface* mapmtCathode = new AFocalSurface("mapmtCathode", mapmtCathodeV);
 
+  if (debug) *oLog << "cathodeHalfThick " << cathodeHalfThick << endl;
+
+  //////////////////////////////////////////////////////////////////////
   // Make a single MAPMT
   TGeoBBox* mapmtV = new TGeoBBox("mapmtV", fMAPMTWidth/2., fMAPMTWidth/2.,
                                   fMAPMTLength/2.);
   AOpticalComponent* mapmt = new AOpticalComponent("mapmt", mapmtV);
+
+  ///////////////////////////////////////////////////////////
+  // make input window
   TGeoBBox* mapmtInputWindowV = new TGeoBBox("mapmtInputWindowV",
                                              fMAPMTWidth/2., fMAPMTWidth/2.,
                                              fInputWindowThickness/2.);
+  if (debug) *oLog << " fInputWindowThickness/2. " << fInputWindowThickness/2. << endl;
 
   ALens* mapmtInputWindow = new ALens("mapmtInputWindow", mapmtInputWindowV, med);
   ARefractiveIndex* bk7 = AGlassCatalog::GetRefractiveIndex("N-BK7");
@@ -583,21 +595,58 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
   mapmt->AddNodeOverlap(mapmtInputWindow, 
                         1, new TGeoTranslation(0, 0, fMAPMTLength/2. - fInputWindowThickness/2.));
 
-  mapmt->AddNodeOverlap(mapmtInputWindow, 1, new TGeoTranslation(0, 0, fMAPMTLength/2. - fInputWindowThickness/2.));
+  if (debug) *oLog << "fMAPMTLength/2. - fInputWindowThickness/2. " 
+                   << fMAPMTLength/2. - fInputWindowThickness/2. << endl;
 
-  mapmt->AddNode(mapmtCathode, 1, new TGeoTranslation(0, 0, fMAPMTLength/2. - fInputWindowThickness - 100*um));
+  Double_t fWindowBottomRelToMapmtCenter = 
+    (fMAPMTLength/2. - fInputWindowThickness/2.) - fInputWindowThickness/2.; // rel. to mapmt center
 
+  Double_t cathodePosition = fMAPMTLength/2. - fInputWindowThickness - fMAPMTGap - cathodeHalfThick;
+  mapmt->AddNode(mapmtCathode, 1, new TGeoTranslation(0, 0, cathodePosition));
+  if (debug) *oLog << "cathodePosition " << cathodePosition << endl;
+
+  Double_t fCathodeTopRelToMapmtCenter = cathodePosition + cathodeHalfThick;
+  
+  Double_t backObsThickness = 2*mm;
   TGeoBBox* mapmtBackObsV = new TGeoBBox("mapmtBackObsV",
                                          fMAPMTWidth/2., fMAPMTWidth/2.,
-                                         5*mm);
+                                         backObsThickness);
+  
   AObscuration* mapmtBackObs = new AObscuration("mapmtBackObs", mapmtBackObsV);
-  mapmt->AddNode(mapmtBackObs, 1, new TGeoTranslation(0, 0, -fMAPMTLength/2. + 1*mm));
 
+  Double_t backObsPosition = -fMAPMTLength/2. + backObsThickness;
+  mapmt->AddNode(mapmtBackObs, 1, new TGeoTranslation(0, 0,backObsPosition ));
+  Double_t backObsTopPositionRelToMapmtCenter = backObsPosition + backObsThickness;
+  
+  *oLog << " xxxxxx fWindowBottomRelToMapmtCenter  " << fWindowBottomRelToMapmtCenter << endl;
+  *oLog << " fCathodeTopRelToMapmtCenter  " << fCathodeTopRelToMapmtCenter << endl;
+  *oLog << " backObsTopPositionRelToMapmtCenter  " << backObsTopPositionRelToMapmtCenter << endl;
+
+  fCathodeTopRelToFocalSurface =  fCathodeTopRelToMapmtCenter + fMAPMTOffset -
+    fCathodeTopRelToMapmtCenter;
+  fWindowBottomRelToFocalSurface = fWindowBottomRelToMapmtCenter + fMAPMTOffset -
+    fCathodeTopRelToMapmtCenter;
+  fMAPOscurationTopRelToFocalSurface = backObsTopPositionRelToMapmtCenter + fMAPMTOffset -
+    fCathodeTopRelToMapmtCenter;
+  
+  // sanity check
+  Double_t fCathodeBottomRelToFocalSurface = fCathodeTopRelToFocalSurface - cathodeHalfThick*2.0; 
+  fCathodeBottomRelToOscurationTop = fCathodeBottomRelToFocalSurface - fMAPOscurationTopRelToFocalSurface;
+
+  if (fCathodeBottomRelToOscurationTop < 0.0) {
+    *oLog << " fCathodeBottomRelToOscurationTop, " << fCathodeBottomRelToOscurationTop 
+          << ",  is less than zero. Cathode is below the obscuration. Need to increase MAPMT length"
+          << "    stopping code " << endl;
+    exit(0);
+  }
+  
   //const Double_t kZs = fF/fQ;
   //const Double_t kZf = kZs - (1 - fAlpha)*fF;
   const Double_t kZf = fF * fZf;
 
   // Make the focal plane
+  Double_t mapmtPositionReltoFocalSurface = - fMAPMTLength/2. + fInputWindowThickness + fMAPMTGap;
+
   Int_t n = 1;
   for(Int_t i = -7; i <= 7; i++){
     Double_t dx = i*fMAPMTWidth;
@@ -608,7 +657,9 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
       Double_t dy = j*fMAPMTWidth;
       Double_t r2 = (i*i + j*j)*fMAPMTWidth*fMAPMTWidth;
       Double_t dz = fKappa1*TMath::Power(fF, -1)*r2 + fKappa2*TMath::Power(fF, -3)*r2*r2;
-      focVol->AddNode(mapmt, n, new TGeoTranslation(dx, dy, - fMAPMTLength/2. + dz));
+      focVol->AddNode(mapmt, n, new TGeoTranslation(dx, dy, 
+                                                    mapmtPositionReltoFocalSurface +
+                                                    + fMAPMTOffset + dz));
       n++;
     } // y
   } // x
@@ -622,28 +673,6 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
                                                                                 0.0,
                                                                                 0.0)));
                                                                
-
-  /*
-
-  const Double_t kZs = fF/fQ;
-  const Double_t kZf = kZs - (1 - fAlpha)*fF;
-
-  // Make the focal plane
-  Int_t n = 1;
-  for(Int_t i = -7; i <= 7; i++){
-    Double_t dx = i*fMAPMTWidth;
-    for(Int_t j = -7; j <= 7; j++){
-      if((TMath::Abs(i) + TMath::Abs(j) >= 11) || (TMath::Abs(i)*TMath::Abs(j) == 21)){
-        continue;
-      } // if
-      Double_t dy = j*fMAPMTWidth;
-      Double_t r2 = (i*i + j*j)*fMAPMTWidth*fMAPMTWidth;
-      Double_t dz = fKappa1*TMath::Power(fF, -1)*r2 + fKappa2*TMath::Power(fF, -3)*r2*r2;
-      fManager->GetTopVolume()->AddNode(mapmt, n, new TGeoTranslation(dx, dy, kZf - fMAPMTLength/2. + dz));
-      n++;
-    } // y
-  } // x
-*/
 };
 /*************************************************************************************/
 
@@ -898,6 +927,7 @@ void GSegSCTelescope::printTelescope() {
   bool debug = true;
   if (debug) {
     *oLog << " -- GSegSCTelescope::printTelescope" << endl;
+    *oLog << "      iPrtMode " << iPrtMode << endl;
   }
   if (iPrtMode > 0) {
     *oLog << "      fF " << fF << endl;
@@ -951,7 +981,15 @@ void GSegSCTelescope::printTelescope() {
     *oLog << "        fInputWindowThickness  " << fInputWindowThickness << endl;
     *oLog << "        fMAPMTOffset  " << fMAPMTOffset << endl;
     *oLog << "        fMAPMTGap  " << fMAPMTGap << endl;
-    *oLog << "        fMAPMTRefIndex  " << fMAPMTRefIndex << endl;
+    *oLog << "        fMAPMTRefIndex  " << fMAPMTRefIndex << endl << endl;
+    *oLog << "        fCathodeTopRelToFocalSurface "
+          << fCathodeTopRelToFocalSurface<< endl;
+    *oLog << "        fWindowBottomRelToFocalSurface "
+          << fWindowBottomRelToFocalSurface << endl;
+    *oLog << "        fMAPOscurationTopRelToFocalSurface  " 
+          << fMAPOscurationTopRelToFocalSurface << endl;
+    *oLog << "        fCathodeBottomRelToOscurationTop " 
+          << fCathodeBottomRelToOscurationTop << endl << endl;
   }
 };
 /********************** end of printTelescope *****************/
@@ -964,7 +1002,6 @@ void GSegSCTelescope::drawTelescope(const int &option) {
     *oLog << "       option: "  << option << endl;
   }
   gGeoManager = fManager;
-  //gGeoManager->GetMasterVolume()->Draw("ogl");
   if ( (option == 0) || (option == 2) ){
     TCanvas * cTelescope = new TCanvas("cTelescope","cTelescope",300,300);
     gGeoManager->GetTopVolume()->Draw("ogl");
@@ -976,7 +1013,8 @@ void GSegSCTelescope::drawTelescope(const int &option) {
       
       TCanvas * cMAPMT = new TCanvas("cMAPMT","cMAPMT",300,300);
       gGeoManager->GetVolume("focVol")->GetNode(1)->GetVolume()->Draw("ogl");;
-      
+      gGeoManager->GetVolume("focVol")->GetNode(1)->InspectNode();      
+      // TBrowser *tb = new TBrowser;
     }
   }
       
@@ -1224,6 +1262,11 @@ void GSegSCTelescope::initialize() {
   fMAPMTOffset = 0.0;
   fMAPMTGap    = 0.0;
   fMAPMTRefIndex        = 0.0;
+
+  fCathodeTopRelToFocalSurface       = 0.0;
+  fWindowBottomRelToFocalSurface     = 0.0;
+  fMAPOscurationTopRelToFocalSurface = 0.0;
+  fCathodeBottomRelToOscurationTop   = 0.0;
 
   eTelType = SEGSC;
 

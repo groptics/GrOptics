@@ -321,7 +321,7 @@ void GReadSegSCStd::setupSCFactory() {
     //opt->fMAPMTAngularSize = atof(tokens.at(7).c_str());
     opt->fMAPMTOffset =  atof(tokens.at(6).c_str());
     opt->fMAPMTGap =  atof(tokens.at(7).c_str());
-    if (tokens.size() == 11) {
+    if (tokens.size() == 9) {
       opt->fMAPMTRefIndex =  atof(tokens.at(8).c_str());
     }
   }
