@@ -87,6 +87,14 @@ class GSegSCTelescope : public GTelescope {
   Int_t iNParP;
   vector<Double_t> fzp;
 
+  // colors of elements in gl picture (set in initialize method)
+  Int_t iPrimaryColor;
+  Int_t iSecondaryColor;
+  Int_t iSecondaryObscurationColor;
+  Int_t iMAPMTCathodeColor;
+  Int_t iMAPMTWindowColor;
+  Int_t iMAPMTObscurationColor;
+
   // secondary parameters
   Double_t fRsMax; // Secondary radius max
   Double_t fRsMin; // Secondary radius min

@@ -146,7 +146,7 @@ void GSegSCTelescope::buildTelescope(bool os8)
   }
   gGeoManager = 0;
   fManager = new AOpticsManager("manager","The optics manager of SEGSC");
-  fManager->SetVisLevel(5);
+  fManager->SetVisLevel(1);// should be 0 or 1
   fManager->SetNsegments(50);
   fManager->DisableFresnelReflection(1);
 
@@ -234,6 +234,7 @@ void GSegSCTelescope::makePrimarySecondaryDisks() {
   fSecondaryV->SetPolynomials(fNs - 1, &fS[1], fNs - 1, &fS[1]);
 
   // make volume for secondary obscurations
+  // not currently used: needed if make obscurations for individual secondary segments
   fSecondaryObsV = new AGeoAsphericDisk("secondaryObsV",
                                      kZs + fS[0] + 5.*cm, 0, 
                                      kZs + fS[0] + 5.*cm + 1*um, 
@@ -346,6 +347,7 @@ void GSegSCTelescope::addPrimaryMirror(const char*name,
   }
   
   AMirror* mir = mirror->BuildMirror(name, fPrimaryV, kTRUE);
+  mir->SetLineColor(iPrimaryColor);
   // get and add TGraph for reflectivity mir->SetReflectivity(TGraph *)
 
   TGraph * graph = makeReflectivityGraph(iReflect);
@@ -461,7 +463,6 @@ void GSegSCTelescope::addSecondaryJ() {
 
 void GSegSCTelescope::addSecondaryObscuration() {
 
-  // not currently used (full secondary disk)
   bool debug = true;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::AddSecondaryObscuration " << endl;
@@ -472,12 +473,12 @@ void GSegSCTelescope::addSecondaryObscuration() {
   AGeoAsphericDisk* disk
     = new AGeoAsphericDisk("secondaryObsV", 
                            kZs + fS[0] + 1.*cm, 0, 
-                           kZs + fS[0]  + 1*cm, 0, fRsMax, 0);
+                           kZs + fS[0]  + 1.*cm + 1.*um, 0, fRsMax, 0);
   disk->SetPolynomials(fNs - 1, &fS[1], fNs - 1, &fS[1]);
 
   TGeoMedium* med = fManager->GetMedium("med");
   AObscuration* secondaryObs = new AObscuration("secondaryObs", disk, med);
-  secondaryObs->SetLineColor(2);
+  secondaryObs->SetLineColor(iSecondaryObscurationColor);
   fManager->GetTopVolume()->AddNode(secondaryObs, 1);
 
 };
@@ -493,7 +494,7 @@ void GSegSCTelescope::addSecondaryObscurationSeg(const char*name,
   }
 
   AObscuration* obs = obscuration->BuildObscuration(name, fSecondaryObsV, kFALSE);
-  obs->SetLineColor(2);
+  obs->SetLineColor(iSecondaryObscurationColor);
   TGeoCombiTrans* combi = obscuration->BuildObscurationCombiTrans(fSecondaryObsV, kFALSE);
 
 
@@ -511,6 +512,7 @@ void GSegSCTelescope::addSecondaryMirror(const char*name, SegmentedMirror *mirro
   }
 
   AMirror* mir = mirror->BuildMirror(name, fSecondaryV, kFALSE);
+  mir->SetLineColor(iSecondaryColor);
   TGraph * graph = makeReflectivityGraph(iReflect);
   mir->SetReflectivity(graph);
 
@@ -537,16 +539,23 @@ void GSegSCTelescope::addIdealFocalPlane()  {
   //const Double_t kZf = kZs - (1 - fAlpha)*fF;
   const Double_t kZf = fF * fZf;
 
+  //Double_t focalPlaneHalfThickness = 1*um;
+  Double_t focalPlaneHalfThickness = 10*cm;
   AGeoAsphericDisk* idealCameraV = new AGeoAsphericDisk("idealCameraV", kZf - 1*um, 0, kZf, 0, fRf*m, 0);
   Double_t sagPar[2] = {fKappa1*TMath::Power(fF, -1),
                         fKappa2*TMath::Power(fF, -3)};
   idealCameraV->SetPolynomials(2, sagPar, 2, sagPar);
   AFocalSurface* idealCamera = new AFocalSurface("idealCamera", idealCameraV);
-  idealCamera->SetLineColor(3);
+  idealCamera->SetLineColor(iMAPMTCathodeColor);
+
   AObscuration* idealCameraObs = new AObscuration("idealCameraObs", idealCameraV);
-  idealCameraObs->SetLineColor(2);
+  idealCameraObs->SetLineColor(iMAPMTObscurationColor);
   fManager->GetTopVolume()->AddNode(idealCamera, 1);
-  fManager->GetTopVolume()->AddNode(idealCameraObs, 1, new TGeoTranslation(0, 0, -100*um));
+
+  Double_t obscurationOffset = -30*cm;
+  //Double_t obscurationOffset = -100.*um;
+
+  fManager->GetTopVolume()->AddNode(idealCameraObs, 1, new TGeoTranslation(0, 0, obscurationOffset));
 
 };
 /*************************************************************************************/
@@ -568,12 +577,12 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
 
   ////////////////////////////////////////////////////////////////////////
   // Make MAPMT photocathode without pixel structure 
-  //Double_t cathodeHalfThick = 100*um;
-  Double_t cathodeHalfThick = 2.0*mm;
+  Double_t cathodeHalfThick = 100*um;
+  //Double_t cathodeHalfThick = 2.0*mm;
   TGeoBBox* mapmtCathodeV = new TGeoBBox("mapmtCathodeV", fPixelSize*4, 
                                          fPixelSize*4, cathodeHalfThick); // very thin box
   AFocalSurface* mapmtCathode = new AFocalSurface("mapmtCathode", mapmtCathodeV);
-
+  mapmtCathode->SetLineColor(iMAPMTCathodeColor);
   if (debug) *oLog << "cathodeHalfThick " << cathodeHalfThick << endl;
 
   //////////////////////////////////////////////////////////////////////
@@ -590,6 +599,7 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
   if (debug) *oLog << " fInputWindowThickness/2. " << fInputWindowThickness/2. << endl;
 
   ALens* mapmtInputWindow = new ALens("mapmtInputWindow", mapmtInputWindowV, med);
+  mapmtInputWindow->SetLineColor(iMAPMTWindowColor);
   ARefractiveIndex* bk7 = AGlassCatalog::GetRefractiveIndex("N-BK7");
   mapmtInputWindow->SetRefractiveIndex(bk7);
   mapmt->AddNodeOverlap(mapmtInputWindow, 
@@ -607,13 +617,13 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
 
   Double_t fCathodeTopRelToMapmtCenter = cathodePosition + cathodeHalfThick;
   
-  Double_t backObsThickness = 2*mm;
+  Double_t backObsThickness = 1*mm;
   TGeoBBox* mapmtBackObsV = new TGeoBBox("mapmtBackObsV",
                                          fMAPMTWidth/2., fMAPMTWidth/2.,
                                          backObsThickness);
   
   AObscuration* mapmtBackObs = new AObscuration("mapmtBackObs", mapmtBackObsV);
-
+  mapmtBackObs->SetLineColor(iMAPMTObscurationColor);
   Double_t backObsPosition = -fMAPMTLength/2. + backObsThickness;
   mapmt->AddNode(mapmtBackObs, 1, new TGeoTranslation(0, 0,backObsPosition ));
   Double_t backObsTopPositionRelToMapmtCenter = backObsPosition + backObsThickness;
@@ -643,14 +653,16 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
   //const Double_t kZs = fF/fQ;
   //const Double_t kZf = kZs - (1 - fAlpha)*fF;
   const Double_t kZf = fF * fZf;
-
+  *oLog << "  =================== kZf " << kZf << endl;
   // Make the focal plane
   Double_t mapmtPositionReltoFocalSurface = - fMAPMTLength/2. + fInputWindowThickness + fMAPMTGap;
-
+  *oLog << " xxxxxxxxxxx  mapmtPositionReltoFocalSurface " << mapmtPositionReltoFocalSurface << endl;
   Int_t n = 1;
-  for(Int_t i = -7; i <= 7; i++){
+  // loop from -iNum to +iNum
+  Int_t iNum = 7; // set to 1, make gl plot and use CheckPoint to see location of center module
+  for(Int_t i = -iNum; i <= iNum; i++){
     Double_t dx = i*fMAPMTWidth;
-    for(Int_t j = -7; j <= 7; j++){
+    for(Int_t j = -iNum; j <= iNum; j++){
       if((TMath::Abs(i) + TMath::Abs(j) >= 11) || (TMath::Abs(i)*TMath::Abs(j) == 21)){
         continue;
       } // if
@@ -1005,6 +1017,7 @@ void GSegSCTelescope::drawTelescope(const int &option) {
   if ( (option == 0) || (option == 2) ){
     TCanvas * cTelescope = new TCanvas("cTelescope","cTelescope",300,300);
     gGeoManager->GetTopVolume()->Draw("ogl");
+    //gGeoManager->GetTopVolume()->Draw("x3d");
   }
   if (bCameraFlag) {
     if ( (option == 1) || (option == 2)) {
@@ -1013,7 +1026,7 @@ void GSegSCTelescope::drawTelescope(const int &option) {
       
       TCanvas * cMAPMT = new TCanvas("cMAPMT","cMAPMT",300,300);
       gGeoManager->GetVolume("focVol")->GetNode(1)->GetVolume()->Draw("ogl");;
-      gGeoManager->GetVolume("focVol")->GetNode(1)->InspectNode();      
+      //gGeoManager->GetVolume("focVol")->GetNode(1)->InspectNode();      
       // TBrowser *tb = new TBrowser;
     }
   }
@@ -1269,6 +1282,14 @@ void GSegSCTelescope::initialize() {
   fCathodeBottomRelToOscurationTop   = 0.0;
 
   eTelType = SEGSC;
+
+  // set gl picture colors: black/1, red/2/, green/3,blue/4, brown/28/49
+  iPrimaryColor = 28;
+  iSecondaryColor = iPrimaryColor;
+  iSecondaryObscurationColor = 1;
+  iMAPMTObscurationColor = iSecondaryObscurationColor;
+  iMAPMTCathodeColor = 2;
+  iMAPMTWindowColor = 4; 
 
   for (int i = 0;i<3;i++) {
     fphotonInjectLoc[i] = 0.0;

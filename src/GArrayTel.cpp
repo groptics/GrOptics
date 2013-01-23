@@ -426,8 +426,8 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
   ttree->Branch("rmsY",&rmsXT,"rmsY/D");
   ttree->Branch("deg",&degT,"deg/D");
 
-  bool debug = true;
-  if (1) {
+  bool debug = false;
+  if (debug) {
     *oLog << "  -- GArrayTel::makeTelescopeTest " << endl;
     *oLog << "           baseName " << baseName << endl;
   }
@@ -565,7 +565,7 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
   for (unsigned ideg=0;ideg<vDeg.size();ideg++) {
     // set directions
     double theta = vDeg[ideg]*(TMath::DegToRad());
-    if (1) {
+    if (debug) {
       *oLog << endl << "           start of ideg loop for deg = " 
 	    << vDeg[ideg] << endl;
     }
@@ -579,7 +579,7 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
      // set locations of photon (put inside loop
       ROOT::Math::XYZVector photonLoc(vX.at(iph),vY.at(iph),vZ.at(iph));
       
-      if (0) {
+      if (debug) {
 	*oLog << "         photonLoc  ";       
       GUtilityFuncts::printGenVector(photonLoc); *oLog << endl;
       *oLog << "         photonDir  ";       
@@ -605,7 +605,7 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
 	
 	xMin = (xMin - theta*TMath::RadToDeg()) * 60.0; // converting to minutes of arc
 	yMin = yMin*60.0;
-	if (1) {
+	if (debug) {
           *oLog << "              camera location from telescope " << cameraLoc.X()
                 << "  " << cameraLoc.Y() << endl;
 	  *oLog << "              onCamera location in minutes of arc "
@@ -627,12 +627,12 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
     rmsYT = rmsy;
     degT = vDeg[ideg];
     ttree->Fill();
-    if (1) {
+    if (debug) {
       *oLog << "                   rmsx  rmsy " << rmsx << "  " 
 	    << rmsy << endl;
     }
-      graRMS->SetPoint(graRMS->GetN(),vDeg[ideg], (rmsx > rmsy ? rmsx: rmsy)*2);
-      graT->SetPoint(graT->GetN(),vDeg[ideg],vHistT[ideg]->GetRMS());
+    graRMS->SetPoint(graRMS->GetN(),vDeg[ideg], (rmsx > rmsy ? rmsx: rmsy)*2);
+    graT->SetPoint(graT->GetN(),vDeg[ideg],vHistT[ideg]->GetRMS());
 
 
   } //ideg
