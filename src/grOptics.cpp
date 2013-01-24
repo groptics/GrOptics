@@ -799,6 +799,11 @@ int readPilot(Pilot *pilot) {
     pilot->telToDraw = atoi(tokens.at(0).c_str());
     if (tokens.size() == 2) {
     pilot->telDrawOption = atoi(tokens.at(1).c_str());
+    if (pilot->telDrawOption > 2) {
+      *oLog << "DRAWTEL valid options are 0, 1, 2 " << endl;
+      *oLog << "setting option to 2 and continuing " << endl;
+      pilot->telDrawOption = 2;
+    }
     }
   }  
   flag = "TESTTEL";

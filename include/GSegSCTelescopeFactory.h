@@ -88,7 +88,8 @@ struct SegSCStdOptics {
   Double_t fMAPMTGap;
   Double_t fMAPMTRefIndex;
   Double_t fMAPMTOffset;
- 
+  Bool_t bSingleMAPMTmodule;
+
   Int_t iNParP;
   vector<Double_t> fzp;
   Int_t iNParS;

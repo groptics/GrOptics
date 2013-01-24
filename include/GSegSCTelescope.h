@@ -94,6 +94,7 @@ class GSegSCTelescope : public GTelescope {
   Int_t iMAPMTCathodeColor;
   Int_t iMAPMTWindowColor;
   Int_t iMAPMTObscurationColor;
+  Bool_t bSingleMAPMTmodule;
 
   // secondary parameters
   Double_t fRsMax; // Secondary radius max

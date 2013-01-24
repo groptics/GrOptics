@@ -107,6 +107,7 @@ SegSCStdOptics::SegSCStdOptics() {
   fMAPMTGap = 0.0;
   fMAPMTRefIndex = 0.0;
   fMAPMTOffset = 0.0;
+  bSingleMAPMTmodule = false;
 
   iNParP = 0;
   iNParS = 0;
@@ -187,7 +188,7 @@ void SegSCStdOptics::printSegSCStdOptics() {
   *oLog << "        fMAPMTOffset        " << fMAPMTOffset << endl;
   *oLog << "        fMAPMTGap        " << fMAPMTGap << endl;
   *oLog << "        fMAPMTRefIndex        " << fMAPMTRefIndex << endl;
-  
+  *oLog << "        bSingleMAPMTmodule " << bSingleMAPMTmodule << endl;
   // print P1 segment details
   *oLog << "       Number of P1 segments " << iNumP1Mirrors << endl;
   GUtilityFuncts::printSegVector(vSegP1);  
@@ -383,9 +384,11 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SCTel->fMAPMTOffset = opt->fMAPMTOffset;
   SCTel->fMAPMTGap    = opt->fMAPMTGap;
   SCTel->fMAPMTRefIndex   = opt->fMAPMTRefIndex;
+  SCTel->bSingleMAPMTmodule = opt->bSingleMAPMTmodule;
 
   SCTel->printTelescope();
   SCTel->buildTelescope();
+
 
   return SCTel; 
 };

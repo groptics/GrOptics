@@ -146,7 +146,7 @@ void GSegSCTelescope::buildTelescope(bool os8)
   }
   gGeoManager = 0;
   fManager = new AOpticsManager("manager","The optics manager of SEGSC");
-  fManager->SetVisLevel(1);// should be 0 or 1
+  fManager->SetVisLevel(5);// should be 0 or 1
   fManager->SetNsegments(50);
   fManager->DisableFresnelReflection(1);
 
@@ -574,7 +574,6 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
   // size adequately covers os8 camera/focal surface 
   TGeoVolume *focVol = gGeoManager->MakeBox("focVol",med,fWidthBox,
                                             fWidthBox,fHeightBox);
-
   ////////////////////////////////////////////////////////////////////////
   // Make MAPMT photocathode without pixel structure 
   Double_t cathodeHalfThick = 100*um;
@@ -660,22 +659,33 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
   Int_t n = 1;
   // loop from -iNum to +iNum
   Int_t iNum = 7; // set to 1, make gl plot and use CheckPoint to see location of center module
-  for(Int_t i = -iNum; i <= iNum; i++){
-    Double_t dx = i*fMAPMTWidth;
-    for(Int_t j = -iNum; j <= iNum; j++){
-      if((TMath::Abs(i) + TMath::Abs(j) >= 11) || (TMath::Abs(i)*TMath::Abs(j) == 21)){
-        continue;
-      } // if
-      Double_t dy = j*fMAPMTWidth;
-      Double_t r2 = (i*i + j*j)*fMAPMTWidth*fMAPMTWidth;
-      Double_t dz = fKappa1*TMath::Power(fF, -1)*r2 + fKappa2*TMath::Power(fF, -3)*r2*r2;
-      focVol->AddNode(mapmt, n, new TGeoTranslation(dx, dy, 
-                                                    mapmtPositionReltoFocalSurface +
-                                                    + fMAPMTOffset + dz));
-      n++;
-    } // y
-  } // x
+  if (bSingleMAPMTmodule == false) {
+    for(Int_t i = -iNum; i <= iNum; i++){
+      Double_t dx = i*fMAPMTWidth;
+      for(Int_t j = -iNum; j <= iNum; j++){
+        if((TMath::Abs(i) + TMath::Abs(j) >= 11) || (TMath::Abs(i)*TMath::Abs(j) == 21)){
+          continue;
+        } // if
+        Double_t dy = j*fMAPMTWidth;
+        Double_t r2 = (i*i + j*j)*fMAPMTWidth*fMAPMTWidth;
+        Double_t dz = fKappa1*TMath::Power(fF, -1)*r2 + fKappa2*TMath::Power(fF, -3)*r2*r2;
+        focVol->AddNode(mapmt, n, new TGeoTranslation(dx, dy, 
+                                                      mapmtPositionReltoFocalSurface +
+                                                      + fMAPMTOffset + dz));
+        *oLog << "n dx dy dz " << n << "  " << dx << " " << dy << " " << dz << endl;
+        n++;
+      } // y
+    } // x
+  }
+  else {
+    Double_t dx = 0.0;
+    Double_t dy = 0.0;
+    Double_t dz = 0.0;
+    focVol->AddNode(mapmt, 1, new TGeoTranslation(dx, dy, 
+                                                  mapmtPositionReltoFocalSurface +
+                                                  + fMAPMTOffset + dz));
 
+  }
   fManager->GetTopVolume()->AddNode(focVol,1,new TGeoCombiTrans("cFocS",
                                                                0.0,
                                                                0.0,
@@ -1012,6 +1022,9 @@ void GSegSCTelescope::drawTelescope(const int &option) {
   if (debug) {
     *oLog << "  -- GSegSCTelescope::drawTelescope" << endl; 
     *oLog << "       option: "  << option << endl;
+    if (option > 2) {
+      *oLog << "valid options are 0, 1, or 2 " << endl;
+    }
   }
   gGeoManager = fManager;
   if ( (option == 0) || (option == 2) ){
@@ -1024,11 +1037,18 @@ void GSegSCTelescope::drawTelescope(const int &option) {
       TCanvas * cCamera = new TCanvas("cCamera","cCamera",300,300);
       gGeoManager->GetVolume("focVol")->Draw("ogl");
       
-      TCanvas * cMAPMT = new TCanvas("cMAPMT","cMAPMT",300,300);
-      gGeoManager->GetVolume("focVol")->GetNode(1)->GetVolume()->Draw("ogl");;
-      //gGeoManager->GetVolume("focVol")->GetNode(1)->InspectNode();      
-      // TBrowser *tb = new TBrowser;
+      if (bSingleMAPMTmodule == false) {
+        TCanvas * cMAPMT = new TCanvas("cMAPMT","cMAPMT",300,300);
+        gGeoManager->GetVolume("focVol")->GetNode(1)->GetVolume()->Draw("ogl");;
+        //gGeoManager->GetVolume("focVol")->GetNode(1)->InspectNode();      
+      }
     }
+  }
+
+  if ( (option == 0) || (option == 2) ){
+    TCanvas * cTelescope = new TCanvas("cTelescope","cTelescope",300,300);
+    gGeoManager->GetTopVolume()->Draw("ogl");
+    //gGeoManager->GetTopVolume()->Draw("x3d");
   }
       
 };
@@ -1275,6 +1295,7 @@ void GSegSCTelescope::initialize() {
   fMAPMTOffset = 0.0;
   fMAPMTGap    = 0.0;
   fMAPMTRefIndex        = 0.0;
+  bSingleMAPMTmodule = false;
 
   fCathodeTopRelToFocalSurface       = 0.0;
   fWindowBottomRelToFocalSurface     = 0.0;
@@ -1284,12 +1305,12 @@ void GSegSCTelescope::initialize() {
   eTelType = SEGSC;
 
   // set gl picture colors: black/1, red/2/, green/3,blue/4, brown/28/49
-  iPrimaryColor = 28;
+  iPrimaryColor =38;
   iSecondaryColor = iPrimaryColor;
   iSecondaryObscurationColor = 1;
   iMAPMTObscurationColor = iSecondaryObscurationColor;
   iMAPMTCathodeColor = 2;
-  iMAPMTWindowColor = 4; 
+  iMAPMTWindowColor = 3; 
 
   for (int i = 0;i<3;i++) {
     fphotonInjectLoc[i] = 0.0;

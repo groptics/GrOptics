@@ -324,7 +324,16 @@ void GReadSegSCStd::setupSCFactory() {
     if (tokens.size() == 9) {
       opt->fMAPMTRefIndex =  atof(tokens.at(8).c_str());
     }
+    if (tokens.size() == 10) {
+      Int_t tmpi = atoi(tokens.at(9).c_str());
+      if (tmpi > 0) 
+        opt->bSingleMAPMTmodule = true;
+      else {
+        opt->bSingleMAPMTmodule = false;
+      }
+    }
   }
+  
   /*
   flag = "REFLID"; 
   pi->set_flag(flag);
