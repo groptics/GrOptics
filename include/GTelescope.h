@@ -1,6 +1,6 @@
 /*
-VERSION2.7aBeta
-17Dec2012
+VERSION3.0
+24Jan2012
 */
 /*! \brief GTelescope base class for ACT telescopes
 

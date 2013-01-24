@@ -1,7 +1,7 @@
   Steering pilot file for GrOptics
   Used for testing versions
-VERSION2.7aBeta 
-17Dec2012
+VERSION3.0 
+24Jan2012
 
 C. Duke
 Grinnell College
@@ -20,8 +20,7 @@ camera output root file specification type
         telescope number appended to base name
       - photonDirCosine flag: 0/1, if 1 add dirCosineCamera branches
 FILEOUT <root filename> <TreeName> <telBaseTreeName> <photonDirCosBranchFlag>
-* FILEOUT photonLocationSEGSCIdeal.root allT T 1
-* PHOTONHISTORY photonhistorySEGSCIdeal.root his
+* FILEOUT photonLocation.root allT T 1
 
 name of grOptics log file, default use cerr (if no asterisk)
  LOGFILE logTest.log
@@ -66,7 +65,7 @@ a history file
 Very useful for debugging
  PHOTONHISTORY <root file, tel.number appended to base name> 
                <tree name: default = "his">
- PHOTONHISTORY photonhistorySCIdeal.root his
+* PHOTONHISTORY photonhistory.root his
 
 core/telescope location in grd.and tel.system branches added for debuging.
 default 0 for compatibility with earlier opticsSimulation.pilot versions.

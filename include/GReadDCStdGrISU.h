@@ -1,6 +1,6 @@
 /*
-VERSION2.7aBeta
-17Dec2012
+VERSION3.0
+24Jan2012
 */
 /*! \brief  GReadDCStdGrISU class: concrete class for reading 
       standard telescope configurations for use by telescope factory

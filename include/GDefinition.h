@@ -1,6 +1,6 @@
 /*
-VERSION2.7aBeta
-17Dec2012
+VERSION3.0
+24Jan2012
 */
 /*! \brief GDefinition Functions: general definitions, enums and associated
   functions to return enum strings.      
@@ -11,7 +11,7 @@ VERSION2.7aBeta
 #define GDEFINITION
 
 // version number
-const string VERSN("2.7aBeta");
+const string VERSN("3.0");
 
 // log file
 extern ostream *oLog;

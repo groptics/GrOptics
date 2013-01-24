@@ -1,6 +1,6 @@
 /*
-VERSION2.7aBeta
-17Dec2012
+VERSION3.0
+24Jan2012
 */
 /*! \brief  GDCGeometry concrete class for holding telescope
   structure parameters for VERITAS-like DC telescope structures.

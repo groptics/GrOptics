@@ -1,6 +1,6 @@
 /*
-VERSION2.7aBeta
-17Dec2012
+VERSION3.0
+24Jan2012
 VERSION with reordered calls to open output file and rootwriter instances
 */
 /*!  gropt.cpp
