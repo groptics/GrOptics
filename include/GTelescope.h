@@ -72,6 +72,8 @@ class GTelescope {
   virtual double getIdealTransitTime() = 0;
 
   virtual double getPlateScaleFactor() = 0;
+
+  //virtual bool setRayPlotMode();
 };
 
 #endif
