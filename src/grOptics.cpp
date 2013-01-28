@@ -183,8 +183,8 @@ int main(int argc, char *argv[]) {
   // uncomment these lines if you want to remain in root
   // or if you want to use the TPolyLine3D option in 
   // GArrayTel.cpp (see code comments there)
-  //app = new TRint("app",&pseudo_argc, argv,0,0,kFALSE );
-  //runApp = true;
+  app = new TRint("app",&pseudo_argc, argv,0,0,kFALSE );
+  runApp = true;
 
   time_t startTime = time(NULL);
   clock_t startClock = clock();
@@ -506,8 +506,9 @@ else if (telType==SEGSC) {
   // after end of execution.
   if (runApp) {
     app->Run(); 
+    return 0;
   }
-   
+ 
   // clean up. makes valgrind output easier to read
   SafeDelete(readP);  // delete photon reader
   

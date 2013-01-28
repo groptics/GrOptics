@@ -129,9 +129,9 @@ void GSegSCTelescope::buildTelescope(bool os8)
   fRpMin = fRpMin*m;
   fRsMax = fRsMax*m;
   fRsMin = fRsMin*m;
-  fTX = fTX*m;
-  fTY = fTY*m;
-  fTZ = fTZ*m;
+  //fTX = fTX*m;
+  //fTY = fTY*m;
+  //fTZ = fTZ*m;
 
   fPixelSize = fPixelSize*mm;
   fMAPMTWidth = fMAPMTWidth*mm;
@@ -146,8 +146,8 @@ void GSegSCTelescope::buildTelescope(bool os8)
   }
   gGeoManager = 0;
   fManager = new AOpticsManager("manager","The optics manager of SEGSC");
-  fManager->SetVisLevel(5);// should be 0 or 1
-  fManager->SetNsegments(50);
+  //fManager->SetVisLevel(5);// should be 0 or 1
+  //fManager->SetNsegments(50);
   fManager->DisableFresnelReflection(1);
 
   // Make dummy material
@@ -156,10 +156,10 @@ void GSegSCTelescope::buildTelescope(bool os8)
   new TGeoMedium("med", 1, mat);
 
   // Make the world
-  TGeoBBox* worldbox = new TGeoBBox("worldbox", fTX, fTY, fTZ);
+  TGeoBBox* worldbox = new TGeoBBox("worldbox", fTX*m, fTY*m, fTZ*m);
   AOpticalComponent* world = new AOpticalComponent("world", worldbox);
   fManager->SetTopVolume(world);
-  //fManager->SetTopVisible(7); 
+  fManager->SetTopVisible(0); 
   //fManager->SetTopVisible(.9); 
 
   makePrimarySecondaryDisks();
@@ -808,6 +808,7 @@ void GSegSCTelescope::movePositionToTopOfTopVol() {
   Double_t rfy = fphotonInjectLoc[1];
   Double_t rfz = fphotonInjectLoc[2];
 
+  //Double_t Z = fTZ; // just inside top volume
   Double_t Z = fTZ; // just inside top volume
 
   Double_t dl = fphotonInjectDir[0];
@@ -835,7 +836,6 @@ void GSegSCTelescope::movePositionToTopOfTopVol() {
     *oLog << "        fphotonToTopVolTime " << fphotonToTopVolTime << endl;
     *oLog << endl;
   }
- 
   
 };
 //****************************************************
@@ -915,9 +915,10 @@ bool GSegSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
   // the testTelescope method. The TPolyLine3D::Print("all") will print
   // the start of the line, the intermediate points, and the end of the 
   // line.  A good way to test the code.
-  if (0) {
+  if (1) {
     static int idraw = 1;
     if (idraw) {
+      //fManager->GetTopVolume()->Draw("ogl");
       drawTelescope();
       idraw = 0;
     }
@@ -1029,7 +1030,9 @@ void GSegSCTelescope::drawTelescope(const int &option) {
   gGeoManager = fManager;
   if ( (option == 0) || (option == 2) ){
     TCanvas * cTelescope = new TCanvas("cTelescope","cTelescope",300,300);
-    gGeoManager->GetTopVolume()->Draw("ogl");
+    if (debug) *oLog << "   ready to draw: option " << option << endl;
+    fManager->GetTopVolume()->Draw("ogl");
+    if (debug) *oLog << "   finished drawing " << endl;
     //gGeoManager->GetTopVolume()->Draw("x3d");
   }
   if (bCameraFlag) {
@@ -1045,11 +1048,11 @@ void GSegSCTelescope::drawTelescope(const int &option) {
     }
   }
 
-  if ( (option == 0) || (option == 2) ){
-    TCanvas * cTelescope = new TCanvas("cTelescope","cTelescope",300,300);
-    gGeoManager->GetTopVolume()->Draw("ogl");
+  //if ( (option == 0) || (option == 2) ){
+  //TCanvas * cTelescope = new TCanvas("cTelescope","cTelescope",300,300);
+  //gGeoManager->GetTopVolume()->Draw("ogl");
     //gGeoManager->GetTopVolume()->Draw("x3d");
-  }
+  //}
       
 };
 /********************** end of drawTelescope *****************/
@@ -1239,9 +1242,9 @@ void GSegSCTelescope::initialize() {
   iTelID = 0;
   iStdID = 0;
 
-  fTX = 30.0;  // set to 15 later, after confirming code
-  fTY = 30.0;
-  fTZ = 30.0;
+  fTX = 15.0;  // set to 15 later, after confirming code
+  fTY = 15.0;
+  fTZ = 15.0;
 
   fTelRadius = 0.0;
   fFMeters = 0.0;

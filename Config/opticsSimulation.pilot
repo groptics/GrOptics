@@ -28,7 +28,7 @@ name of grOptics log file, default use cerr (if no asterisk)
 number of showers/photons, defaults -1
   NSHOWER <numShowers, <0, no limit>
           <numPhotons, <0, no limit>
-* NSHOWER -1 -1
+* NSHOWER -1 100
 
 x and y coordinates of the source in the field
 of view followed by the source extention radius (all in degrees). The fourth
@@ -77,7 +77,7 @@ DRAWTEL <telescope number to draw: default 0 (no drawing)> <drawtel option:
                                    default 0, applicable in specific cases>          
 code makes an opengl drawing of the telescope and immediately 
 stops with the root prompt. These are cool drawings. 
- DRAWTEL 1 0
+ DRAWTEL 1 2
 
 TESTTEL <telescope number> <baseFileName for histograms>   
 THis is a very useful option for producing spot histograms and spot rms
