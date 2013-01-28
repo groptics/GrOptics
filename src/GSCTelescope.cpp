@@ -788,7 +788,7 @@ bool GSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
   // the testTelescope method. The TPolyLine3D::Print("all") will print
   // the start of the line, the intermediate points, and the end of the 
   // line.  A good way to test the code.
-  if (1) {
+  if (0) {
     static int idraw = 1;
     if (idraw) {
       drawTelescope();

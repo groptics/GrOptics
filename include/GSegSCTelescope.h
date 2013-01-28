@@ -84,7 +84,6 @@ class GSegSCTelescope : public GTelescope {
   Double_t fZp;  // primary position on z axis
   Int_t     fNp;   // Number of coefficients for the primary
   Double_t* fP;   // Polynomial coefficients (p0, p1 ...)
-  Int_t iNParP;
   vector<Double_t> fzp;
 
   // colors of elements in gl picture (set in initialize method)
@@ -119,13 +118,6 @@ class GSegSCTelescope : public GTelescope {
 
   map<int, TGraph *> *mGRefl;
   Int_t iReflect;
-  TGraph *gPrimRefl;
-  double fPrimMaxLmda;
-  double fPrimMinLmda;
-
-  TGraph *gSeconRefl;
-  double fSeconMaxLmda;
-  double fSeconMinLmda;
 
   string historyFileName; /*!< name of photon history file, 
                             if "", no history written */

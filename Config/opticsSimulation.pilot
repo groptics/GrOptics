@@ -28,7 +28,7 @@ name of grOptics log file, default use cerr (if no asterisk)
 number of showers/photons, defaults -1
   NSHOWER <numShowers, <0, no limit>
           <numPhotons, <0, no limit>
-* NSHOWER -1 100
+* NSHOWER -1 -1
 
 x and y coordinates of the source in the field
 of view followed by the source extention radius (all in degrees). The fourth

@@ -137,6 +137,19 @@ SegSCStdOptics::~SegSCStdOptics() {
   if (debug) {
     *oLog << "  -- SegSCStdOptics::~SegSCStdOptics" << endl;
   }
+
+  for (int unsigned i = 0;i< vSegP1.size();i++) {
+    SafeDelete(vSegP1.at(i));
+  }
+  for (int unsigned i = 0;i< vSegP2.size();i++) {
+    SafeDelete(vSegP2.at(i));
+  }
+  for (int unsigned i = 0;i< vSegS1.size();i++) {
+    SafeDelete(vSegS1.at(i));
+  }
+  for (int unsigned i = 0;i< vSegS2.size();i++) {
+    SafeDelete(vSegS2.at(i));
+  }
 };
 /********************* end of ~SegSCStdOptics *****************/
 
@@ -234,7 +247,7 @@ GSegSCTelescopeFactory(GReadSegSCStd &scReader,
     *oLog << "  -- GSegSCTelescopeFactory Constructor:  " << sPilotEdit << endl;
   }
   iNumSCTelMade = 0;
-  readSC = 0;
+  readSegSC = 0;
   pi = 0;
   sPilotEdit = "";
   mGRefl = 0;
@@ -244,8 +257,8 @@ GSegSCTelescopeFactory(GReadSegSCStd &scReader,
   // make the reflectivity map 
   mGRefl = new map<int, TGraph *>;
 
-  readSC = &(scReader);
-  readSC->setSegSCTelescopeFactory(this);
+  readSegSC = &(scReader);
+  readSegSC->setSegSCTelescopeFactory(this);
 
   sPilotEdit = editPilotFile;
 
@@ -266,7 +279,7 @@ GSegSCTelescopeFactory::~GSegSCTelescopeFactory() {
     *oLog << "  -- GSegSCTelescopeFactory::~GSegSCTelescopeFactory" << endl;
   }
   SafeDelete(pi);
-
+  SafeDelete(readSegSC);
   //for (itmGRefl=mGRefl->begin();
   //   itmGRefl!=mGRefl->end(); itmGRefl++) {
   //SafeDelete(itmGRefl->second ); 
@@ -321,10 +334,9 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SCTel->fZp = (opt->fZp);
   //SCTel->fNp = opt->fNp;
   SCTel->fNp = opt->iNParP;
-  SCTel->iNParP = opt->iNParP;
   SCTel->fzp = opt->fzp;
   // make primary poly coefficients
-  SCTel->fP = new Double_t[SCTel->iNParP];
+  SCTel->fP = new Double_t[SCTel->fNp];
   Double_t fF = (SCTel->fF)*m;
   (SCTel->fP)[0] = TMath::Power(fF,  1)* ((opt->fzp[0]));
   (SCTel->fP)[1] = TMath::Power(fF,  -1)* ((opt->fzp[1]));

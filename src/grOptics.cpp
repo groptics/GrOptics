@@ -173,6 +173,9 @@ ostream *oLog;
 /**************************   main   *****************************/
 int main(int argc, char *argv[]) {
 
+  // set this to true to remain in root (useful for plotting rays on ogl images
+  bool rayTracePlotFlag = false;
+
   // log file output stream, initialize
   oLog = &cerr;
 
@@ -183,8 +186,10 @@ int main(int argc, char *argv[]) {
   // uncomment these lines if you want to remain in root
   // or if you want to use the TPolyLine3D option in 
   // GArrayTel.cpp (see code comments there)
-  app = new TRint("app",&pseudo_argc, argv,0,0,kFALSE );
-  runApp = true;
+  if (rayTracePlotFlag) {
+    app = new TRint("app",&pseudo_argc, argv,0,0,kFALSE );
+    runApp = true;
+  }
 
   time_t startTime = time(NULL);
   clock_t startClock = clock();
@@ -502,8 +507,7 @@ else if (telType==SEGSC) {
   
   *oLog << "**** ALL DONE:  " << ctime(&endTime) << endl;
   
-  // uncomment this Run statement if wish to remain in ROOT 
-  // after end of execution.
+  // to remain in root after application is finished
   if (runApp) {
     app->Run(); 
     return 0;
@@ -521,6 +525,7 @@ else if (telType==SEGSC) {
   }
   SafeDelete(DCFac);
   SafeDelete(SCFac);
+  SafeDelete(SegSCFac);
   
   // this deletes the telescopes
   for (mArrayTelIter = mArrayTel.begin();

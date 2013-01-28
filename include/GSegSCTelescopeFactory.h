@@ -132,7 +132,7 @@ class GSegSCTelescopeFactory : public GTelescopeFactory {
 
   friend class GReadSegSCStd; 
 
-  GReadSegSCStd *readSC;  //!< SC base reader
+  GReadSegSCStd *readSegSC;  //!< SC base reader
 
   GPilot *pi;  //!< pilot reader pointer
   vector<string> tokens;  //!< string vector for GPilot use

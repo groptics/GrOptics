@@ -113,7 +113,18 @@ GSegSCTelescope::~GSegSCTelescope() {
     SafeDelete(fManager);
   }
 
+  if (hisF != 0) SafeDelete(hisF);
  
+  map<int, TGraph *>::iterator itmGRefl; 
+  for (itmGRefl=mGRefl->begin();
+       itmGRefl!=mGRefl->end(); itmGRefl++) {
+    SafeDelete(itmGRefl->second ); 
+  }
+  SafeDelete(mGRefl);
+  SafeDelete(ray);
+
+  if (fS != 0) delete[] fS;
+  if (fP != 0) delete[] fP;
 };
 /********************** end of ~GSegSCTelescope *****************/
 
@@ -351,7 +362,7 @@ void GSegSCTelescope::addPrimaryMirror(const char*name,
   // get and add TGraph for reflectivity mir->SetReflectivity(TGraph *)
 
   TGraph * graph = makeReflectivityGraph(iReflect);
-  mir->SetReflectivity(graph);
+  mir->SetReflectivity(graph); // graph owned by AMirror (and deleted)
   TGeoCombiTrans* combi = mirror->BuildMirrorCombiTrans(fPrimaryV, kTRUE);
 
   ABorderSurfaceCondition * condition
@@ -915,7 +926,7 @@ bool GSegSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
   // the testTelescope method. The TPolyLine3D::Print("all") will print
   // the start of the line, the intermediate points, and the end of the 
   // line.  A good way to test the code.
-  if (1) {
+  if (0) {
     static int idraw = 1;
     if (idraw) {
       //fManager->GetTopVolume()->Draw("ogl");
@@ -1047,12 +1058,6 @@ void GSegSCTelescope::drawTelescope(const int &option) {
       }
     }
   }
-
-  //if ( (option == 0) || (option == 2) ){
-  //TCanvas * cTelescope = new TCanvas("cTelescope","cTelescope",300,300);
-  //gGeoManager->GetTopVolume()->Draw("ogl");
-    //gGeoManager->GetTopVolume()->Draw("x3d");
-  //}
       
 };
 /********************** end of drawTelescope *****************/
@@ -1167,6 +1172,7 @@ void GSegSCTelescope::writePhotonHistory() {
     // deleting the file will close the file;
     // the file owns the tree and will delete it
     SafeDelete(hisF);
+    hisF = 0;
  }
  
 };
@@ -1266,18 +1272,12 @@ void GSegSCTelescope::initialize() {
   fRsMin = 0.0;
   fZs = 0.0;
   fNs = 0;
-  iNParP = 0;
   iNumP1Mirrors = 0;
   iNumP2Mirrors = 0;
   iNParS = 0;
   iNumS1Mirrors = 0;
   iNumS2Mirrors = 0;
-  gPrimRefl = 0;
-  fPrimMaxLmda = 0.0;
-  fPrimMinLmda = 0.0;
-  gSeconRefl = 0;
-  fSeconMaxLmda = 0.0;
-  fSeconMinLmda = 0.0;
+
   historyFileName = "";
   fTimeLast = 0.0;
   iHistoryOption = 0;
@@ -1340,6 +1340,8 @@ void GSegSCTelescope::CloseGeometry() {
 
 void GSegSCTelescope::testPerformance() {
 
+  // unused - from Akira's NewSCT.C, may not work here as is.
+  /*
   bool debug = true;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::testPerformance " << endl;
@@ -1492,6 +1494,6 @@ void GSegSCTelescope::testPerformance() {
 
   canFig10->cd(2);
   histTime[5]->Draw();
-
+  */
 };
 /************************* end of testPerformance *****/
