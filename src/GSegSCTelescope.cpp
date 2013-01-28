@@ -1030,7 +1030,7 @@ void GSegSCTelescope::printTelescope() {
 
 void GSegSCTelescope::drawTelescope(const int &option) {
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::drawTelescope" << endl; 
     *oLog << "       option: "  << option << endl;
@@ -1039,8 +1039,9 @@ void GSegSCTelescope::drawTelescope(const int &option) {
     }
   }
   gGeoManager = fManager;
+
   if ( (option == 0) || (option == 2) ){
-    TCanvas * cTelescope = new TCanvas("cTelescope","cTelescope",300,300);
+    TCanvas *cTelescope = new TCanvas("cTelescope","cTelescope",300,300);
     if (debug) *oLog << "   ready to draw: option " << option << endl;
     fManager->GetTopVolume()->Draw("ogl");
     if (debug) *oLog << "   finished drawing " << endl;
@@ -1058,7 +1059,7 @@ void GSegSCTelescope::drawTelescope(const int &option) {
       }
     }
   }
-      
+
 };
 /********************** end of drawTelescope *****************/
 
@@ -1290,7 +1291,7 @@ void GSegSCTelescope::initialize() {
   fZf = 0.0;
 
   bCameraFlag = false;
-
+  bPhotonHistoryFlag = false;
   fPixelSize   = 0.0;
   fMAPMTWidth  = 0.0;
   fMAPMTLength = 0.0;

@@ -6,6 +6,16 @@ VERSION3.0
 C. Duke
 Grinnell College
 
+This version (3.0) contains the segmented sc telescope class, factory, and
+reader.  It will continue to evolve with better documentation over the next
+months. Thus, you should do a git pulls fairly often. I'll alert you to any
+major changes via e-mail.  
+If you are not on the GrOptics email list, I can add your name;
+email duke at grinnell.edu.
+
+You can immediately run GrOptics using the repository configuration files
+and the repository photon.cph test file.
+
 Only records with an initial "*" are active.  
 
 cherenkov photon GRISU-type input file, 
@@ -28,7 +38,7 @@ name of grOptics log file, default use cerr (if no asterisk)
 number of showers/photons, defaults -1
   NSHOWER <numShowers, <0, no limit>
           <numPhotons, <0, no limit>
-* NSHOWER -1 -1
+* NSHOWER -1 10
 
 x and y coordinates of the source in the field
 of view followed by the source extention radius (all in degrees). The fourth
@@ -48,7 +58,6 @@ wobble East : WOBBLE 0.5 0.0 0.0 31.675  (offset perpendicular to hour circle)
 
 array configuration file
  ARRAYCONFIG <filename: default ./Config/arrayConfig.cfg>
- ARRAYCONFIG ./Config/arrayConfigSC61.cfg
 * ARRAYCONFIG ./Config/arrayConfig.cfg
 
 random number seed for TRandom3: default seed = 0, set by machine clock.
@@ -65,11 +74,11 @@ a history file
 Very useful for debugging
  PHOTONHISTORY <root file, tel.number appended to base name> 
                <tree name: default = "his">
-* PHOTONHISTORY photonhistory.root his
+ PHOTONHISTORY photonhistory.root his
 
 core/telescope location in grd.and tel.system branches added for debuging.
 default 0 for compatibility with earlier opticsSimulation.pilot versions.
-* DEBUGBRANCHES 1
+* DEBUGBRANCHES 0
 ///////////////  draw possibilities for checking configuration and
                                debugging
 			       
@@ -77,7 +86,10 @@ DRAWTEL <telescope number to draw: default 0 (no drawing)> <drawtel option:
                                    default 0, applicable in specific cases>          
 code makes an opengl drawing of the telescope and immediately 
 stops with the root prompt. These are cool drawings. 
- DRAWTEL 1 2
+For segmented SC telescope, option 0: only draw telescope
+                            option 1: draw MAPMT module and MAPMT camera
+                            option 2: draw all of the above.
+ DRAWTEL 1 0
 
 TESTTEL <telescope number> <baseFileName for histograms>   
 THis is a very useful option for producing spot histograms and spot rms
@@ -94,4 +106,4 @@ DO THAT.
 The graphs and histograms are printed to png files using the base filenames.
 
 TESTTEL <telescope number> <baseFileName for histograms>   
- TESTTEL 1  SCIdealSpot
+* TESTTEL 1  SCIdealSpot
