@@ -89,7 +89,7 @@ stops with the root prompt. These are cool drawings.
 For segmented SC telescope, option 0: only draw telescope
                             option 1: draw MAPMT module and MAPMT camera
                             option 2: draw all of the above.
- DRAWTEL 1 0
+* DRAWTEL 1 0
 
 TESTTEL <telescope number> <baseFileName for histograms>   
 THis is a very useful option for producing spot histograms and spot rms
@@ -106,4 +106,4 @@ DO THAT.
 The graphs and histograms are printed to png files using the base filenames.
 
 TESTTEL <telescope number> <baseFileName for histograms>   
-* TESTTEL 1  SCIdealSpot
+ TESTTEL 1  SCIdealSpot

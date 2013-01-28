@@ -315,17 +315,17 @@ void GReadSegSCStd::setupSCFactory() {
     }
     opt->fPixelSize = atof(tokens.at(2).c_str() );
     //opt->fPixelPitch = atof(tokens.at(3).c_str());
-    opt->fMAPMTWidth = atof(tokens.at(3).c_str());
-    opt->fMAPMTLength = atof(tokens.at(4).c_str());
-    opt->fInputWindowThickness = atof(tokens.at(5).c_str());
+    opt->fMAPMTWidth = atof(tokens.at(4).c_str());
+    opt->fMAPMTLength = atof(tokens.at(5).c_str());
+    opt->fInputWindowThickness = atof(tokens.at(6).c_str());
     //opt->fMAPMTAngularSize = atof(tokens.at(7).c_str());
-    opt->fMAPMTOffset =  atof(tokens.at(6).c_str());
-    opt->fMAPMTGap =  atof(tokens.at(7).c_str());
-    if (tokens.size() == 9) {
-      opt->fMAPMTRefIndex =  atof(tokens.at(8).c_str());
-    }
+    opt->fMAPMTOffset =  atof(tokens.at(7).c_str());
+    opt->fMAPMTGap =  atof(tokens.at(8).c_str());
     if (tokens.size() == 10) {
-      Int_t tmpi = atoi(tokens.at(9).c_str());
+      opt->fMAPMTRefIndex =  atof(tokens.at(9).c_str());
+    }
+    if (tokens.size() == 11) {
+      Int_t tmpi = atoi(tokens.at(10).c_str());
       if (tmpi > 0) 
         opt->bSingleMAPMTmodule = true;
       else {
