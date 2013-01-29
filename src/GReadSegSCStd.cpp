@@ -397,9 +397,15 @@ void GReadSegSCStd::setupSCFactory() {
    segTmp->rotErrorPsi =  atof(tokens.at(14).c_str());
    segTmp->bRead = 0;
 
+   //mirrorSegmentDetails *tmpvv = new mirrorSegmentDetails();
+  //*tmpvv = *segTmp;
+
    vector<mirrorSegmentDetails *> vSeg;
    for (int i = 0;i<numMirrors;i++) {
-     vSeg.push_back(segTmp);
+     vSeg.push_back(new mirrorSegmentDetails);
+     *vSeg[i] = *segTmp; 
+     //vSeg.push_back(segTmp);
+     //vSeg.push_back(tmpvv);
    }
 
    if (eMirPS == P1) {
@@ -422,6 +428,12 @@ void GReadSegSCStd::setupSCFactory() {
      opt->vSegS2 = vSeg;
 
    }  
+
+   // *oLog << "testing delete" << endl;
+   //for (int unsigned i = 0;i<  opt->vSegP1.size();i++) {
+   //SafeDelete(opt->vSegP1.at(i));
+   //}
+   //exit(0);
  };
 
 /******************** end of readBasicRecord ****************/
@@ -435,6 +447,8 @@ void GReadSegSCStd::readChangeRecord(const vector<string> &tokens,
   *oLog << "VLISTSEG " << endl;
   GUtilityFuncts::printVector(vListSeg);
   for (int i = 0;i<vListSeg.size();i++) {
+ 
+    mirrorSegmentDetails *segTmp = new mirrorSegmentDetails();
     int ix = vListSeg[i];
     segTmp->rmin =  atof(tokens.at(3).c_str());
     segTmp->rmax =  atof(tokens.at(4).c_str());
@@ -451,15 +465,23 @@ void GReadSegSCStd::readChangeRecord(const vector<string> &tokens,
     segTmp->bRead = 1;
   
     if (eMirPS == P1) {
+      // replace element
+      delete (opt->vSegP1)[ix -1];
       (opt->vSegP1)[ix -1] = segTmp;
    }
     else if (eMirPS == P2) {
+      // replace element
+      delete (opt->vSegP2)[ix -1];
       (opt->vSegP2)[ix -1] = segTmp;
     }
     else if (eMirPS == S1) {
+      // replace element
+      delete (opt->vSegS1)[ix -1];
       (opt->vSegS1)[ix -1] = segTmp;
     }
     else if (eMirPS == S2) {
+      // replace element
+      delete (opt->vSegS2)[ix -1];
       (opt->vSegS2)[ix -1] = segTmp;
     }
   } 

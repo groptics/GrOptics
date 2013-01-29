@@ -321,12 +321,14 @@ int main(int argc, char *argv[]) {
 
   map<int,GRootWriter *> mRootWriter;
   map<int,GRootWriter *>::iterator mRootWriterIter;
+
   for (mIter=mTelDetails.begin();mIter!=mTelDetails.end();mIter++) {
     int telID = mIter->first;
     mRootWriter[telID] = new GRootWriter(fO,telID,pilot.outFileTelTreeName,
-					 pilot.outFileDCos, pilot.iNInitEvents,
+                                         pilot.outFileDCos, pilot.iNInitEvents,
                                          pilot.debugBranchesFlag);
-  }
+    }
+
   //*oLog << " EXITING " << endl;
   //exit(0);  
   // set up factories
@@ -336,6 +338,7 @@ int main(int argc, char *argv[]) {
   GReadDCStdBase *readerDC = 0;
   GReadSCStd *readerSC = 0;
   GReadSegSCStd *readerSegSC = 0;
+
   
   for (unsigned i = 0;i< vTelFac.size(); ++i) {
     if (vTelFac.at(i)->telType == DC) {
@@ -356,6 +359,8 @@ int main(int argc, char *argv[]) {
       SegSCFac = new GSegSCTelescopeFactory(*readerSegSC,vTelFac.at(i)->editFile);
     }
   }
+
+
 
   // make arrayTelescope map<telid, ArrayTel*>
   map<int, GArrayTel *> mArrayTel;

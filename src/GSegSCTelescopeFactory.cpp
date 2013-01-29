@@ -274,7 +274,7 @@ GSegSCTelescopeFactory(GReadSegSCStd &scReader,
 
 GSegSCTelescopeFactory::~GSegSCTelescopeFactory() {
  
-  bool debug = false;
+  bool debug = true;
   if (debug) {
     *oLog << "  -- GSegSCTelescopeFactory::~GSegSCTelescopeFactory" << endl;
   }
@@ -287,7 +287,7 @@ GSegSCTelescopeFactory::~GSegSCTelescopeFactory() {
     //tmpSeg = itmStdOp->second;
     //*oLog << "tmpSeg->stdNum " <<tmpSeg->stdNum << endl;
     //delete tmpSeg;
-    //SafeDelete( itmStdOp->second );
+    SafeDelete( itmStdOp->second );
     //*oLog << " (itmStdOp->second)->stdNum " <<  (itmStdOp->second)->stdNum << endl;
     //*oLog << "itmStdOp->second " << itmStdOp->second << endl;
   }
