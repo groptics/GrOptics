@@ -274,18 +274,31 @@ GSegSCTelescopeFactory(GReadSegSCStd &scReader,
 
 GSegSCTelescopeFactory::~GSegSCTelescopeFactory() {
  
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GSegSCTelescopeFactory::~GSegSCTelescopeFactory" << endl;
   }
+
+  for (itmStdOp=mStdOptics.begin();
+     itmStdOp!=mStdOptics.end(); itmStdOp++) {
+    // WHY CAN'T I DELETE THIS CLASS? thinks I have already deleted the class?
+    // was created in reader: SCFac->mStdOptics[i] = new SegSCStdOptics();
+    //SegSCStdOptics *tmpSeg;
+    //tmpSeg = itmStdOp->second;
+    //*oLog << "tmpSeg->stdNum " <<tmpSeg->stdNum << endl;
+    //delete tmpSeg;
+    //SafeDelete( itmStdOp->second );
+    //*oLog << " (itmStdOp->second)->stdNum " <<  (itmStdOp->second)->stdNum << endl;
+    //*oLog << "itmStdOp->second " << itmStdOp->second << endl;
+  }
+   for (itmGRefl=mGRefl->begin();
+    itmGRefl!=mGRefl->end(); itmGRefl++) {
+     SafeDelete(itmGRefl->second ); 
+   }
+  SafeDelete(mGRefl);
   SafeDelete(pi);
   SafeDelete(readSegSC);
-  //for (itmGRefl=mGRefl->begin();
-  //   itmGRefl!=mGRefl->end(); itmGRefl++) {
-  //SafeDelete(itmGRefl->second ); 
-  //}
-  //SafeDelete(mGRefl);
-  
+ 
 };
 /************** end of ~GSegSCTelescopeFactory ***********************/
 

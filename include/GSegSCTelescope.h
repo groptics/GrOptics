@@ -156,6 +156,9 @@ class GSegSCTelescope : public GTelescope {
  
   Int_t iPrtMode;
 
+  bool bRayPlotModeFlag;
+  enum RayPlotType eRayPlotType;
+
   TelType eTelType; //!< telescope type enum (here will be SC)
 
   void makePhotonHistoryBranches();
@@ -297,6 +300,18 @@ class GSegSCTelescope : public GTelescope {
   void CloseGeometry(); 
 
   AOpticsManager *getManager() const { return fManager;};
+
+  void setRayPlotMode(const enum RayPlotType &eRayPlot) {
+    bRayPlotModeFlag = true;
+    eRayPlotType = eRayPlot;    
+    bool debug = true;
+    if (debug) {
+      *oLog << "  -- GSegSCTelescope::setRayPlotMode " << endl;
+      *oLog << "bRayPlotModeFlag eRayPlotType " 
+            <<  bRayPlotModeFlag << "  " << eRayPlotType  << endl;
+    }
+    
+  };
 };
 
 

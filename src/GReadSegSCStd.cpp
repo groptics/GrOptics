@@ -69,7 +69,7 @@ GReadSegSCStd::GReadSegSCStd(const string &pilotfile,GSegSCTelescopeFactory *SCF
 GReadSegSCStd::GReadSegSCStd(const string &pilotfile) {
   spilotfile = pilotfile;
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GReadSegSCStd::GReadSegSCStd(const string pilotfile) " 
           << pilotfile << endl;

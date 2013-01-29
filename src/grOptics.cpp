@@ -183,13 +183,6 @@ int main(int argc, char *argv[]) {
   TRint *app = 0;
   bool runApp = false;  // TRint for possible use later with 
 
-  // uncomment these lines if you want to remain in root
-  // or if you want to use the TPolyLine3D option in 
-  // GArrayTel.cpp (see code comments there)
-  if (rayTracePlotFlag) {
-    app = new TRint("app",&pseudo_argc, argv,0,0,kFALSE );
-    runApp = true;
-  }
 
   time_t startTime = time(NULL);
   clock_t startClock = clock();
@@ -232,11 +225,41 @@ int main(int argc, char *argv[]) {
   readPilot(&pilot);
   updatePilot(cline,&pilot);
 
-  if ( (pilot.testTel) || (pilot.telToDraw) ) {
-    *oLog << "creating app " << endl;
+  // setup draw flags
+  bool bDrawTelFlag = false;
+  bool bDrawRayFlag = false;
+  enum RayPlotType eRayType;
+  
+  if (pilot.telToDraw == true) {
+    if (pilot.telDrawOption < 3 ) {
+      bDrawTelFlag = true;
+      bDrawRayFlag = false;
+    }
+    else if (pilot.telDrawOption == 10 )  {
+      bDrawTelFlag = false;
+      bDrawRayFlag = true;
+      eRayType = FOCUSONLY;
+    }
+    else if  (pilot.telDrawOption == 20 ) {
+      bDrawTelFlag = false;
+      bDrawRayFlag = true;
+      eRayType = ALLSURFACES;
+    }
+    else {
+      *oLog << "incorrect value for DRAWTEL option, stopping code" << endl;
+      *oLog << "      option in DRAWTEL record: " << pilot.telDrawOption 
+            << endl;
+      *oLog << "possible values: 0, 1, 2, 10, 20 " << endl;
+      *oLog << "   STOPPING CODE" << endl;
+      exit(0);
+    }
+  }
+
+  if ( (bDrawTelFlag) || (bDrawRayFlag) || (pilot.testTel) ) {
     app = new TRint("app",&pseudo_argc, argv,0,0,kFALSE );
     runApp = true;
   }
+
   // set seed so can print out seed if from machine clock
   TR3.SetSeed(pilot.seed); 
 
@@ -356,7 +379,7 @@ int main(int argc, char *argv[]) {
     if (telType==DC) {
       GTelescope *tel = DCFac->makeTelescope(telId,telStd);
       tel->setPrintMode(*oLog,printMode);
-      if (pilot.telToDraw == telId) {
+      if ( (pilot.telToDraw == telId)  && (bDrawTelFlag) ) {
 	tel->drawTelescope(pilot.telDrawOption);
 	app->Run(); 
 	return 0;
@@ -374,7 +397,10 @@ int main(int argc, char *argv[]) {
 
       GTelescope *tel = SCFac->makeTelescope(telId,telStd);
       tel->setPrintMode(*oLog,printMode);
-      if (pilot.telToDraw == telId) {
+      if (bDrawRayFlag) {
+        tel->setRayPlotMode(eRayType);
+      }
+      if ( (pilot.telToDraw == telId) && (bDrawTelFlag) ) {
 	tel->drawTelescope(pilot.telDrawOption);
 	app->Run(); 
 	return 0;
@@ -394,7 +420,10 @@ else if (telType==SEGSC) {
 
       GTelescope *tel = SegSCFac->makeTelescope(telId,telStd);
       tel->setPrintMode(*oLog,printMode);
-      if (pilot.telToDraw == telId) {
+      if (bDrawRayFlag) {
+        tel->setRayPlotMode(eRayType);
+      }
+      if ( (pilot.telToDraw == telId) && (bDrawTelFlag) ) {
 	tel->drawTelescope(pilot.telDrawOption);
 	app->Run(); 
 	return 0;
@@ -508,7 +537,7 @@ else if (telType==SEGSC) {
   *oLog << "**** ALL DONE:  " << ctime(&endTime) << endl;
   
   // to remain in root after application is finished
-  if (runApp) {
+  if (bDrawRayFlag) {
     app->Run(); 
     return 0;
   }
@@ -804,12 +833,7 @@ int readPilot(Pilot *pilot) {
   while (pi->get_line_vector(tokens) >=0) {
     pilot->telToDraw = atoi(tokens.at(0).c_str());
     if (tokens.size() == 2) {
-    pilot->telDrawOption = atoi(tokens.at(1).c_str());
-    if (pilot->telDrawOption > 2) {
-      *oLog << "DRAWTEL valid options are 0, 1, 2 " << endl;
-      *oLog << "setting option to 2 and continuing " << endl;
-      pilot->telDrawOption = 2;
-    }
+      pilot->telDrawOption = atoi(tokens.at(1).c_str());
     }
   }  
   flag = "TESTTEL";

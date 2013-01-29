@@ -104,7 +104,7 @@ GSegSCTelescope::GSegSCTelescope() {
 /********************** end of GSegSCTelescope *****************/
 GSegSCTelescope::~GSegSCTelescope() {
 
-  bool debug=true;
+  bool debug=false;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::~GSegSCTelescope " << endl;
   }
@@ -926,14 +926,19 @@ bool GSegSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
   // the testTelescope method. The TPolyLine3D::Print("all") will print
   // the start of the line, the intermediate points, and the end of the 
   // line.  A good way to test the code.
-  if (0) {
+
+  // fStatusLast can be 0 through 5.
+  if (bRayPlotModeFlag) {
+    // draw the telescope only once.
     static int idraw = 1;
     if (idraw) {
       //fManager->GetTopVolume()->Draw("ogl");
       drawTelescope();
       idraw = 0;
     }
-    if (fStatusLast == 3) {
+    // do we draw the ray.
+    if ( ( (eRayPlotType == FOCUSONLY) && (fStatusLast == 3) ) ||
+         (eRayPlotType == ALLSURFACES) ) {
       *oLog << " ready to draw polyline" << endl;
       TPolyLine3D *pol = ray->MakePolyLine3D();
       pol->Print("all");
@@ -1305,6 +1310,8 @@ void GSegSCTelescope::initialize() {
   fWindowBottomRelToFocalSurface     = 0.0;
   fMAPOscurationTopRelToFocalSurface = 0.0;
   fCathodeBottomRelToOscurationTop   = 0.0;
+  bRayPlotModeFlag = false;
+  eRayPlotType = FOCUSONLY;  
 
   eTelType = SEGSC;
 

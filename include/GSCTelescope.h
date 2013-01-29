@@ -257,6 +257,10 @@ class GSCTelescope : public GTelescope {
     double tm = ( ( 2*fZs - fZp -fZf )* fFocLgt / TMath::C()) * 1.0e09;
     return tm;
   }
+
+  void setRayPlotMode(const enum RayPlotType &eRayPlot) {
+
+  };
 };
 
 

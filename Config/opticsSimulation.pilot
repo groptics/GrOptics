@@ -38,7 +38,7 @@ name of grOptics log file, default use cerr (if no asterisk)
 number of showers/photons, defaults -1
   NSHOWER <numShowers, <0, no limit>
           <numPhotons, <0, no limit>
-* NSHOWER -1 10
+* NSHOWER -1 -1
 
 x and y coordinates of the source in the field
 of view followed by the source extention radius (all in degrees). The fourth
@@ -74,7 +74,7 @@ a history file
 Very useful for debugging
  PHOTONHISTORY <root file, tel.number appended to base name> 
                <tree name: default = "his">
- PHOTONHISTORY photonhistory.root his
+* PHOTONHISTORY photonhistory.root his
 
 core/telescope location in grd.and tel.system branches added for debuging.
 default 0 for compatibility with earlier opticsSimulation.pilot versions.
@@ -89,7 +89,11 @@ stops with the root prompt. These are cool drawings.
 For segmented SC telescope, option 0: only draw telescope
                             option 1: draw MAPMT module and MAPMT camera
                             option 2: draw all of the above.
-* DRAWTEL 1 0
+
+                            option 10: plot rays reaching cathode or focal
+                            surfae on telescope image
+                            option 20: plot all rays on telescope image
+ DRAWTEL 1 10
 
 TESTTEL <telescope number> <baseFileName for histograms>   
 THis is a very useful option for producing spot histograms and spot rms

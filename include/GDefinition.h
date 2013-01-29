@@ -56,6 +56,10 @@ enum MirSeg {P1,P2,S1,S2};
  */
 enum GrISURecType {SREC,PREC,RREC,HREC,EOFREC};
 
+/*!// type for rayplots 
+ */
+enum RayPlotType {FOCUSONLY, ALLSURFACES  };
+
 // set up common random number generator for all classes, move the 
 // include to .cpp files later.  maybe have a separate include file for 
 // globals, GGlobal.h, fix this later.

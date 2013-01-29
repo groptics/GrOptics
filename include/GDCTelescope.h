@@ -298,6 +298,10 @@ double fTransitTime;                //!< photon total transit time (from inject 
     double tm = (dFocLgt/TMath::C() ) * 1.0e09;
     return tm;
   }
+
+  void setRayPlotMode(const enum RayPlotType &eRayPlot) {
+
+  };
 };
 
 

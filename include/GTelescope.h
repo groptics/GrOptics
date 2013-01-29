@@ -73,7 +73,7 @@ class GTelescope {
 
   virtual double getPlateScaleFactor() = 0;
 
-  //virtual bool setRayPlotMode();
+  virtual void setRayPlotMode(const enum RayPlotType &eRayPlot) = 0;
 };
 
 #endif
