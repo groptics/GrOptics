@@ -24,7 +24,8 @@ telescope. I removed two segments just for fun (nice image).
 
 ToDo's include: making the printoption consistent across telescopes, using
 valgrind for memory usage and leak testing for the new segsc code, making
-the screen/log output nicer, and added error offsets for the focal surface.
+the screen/log output nicer, adding error offsets for the focal surface, 
+and removing all compile warnings.
 I also have not yet specified axes for the rotational errors (segsc only).
 As you see other details to be added, please let me know.
 
