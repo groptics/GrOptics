@@ -90,6 +90,13 @@ struct SegSCStdOptics {
   Double_t fMAPMTOffset;
   Bool_t bSingleMAPMTmodule;
 
+  Double_t fFocalSurfaceXOffset;     // xOffset, entered in mm
+  Double_t fFocalSurfaceYOffset;     // yOffset, entered in mm
+  Double_t fFocalSurfaceZOffset;     // zOffset, entered in mm 
+  Double_t fFocalSurfacePhiOffset;   // Euler angle offset, degrees
+  Double_t fFocalSurfaceThetaOffset; // Euler angle offset, degrees
+  Double_t fFocalSurfacePsiOffset;   // Euler angle offset, degrees
+
   Int_t iNParP;
   vector<Double_t> fzp;
   Int_t iNParS;

@@ -310,7 +310,7 @@ void GReadSCStd::setupSCFactory() {
 /******************** end of setupSCFactory ****************/
 void GReadSCStd::getPolyCoeffs() {
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GReadSCStd::getPolyCoeffs " << endl;
   }

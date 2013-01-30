@@ -69,7 +69,7 @@ SegSCStdOptics::SegSCStdOptics() {
 
   iPrimReflID = 0;
   iSecReflID = 0;
-  iPrtMode = 1;
+  iPrtMode = 0;
   oStr     = oLog;
 
   stdType = SEGSC; 
@@ -117,7 +117,12 @@ SegSCStdOptics::SegSCStdOptics() {
   iNumS1Mirrors = 0;
   iNumS2Mirrors = 0;  
 
-  
+  fFocalSurfaceXOffset     = 0.0;
+  fFocalSurfaceYOffset     = 0.0;
+  fFocalSurfaceZOffset     = 0.0;
+  fFocalSurfacePhiOffset   = 0.0;
+  fFocalSurfaceThetaOffset = 0.0;
+  fFocalSurfacePsiOffset   = 0.0;  
 };
 /************** end of SegSCStdOptics ***********************/
 
@@ -202,6 +207,12 @@ void SegSCStdOptics::printSegSCStdOptics() {
   *oLog << "        fMAPMTGap        " << fMAPMTGap << endl;
   *oLog << "        fMAPMTRefIndex        " << fMAPMTRefIndex << endl;
   *oLog << "        bSingleMAPMTmodule " << bSingleMAPMTmodule << endl;
+  *oLog << "        focalSurfaceOffsets from FOCALSURFACEOFFSET record" << endl;
+  *oLog << "           x/y/z " << fFocalSurfaceXOffset << " " 
+        << fFocalSurfaceYOffset << " " << fFocalSurfaceZOffset << endl;
+  *oLog << "           phi/theta/psi " << fFocalSurfacePhiOffset << "  "
+        << fFocalSurfaceThetaOffset << " " << fFocalSurfacePsiOffset << endl;
+
   // print P1 segment details
   *oLog << "       Number of P1 segments " << iNumP1Mirrors << endl;
   GUtilityFuncts::printSegVector(vSegP1);  
@@ -411,9 +422,14 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SCTel->fMAPMTRefIndex   = opt->fMAPMTRefIndex;
   SCTel->bSingleMAPMTmodule = opt->bSingleMAPMTmodule;
 
-  SCTel->printTelescope();
+  SCTel->fFocalSurfaceXOffset     = opt->fFocalSurfaceXOffset;
+  SCTel->fFocalSurfaceYOffset     = opt->fFocalSurfaceYOffset;
+  SCTel->fFocalSurfaceZOffset     = opt->fFocalSurfaceZOffset;
+  SCTel->fFocalSurfacePhiOffset   = opt->fFocalSurfacePhiOffset;
+  SCTel->fFocalSurfaceThetaOffset = opt->fFocalSurfaceThetaOffset;
+  SCTel->fFocalSurfacePsiOffset   = opt->fFocalSurfacePsiOffset;
+ 
   SCTel->buildTelescope();
-
 
   return SCTel; 
 };

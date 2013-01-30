@@ -52,7 +52,7 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
   
   strcpy(version,VERSN.c_str());
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GRootWriter::GRootWriter " << endl;
     *oLog << "     version: " << version << endl;

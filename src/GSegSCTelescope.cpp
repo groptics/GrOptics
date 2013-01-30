@@ -177,7 +177,6 @@ void GSegSCTelescope::buildTelescope(bool os8)
   addPrimaryF();
   addSecondaryJ();
   addSecondaryObscuration();
-  //printTelescope();
 
   if (bCameraFlag) {
     addMAPMTFocalPlane();
@@ -188,6 +187,7 @@ void GSegSCTelescope::buildTelescope(bool os8)
 
   closeGeometry();
 
+  *oLog << "ssssssssssssssssssiPrtMode " << iPrtMode << endl;
   printTelescope();
   //testPerformance();
 
@@ -638,7 +638,7 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
   mapmt->AddNode(mapmtBackObs, 1, new TGeoTranslation(0, 0,backObsPosition ));
   Double_t backObsTopPositionRelToMapmtCenter = backObsPosition + backObsThickness;
   
-  *oLog << " xxxxxx fWindowBottomRelToMapmtCenter  " << fWindowBottomRelToMapmtCenter << endl;
+  *oLog << " fWindowBottomRelToMapmtCenter  " << fWindowBottomRelToMapmtCenter << endl;
   *oLog << " fCathodeTopRelToMapmtCenter  " << fCathodeTopRelToMapmtCenter << endl;
   *oLog << " backObsTopPositionRelToMapmtCenter  " << backObsTopPositionRelToMapmtCenter << endl;
 
@@ -663,10 +663,10 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
   //const Double_t kZs = fF/fQ;
   //const Double_t kZf = kZs - (1 - fAlpha)*fF;
   const Double_t kZf = fF * fZf;
-  *oLog << "  =================== kZf " << kZf << endl;
+  //*oLog << "  =================== kZf " << kZf << endl;
   // Make the focal plane
   Double_t mapmtPositionReltoFocalSurface = - fMAPMTLength/2. + fInputWindowThickness + fMAPMTGap;
-  *oLog << " xxxxxxxxxxx  mapmtPositionReltoFocalSurface " << mapmtPositionReltoFocalSurface << endl;
+  //*oLog << " xxxxxxxxxxx  mapmtPositionReltoFocalSurface " << mapmtPositionReltoFocalSurface << endl;
   Int_t n = 1;
   // loop from -iNum to +iNum
   Int_t iNum = 7; // set to 1, make gl plot and use CheckPoint to see location of center module
@@ -683,7 +683,6 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
         focVol->AddNode(mapmt, n, new TGeoTranslation(dx, dy, 
                                                       mapmtPositionReltoFocalSurface +
                                                       + fMAPMTOffset + dz));
-        *oLog << "n dx dy dz " << n << "  " << dx << " " << dy << " " << dz << endl;
         n++;
       } // y
     } // x
@@ -987,7 +986,12 @@ void GSegSCTelescope::printTelescope() {
     else {
       *oLog << "      build ideal focal plane " << endl;
     }
-        
+    *oLog << "        focalSurfaceOffsets from FOCALSURFACEOFFSET record" << endl;
+    *oLog << "           x/y/z " << fFocalSurfaceXOffset << " " 
+          << fFocalSurfaceYOffset << " " << fFocalSurfaceZOffset << endl;
+    *oLog << "           phi/theta/psi " << fFocalSurfacePhiOffset << "  "
+          << fFocalSurfaceThetaOffset << " " << fFocalSurfacePsiOffset << endl;
+    
   }
 
   if ( iPrtMode == 2) {
@@ -1030,6 +1034,7 @@ void GSegSCTelescope::printTelescope() {
     *oLog << "        fCathodeBottomRelToOscurationTop " 
           << fCathodeBottomRelToOscurationTop << endl << endl;
   }
+  if (debug) *oLog << "exiting GSegSCTelescope::printTelescope" << endl; 
 };
 /********************** end of printTelescope *****************/
 
@@ -1310,6 +1315,14 @@ void GSegSCTelescope::initialize() {
   fWindowBottomRelToFocalSurface     = 0.0;
   fMAPOscurationTopRelToFocalSurface = 0.0;
   fCathodeBottomRelToOscurationTop   = 0.0;
+
+  fFocalSurfaceXOffset     = 0.0;
+  fFocalSurfaceYOffset     = 0.0;
+  fFocalSurfaceZOffset     = 0.0;
+  fFocalSurfacePhiOffset   = 0.0;
+  fFocalSurfaceThetaOffset = 0.0;
+  fFocalSurfacePsiOffset   = 0.0;  
+
   bRayPlotModeFlag = false;
   eRayPlotType = FOCUSONLY;  
 

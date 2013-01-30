@@ -504,26 +504,26 @@ void GSCTelescope::buildTelescope(bool os8)
     top->AddNode(focVol, 1,cFoc);
  
 
-    *oLog << "     --  placing modules " << endl;
-    *oLog << "       kZf   " << setw(12) << setprecision(6) << kZf << endl;
-    *oLog << "       kMAPMTOffset "  << kMAPMTOffset << endl;
+    //*oLog << "     --  placing modules " << endl;
+    //*oLog << "       kZf   " << setw(12) << setprecision(6) << kZf << endl;
+    //*oLog << "       kMAPMTOffset "  << kMAPMTOffset << endl;
     
-    *oLog << "       location of module with dz = 0  " << setw(15) << setprecision(8)
-	  << kZf  - kMAPMTLength/2. + kInputWindowThickness + kgap + kMAPMTOffset << endl;
+    //*oLog << "       location of module with dz = 0  " << setw(15) << setprecision(8)
+    //	  << kZf  - kMAPMTLength/2. + kInputWindowThickness + kgap + kMAPMTOffset << endl;
   }
   else {
-    *oLog << " ready to make focal plane with no camera " << endl;
-    *oLog << " kZf " << kZf << endl;
-    *oLog << " kZf - 1*mm " << kZf-1*mm << endl;
-    *oLog << " 38.*cm " << 38.*cm << endl;
-    *oLog << " kMAPMTWidth " << kMAPMTWidth << endl;
-    *oLog << " kk1  kk2 " << kk1 << "  " << kk2 << endl;
+    //*oLog << " ready to make focal plane with no camera " << endl;
+    //*oLog << " kZf " << kZf << endl;
+    //*oLog << " kZf - 1*mm " << kZf-1*mm << endl;
+    //*oLog << " 38.*cm " << 38.*cm << endl;
+    //*oLog << " kMAPMTWidth " << kMAPMTWidth << endl;
+    //*oLog << " kk1  kk2 " << kk1 << "  " << kk2 << endl;
     Double_t tmp = 1/(7.*kMAPMTWidth);
     Double_t tmp2 = tmp*tmp;
     Double_t beta[2];
     beta[0] = tmp2*kk1;
     beta[1] = tmp2*tmp2*kk2;
-    *oLog << "  beta[0]  beta[1] " << beta[0] << "  " << beta[1] << endl;
+    //*oLog << "  beta[0]  beta[1] " << beta[0] << "  " << beta[1] << endl;
     //double planeRad = 38.*cm;
     double planeRad = 38.*cm;
     //*oLog << " planeRad " << planeRad << endl;
@@ -568,8 +568,8 @@ void GSCTelescope::buildTelescope(bool os8)
 							       fFocalPlPhiAngle,
 							       fFocalPlThetaOffset,0.0)));
 
-    *oLog << " focal plane positions: " << kZf + kzs[0] - 1*mm << "  " << kZf + kzs[0] << endl;
-    *oLog << " obs plane positions:   " << kZf + kzs[0] - 2*mm << "  " << kZf + kzs[0]-1*mm << endl;
+    //*oLog << " focal plane positions: " << kZf + kzs[0] - 1*mm << "  " << kZf + kzs[0] << endl;
+    //*oLog << " obs plane positions:   " << kZf + kzs[0] - 2*mm << "  " << kZf + kzs[0]-1*mm << endl;
 
     
   }
@@ -788,13 +788,16 @@ bool GSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
   // the testTelescope method. The TPolyLine3D::Print("all") will print
   // the start of the line, the intermediate points, and the end of the 
   // line.  A good way to test the code.
-  if (0) {
+
+  if (bRayPlotModeFlag) {
     static int idraw = 1;
     if (idraw) {
       drawTelescope();
       idraw = 0;
     }
-    if (fStatusLast == 3) {
+    // do we draw the ray.
+    if ( ( (eRayPlotType == FOCUSONLY) && (fStatusLast == 3) ) ||
+         (eRayPlotType == ALLSURFACES) ) {
       *oLog << " ready to draw polyline" << endl;
       TPolyLine3D *pol = ray->MakePolyLine3D();
       pol->Print("all");
@@ -920,13 +923,8 @@ void GSCTelescope::drawTelescope(const int &option) {
   if (debug) {
     *oLog << " ready to draw the SC telescope" << endl; 
   }
-  //TGeoManager *managerOld = gGeoManager;
-  //gGeoManager = manager;
   gGeoManager = manager;
   gGeoManager->GetMasterVolume()->Draw("ogl");
-  //TGeoVolume *mv = manager->GetMasterVolume();
-  //mv->Draw("ogl");
-  //gGeoManager = managerOld;
 };
 /********************** end of drawTelescope *****************/
 

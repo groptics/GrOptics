@@ -49,9 +49,6 @@ class GSCTelescope : public GTelescope {
   double fTY;
   double fTZ;
 
-  //double fDummy;  // dummy parameters from factory.
-  //int iDummy;
-  
   int iTelID;  //!< telescope id in the array.
   int iStdID;  //!< telescope standard number from the telescope factory
 
@@ -137,6 +134,9 @@ class GSCTelescope : public GTelescope {
   double fMAPMTGap;
   double fMAPMTRefIndex;
   bool bCameraFlag;
+
+  bool bRayPlotModeFlag;
+  enum RayPlotType eRayPlotType;
 
   int iNParP;
   vector<double> fzp;
@@ -259,8 +259,17 @@ class GSCTelescope : public GTelescope {
   }
 
   void setRayPlotMode(const enum RayPlotType &eRayPlot) {
-
+    bRayPlotModeFlag = true;
+    eRayPlotType = eRayPlot;    
+    bool debug = true;
+    if (debug) {
+      *oLog << "  -- GSCTelescope::setRayPlotMode " << endl;
+      *oLog << "bRayPlotModeFlag eRayPlotType " 
+            <<  bRayPlotModeFlag << "  " << eRayPlotType  << endl;
+    }
+    
   };
+
 };
 
 
