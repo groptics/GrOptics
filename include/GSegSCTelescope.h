@@ -6,7 +6,9 @@ VERSION3.0
   inherits from GTelescope
 
 GSCTelescope provides the concrete class for a Schwarzschild-Couder
-telescope.  Inherits from GTelescope base class.
+telescope.  Inherits from GTelescope base class. This class is based on 
+Akira Okamura's NewSCT.C root script included in the GrOptics/scripts/SegSC
+directory
 
 */
 #ifndef GSEGSCTELESCOPE
