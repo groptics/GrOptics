@@ -117,6 +117,7 @@ For segmented SC telescope, option 0: only draw telescope
                             option 10: plot rays reaching cathode or focal
                                        surface on telescope image
                             option 20: plot all rays on telescope image
+NOTE: for ideal SC telescope, camera is not drawn - coming soon.
  DRAWTEL 1 20
 
 TESTTEL <telescope number> <baseFileName for histograms>   

@@ -927,6 +927,7 @@ bool GSegSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
   // line.  A good way to test the code.
 
   // fStatusLast can be 0 through 5.
+
   if (bRayPlotModeFlag) {
     // draw the telescope only once.
     static int idraw = 1;

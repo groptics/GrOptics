@@ -157,6 +157,8 @@ GSCTelescope::GSCTelescope() {
   fMAPMTRefIndex = 0.0;
   bCameraFlag = true;
 
+  bRayPlotModeFlag = false;
+
   iNParP = 0.0;
   iNParS = 0.0;
   
@@ -788,6 +790,8 @@ bool GSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
   // the testTelescope method. The TPolyLine3D::Print("all") will print
   // the start of the line, the intermediate points, and the end of the 
   // line.  A good way to test the code.
+
+  //*oLog << "bRayPlotModeFlag " << bRayPlotModeFlag << endl;
 
   if (bRayPlotModeFlag) {
     static int idraw = 1;
