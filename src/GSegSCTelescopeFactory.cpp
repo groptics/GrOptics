@@ -362,14 +362,29 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   // make primary poly coefficients
   SCTel->fP = new Double_t[SCTel->fNp];
   Double_t fF = (SCTel->fF)*m;
+  
   (SCTel->fP)[0] = TMath::Power(fF,  1)* ((opt->fzp[0]));
-  (SCTel->fP)[1] = TMath::Power(fF,  -1)* ((opt->fzp[1]));
-  (SCTel->fP)[2] = TMath::Power(fF,  -3)* ((opt->fzp[2]));
-  (SCTel->fP)[3] = TMath::Power(fF,  -5)* ((opt->fzp[3]));
-  (SCTel->fP)[4] = TMath::Power(fF,  -7)* ((opt->fzp[4]));
-  (SCTel->fP)[5] = TMath::Power(fF,  -9)* ((opt->fzp[5]));
-  (SCTel->fP)[6] = TMath::Power(fF,  -11)* ((opt->fzp[6]));
-  (SCTel->fP)[7] = TMath::Power(fF,  -13)* ((opt->fzp[7]));
+
+  bool printParameters = true;
+  if (printParameters) {
+    *oLog << endl;
+    *oLog << "  calculation of primary parameters " << endl;
+    *oLog << "           fzp[i]: input parameters from configuration file " << endl;
+    *oLog << "           fP[i]  =  TMath::Power(fF,  iPowerF)* fzp[i] " << endl;  
+    *oLog << "  i     iPowerF     fzp[i]           fP[i] " << endl;
+    *oLog <<"  0" << "        " << "1" << "       " << opt->fzp[0] << "       " 
+          << (SCTel->fP)[0] << endl;   
+  }
+  int iPowerF = -1;
+  for (int i = 1;i < SCTel->fNp; i++) {
+    (SCTel->fP)[i] = TMath::Power(fF,  iPowerF)* ((opt->fzp[i]));  
+    if (printParameters) {
+      *oLog << "  " <<  i << "       " << iPowerF
+            << "       " << opt->fzp[i] << "       " << (SCTel->fP)[i] << endl;
+    }
+    iPowerF = iPowerF -2;
+  }
+  if(printParameters) *oLog << endl;
   
   // secondary parameters
   SCTel->fRsMax = (opt->fRsMax);
@@ -383,14 +398,28 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   // make secondary poly coefficients
   SCTel->fS = new Double_t[SCTel->iNParS];
   fF = (SCTel->fF)*m;
+
   (SCTel->fS)[0] = TMath::Power(fF,  1)* ((opt->fzs[0]));
-  (SCTel->fS)[1] = TMath::Power(fF,  -1)* ((opt->fzs[1]));
-  (SCTel->fS)[2] = TMath::Power(fF,  -3)* ((opt->fzs[2]));
-  (SCTel->fS)[3] = TMath::Power(fF,  -5)* ((opt->fzs[3]));
-  (SCTel->fS)[4] = TMath::Power(fF,  -7)* ((opt->fzs[4]));
-  (SCTel->fS)[5] = TMath::Power(fF,  -9)* ((opt->fzs[5]));
-  (SCTel->fS)[6] = TMath::Power(fF,  -11)* ((opt->fzs[6]));
-  (SCTel->fS)[7] = TMath::Power(fF,  -13)* ((opt->fzs[7]));
+
+  if (printParameters) {
+    *oLog << "  calculation of secondary parameters " << endl;
+    *oLog << "           fzs[i]: input parameters from configuration file " << endl;
+    *oLog << "           fS[i]  =  TMath::Power(fF,  iPowerF)* fzs[i] " << endl;  
+    *oLog << "  i     iPowerF     fzs[i]           fS[i] " << endl;
+    *oLog <<"  0" << "        " << "1" << "       " << opt->fzs[0] << "       " 
+          << (SCTel->fS)[0] << endl;   
+  }
+
+  iPowerF = -1;
+  for (int i = 1;i < SCTel->fNs; i++) {
+    (SCTel->fS)[i] = TMath::Power(fF,  iPowerF)* ((opt->fzs[i]));  
+    if (printParameters) {
+      *oLog << "  " <<  i << "       " << iPowerF
+            << "       " << opt->fzs[i] << "       " << (SCTel->fS)[i] << endl;
+    }
+    iPowerF = iPowerF -2;
+  }
+  if (printParameters) *oLog << endl;
 
   // primary segment details
   SCTel->iNumP1Mirrors = opt->iNumP1Mirrors;

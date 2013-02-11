@@ -239,35 +239,67 @@ void GSCTelescope::buildTelescope(bool os8)
   // 14th order polynomials
   // fitted with gnuplot by Akira
   const int kNPar = iNParP;
-  //const int kNPar = iNParP;
-  
-  const double kzp[] = {TMath::Power(kFp,  1)*fzp[0],
-			//double kzp[kNPar] = {TMath::Power(kFp,  1)*fzp[0],
-			TMath::Power(kFp, -1)*fzp[1],
-			TMath::Power(kFp, -3)*fzp[2],
-			TMath::Power(kFp, -5)*fzp[3],
-			TMath::Power(kFp, -7)*fzp[4],
-			TMath::Power(kFp, -9)*fzp[5],
-			TMath::Power(kFp,-11)*fzp[6],
-			TMath::Power(kFp,-13)*fzp[7]};
+
+  bool printcoeff = true;
+ 
+  double kzp[iNParP];
+  kzp[0] = TMath::Power(kFp,  1)*fzp[0];
+  if (printcoeff) {
+    *oLog << " primary ip fpPower  fzp[ip] kzp[ip] " << "0" 
+          << "   " << "1" << "   " << fzp[0] << "   " 
+          << kzp[0] << endl;
+  }
+   int fpPower = -1;
+  for (int ip = 1;ip<iNParP;ip++) {
+    kzp[ip] = TMath::Power(kFp, fpPower)*fzp[ip];
+    if (printcoeff) {
+      *oLog << " primary ip fpPower  fzp[ip] kzp[ip] " << ip 
+            << "   " << fpPower << "   " << fzp[ip] << "   " 
+            << kzp[ip] << endl;
+    }
+    fpPower = fpPower -2;
+  }
+
+  //const double kzp[] = {TMath::Power(kFp,  1)*fzp[0],
+  //double kzp[] = {TMath::Power(kFp,  1)*fzp[0],
+  //			//double kzp[kNPar] = {TMath::Power(kFp,  1)*fzp[0],
+  //			TMath::Power(kFp, -1)*fzp[1],
+  //			TMath::Power(kFp, -3)*fzp[2],
+  //			TMath::Power(kFp, -5)*fzp[3],
+  //			TMath::Power(kFp, -7)*fzp[4],
+  //			TMath::Power(kFp, -9)*fzp[5],
+  //			TMath::Power(kFp,-11)*fzp[6],
+  //			TMath::Power(kFp,-13)*fzp[7]};
   //const double kzs[kNPar] = {TMath::Power(kFp,  1)*6.45608e-08,
 
-  // to check parameters from stdSCTelescope record
-  if (1) {
-    *oLog << " secondary parameter array fzs " << endl;
-    *oLog << " should be same as in configuration file" << endl;
-    for (int ii = 0;ii<8;ii++) {
-      *oLog << " i fzs " << ii << " " << fzs[ii] << endl;
-    }
+
+  double kzs[iNParS];
+  kzs[0] = TMath::Power(kFp,  1)*fzs[0];
+  if (printcoeff) {
+    *oLog << " secondary ip fsPower  fzs[ip] kzs[ip] " << "0" 
+          << "   " << "1" << "   " << fzs[0] << "   " 
+          << kzs[0] << endl;
   }
-  const double kzs[] = {TMath::Power(kFp,  1)*fzs[0],
-			TMath::Power(kFp, -1)*fzs[1],
-			TMath::Power(kFp, -3)*fzs[2],
-			TMath::Power(kFp, -5)*fzs[3],
-			TMath::Power(kFp, -7)*fzs[4],
-			TMath::Power(kFp, -9)*fzs[5],
-			TMath::Power(kFp,-11)*fzs[6],
-			TMath::Power(kFp,-13)*fzs[7]};
+  int fsPower = -1;
+  for (int ip = 1;ip<iNParS;ip++) {
+    kzs[ip] = TMath::Power(kFp, fsPower)*fzs[ip];
+    
+    if (printcoeff) {
+    *oLog << " secondary ip fsPower  fzs[ip] kzs[ip] " << ip 
+          << "   " << fsPower << "   " << fzs[ip] << "   " 
+          << kzs[ip] << endl;
+    }
+    fsPower = fsPower -2;
+  }
+
+  //  const double kzs[] = {TMath::Power(kFp,  1)*fzs[0],
+  //			TMath::Power(kFp, -1)*fzs[1],
+  //			TMath::Power(kFp, -3)*fzs[2],
+  //			TMath::Power(kFp, -5)*fzs[3],
+  //			TMath::Power(kFp, -7)*fzs[4],
+  //			TMath::Power(kFp, -9)*fzs[5],
+  //			TMath::Power(kFp,-11)*fzs[6],
+  //			TMath::Power(kFp,-13)*fzs[7]};
 
   //  const double kzs[] = {TMath::Power(kFp,  1)*6.45608e-08,
   //			TMath::Power(kFp, -1)*-0.416688,

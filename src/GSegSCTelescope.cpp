@@ -225,7 +225,8 @@ void GSegSCTelescope::makePrimarySecondaryDisks() {
     *oLog << "   primary coefficients " << endl;
     *oLog << "   fNp " << fNp << endl;
     for (int i = 0;i<fNp; i++ ) {
-      *oLog << "   i/fNp " << i << " " << fP[i] << endl;
+      *oLog << "   i  fp[i] " << i << "   " << fP[i] << endl;
+      *oLog << "     fzp[i]    " << fzp[i] << endl;
     }
   }
   fPrimaryV->SetPolynomials(fNp - 1, &fP[1], fNp - 1, &fP[1]);
@@ -235,7 +236,8 @@ void GSegSCTelescope::makePrimarySecondaryDisks() {
     *oLog << "   secondary coefficients " << endl;
     *oLog << "   fNs " << fNs << endl;
     for (int i = 0;i<fNs; i++ ) {
-      *oLog << "   i/fNs " << i << " " << fS[i] << endl;
+      *oLog << "   i  fs " << i << "   " << fS[i] << endl;
+      *oLog << "      fzs[i] " << fzs[i] << endl;
     }
   }
   fSecondaryV = new AGeoAsphericDisk("secondaryV",
