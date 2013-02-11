@@ -251,14 +251,32 @@ void GSCTelescope::buildTelescope(bool os8)
 			TMath::Power(kFp,-11)*fzp[6],
 			TMath::Power(kFp,-13)*fzp[7]};
   //const double kzs[kNPar] = {TMath::Power(kFp,  1)*6.45608e-08,
-  const double kzs[] = {TMath::Power(kFp,  1)*6.45608e-08,
-			TMath::Power(kFp, -1)*-0.416688,
-			TMath::Power(kFp, -3)*-0.144035,
-			TMath::Power(kFp, -5)*0.647955,
-			TMath::Power(kFp, -7)*-2.96087,
-			TMath::Power(kFp, -9)*9.39256,
-			TMath::Power(kFp,-11)*-18.0811,
-			TMath::Power(kFp,-13)*15.3711};
+
+  // to check parameters from stdSCTelescope record
+  if (1) {
+    *oLog << " secondary parameter array fzs " << endl;
+    *oLog << " should be same as in configuration file" << endl;
+    for (int ii = 0;ii<8;ii++) {
+      *oLog << " i fzs " << ii << " " << fzs[ii] << endl;
+    }
+  }
+  const double kzs[] = {TMath::Power(kFp,  1)*fzs[0],
+			TMath::Power(kFp, -1)*fzs[1],
+			TMath::Power(kFp, -3)*fzs[2],
+			TMath::Power(kFp, -5)*fzs[3],
+			TMath::Power(kFp, -7)*fzs[4],
+			TMath::Power(kFp, -9)*fzs[5],
+			TMath::Power(kFp,-11)*fzs[6],
+			TMath::Power(kFp,-13)*fzs[7]};
+
+  //  const double kzs[] = {TMath::Power(kFp,  1)*6.45608e-08,
+  //			TMath::Power(kFp, -1)*-0.416688,
+  //			TMath::Power(kFp, -3)*-0.144035,
+  //			TMath::Power(kFp, -5)*0.647955,
+  //			TMath::Power(kFp, -7)*-2.96087,
+  //			TMath::Power(kFp, -9)*9.39256,
+  //			TMath::Power(kFp,-11)*-18.0811,
+  //			TMath::Power(kFp,-13)*15.3711};
   
   //////////////// Make the primary mirror ////////////////////////
   AGeoAsphericDisk* primaryV = 0;
