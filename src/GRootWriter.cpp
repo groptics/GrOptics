@@ -124,6 +124,12 @@ GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
   fTree->Branch( "eventNumber", &fEventNumber, "eventNumber/i" );
   fTree->Branch( "primaryType", &fPrimaryType, "primaryType/i" );
   fTree->Branch( "primaryEnergy", &fPrimaryEnergy, "primaryEnergy/F"  );
+
+  //CD:2Mar2015  3 new branches
+  fTree->Branch( "FirstIntHgt", &fFirstIntHgt,"FirstIntHgt/F" );
+  fTree->Branch( "FirstIntDpt", &fFirstIntDpt,"FirstIntDpt/F" );
+  fTree->Branch( "ShowerID",&iShowerID,"ShowerID/i" );
+
   fTree->Branch( "Xcore", &fXcore, "Xcore/F" );
   fTree->Branch( "Ycore", &fYcore, "Ycore/F" );
   fTree->Branch( "Xcos", &fXcos, "Xcos/F" );
@@ -189,6 +195,8 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
 			  const double &transitTime, const double &azTel,const double &znTel,
                           const double &azPrim, const double &znPrim,
                           const double &srcX,const double &srcY,
+                          const double &firstIntHgt, const double &firstIntDpt,
+                          const unsigned int &showerID,
 
                           const ROOT::Math::XYZVector &vSCoreTC,
                           const ROOT::Math::XYZVector &vSDcosTC,
@@ -196,7 +204,6 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
                           const ROOT::Math::XYZVector &vSDcosSC,
                           
                           const ROOT::Math::XYZVector &vTelLocTC
-
                           ) {
 
 
@@ -231,6 +238,10 @@ int GRootWriter::addEvent(const unsigned int &eventNumber, const unsigned int &p
   fSrcRelToCameraX = (float)srcX*(TMath::RadToDeg());
   fSrcRelToCameraY = (float)srcY*(TMath::RadToDeg());
 
+  fFirstIntHgt = (float)firstIntHgt;
+  fFirstIntDpt = (float)firstIntDpt;
+  iShowerID    = showerID;
+    
   // debug branches
   fXcoreTC = (float)vSCoreTC.X();
   fYcoreTC = (float)vSCoreTC.Y();

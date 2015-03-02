@@ -33,6 +33,11 @@ class GReadPhotonGrISU: public GReadPhotonBase {
   double fSAz;          //!< primary azimuth (radians)
   double fSZn;          //!< primary zenith angle (radians)
   int iSSeed[3];        //!< up to three seeds from primary record
+  // new parameters CD:2Mar2015
+  double fFirstIntHgt;
+  double fFirstIntDpt;
+  unsigned int iShowerID;
+
   ROOT::Math::XYZVector vSCore; //!< core loc.vec. ground coors.(meters)
   ROOT::Math::XYZVector vSDcos; //!< core dir.cosines; grd coors.
 
@@ -102,7 +107,9 @@ class GReadPhotonGrISU: public GReadPhotonBase {
    */
   bool getPrimary(ROOT::Math::XYZVector *pCore, 
                   ROOT::Math::XYZVector *pDCos,double *Az,
-                  double *Zn, double *energy, unsigned int *particleType);
+                  double *Zn, double *energy, unsigned int *particleType,
+                  double *firstIntHgt, double *firstIntDpt,
+                  unsigned int *showerid);
 
 
   /*!  getPhoton

@@ -54,7 +54,8 @@ enum MirSeg {P1,P2,S1,S2};
 
 /*!// record type for GrISU input files,S,P,R,H,eof lines
  */
-enum GrISURecType {SREC,PREC,RREC,HREC,EOFREC};
+// CD:2Mar2015 added C record CREC
+enum GrISURecType {SREC,PREC,RREC,HREC,CREC,EOFREC};
 
 /*!// type for rayplots 
  */

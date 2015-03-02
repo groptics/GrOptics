@@ -51,6 +51,11 @@ class GRootWriter
    float        fSrcRelToCameraX;
    float        fSrcRelToCameraY;
 
+  //CD:2Mar2015  new parameters
+  float fFirstIntHgt;
+  float fFirstIntDpt;
+  unsigned int iShowerID;
+
    // debug branch variables
    float        fXcoreTC;
    float        fYcoreTC;
@@ -101,12 +106,14 @@ class GRootWriter
                 const double &azTel,const double &znTel,
                 const double &azPrim, const double &znPrim,
                 const double &srcX,const double &srcY,
+                const double &firstIntHgt, const double &firstIntDpt,
+                const unsigned int &showerID,
                 
                 const ROOT::Math::XYZVector &vSCoreTC,
                 const ROOT::Math::XYZVector &vSDcosTC,
                 const ROOT::Math::XYZVector &vSCoreSC,
                 const ROOT::Math::XYZVector &vSDcosSC,
-                 const ROOT::Math::XYZVector &vTelLocTC
+                const ROOT::Math::XYZVector &vTelLocTC
                 );
 
    TTree*  getDataTree() { return fTree; };

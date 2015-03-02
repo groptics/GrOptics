@@ -234,6 +234,9 @@ bool GReadPhotonGrISU::getLine() {
     else if (c == 'P') { // photon record type
       eRecType = PREC;
     }
+    else if (c =='C') {   // C record
+      eRecType = CREC;
+    }
     else {
       cerr << "  unknown record type in input file" << endl;
       cerr << "  record:  " << sFileLine << endl;
@@ -257,7 +260,9 @@ bool GReadPhotonGrISU::getLine() {
 bool GReadPhotonGrISU::getPrimary(ROOT::Math::XYZVector *pCore, 
 				  ROOT::Math::XYZVector *pDCos,double *Az,
 				  double *Zn, double *energy, 
-				  unsigned int *particleType) {
+				  unsigned int *particleType,
+                                  double *firstIntHgt, double *firstIntDpt,
+                                  unsigned int *showerid) {
   *particleType = iParticleType; // from header
 
   bool debugS = false;
@@ -281,10 +286,15 @@ bool GReadPhotonGrISU::getPrimary(ROOT::Math::XYZVector *pCore,
     double fSYcos  = 0.0;
     double fSZcos  = 0.0;
 
+    //CD:2Mar2015 default values
+    fFirstIntHgt = -999.9;
+    fFirstIntDpt = -9999.9;
+    iShowerID     = 99;
+
     // read primary parameters from string stream 
     is >> c >> fSEnergy >> fSXcore >> fSYcore >> fSXcos >> fSYcos
        >> tmp >> iSSeed[0] >> iSSeed[1] >> iSSeed[2];
-    
+
     // the input coordinate system has x-axis East, y-axis South,
     // and z-axis Down. Our ground coor. system has x-axis East,
     // y-axis North, and z-axis Up. Thus, we have to reflect the y axis
@@ -317,6 +327,11 @@ bool GReadPhotonGrISU::getPrimary(ROOT::Math::XYZVector *pCore,
     *pDCos = vSDcos;
     *energy=fSEnergy;
 
+    //CD:new parameters
+    *firstIntHgt = fFirstIntHgt;
+    *firstIntDpt = fFirstIntDpt;
+    *showerid    = iShowerID;
+   
     // get zenith angle and azimuth without adding wobble
 
     GUtilityFuncts::XYcosToAzZn(-fSXcos, -fSYcos,&fSAz,&fSZn);
@@ -330,13 +345,36 @@ bool GReadPhotonGrISU::getPrimary(ROOT::Math::XYZVector *pCore,
     }
 
     if (debugS) *oLog << "        ready to get next line " << endl;
-    getLine();  // get the next input record for use later
+
+    // get C line if it's there
+    getLine();
+    istringstream is1(sFileLine);
+    char c1;
+
+    if (eRecType == CREC) {
+      is1 >> c1 >> fFirstIntHgt >> fFirstIntDpt >> iShowerID;  // C line parms
+      *firstIntHgt = fFirstIntHgt;
+      *firstIntDpt = fFirstIntDpt;
+      *showerid    = iShowerID;
+      is1.str("");
+      is1.clear();
+      getLine();
+  }
+
+  else {
+    *oLog << "R record out of place or nonexistant in input file" << endl;
+    *oLog << "fileline read " << sFileLine << endl;
+    *oLog << "    STOPPING CODE " << endl;
+    exit(0);
+  }
+
+    //getLine();  // get the next input record for use later
 
   }
   if (debugS) {
     *oLog << "   end of GReadPhotonGrISU::getPrimary" << endl;
   }
- 
+
   return okReadS;
   
 };

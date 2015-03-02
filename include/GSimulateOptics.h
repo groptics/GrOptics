@@ -54,6 +54,11 @@ class GSimulateOptics {
   unsigned int fEventNumber;
   unsigned int fPrimaryType;
   double        fPrimaryEnergy;
+  //CD:2Mar2015  new parameters
+  double fFirstIntHgt;
+  double fFirstIntDpt;
+  unsigned int iShowerID;
+
   //double        fXcore;
   //double         fYcore;
   //double         fXcos;

@@ -55,7 +55,10 @@ class GReadPhotonBase {
    */
   virtual bool getPrimary(ROOT::Math::XYZVector *pCore, 
                           ROOT::Math::XYZVector *pDCos,double *Az,
-                          double *Zn, double *energy, unsigned int *particleType) = 0;
+                          double *Zn, double *energy, 
+                          unsigned int *particleType,
+                          double *firstIntHgt, double *firstIntDpt,
+                          unsigned int *showerid) = 0;
 
   /*!  getPhoton
        get cherenkov photon details from current record

@@ -144,7 +144,9 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
     // get the primary details from the reader
     primaryFlag = reader->getPrimary(&vSCore,&vSDcosGd,
                                      &fAzPrim,&fZnPrim,
-				     &fPrimaryEnergy,&fPrimaryType);
+				     &fPrimaryEnergy,&fPrimaryType,
+                                     &fFirstIntHgt,&fFirstIntDpt,
+                                     &iShowerID);
     if (!primaryFlag) break;  // no more primaries available
 
     fDelay = 0;
@@ -154,9 +156,7 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
 
     // get the wobble offset
     makeWobbleOffset();
-
     
-
     if (debug) printDebugPrimary();
  
     // set primary in all ArrayTel elements
@@ -268,6 +268,8 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
                                          azTel,znTel,
                                          fAzPrim,fZnPrim,
                                          srcX,srcY,
+                                         fFirstIntHgt,fFirstIntDpt,iShowerID,
+
                                          vSCoreTC,vSDcosTC,
                                          vSCoreSC,vSDcosSC,
                                          vTelLocTC
@@ -389,7 +391,10 @@ void GSimulateOptics::printDebugPrimary() {
   *oLog << "      wobbleR latitude " << fWobbleR*(TMath::RadToDeg())  
         << " " << fLatitude*(TMath::RadToDeg()) << endl;
   *oLog << "      wobbleTN TE from R " << fWobbleTN*(TMath::RadToDeg()) 
-        << " " << fWobbleTE*(TMath::RadToDeg())  << endl; 
+        << " " << fWobbleTE*(TMath::RadToDeg())  << endl;
+  *oLog << "      firstInteractionHeight " << fFirstIntHgt << endl;
+  *oLog << "      firstInteractionDepth  " << fFirstIntDpt << endl;
+  *oLog << "      shower ID "  << iShowerID << endl;
 };
 /************** end of printDebugPhoton ******************/
 
