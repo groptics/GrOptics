@@ -113,6 +113,14 @@ GrOptics accepts input from GrISU compatible photon files.
 
        tag name: v2.6a
 
+       -------------------------------------------------------------------------
+       VERSION 3.1
+       CorsikaIOReader can include a C line following the S line in the
+       GrISU-type input file. The C line parameters are simply passed to
+       the root file and written to three new branches in each telescope
+       tree.  So, there is some duplication in the telescope output trees
+
+       tag name: v3.1
 
 1. Installation
 
