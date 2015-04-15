@@ -359,16 +359,8 @@ bool GReadPhotonGrISU::getPrimary(ROOT::Math::XYZVector *pCore,
       is1.str("");
       is1.clear();
       getLine();
-  }
-
-  else {
-    *oLog << "R record out of place or nonexistant in input file" << endl;
-    *oLog << "fileline read " << sFileLine << endl;
-    *oLog << "    STOPPING CODE " << endl;
-    exit(0);
-  }
-
-    //getLine();  // get the next input record for use later
+    }
+    //if C record is not present, set to default values
 
   }
   if (debugS) {
