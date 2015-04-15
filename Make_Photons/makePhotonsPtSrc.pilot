@@ -1,0 +1,49 @@
+  version: 6.1.0    date: 2014-05-06
+   makePhotonsPtSrc.cpp produces a grisudet compatible .cph file 
+   of cherenkov photons from a designated point source. 
+   The photons are randomly placed on the telescope area with  
+   radius increased by 10%.  Telescope locations and radii are from 
+   a standard GrISU telescope configuration file. The code has 
+   a ROOT dependency. All input information designated by this pilot file.
+
+   All log information goes to cerr.
+
+   Testing of this code is straightforward using a photon_history debug
+   file (see the DEBUG record in detector.pilot). This history file may
+   be converted to a root tree in GrISU/Utilities/Diagnostics.
+
+   usage:  makePhotonsPtSrc [name of pilotfile: default makePhotonsPtSrc.pilot]
+
+   Coor.System: ground X(East), Y(North), Z(up). When pointing to zenith
+   as is always the case here, the telescope axes are parallel to these
+   ground coordinate axes.  The camera axes are slightly different, camera
+   X axis is parallel to the telescope x axis; the camera y axis is
+   opposite to the telescope y axis (thus permitting x camera to the right and y
+   camera up when facing the camera with telescope in stow position).
+
+    OUTFL <filename: default stdout> 
+    formatted as .cph input file to grisudet
+* OUTFL starPtSrc.cph
+
+    CONFG  <filename: no default>
+	GrISU-type configuration file,
+	needed for telescope locations and radii
+ CONFG ../../Config/Files/veritas2013Feb1_GrISU_version5.0.0.cfg
+* CONFG ../../Config/Files/veritas2013Sept16_GrISU_version6.0.0.cfg
+
+    NUMBR <numevents: default 1> <numphotons: default 10000
+* NUMBR  1 500000
+
+  SRCPT <x:default 0.0> <y: default 0.0> <z:default 10000.0>
+  photon point source location, ground system coor.system: 
+       x: East, y:North, z:Up, origin at array origin, i.e.
+       same coor. system as telescope locations in config. file.
+       The height is not from sea level!
+* SRCPT 10.0 20.0 10000.0
+
+    SEEDR <integer: default 0>
+       random number generator seed for TRandom3
+* SEEDR 63565
+
+H record in cph file, height of observatory, default 1277.06
+* OBSER 1277.06

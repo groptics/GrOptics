@@ -1,0 +1,64 @@
+#  version: 6.1.0    date: 2014-05-06
+ # Makefile.common
+#  Version 2.0, removed gsl and tmva libraries
+#     C. Duke
+# Grinnell College
+# May, 2011
+
+
+# Makefile.common to be included at the beginning of all Makefiles for
+# compiling and linking GrISep code, can be used for non-GrISep applications
+
+SHELL=bash
+
+MAKEFLAGS = --no-print-directory -r -s 
+
+# -----------------------------------------------------------------------------
+# Architecture dependent compile / link options
+# -----------------------------------------------------------------------------
+# find the machine architecture
+ARCH :=$(shell uname)
+DLLSUFF :=
+
+# linux flags
+ifeq ($(ARCH),Linux)
+DLLSUFF       =.so
+CXX           = g++ 
+ARCHCFLAGS    = -g -Wall -fPIC  -fno-strict-aliasing  -D_FILE_OFFSET_BITS=64 -D_LARGE_FILE_SOURCE -D_LARGEFILE64_SOURCE 
+LD            = g++
+ARCHLDFLAGS   = -O
+ARCHSOFLAGS   = -shared
+
+endif
+
+# Apple OS X flags
+ifeq ($(ARCH),Darwin)
+DLLSUFF       =.dylib
+CXX           = g++ 
+
+#ARCHCFLAGS    = -g -Wall -fPIC  -fno-strict-aliasing 
+ARCHCFLAGS    = -O2 -pipe -Wall -W -Woverloaded-virtual -Wshadow
+LD            = MACOSX_DEPLOYMENT_TARGET=10.5 g++
+ARCHLDFLAGS   = -O2 -bind_at_load 
+#-O -bind_at_load
+#ARCHSOFLAGS   = -dynamiclib -single_module -undefined dynamic_lookup
+ARCHSOFLAGS   = -dynamiclib -undefined dynamic_lookup
+
+endif
+
+
+CXXFLAGS      = $(ARCHCFLAGS) $(ROOTCFLAGS)
+LDFLAGS       = $(ARCHLDFLAGS) $(ROOTLDFLAGS)
+LIBS          =  $(ROOTLIBS) $(ROOTGLIBS) 
+
+OutPutOpt     = -o
+
+# -----------------------------------------------------------------------------
+# Root
+# -----------------------------------------------------------------------------
+ROOTCFLAGS   := $(shell root-config --cflags)
+ROOTLDFLAGS  := $(shell root-config --ldflags)
+ROOTLIBS     := $(shell root-config --libs) -lMinuit -lTreePlayer -lGenVector 
+ROOTLIBS += -lGeomBuilder  -lGeomPainter  -lGeom -lGed
+ROOTGLIBS    := $(shell root-config --glibs) 
+
