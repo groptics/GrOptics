@@ -28,9 +28,6 @@ OBJECTS =  VG_Pilot.o GUtilityFuncts.o
 # links the application code to library routines
 # and removes the .o application file.
 
-.PHONY: all
-all: makePhotonsOffset makePhotonsPtSrc
-
 makePhotonsOffset:: makePhotonsOffset.o  $(OBJECTS)
 	@echo "linking makePhotonsOffset"
 	$(LD) $(LDFLAGS) -g  $^  $(LIBS)  $(OutPutOpt) $@

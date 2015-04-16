@@ -2,4 +2,42 @@ April 2015
 Charlie Duke
 Grinnell College
 
-All documentation is in the pilot files.
+see the pilot files for more documentation
+
+usage: using the repository makePhotonsOffset.pilot
+       
+          make
+          makePhotonsOffset
+
+to create the veritasStarOffset.cph file containing 500,000 photons on each
+of the 4 veritas telescopes. Telescope locations and radii are in the
+../Config/veritas.cfg file.  Note that as specified in the
+makePhotonsOffset.pilot, the photons all are incident from the zenith with
+no wobble offset.  
+
+Use veritasStarOffset.cph as the input file to grOptics (set the filename
+in the main grOptics pilot file). From the
+photonhistory files, you, for example, can plot from the treeviewer:
+    facet hits: facetX vs facetY where reflectFlag>0 (successful facet
+    reflections or onFacetFlag > 0 (on facet hits).  
+
+From the photonLocation.root file, a good plot to check the facet
+orientation is photonDcosX vs photonDcosY.  These direction cosines
+describe the direction of the reflected photon (on its way to the camera).
+
+You can also compare the above plots with the shadowing on and with the
+shadowing off to see the effect of shadowing and to test the shadowing geometry.
+
+------------------------------------------------------------------
+I'll make this code easier to use over the next month and will make the
+documentation specific to GrOptics rather than to GrISU. In the meanwhile,
+the code is easy to use provided that you:
+
+    Make sure the telescope locations are the same in both the array
+    configuration file and the Davies-Cotton configuration file. 
+
+    Make sure that the number of telescope record in the DC configuration
+    file is correct.
+
+
+

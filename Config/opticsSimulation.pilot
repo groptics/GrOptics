@@ -45,6 +45,9 @@ same type input file as for grisudet.
 FILEIN <filename>  
 * FILEIN ./Config/photon.cph
 
+see GrOptics/Make_Photons/README 
+ FILEIN ./Make_Photons/veritasStarOffset.cph
+
 camera output root file specification type
       - root file name
       - name for tree containing parameters common to all photons
