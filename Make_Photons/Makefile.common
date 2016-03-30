@@ -37,9 +37,9 @@ DLLSUFF       =.dylib
 CXX           = g++ 
 
 #ARCHCFLAGS    = -g -Wall -fPIC  -fno-strict-aliasing 
-ARCHCFLAGS    = -O2 -pipe -Wall -W -Woverloaded-virtual -Wshadow
-LD            = MACOSX_DEPLOYMENT_TARGET=10.5 g++
-ARCHLDFLAGS   = -O2 -bind_at_load 
+ARCHCFLAGS    =  -pipe -Wall -W -Woverloaded-virtual -Wshadow
+LD            = g++
+ARCHLDFLAGS   =  -bind_at_load 
 #-O -bind_at_load
 #ARCHSOFLAGS   = -dynamiclib -single_module -undefined dynamic_lookup
 ARCHSOFLAGS   = -dynamiclib -undefined dynamic_lookup

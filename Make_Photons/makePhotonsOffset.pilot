@@ -1,50 +1,83 @@
-  version: 6.1.0    date: 2014-05-06
-   makePhotonsOffset.cpp produces a grisudet compatible .cph file 
+  version: 2.0
+  date: 28March2016
+
+  pilot file for makePhotonsOffset
+
+   This code is useful for testing ray tracing through any type ACT
+   telescope. Given a telescope pointing direction (Azimuth and zenith
+   angle), the photons can selectively all be parallel to the telescope
+   direction, can all be offset at a fixed direction relative to the
+   telescope direction, or can all be randomly placed in a circle on
+   the sky centered on a point offset from the telescope direction.
+   These options facilitate determining e.g. point-spread functions and
+   other measures of the telescope performance.
+
+   /////////////////////////////////////////////////////////////////////
+
+   makePhotonsOffset.cpp produces a grisudet or grOptics compatible .cph file 
    of cherenkov photons offset from a specified primary direction. 
    The photons are randomly placed on the telescope area with  
    radius increased by 10%.  Telescope locations and radii are from 
-   a standard GrISU telescope configuration file. The code has 
-   a ROOT dependency. All input information designated by this pilot file.
+   a standard veritas GrISU or GrOptics telescope configuration file. The code has 
+   a ROOT dependency. 
 
-   All log information goes to cerr.
+   All log and debug information goes to cerr.
 
-   Testing of this code is straightforward using a photon_history debug
-   file (see the DEBUG record in detector.pilot). This history file may
-   be converted to a root tree in GrISU/Utilities/Diagnostics.
+   Testing of this code is straightforward using a photonHistory.root debug
+   file from grOptics. Or, when using grisudet, create a photonhistory file
+   (see detector.pilot) and use the utility code to move the history data
+   into a root file.
 
-   usage:  makePhotonsOffset [name of pilotfile: default makePhotonsPtSrc.pilot]
+   usage:  makePhotonsOffset [name of pilotfile: default makePhotonsOffset.pilot
 
-   Coor.System: ground X(East), Y(North), Z(up). When pointing to zenith
-   as is always the case here, the telescope axes are parallel to these
-   ground coordinate axes.  The camera axes are slightly different, camera
-   X axis is parallel to the telescope x axis; the camera y axis is
-   opposite to the telescope y axis (thus permitting x camera to the right and y
+   Coor.System: ground X(East), Y(North), Z(up). When pointing to zenith,
+   the telescope axes are parallel to these ground coordinate axes.
+   The camera axes are slightly different, camera X axis is parallel to
+   the telescope x axis; the camera y axis is opposite to the telescope
+   y axis (thus permitting x camera to the right and y
    camera up when facing the camera with telescope in stow position).
 
     OUTFL <filename: default stdout> 
-    formatted as .cph input file to grisudet
+    formatted as .cph input file to grOptics or to grisudet
+    Default (no asterisk): stdout
 * OUTFL veritasStarOffset.cph
 
     CONFG  <filename: no default>
 	GrISU-type configuration file,
 	needed for telescope locations and radii only
 
+Uses only telescope location and radii from the veritas configuration file
 * CONFG ../Config/veritas.cfg
 
-    NUMBR <numevents: default 1> <numphotons: default 10000
-* NUMBR  1 500000
+NUMBR <numevents: default 1> <numphotons: default 10000 >
+* NUMBR  1 100000
 
-    SEEDR <integer: default 0>
-       random number generator seed for TRandom3
+SEEDR <integer: default 0> random number generator seed for TRandom3
 * SEEDR 63565
 
 H record in cph file, height of observatory, default 1277.06
 * OBSER 1277.06
 
 azimuth and zenith angle of primary (degrees).
-* AZZN 0.0 0.0
+* AZZN 0.0 30.0
 
-telescope wobble offset (latitude 90 deg - wobbleE and wobbleN, see
-detector.pilot for more details about the wobble offset) in degrees
- SOURCE 0.5 1.0
-* SOURCE 0.0 0.0
+The OFFSET record sets the direction of the Cherenkov photons. 
+With zero wobble offset (wobbleX/Y/R = 0.0), all photons are parallel
+to the primary.  When wobbleR = 0.0, all photons are offset by WobbleX/Y
+to the primary and all have the same direction.  With WobbleR > 0.01,
+the photon directions are uniformly distributed within the WobbleR circle
+with center at WobbleX/Y.
+
+The observatory latitude is set in the code to 90 degrees so that wobble X and
+wobble Y are along the camera axes. See detector.pilot or
+opticsSimulation.pilot for a more detailed description of the coordinate
+systems.
+OFFSET <WobbleX> <WobbleY> <WobbleR>
+default values (no asterisk) all 0.0
+* OFFSET 0.0 1.0 0.4
+ OFFSET 0.0 0.0 0.0
+
+for debugging only, prints lots of intermediate steps.  Use with a small
+number of photons. Prints to cerr.
+Turn on with "* DEBUG 1", default is off, i.e. "* DEBUG 0"
+* DEBUG 0
