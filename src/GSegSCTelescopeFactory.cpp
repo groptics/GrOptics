@@ -102,12 +102,24 @@ SegSCStdOptics::SegSCStdOptics() {
   bCameraFlag = false;
   fPixelSize = 0.0;            // Width of a MAPMT pixel
   fMAPMTWidth = 0.0;           // Housing width
+  fSubCells = 0;               // Module divided into fSubCells^2 subcells  
   fMAPMTLength = 0.0;          // between input window and anode pins
   fInputWindowThickness = 0.0; // Thickness of the input window
   fMAPMTGap = 0.0;
   fMAPMTRefIndex = 0.0;
   fMAPMTOffset = 0.0;
   bSingleMAPMTmodule = false;
+
+  // Entrance Window Parameters
+
+  bEntranceWindowFlag      = false;
+  bEntranceWindowAbsFlag   = false;
+  fEntranceWindowThickness = 0.0;
+  fEntranceWindowN         = 0.0;
+  fEntranceWindowAbsLength = 0.0;
+  fEntranceWindowOffset    = 0.0;
+
+  //
 
   iNParP = 0;
   iNParS = 0;
@@ -198,8 +210,21 @@ void SegSCStdOptics::printSegSCStdOptics() {
         << fKappa1 << " " << fKappa2 << " " 
         << fRf << endl;
   
+  *oLog << "        bpBaffleFlag  " << bpBaffleFlag << endl;
+  *oLog << "        fpBLen        " << fpBLen << endl;
+  *oLog << "        fpBTilt       " << fpBTilt << endl;
+  *oLog << "        fpBRadOffset  " << fpBRadOffset << endl;
+  *oLog << "        fpBZOffset    " << fpBZOffset << endl;
+ 
+  *oLog << "        bsBaffleFlag  " << bsBaffleFlag << endl;
+  *oLog << "        fsBLen        " << fsBLen << endl;
+  *oLog << "        fsBTilt       " << fsBTilt << endl;
+  *oLog << "        fsBRadOffset  " << fsBRadOffset << endl;
+  *oLog << "        fsBZOffset    " << fsBZOffset << endl;
+ 
   *oLog << "        bCameraFlag  " << bCameraFlag << endl;
   *oLog << "        fPixelSize   " << fPixelSize << endl;
+  *oLog << "        fSubCells   " << fSubCells << endl;
   *oLog << "        fMAPMTWidth   " << fMAPMTWidth << endl;
   *oLog << "        fMAPMTLength   " << fMAPMTLength << endl;
   *oLog << "        fInputWindowThickness   " << fInputWindowThickness << endl;
@@ -439,10 +464,24 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SCTel->fRf     = opt->fRf;
   SCTel->fZf     = opt->fZf;
 
-  SCTel->bCameraFlag = opt->bCameraFlag;
+  // primary baffle
+  SCTel->bpBaffleFlag = opt->bpBaffleFlag;
+  SCTel->fpBRadOffset = opt-> fpBRadOffset;
+  SCTel->fpBLen = opt-> fpBLen;
+  SCTel->fpBZOffset = opt-> fpBZOffset;
+  SCTel->fpBTilt = opt-> fpBTilt;
 
+  // secondary baffle
+  SCTel->bsBaffleFlag = opt->bsBaffleFlag;
+  SCTel->fsBRadOffset = opt-> fsBRadOffset;
+  SCTel->fsBLen = opt-> fsBLen;
+  SCTel->fsBZOffset = opt-> fsBZOffset;
+  SCTel->fsBTilt = opt-> fsBTilt;
+ 
   // camera
+  SCTel->bCameraFlag = opt->bCameraFlag;
   SCTel->fPixelSize   = opt->fPixelSize;
+  SCTel->fSubCells   = opt->fSubCells;
   SCTel->fMAPMTWidth  = opt->fMAPMTWidth;
   SCTel->fMAPMTLength = opt->fMAPMTLength;
   SCTel->fInputWindowThickness   = opt->fInputWindowThickness;
@@ -450,6 +489,17 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SCTel->fMAPMTGap    = opt->fMAPMTGap;
   SCTel->fMAPMTRefIndex   = opt->fMAPMTRefIndex;
   SCTel->bSingleMAPMTmodule = opt->bSingleMAPMTmodule;
+
+  // entrance window
+
+  SCTel->bEntranceWindowFlag      = opt->bEntranceWindowFlag;
+  SCTel->bEntranceWindowAbsFlag   = opt->bEntranceWindowAbsFlag;
+  SCTel->fEntranceWindowThickness = opt->fEntranceWindowThickness;
+  SCTel->fEntranceWindowN         = opt->fEntranceWindowN;
+  SCTel->fEntranceWindowAbsLength = opt->fEntranceWindowAbsLength;
+  SCTel->fEntranceWindowOffset    = opt->fEntranceWindowOffset;
+
+  //
 
   SCTel->fFocalSurfaceXOffset     = opt->fFocalSurfaceXOffset;
   SCTel->fFocalSurfaceYOffset     = opt->fFocalSurfaceYOffset;

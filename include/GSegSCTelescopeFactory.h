@@ -79,10 +79,29 @@ struct SegSCStdOptics {
   Double_t* fP;   // Polynomial coefficients (p0, p1 ...)
   Double_t* fS;   // Polynomial coefficients (s0, s1 ...)
 
+  // Primary baffle
+
+  bool bpBaffleFlag;
+  Double_t fpBRadOffset;
+  Double_t fRpBMaxOffset;
+  Double_t fpBLen;
+  Double_t fpBZOffset;
+  Double_t fpBTilt;
+
+  // Secondary baffle
+
+  bool bsBaffleFlag;
+  Double_t fsBRadOffset;
+  Double_t fRsBMaxOffset;
+  Double_t fsBLen;
+  Double_t fsBZOffset;
+  Double_t fsBTilt;
+
   // MAPMT Parameters
   bool bCameraFlag;
   Double_t fPixelSize;            // Width of a MAPMT pixel
   Double_t fMAPMTWidth;           // Housing width
+  Int_t fSubCells;                // Module divided into fSubCells^2 subcells
   Double_t fMAPMTLength;          // between input window and anode pins
   Double_t fInputWindowThickness; // Thickness of the input window
   Double_t fMAPMTGap;
@@ -90,6 +109,16 @@ struct SegSCStdOptics {
   Double_t fMAPMTOffset;
   Bool_t bSingleMAPMTmodule;
 
+  // Entrance window
+
+  bool bEntranceWindowFlag;
+  bool bEntranceWindowAbsFlag;
+  Double_t fEntranceWindowThickness;
+  Double_t fEntranceWindowN;
+  Double_t fEntranceWindowAbsLength;
+  Double_t fEntranceWindowOffset;
+
+  //
   Double_t fFocalSurfaceXOffset;     // xOffset, entered in mm
   Double_t fFocalSurfaceYOffset;     // yOffset, entered in mm
   Double_t fFocalSurfaceZOffset;     // zOffset, entered in mm 
