@@ -207,10 +207,16 @@ namespace GUtilityFuncts {
    void AzZnToRotMat(const double &az,
                      const double &zn,
                      ROOT::Math::Rotation3D *rotM);
+  
    void offsetXYToAzZn(const double &offsetX, const double &offsetY,
                        const double &az, const double &zn,
                        double *azOffset, double *znOffset);
 
+   void tangentPlaneOffset( const double &az  , const double &zn,
+                            const double &az_t, const double &zn_t,
+                            double       *xoff, double       *yoff,
+                            int          *calc_status   ) ;
+   
    bool testZeroFloat(const double &ax);
 
    bool zeroFloatVectorFix(ROOT::Math::XYZVector *vec);

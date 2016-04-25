@@ -116,6 +116,9 @@ GArrayTel::GArrayTel(const ROOT::Math::XYZVector telLocGrd,
   fSrcRelToCameraY = 0.0;
   dStoreLoc = 0;
   dStorePix = 0;
+  fFixedPointing   = false ;
+  fFixedPointingAz = 0.0   ;
+  fFixedPointingEl = 0.0   ;
 
   // initialize rotation matrix
   // will use later in setting up rotation matrix for telCoors.
@@ -156,6 +159,7 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
   fWobbleN = WobbleTNc;
   fWobbleE = WobbleTEc;
   fLatitude = Latitude;
+  double PI = 3.141592654 ;
   
   if (debug) {
     *oLog << "  -- GArrayTel::setPrimary: telID = " << telID << endl;
@@ -179,17 +183,50 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
     *oLog << "        fLatitude " << fLatitude*(TMath::RadToDeg()) << endl;
   }
   
-  // get telescope az and zn
-  GUtilityFuncts::telescopeAzZn(fAzPrim,
-                                fZnPrim,
-                                fWobbleN,
-                                fWobbleE,
-                                fpointingOffsetX,
-                                fpointingOffsetY,
-                                fLatitude,
-                                &fAzTel,&fZnTel,
-                                &fSrcRelToTelescopeX,
-                                &fSrcRelToTelescopeY);
+  // NKH add here
+  if ( fFixedPointing ) {
+    // If fixed pointing is specified, manually set telescope az/zn to a fixed position,
+    // and calculate the event's offset in the tangential camera plane fSrcRelToTelescopeX/Y
+    fAzTel =        fFixedPointingAz   ; 
+    fZnTel = ( PI - fFixedPointingEl ) ;
+    
+    // We have our telescope pointing and our event direction, so we need to compute
+    // the tangent-plane offset of the event in the tangential plane of the telescope
+    int status = -1 ;
+    GUtilityFuncts::tangentPlaneOffset( fAzPrim, fZnPrim, 
+                                        fAzTel , fZnTel, 
+                                        &fSrcRelToTelescopeX,
+                                        &fSrcRelToTelescopeY,
+                                        &status ) ;
+    *oLog << "  fSrcRelToTelescopeX/Y = " << setw(7) << setprecision(5) << fSrcRelToTelescopeX * TMath::RadToDeg() << " " << fSrcRelToTelescopeY * TMath::RadToDeg() << endl;
+    *oLog << "  status                = " << status << endl;
+
+    if ( status != 0 ) {
+      *oLog << endl;
+      *oLog << "Error, cannot process event at az/el " << fAzPrim*TMath::DegToRad() << "," << (90.0 - (fZnPrim*TMath::RadToDeg())) << endl;
+      *oLog << "  when telescope is pointing at az/el " << fAzTel*TMath::DegToRad() << "," << fAzPrim*TMath::RadToDeg() << endl;
+      *oLog << "  These two directions are too far apart (status=" << status << ") when calculating the tangential coordinates of the event, should generall be within 90 deg of each other." << endl;
+      exit(1);
+    }
+    
+  } else {
+    // If fixed pointing is not specified, then compute their 
+    // position from the event position and given wobbles
+
+    // get telescope az and zn
+    GUtilityFuncts::telescopeAzZn(fAzPrim,
+                                  fZnPrim,
+                                  fWobbleN,
+                                  fWobbleE,
+                                  fpointingOffsetX,
+                                  fpointingOffsetY,
+                                  fLatitude,
+                                  &fAzTel,&fZnTel,
+                                  &fSrcRelToTelescopeX,
+                                  &fSrcRelToTelescopeY);
+  
+  }
+
 
   // see the coor.sys memo on README directory, minus sign
   // required to give source location in telescope coordinates.
@@ -688,3 +725,13 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
   fOut->Close();
 };
 /************** end of makeTelescopeTest ***************************/
+
+
+void GArrayTel::setFixedPointing(const bool pointingflag, const double az, const double el ) {
+  // toggle this telescope to only point at a specific azimuth/elevation for the entire run,
+  // will ignore any wobble settings
+  fFixedPointing = pointingflag ;
+  fFixedPointingAz = az ;
+  fFixedPointingEl = el ;
+}
+/************** end of setFixedPointing ***************************/

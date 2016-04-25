@@ -105,6 +105,10 @@ struct Pilot {
   string photonHistoryFile;  //!< 
   string photonHistoryTree;  //!< 
   UInt_t seed;  //!< 
+  
+  bool   fixedPointing   ;
+  double fixedPointingAz ;
+  double fixedPointingEl ;
 
   int telToDraw;
   int telDrawOption;
@@ -502,6 +506,10 @@ else if (telType==SEGSC) {
 					     &mRootWriter,pilot.outFileHeaderTree);
   siO->setWobble(pilot.wobble[0],pilot.wobble[1],
 		 pilot.wobble[2],pilot.latitude);
+  
+  if ( pilot.fixedPointing ) {
+    siO->setFixedPointing( pilot.fixedPointing, pilot.fixedPointingAz, pilot.fixedPointingEl ) ;
+  }
  
   /////////////////////////////////////////////////////////////
   /////// do the simulations (where do we create the output class).
@@ -706,6 +714,9 @@ int pilotPrint(const Pilot &pilot) {
   *oLog << "         testTel   " << pilot.testTel << endl;
   *oLog << "         testTel base filename   " << pilot.testTelFile << endl;
   *oLog << "         debugBranchesFlag       " << pilot.debugBranchesFlag << endl;
+  *oLog << "         fixedPointing " << pilot.fixedPointing << endl;
+  *oLog << "         fixedPointingAz " << pilot.fixedPointingAz << endl;
+  *oLog << "         fixedPointingEl " << pilot.fixedPointingEl << endl;
   *oLog << endl;
 
   return 1;
@@ -742,10 +753,15 @@ int readPilot(Pilot *pilot) {
   pilot->testTelFile = "";
   pilot->debugBranchesFlag = false;
   pilot->iNInitEvents = 100;
+  pilot->fixedPointing   = false ;
+  pilot->fixedPointingAz = 0.0 ;
+  pilot->fixedPointingEl = 0.0 ;
   vector<string> tokens;
   string spilotfile = pilot->pilotfile;
 
   GPilot *pi = new GPilot(spilotfile);
+
+  double PI =  3.141592654;     /*   Value of pi */
 
   string flag = "FILEIN";
   pi->set_flag(flag);
@@ -849,6 +865,27 @@ int readPilot(Pilot *pilot) {
       pilot->testTelFile = tokens.at(1);
     }
   }  
+  flag = "FIXTELAZELDEG" ;
+  pi->set_flag(flag);
+  while (pi->get_line_vector(tokens) >=0) {
+    if (tokens.size() == 2 ) {
+      // read in settings for manually fixing the telescope pointing for the entire run of this program
+      // will ignore any wobbling settings
+      pilot->fixedPointing   = true ;
+      
+      // read in the geographic azimuth in degrees (0deg=GeoNorth, 90deg=East), and switch it to groptic's coordinate system
+      double az = ( atof(tokens.at(0).c_str()) * TMath::DegToRad() ) + PI;
+      if ( az >= 2.0 * PI ) {
+        az -= 2.0 * PI ;
+      }
+      pilot->fixedPointingAz = az ;
+      
+      // read in the telescope elevation in degrees from the horizon, 
+      // and convert it to groptics's coordinate system where elevation is degrees from nadir (add 90)
+      pilot->fixedPointingEl = (PI/2.0) + ( atof(tokens.at(1).c_str()) * TMath::DegToRad() ) ; 
+    }
+  }  
+  
     
   delete pi;
   return 1;

@@ -89,9 +89,12 @@ GSimulateOptics::GSimulateOptics(GReadPhotonBase *read,
   fAzTel       = 0.0;
   iNShowers    = -1;
   iNPhotons    = -1;
+  fFixedPointing   = false ;
+  fFixedPointingAz = 0.0 ;
+  fFixedPointingEl = 0.0 ;
 
   fEventNumber = 0;
-
+  
   sFileHeader  = reader->getHeader();
   fObsHgt      = reader->getObsHeight();
   fGlobalEffic = reader->getGlobalEffic();
@@ -135,6 +138,18 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
   int numPhTmp = iNPhotons;
   if (iNPhotons < 0) numPhTmp = 1;
   
+  if ( fFixedPointing ) {
+    *oLog << "using fixed pointing at Az/El: (" << fFixedPointingAz * TMath::RadToDeg() << "," << fFixedPointingEl * TMath::RadToDeg() << ")" << endl;
+    
+    // set each telescope to use fixed pointing
+    for (iterArrayTel=mArrayTel->begin();
+         iterArrayTel!=mArrayTel->end();
+         iterArrayTel++) {
+      // individually set each telescope to a specific azimuth and elevation
+      iterArrayTel->second->setFixedPointing( fFixedPointing, fFixedPointingAz, fFixedPointingEl ) ;
+    }
+  }
+  
   primaryFlag = false;
   
   // Start of shower loop /////////////////////////////////
@@ -163,6 +178,7 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
     for (iterArrayTel=mArrayTel->begin();
          iterArrayTel!=mArrayTel->end();
          iterArrayTel++) {
+      
       iterArrayTel->second->setPrimary(vSCore,vSDcosGd,fAzPrim,fZnPrim,
                                        fEnergy,fWobbleTN,fWobbleTE,fLatitude);
       //*oLog << " after set Primary " << fWobbleTN*(TMath::RadToDeg()) << " " << fWobbleTE*(TMath::RadToDeg()) << endl;
@@ -331,7 +347,7 @@ void GSimulateOptics::makeWobbleOffset() {
     *oLog << "     fWobbleTN TE  " << fWobbleTN*(TMath::RadToDeg()) 
           << "  " << fWobbleTE*(TMath::RadToDeg()) << endl;    
   }
-
+  
 };
 /************** end of makeWobbleOffset ******************/
 void GSimulateOptics::printDebugTelescope() {
@@ -526,3 +542,14 @@ void GSimulateOptics::fillAllTelTree() {
 //bool test = (i.second < j.second);
 //return test;
 //};
+
+void GSimulateOptics::setFixedPointing( bool useFixedPointing, double az, double el ) {
+  // toggle GSimulateOptics to freeze the telescopes at 
+  // a fixed azimuth and elevation for the entire program
+  // bool useFixedPointing : if true, GSimulateOptics will fix the telescopes to a single az/el
+  //                         set to false to disable it aftwards
+  fFixedPointing   = useFixedPointing ;
+  fFixedPointingAz = az ;
+  fFixedPointingEl = el ;
+}
+/************** end of setFixedPointing *****************/

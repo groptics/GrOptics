@@ -81,6 +81,10 @@ class GSimulateOptics {
   double fZnTel;  //!< zenith angle of telescope (radians)
   double fAzTel;  //!< azimuthal angle of telescop (radians)
   
+  bool   fFixedPointing   ;
+  double fFixedPointingAz ;
+  double fFixedPointingEl ;
+
   ROOT::Math::XYZVector *vTelDcosGrd;
   ROOT::Math::Rotation3D *rotGrdToTel; //!< rotation matrix: GrdCoor to TelCoor.
   double fEnergy;  //!< 
@@ -170,6 +174,9 @@ class GSimulateOptics {
    */
   void printDebugPrimary();
   
+  /*!
+   */
+  void setFixedPointing( bool useFixedPointing, double az_deg, double el_deg ) ;
 };
 
 #endif

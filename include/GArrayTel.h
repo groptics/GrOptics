@@ -55,6 +55,10 @@ class GArrayTel {
   double fSrcRelToCameraX;
   double fSrcRelToCameraY;
 
+  bool   fFixedPointing   ;
+  double fFixedPointingAz ;
+  double fFixedPointingEl ;
+
   // photon parameters
   ROOT::Math::XYZVector vPhotonGrdLocGC; //!< photon grd.loc.ground coors.
   ROOT::Math::XYZVector vPhotonDcosGC;   //!< photon dir.cos.ground coors.
@@ -143,6 +147,8 @@ class GArrayTel {
     tel->setPhotonHistory(rootFile,treeName,option);
   };
 
+  void setFixedPointing(const bool pointingflag, const double az_deg, const double el_deg ) ;
+  
   void writePhotonHistory() {
 
     tel->writePhotonHistory();
