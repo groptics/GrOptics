@@ -351,8 +351,8 @@ void GSCTelescope::buildTelescope(bool os8)
 
 
   cout << " adding primary roughness sigma = " << fPrimRoughSigma << endl;
-  ABorderSurfaceCondition * condition = new ABorderSurfaceCondition(top,primaryMirror);
-  condition->SetGaussianRoughness((fPrimRoughSigma/60.)*TMath::DegToRad());
+  //ABorderSurfaceCondition * condition = new ABorderSurfaceCondition(top,primaryMirror);
+  //condition->SetGaussianRoughness((fPrimRoughSigma/60.)*TMath::DegToRad());
   ////////////////// make secondary mirror /////////////////////
   // make a new volume to place secondary mirror and obscuration later
   // may want to reduce the depth of the box; check distance to focal surface 
@@ -376,8 +376,8 @@ void GSCTelescope::buildTelescope(bool os8)
   secVol->AddNode(secondaryMirror, 1);
 
   cout << " adding secondary roughness sigma = " << fSecondRoughSigma << endl;    
-  ABorderSurfaceCondition * conditionSec = new ABorderSurfaceCondition(secVol,secondaryMirror);
-  conditionSec->SetGaussianRoughness((fSecondRoughSigma/60.)*TMath::DegToRad());
+  //ABorderSurfaceCondition * conditionSec = new ABorderSurfaceCondition(secVol,secondaryMirror);
+  //conditionSec->SetGaussianRoughness((fSecondRoughSigma/60.)*TMath::DegToRad());
    /////////////////////////////////////////////////////
   ////// make Dummy transparent material //////////////
 

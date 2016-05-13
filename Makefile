@@ -22,6 +22,7 @@ vpath %.cpp src
 CXXFLAGS += $(INCLUDEFLAGS)
 
 .PHONY:	all
+#.PHONY all
 all: robast grReaderFactory grOptics
 #all: robast grOptics
 
@@ -80,14 +81,14 @@ $(OBJ)/%.o : %.cpp
 # to create root dictionary using rootcint
 src/GRootDCNavigatorDict.cpp: GRootDCNavigator.h GRootDCNavigatorLinkDef.h
 	@echo "Generating dictionary $< ... "
-	rootcint -v -f $@ -c  $^
-	mv src/GRootDCNavigatorDict.h include/.
+	rootcling -v -f $@ -c  $^
+	#mv src/GRootDCNavigatorDict.h include/.
 	@echo "Done"
 
 src/GRootWriterDict.cpp: GRootWriter.h GRootWriterLinkDef.h
 	@echo "Generating dictionary $< ... "
-	rootcint -v -f $@ -c  $^
-	mv src/GRootWriterDict.h include/.
+	rootcling -v -f $@ -c  $^
+	#mv src/GRootWriterDict.h include/.
 	@echo "Done"
 
 
@@ -95,11 +96,11 @@ src/GRootWriterDict.cpp: GRootWriter.h GRootWriterLinkDef.h
 robast: $(ROOTMAP)
 
 $(ROBAST_TGZ):
-	echo Downloading $(TGZ)
-	curl -L $(ROBAST_URL) > $(ROBAST_TGZ)
+	echo Downloading from $(ROBAST_URL) into $(ROBAST_TGZ)
+	#curl -L $(ROBAST_URL) > $(ROBAST_TGZ)
 
 $(ROBAST_VER): $(ROBAST_TGZ)
-	tar zxvf $(ROBAST_TGZ)
+	#tar zxvf $(ROBAST_TGZ)
 
 $(ROOTMAP): $(ROBAST_VER)
 	cd $(ROBAST_VER);\
@@ -128,7 +129,7 @@ cleanGrOptics:
 cleanRobast: 
 	rm -rf $(ROBAST_VER) $(ROBAST_TGZ)
 
-clean: cleanGrOptics cleanRobast
+clean: cleanGrOptics
 
 DEPEND=echo > Makefile.depend0 &&\
 	makedepend -s "\#DEPEND LIST DONT DELETE" -- $(INCLUDEFLAGS) \
