@@ -322,10 +322,10 @@ void GReadSegSCStd::setupSCFactory() {
     //opt->fMAPMTAngularSize = atof(tokens.at(7).c_str());
     opt->fMAPMTOffset =  atof(tokens.at(7).c_str());
     opt->fMAPMTGap =  atof(tokens.at(8).c_str());
-    if (tokens.size() == 10) {
+    if (tokens.size() > 9) {
       opt->fMAPMTRefIndex =  atof(tokens.at(9).c_str());
     }
-    if (tokens.size() == 11) {
+    if (tokens.size() > 10) {
       Int_t tmpi = atoi(tokens.at(10).c_str());
       if (tmpi > 0) 
         opt->bSingleMAPMTmodule = true;
@@ -333,8 +333,75 @@ void GReadSegSCStd::setupSCFactory() {
         opt->bSingleMAPMTmodule = false;
       }
     }
+    if (tokens.size() > 11) {
+      opt->fSubCells =  atof(tokens.at(11).c_str());
+    }
   }
-  
+
+  flag = "WINDOW"; 
+  pi->set_flag(flag);
+
+  while (pi->get_line_vector(tokens) >=0) {
+    int iStdOptNum = atoi(tokens.at(0).c_str() );
+    opt = SCFac->mStdOptics[iStdOptNum];   
+    int cflag = atoi(tokens.at(1).c_str() );
+    if (cflag) {
+      opt->bEntranceWindowFlag = true;
+    }
+    else {
+      opt->bEntranceWindowFlag = false;
+    }
+    opt->fEntranceWindowThickness = atof(tokens.at(2).c_str() );
+    opt->fEntranceWindowN = atof(tokens.at(3).c_str() );
+    opt->fEntranceWindowOffset = atof(tokens.at(4).c_str() );
+    int aflag = atof(tokens.at(5).c_str() );
+    if (aflag) {
+      opt->bEntranceWindowAbsFlag = true;
+    }
+    else {
+      opt->bEntranceWindowAbsFlag = false;
+    }
+    opt->fEntranceWindowAbsLength = atof(tokens.at(6).c_str() );
+  }
+
+  flag = "PRIMBAFFLE"; 
+  pi->set_flag(flag);
+
+  while (pi->get_line_vector(tokens) >=0) {
+    int iStdOptNum = atoi(tokens.at(0).c_str() );
+    opt = SCFac->mStdOptics[iStdOptNum];   
+    int cflag = atoi(tokens.at(1).c_str() );
+    if (cflag) {
+      opt->bpBaffleFlag = true;
+    }
+    else {
+      opt->bpBaffleFlag = false;
+    }
+    opt->fpBLen = atof(tokens.at(2).c_str() );
+    opt->fpBTilt = atof(tokens.at(3).c_str() );
+    opt->fpBRadOffset = atof(tokens.at(4).c_str() );
+    opt->fpBZOffset = atof(tokens.at(5).c_str() );
+  }  
+
+  flag = "SECONDBAFFLE"; 
+  pi->set_flag(flag);
+
+  while (pi->get_line_vector(tokens) >=0) {
+    int iStdOptNum = atoi(tokens.at(0).c_str() );
+    opt = SCFac->mStdOptics[iStdOptNum];   
+    int cflag = atoi(tokens.at(1).c_str() );
+    if (cflag) {
+      opt->bsBaffleFlag = true;
+    }
+    else {
+      opt->bsBaffleFlag = false;
+    }
+    opt->fsBLen = atof(tokens.at(2).c_str() );
+    opt->fsBTilt = atof(tokens.at(3).c_str() );
+    opt->fsBRadOffset = atof(tokens.at(4).c_str() );
+    opt->fsBZOffset = atof(tokens.at(5).c_str() );
+  }  
+
   /*
   flag = "REFLID"; 
   pi->set_flag(flag);

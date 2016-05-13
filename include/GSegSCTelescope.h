@@ -91,11 +91,13 @@ class GSegSCTelescope : public GTelescope {
   // colors of elements in gl picture (set in initialize method)
   Int_t iPrimaryColor;
   Int_t iSecondaryColor;
+  Int_t iPrimaryObscurationColor;
   Int_t iSecondaryObscurationColor;
   Int_t iMAPMTCathodeColor;
   Int_t iMAPMTWindowColor;
   Int_t iMAPMTObscurationColor;
   Bool_t bSingleMAPMTmodule;
+  Int_t iEntranceWindowColor;
 
   // secondary parameters
   Double_t fRsMax; // Secondary radius max
@@ -136,6 +138,22 @@ class GSegSCTelescope : public GTelescope {
 
   Double_t fRotationOffset;
 
+  // Primary baffle
+
+  bool bpBaffleFlag;
+  Double_t fpBRadOffset;
+  Double_t fpBLen;
+  Double_t fpBZOffset;
+  Double_t fpBTilt;
+
+  // Secondary baffle
+
+  bool bsBaffleFlag;
+  Double_t fsBRadOffset;
+  Double_t fsBLen;
+  Double_t fsBZOffset;
+  Double_t fsBTilt;
+
   // camera and focal surface
   Double_t fKappa1;
   Double_t fKappa2;
@@ -153,7 +171,8 @@ class GSegSCTelescope : public GTelescope {
 
   bool bCameraFlag; //*< if true, use MAPMT camera; false: ideal focal surface
   Double_t fPixelSize; 
-  Double_t fMAPMTWidth; 
+  Double_t fMAPMTWidth;
+  Int_t fSubCells; 
   Double_t fMAPMTLength; 
   Double_t fInputWindowThickness; 
   Double_t fMAPMTOffset; 
@@ -164,6 +183,17 @@ class GSegSCTelescope : public GTelescope {
   Double_t fWindowBottomRelToFocalSurface;
   Double_t fMAPOscurationTopRelToFocalSurface;
   Double_t fCathodeBottomRelToOscurationTop;
+
+  // Entrance window
+
+  bool bEntranceWindowFlag;
+  bool bEntranceWindowAbsFlag;
+  Double_t fEntranceWindowThickness;
+  Double_t fEntranceWindowN;
+  Double_t fEntranceWindowAbsLength;
+  Double_t fEntranceWindowOffset;
+  Double_t fFocalPlaneOffsetCorrection;
+  //
 
   bool bRayPlotModeFlag;
   enum RayPlotType eRayPlotType;
@@ -189,6 +219,8 @@ class GSegSCTelescope : public GTelescope {
   void addSecondaryJ();
 
   void addSecondaryMirror(const char*name, SegmentedMirror *mirror);
+
+  void addPrimaryObscuration();
 
   void addSecondaryObscuration();
 
@@ -216,6 +248,12 @@ class GSegSCTelescope : public GTelescope {
   void addIdealFocalPlane();
 
   void addMAPMTFocalPlane();
+
+  void addEntranceWindow();
+
+  void addPrimaryBaffle();
+
+  void addSecondaryBaffle();
 
   void closeGeometry();
 
