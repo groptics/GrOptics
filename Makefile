@@ -56,7 +56,8 @@ TESTOBJECTS = $(OBJ)/GUtilityFuncts.o $(OBJ)/GDefinition.o
 testUtilities: $(OBJ)/testUtilities.o  $(TESTOBJECTS)
 	@echo "building testUtilities"
 	$(LD) $(LDFLAGS) -pg $(LIBS) $^ $(OutPutOpt) $@
-
+	@echo SRCDIR $(SRCDIR)
+	@echo INCDIR $(INCDIR)
 
 grOptics: $(OBJ)/grOptics.o $(OBJECTS)
 	@echo "building grOptics"
@@ -78,19 +79,34 @@ $(OBJ)/%.o : %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Done"
 
-# to create root dictionary using rootcint
+ifeq ($(ROOTCLING_FOUND),)
+# to create root dictionary using rootcling
 src/GRootDCNavigatorDict.cpp: GRootDCNavigator.h GRootDCNavigatorLinkDef.h
 	@echo "Generating dictionary $< ... "
 	rootcling -v -f $@ -c  $^
-	#mv src/GRootDCNavigatorDict.h include/.
 	@echo "Done"
 
 src/GRootWriterDict.cpp: GRootWriter.h GRootWriterLinkDef.h
 	@echo "Generating dictionary $< ... "
 	rootcling -v -f $@ -c  $^
-	#mv src/GRootWriterDict.h include/.
 	@echo "Done"
 
+else
+# to create root dictionary using rootcint
+src/GRootDCNavigatorDict.cpp: GRootDCNavigator.h GRootDCNavigatorLinkDef.h
+	@echo "Generating dictionary $< ... "
+	rootcint -v -f $@ -c  $^
+	@echo "rootcint SHELL mv src/GRootDCNavigatorDict.h include/."
+	mv $(SRCDIR)/GRootDCNavigatorDict.h $(INCDIR)/.
+	@echo "Done"
+
+src/GRootWriterDict.cpp: GRootWriter.h GRootWriterLinkDef.h
+	@echo "Generating dictionary $< ... "
+	rootcint -v -f $@ -c  $^
+	@echo "rootcint SHELL mv src/GRootWriterDict.h include/."
+	mv $(SRCDIR)/GRootWriterDict.h $(INCDIR)/.
+	@echo "Done"
+endif
 
 
 robast: $(ROOTMAP)
@@ -122,8 +138,19 @@ ldflags:
 libs:
 	@echo "libs:  $(LIBS)"
 
+ifeq ($(ROOTCLING),)
+  TMPV = 1
+endif
+
+testR:
+	@echo ROOTCLING_FOUND $(ROOTCLING_FOUND)
+	@echo PWD $(PWD)
+	@echo TMPV $(TMPV)
+	@echo SRCDIR $(SRCDIR)
+	@echo INCDIR $(INCDIR)
+
 cleanGrOptics: 
-	rm -rf grOptics coorTrans src/*Dict*.cpp include/*Dict*.h obj/*.o \
+	rm -rf grOptics coorTrans src/*Dict* include/*Dict* obj/*.o \
             Makefile.depend 
 
 cleanRobast: 

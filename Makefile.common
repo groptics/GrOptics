@@ -55,6 +55,8 @@ LIBS         += $(ROOTGLIBS) $(GSLLIBS)
 
 OutPutOpt     = -o
 
+SRCDIR := $(shell pwd )/src
+INCDIR := $(shell pwd )/include
 # -----------------------------------------------------------------------------
 # Root
 # -----------------------------------------------------------------------------
@@ -65,6 +67,16 @@ ROOTLDFLAGS  := $(shell root-config --ldflags)
 ROOTGLIBS    := $(shell root-config --glibs) -lMinuit -lTreePlayer -lGenVector  
 ROOTGLIBS += -lGeomBuilder  -lGeomPainter  -lGeom -lGed
 
+# get root version, will be either 6.xxx or 5.xxx
+ROOTVER := $(shell root-config --version)
+
+ROOTVER6TEST := 6.
+ROOTVER6 := $(findstring $(ROOTVER6TEST),$(ROOTVER))
+
+ifeq ($(ROOTVER6), )
+ROOTCLING_FOUND := 1
+endif
+# if ROOTCLING_FOUND = 1, USE ROOTCINT FROM ROOT5; OTHERWISE USE ROOTCLING FROM ROOT6
 # -----------------------------------------------------------------------------
 # GSL (Gnu Scientific Library)
 # -----------------------------------------------------------------------------

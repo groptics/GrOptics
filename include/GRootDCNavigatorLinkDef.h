@@ -1,6 +1,7 @@
 /*
 VERSION3.1
 2March2015
+ifdef __CINT__ or __CLING__
 */
 #ifdef __CINT__
 

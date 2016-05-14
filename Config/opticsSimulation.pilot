@@ -15,7 +15,7 @@ the arrayConfig.cfg file and the new stdSegSCTelescopes.cfg file.  Please
 read these files carefully to save consternation later.
 
 The segmented telescope class is based on the NewSCT.C root script by Akira
-Okamura. you can find this script in GrOptics/scripts/NewSCT.C.
+Okumura. you can find this script in GrOptics/scripts/NewSCT.C.
 
 The new DRAWTEL options are very useful as is the "single mapmt module"
 option for confirming your camera position - see comments at the end of
@@ -63,7 +63,7 @@ name of grOptics log file, default use cerr (if no asterisk)
 number of showers/photons, defaults -1
   NSHOWER <numShowers, <0, no limit>
           <numPhotons, <0, no limit>
-* NSHOWER -1 -1
+* NSHOWER 1 20
 You can see the paths of all 20 photons in the ogl image when you
 run the code (all photons from the photon.cph test input file).
 
@@ -121,7 +121,7 @@ For segmented SC telescope, option 0: only draw telescope
                                        surface on telescope image
                             option 20: plot all rays on telescope image
 NOTE: for ideal SC telescope, camera is not drawn - coming soon.
-* DRAWTEL 1 2
+* DRAWTEL 1 20
 
 TESTTEL <telescope number> <baseFileName for histograms>   
 THis is a very useful option for producing spot histograms and spot rms
