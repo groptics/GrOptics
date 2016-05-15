@@ -38,6 +38,7 @@ using namespace std;
 //#include "TString.h"
 #include "TSystem.h"
 #include "TVector3.h"
+#include "TPad.h"
 
 #include "GDefinition.h"
 #include "GUtilityFuncts.h"
@@ -433,6 +434,7 @@ else if (telType==SEGSC) {
         tel->setRayPlotMode(eRayType);
       }
       if ( (pilot.telToDraw == telId) && (bDrawTelFlag) ) {
+	*oLog << "READY TO DRAW TELESCOPE AND QUIT" << endl;
 	tel->drawTelescope(pilot.telDrawOption);
 	app->Run(); 
 	return 0;
@@ -551,6 +553,7 @@ else if (telType==SEGSC) {
   
   // to remain in root after application is finished
   if (bDrawRayFlag) {
+    *oLog << "READY TO app->Run() " << endl;
     app->Run(); 
     return 0;
   }

@@ -19,8 +19,8 @@ class GReadDCStdBase;
 class GDCTelescope;
 class GTelescope;
 class GGeometryBase;
-class GDCStdFacet;
-class DCStdFacet;
+//class GDCStdFacet;
+struct DCStdFacet;
 class GOrderedGrid;
 
 /*!  /brief DCStdOptics structure stores details of a standard 

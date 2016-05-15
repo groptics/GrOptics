@@ -66,6 +66,7 @@ using namespace std;
 #include "TGraph.h"
 #include "TBrowser.h"
 #include "TF1.h"
+#include "TStyle.h"
 
 #include "ABorderSurfaceCondition.h"
 #include "AGeoAsphericDisk.h"
@@ -1110,9 +1111,10 @@ bool GSegSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
       *oLog << " ready to draw polyline" << endl;
       TPolyLine3D *pol = ray->MakePolyLine3D();
       pol->Print("all");
-      cout << " fStatusLast " << fStatusLast << endl;
+      *oLog << " fStatusLast " << fStatusLast << endl;
       pol->SetLineColor(2);
       pol->Draw();
+      gPad->Update();
     }
   }
 
@@ -1247,7 +1249,8 @@ void GSegSCTelescope::drawTelescope(const int &option) {
   }
   
   if ( (option == 0) || (option == 2) ){
-    TCanvas *cTelescope = new TCanvas("cTelescope","cTelescope",300,300);
+    //gStyle->SetCanvasPreferGL(1);
+    //TCanvas *cTelescope = new TCanvas("cTelescope","cTelescope",300,300);
     if (debug) *oLog << "   ready to draw: option " << option << endl;
     fManager->GetTopVolume()->Draw("ogl");
     if (debug) *oLog << "   finished drawing " << endl;

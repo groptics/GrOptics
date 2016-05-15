@@ -20,7 +20,7 @@ VERSION3.1
 #include "Math/Vector3D.h"
 
 extern ostream *oLog;
-class mirrorSegmentDetails;
+struct mirrorSegmentDetails;
 
 namespace GUtilityFuncts {
   

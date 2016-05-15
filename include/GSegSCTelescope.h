@@ -30,7 +30,7 @@ directory
 
 // forward declarations
 enum TelType;
-class mirrorSegmentDetails;
+struct mirrorSegmentDetails;
 class TFile;
 class TTree;
 class ARay;

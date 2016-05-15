@@ -19,7 +19,7 @@ class GPilot;
 class GSegSCTelescope;
 class GTelescope;
 class GReadSegSCStd;
-class mirrorSegmentDetails;
+struct mirrorSegmentDetails;
 
 // move following declaration to GDefinition.h
 // if a structure/variable used in more than one file
