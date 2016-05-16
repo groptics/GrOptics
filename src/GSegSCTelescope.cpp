@@ -1102,7 +1102,7 @@ bool GSegSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
     static int idraw = 1;
     if (idraw) {
       //fManager->GetTopVolume()->Draw("ogl");
-      drawTelescope();
+      drawTelescope(0);
       idraw = 0;
     }
     // do we draw the ray.
@@ -1114,7 +1114,7 @@ bool GSegSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
       *oLog << " fStatusLast " << fStatusLast << endl;
       pol->SetLineColor(2);
       pol->Draw();
-      gPad->Update();
+      //gPad->Update();
     }
   }
 
