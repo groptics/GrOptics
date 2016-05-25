@@ -534,7 +534,9 @@ else if (telType==SEGSC) {
     }
     //delete mArrayTelIter->second; 
   }
-  gPad->Update();
+  if (bDrawRayFlag) {
+    gPad->Update();
+  }
   fO->cd();
   fO->Close();
   // no memory leak detected by valgrind so don't delete f0
