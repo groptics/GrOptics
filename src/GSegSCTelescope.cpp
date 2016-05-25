@@ -1114,7 +1114,7 @@ bool GSegSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
       *oLog << " fStatusLast " << fStatusLast << endl;
       pol->SetLineColor(2);
       pol->Draw();
-      //gPad->Update();
+      gPad->Update();
     }
   }
 
