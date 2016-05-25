@@ -39,6 +39,7 @@ using namespace std;
 #include "TSystem.h"
 #include "TVector3.h"
 #include "TPad.h"
+#include "TCanvas.h"
 
 #include "GDefinition.h"
 #include "GUtilityFuncts.h"
@@ -535,7 +536,15 @@ else if (telType==SEGSC) {
     //delete mArrayTelIter->second; 
   }
   if (bDrawRayFlag) {
-    gPad->Update();
+    //if (!gROOT->GetListOfCanvases()->FindObject("c1")) return;
+    TCanvas *ctel = (TCanvas *) gROOT->GetListOfCanvases()->FindObject("cTelescope");
+    //*oLog << " ctel = " << ctel << endl;
+    if (ctel != 0) {
+      ctel->cd();
+      *oLog << "found cTelescope canvas and ready to update" << endl;
+      //gPad->Update();
+      ctel->Update();
+    }
   }
   fO->cd();
   fO->Close();

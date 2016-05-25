@@ -1250,7 +1250,7 @@ void GSegSCTelescope::drawTelescope(const int &option) {
   
   if ( (option == 0) || (option == 2) ){
     //gStyle->SetCanvasPreferGL(1);
-    //TCanvas *cTelescope = new TCanvas("cTelescope","cTelescope",300,300);
+    TCanvas *cTelescope = new TCanvas("cTelescope","cTelescope",300,300);
     if (debug) *oLog << "   ready to draw: option " << option << endl;
     fManager->GetTopVolume()->Draw("ogl");
     if (debug) *oLog << "   finished drawing " << endl;
