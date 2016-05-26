@@ -387,7 +387,8 @@ void GDCTelescopeFactory::editWorkingTelescope(GDCTelescope *DCTel) {
 
 void GDCTelescopeFactory::printStdTelescope(const int &iStd, 
                                                const int &mode,ostream &oStr) {
-
+  (void) mode;  //unused
+  
   // this prints all standard telescopes, not currently used.
 
   int debug = 0;
@@ -450,6 +451,10 @@ void GDCTelescopeFactory::setPrintMode(ostream &oStr,
 
 void GDCTelescopeFactory::makeRayTracer(GDCTelescope *DCTel,DCStdOptics *opt1) {
 
+  opt1->gridOption;  // unused
+  //DCStdOptics optt = *opt1;
+  //(void) optt;        // unused
+  
   bool debug = false;
   if (debug) {
     *oLog << "  -- GDCTelescopeFactory::makeRayTracer " << endl;
