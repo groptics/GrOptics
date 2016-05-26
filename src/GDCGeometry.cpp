@@ -193,6 +193,8 @@ void GDCGeometry::setPrintMode(ostream &oStr,
 /************************* end of setPrintMode **********************/
 
 void GDCGeometry::printGeometry1(ostream &oStr,const int &prtMode) {
+  iPrtMode = prtMode;  // unused
+ 
   oStr << " -- GDCGeometry::printGeometry1" << endl;
   oStr << "       edgeX/Y/Z [4] " << endl;
   for (int i = 0;i<4;i++) {

@@ -300,7 +300,7 @@ double fTransitTime;                //!< photon total transit time (from inject 
   }
 
   void setRayPlotMode(const enum RayPlotType &eRayPlot) {
-
+    (void) eRayPlot;  // unused
   };
 };
 
