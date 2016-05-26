@@ -85,7 +85,7 @@ class GRootDCNavigator {
   GRootDCNavigator(GDCTelescope *dcTel,int makeFacetsFlag = 0, bool debugT = false);
 
   // destructor
-  ~GRootDCNavigator();
+  virtual ~GRootDCNavigator();
 
   // set initial position and direction for tracking
   // returns name of current node
