@@ -26,7 +26,7 @@ class GRayTracerBase;
 
 class GTelescope {
  private:
-  float _location;
+  //float _location;
 
  protected:
 
