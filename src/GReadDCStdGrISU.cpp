@@ -687,7 +687,7 @@ void GReadDCStdGrISU::makeStdOptics() {
     //dco->geoStruct = mDCGeo[stdGeo];
     dco->igeoStd   = stdGeo;
     if (debug) {
-      if ( (DCFac->mDCGeo[stdGeo]->type == DCVERITAS) ) {
+      if ( DCFac->mDCGeo[stdGeo]->type == DCVERITAS ) {
 	  GDCGeometry *geotest = 
 	    dynamic_cast<GDCGeometry*>(DCFac->mDCGeo[stdGeo]);
 	  geotest->printGeometry();

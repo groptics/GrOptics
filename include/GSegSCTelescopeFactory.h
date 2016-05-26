@@ -149,8 +149,8 @@ struct SegSCStdOptics {
   SegSCStdOptics(const SegSCStdOptics &sco);
 
   void setPrintOptions(ostream *outStr, const int &prtMode) {
-    //oStr = outStr;
-    //iPrtMode = prtMode;
+    oStr = outStr;
+    iPrtMode = prtMode;
   };
 
   void printSegSCStdOptics();

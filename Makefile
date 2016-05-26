@@ -118,7 +118,7 @@ $(ROBAST_TGZ):
 $(ROBAST_VER): $(ROBAST_TGZ)
 	#tar zxvf $(ROBAST_TGZ)
 
-$(ROOTMAP): $(ROBAST_VER)
+$(ROOTMAP): 
 	cd $(ROBAST_VER);\
 	make
 
