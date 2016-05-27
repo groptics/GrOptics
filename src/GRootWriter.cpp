@@ -40,11 +40,11 @@ using namespace std;
 ClassImp(GRootWriter);
 
 GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
-			  const string &treeBaseName,
+			  const string &treeBaseName1,
 			  const bool &storePhotonDcos,
 			  const unsigned int &iNInitEvents,
                           const bool &debugBranchesFlag) 
-  :fFile(tfile),fTelID(iTelID), treeBaseName(treeBaseName),
+  :fFile(tfile),fTelID(iTelID), treeBaseName(treeBaseName1),
    bStoreDcos(storePhotonDcos),bDebugBranchesFlag(debugBranchesFlag),
    iNInitReserve(iNInitEvents)
 {

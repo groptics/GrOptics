@@ -274,8 +274,8 @@ GSCTelescope* GSCTelescopeFactory::makeTelescope(const int &id,
   assert(itmStdOp != mStdOptics.end());
 
   // make the telescope
-  GSCTelescope *SCTel = 0;
-  SCTel = new GSCTelescope;
+  GSCTelescope *SCTel1 = 0;
+  SCTel1 = new GSCTelescope;
 
   // opt is pointer to working SCStdOptics structure
   opt = mStdOptics[std];
@@ -286,80 +286,83 @@ GSCTelescope* GSCTelescopeFactory::makeTelescope(const int &id,
   //int primID = 1;
   //int secondID = 1;
  
-  SCTel->setReflCv(primID,secondID,mGRefl);
+  SCTel1->setReflCv(primID,secondID,mGRefl);
 
   // get the id and stdOpticsID for the telescope
-  SCTel->setTelID(idTel);
-  SCTel->setStdID(iStdID);
+  SCTel1->setTelID(idTel);
+  SCTel1->setStdID(iStdID);
 
   // set the eTelType and the avg. transition time
-  SCTel->eTelType = opt->stdType;  
-  SCTel->fAvgTransitTime = opt->fAvgTransitTime;
-  SCTel->fRotationOffset = opt->fRotationOffset;
+  SCTel1->eTelType = opt->stdType;  
+  SCTel1->fAvgTransitTime = opt->fAvgTransitTime;
+  SCTel1->fRotationOffset = opt->fRotationOffset;
 
-  SCTel->fFocLgt = opt->fFocLgt;
-  SCTel->fPlateScaleFactor = opt->fPlateScaleFactor;
-  SCTel->fDp = opt->fDp;
-  SCTel-> fDpinner= opt->fDpinner;
-  SCTel->fZp = opt->fZp;
+  SCTel1->fFocLgt = opt->fFocLgt;
+  SCTel1->fPlateScaleFactor = opt->fPlateScaleFactor;
+  SCTel1->fDp = opt->fDp;
+  SCTel1-> fDpinner= opt->fDpinner;
+  SCTel1->fZp = opt->fZp;
 
-  SCTel->fPrimXoffset = opt->fPrimXoffset;
-  SCTel->fPrimYoffset = opt->fPrimYoffset;
-  SCTel->fPrimZoffset = opt->fPrimZoffset;
-  SCTel->fPrimThetaOffset = opt->fPrimThetaOffset;
-  SCTel->fPrimPhiAngle = opt->fPrimPhiAngle;
-  SCTel->fPrimRoughSigma = opt->fPrimRoughSigma;
-  SCTel->fPrimRoughMax = opt->fPrimRoughMax;
+  SCTel1->fPrimXoffset = opt->fPrimXoffset;
+  SCTel1->fPrimYoffset = opt->fPrimYoffset;
+  SCTel1->fPrimZoffset = opt->fPrimZoffset;
+  SCTel1->fPrimThetaOffset = opt->fPrimThetaOffset;
+  SCTel1->fPrimPhiAngle = opt->fPrimPhiAngle;
+  SCTel1->fPrimRoughSigma = opt->fPrimRoughSigma;
+  SCTel1->fPrimRoughMax = opt->fPrimRoughMax;
 
-  SCTel->fZs = opt->fZs;
-  SCTel->fDs = opt->fDs;
-  SCTel->fDsinner = opt->fDsinner;
+  SCTel1->fZs = opt->fZs;
+  SCTel1->fDs = opt->fDs;
+  SCTel1->fDsinner = opt->fDsinner;
 
-  SCTel->fSecondXoffset = opt->fSecondXoffset;
-  SCTel->fSecondYoffset = opt->fSecondYoffset;
-  SCTel->fSecondZoffset = opt->fSecondZoffset;
-  SCTel->fSecondThetaOffset = opt->fSecondThetaOffset;
-  SCTel->fSecondPhiAngle = opt->fSecondPhiAngle;
-  SCTel->fSecondRoughSigma = opt->fSecondRoughSigma;
-  SCTel->fSecondRoughMax = opt->fSecondRoughMax;
+  SCTel1->fSecondXoffset = opt->fSecondXoffset;
+  SCTel1->fSecondYoffset = opt->fSecondYoffset;
+  SCTel1->fSecondZoffset = opt->fSecondZoffset;
+  SCTel1->fSecondThetaOffset = opt->fSecondThetaOffset;
+  SCTel1->fSecondPhiAngle = opt->fSecondPhiAngle;
+  SCTel1->fSecondRoughSigma = opt->fSecondRoughSigma;
+  SCTel1->fSecondRoughMax = opt->fSecondRoughMax;
 
-  SCTel->fZf = opt->fZf;
-  SCTel->fk1 = opt->fk1;
-  SCTel->fk2 = opt->fk2;
+  SCTel1->fZf = opt->fZf;
+  SCTel1->fk1 = opt->fk1;
+  SCTel1->fk2 = opt->fk2;
 
-  SCTel->fFocalPlXoffset = opt->fFocalPlXoffset;
-  SCTel->fFocalPlYoffset = opt->fFocalPlYoffset;
-  SCTel->fFocalPlZoffset = opt->fFocalPlZoffset;
-  SCTel->fFocalPlThetaOffset = opt->fFocalPlThetaOffset;
-  SCTel->fFocalPlPhiAngle = opt->fFocalPlPhiAngle;
+  SCTel1->fFocalPlXoffset = opt->fFocalPlXoffset;
+  SCTel1->fFocalPlYoffset = opt->fFocalPlYoffset;
+  SCTel1->fFocalPlZoffset = opt->fFocalPlZoffset;
+  SCTel1->fFocalPlThetaOffset = opt->fFocalPlThetaOffset;
+  SCTel1->fFocalPlPhiAngle = opt->fFocalPlPhiAngle;
 
 
-  SCTel->fPixelSize = opt->fPixelSize;
-  SCTel->fPixelPitch = opt->fPixelPitch;
-  SCTel->fMAPMTWidth = opt->fMAPMTWidth;
-  SCTel->fMAPMTLength = opt->fMAPMTLength;
-  SCTel->fInputWindowThickness = opt->fInputWindowThickness;
-  SCTel->fMAPMTAngularSize = opt->fMAPMTAngularSize;
-  SCTel->fMAPMTOffset = opt->fMAPMTOffset;
-  SCTel->fMAPMTGap = opt->fMAPMTGap;
-  SCTel->fMAPMTRefIndex = opt->fMAPMTRefIndex;
-  SCTel->bCameraFlag = opt->bCameraFlag;
-  SCTel->iNParP = opt->iNParP;
-  SCTel->fzp = opt->fzp;
-  SCTel->iNParS = opt->iNParS;
-  SCTel->fzs = opt->fzs;
+  SCTel1->fPixelSize = opt->fPixelSize;
+  SCTel1->fPixelPitch = opt->fPixelPitch;
+  SCTel1->fMAPMTWidth = opt->fMAPMTWidth;
+  SCTel1->fMAPMTLength = opt->fMAPMTLength;
+  SCTel1->fInputWindowThickness = opt->fInputWindowThickness;
+  SCTel1->fMAPMTAngularSize = opt->fMAPMTAngularSize;
+  SCTel1->fMAPMTOffset = opt->fMAPMTOffset;
+  SCTel1->fMAPMTGap = opt->fMAPMTGap;
+  SCTel1->fMAPMTRefIndex = opt->fMAPMTRefIndex;
+  SCTel1->bCameraFlag = opt->bCameraFlag;
+  SCTel1->iNParP = opt->iNParP;
+  SCTel1->fzp = opt->fzp;
+  SCTel1->iNParS = opt->iNParS;
+  SCTel1->fzs = opt->fzs;
 
-  // now can edit SCTel
-  editWorkingTelescope(SCTel);
+  // now can edit SCTel1
+  editWorkingTelescope(SCTel1);
   // can now build the telescope
-  SCTel->buildTelescope();
+  SCTel1->buildTelescope();
 
   iNumSCTelMade++; // increment number of SC telescopes made
-  return SCTel;
+  return SCTel1;
 };
 /************** end of makeTelescope ***********************/
 
 void GSCTelescopeFactory::editWorkingTelescope(GSCTelescope *SCTel1) {
+  int iTelID = SCTel1->iTelID;
+  (void) iTelID;  // unused
+  
   int debug = 0;
   if (debug>0) {
     *oLog << " -- GSCTelescopeFactory::editWorkingTelescope" << endl;
@@ -395,7 +398,9 @@ void GSCTelescopeFactory::editWorkingTelescope(GSCTelescope *SCTel1) {
 
 void GSCTelescopeFactory::printStdTelescope(const int &iStd, 
                                                const int &mode,ostream &oStr) {
-
+  (void) mode;  // unused
+  oStr << "in not working printStdTelescope" << endl;
+  
   // DO NOT USE.
   int debug = 0;
   if (debug > 0) {

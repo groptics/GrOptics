@@ -134,6 +134,7 @@ GSegSCTelescope::~GSegSCTelescope() {
 
 void GSegSCTelescope::buildTelescope(bool os8)
 {
+  (void) os8; //unused
   // fix units
   fFMeters = fF;
   fF = fF*m;
@@ -685,7 +686,7 @@ void GSegSCTelescope::addIdealFocalPlane()  {
   const Double_t kZf = fF * fZf;
 
   //Double_t focalPlaneHalfThickness = 1*um;
-  Double_t focalPlaneHalfThickness = 10*cm;
+  //Double_t focalPlaneHalfThickness = 10*cm;
   AGeoAsphericDisk* idealCameraV = new AGeoAsphericDisk("idealCameraV", kZf - 1*um, 0, kZf, 0, fRf*m, 0);
   Double_t sagPar[2] = {fKappa1*TMath::Power(fF, -1),
                         fKappa2*TMath::Power(fF, -3)};
@@ -1251,6 +1252,7 @@ void GSegSCTelescope::drawTelescope(const int &option) {
   if ( (option == 0) || (option == 2) ){
     //gStyle->SetCanvasPreferGL(1);
     TCanvas *cTelescope = new TCanvas("cTelescope","cTelescope",300,300);
+    cTelescope->cd();
     if (debug) *oLog << "   ready to draw: option " << option << endl;
     fManager->GetTopVolume()->Draw("ogl");
     if (debug) *oLog << "   finished drawing " << endl;
@@ -1259,10 +1261,12 @@ void GSegSCTelescope::drawTelescope(const int &option) {
   if (bCameraFlag) {
     if ( (option == 1) || (option == 2)) {
       TCanvas * cCamera = new TCanvas("cCamera","cCamera",300,300);
+      cCamera->cd();
       gGeoManager->GetVolume("focVol")->Draw("ogl");
       
       if (bSingleMAPMTmodule == false) {
         TCanvas * cMAPMT = new TCanvas("cMAPMT","cMAPMT",300,300);
+	cMAPMT->cd();
         gGeoManager->GetVolume("focVol")->GetNode(1)->GetVolume()->Draw("ogl");
         //gGeoManager->GetVolume("focVol")->GetNode(1)->InspectNode();      
       }
@@ -1274,6 +1278,7 @@ void GSegSCTelescope::drawTelescope(const int &option) {
 void GSegSCTelescope::setPrintMode(ostream &oStr,const int prtMode) {
   bool debug = false;
   iPrtMode = prtMode;
+  oStr << "unused string stream " << endl;
   if (debug) {
     *oLog << " -- GSegSCTelescope::setPrintMode " << iPrtMode << endl;
   } 

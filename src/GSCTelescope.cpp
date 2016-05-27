@@ -190,7 +190,8 @@ GSCTelescope::~GSCTelescope() {
 
 void GSCTelescope::buildTelescope(bool os8)
 {
-
+  (void) os8; // unused parameter
+  
   gGeoManager = 0;
   manager = new AOpticsManager("manager","My 3D Project");
   
@@ -972,7 +973,8 @@ void GSCTelescope::printTelescope() {
 /********************** end of printTelescope *****************/
 
 void GSCTelescope::drawTelescope(const int &option) {
-
+  (void) option; // unused parameter
+  
   bool debug = false;
   if (debug) {
     *oLog << " ready to draw the SC telescope" << endl; 

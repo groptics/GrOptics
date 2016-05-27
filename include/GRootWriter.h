@@ -79,7 +79,7 @@ class GRootWriter
    std::vector< float > *fPE_DcosY;
    std::vector< float > *fPE_time;
    std::vector< float > *fPE_wl;
-   int iNInitReserve;
+   unsigned int iNInitReserve;
    bool bReserveFlag;
 
    unsigned numPhotonX;

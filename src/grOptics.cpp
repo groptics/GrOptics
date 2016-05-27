@@ -541,8 +541,9 @@ else if (telType==SEGSC) {
     //*oLog << " ctel = " << ctel << endl;
     if (ctel != 0) {
       ctel->cd();
-      *oLog << "found cTelescope canvas and ready to update" << endl;
-      //gPad->Update();
+      //*oLog << "found cTelescope canvas and ready to update" << endl;
+      //ctel->Modified();
+      //ctel->Update();
       //ctel->Update();
     }
   }
