@@ -1105,7 +1105,9 @@ void GUtilityFuncts::XYZcosToRotMat(const double &xcos,
                                const double &ycos,
                                const double &zcos,
                                ROOT::Math::Rotation3D *rotM) {
-
+  // INCOMPLETE, DO NOT USE, DO NOT CALL
+  (void) zcos; // unused
+  (void) rotM; // unused
   double az,zn;
   GUtilityFuncts::XYcosToAzZn(xcos,ycos,&az,&zn);
 

@@ -63,8 +63,8 @@ class GSimulateOptics {
   //double         fYcore;
   //double         fXcos;
   //double         fYcos;
-  double         fXsource;
-  double        fYsource;
+  //double         fXsource;
+  //double        fYsource;
   double         fDelay;
   double        fPhotonToCameraTime;
   
@@ -76,8 +76,8 @@ class GSimulateOptics {
   double fWobbleTE; //!< wobble offset E, determined from fWobbleR
   double fWobbleTN; //!< wobble offset N, determined from fWobbleR
 
-  double fFieldRot;  /*!< angle between arc from prim to zenith and arc from
-                       primary and polaris */
+  //double fFieldRot;  /*!< angle between arc from prim to zenith and arc from
+  //                     primary and polaris */
   double fZnTel;  //!< zenith angle of telescope (radians)
   double fAzTel;  //!< azimuthal angle of telescop (radians)
   

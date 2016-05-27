@@ -180,7 +180,7 @@ ostream *oLog;
 int main(int argc, char *argv[]) {
 
   // set this to true to remain in root (useful for plotting rays on ogl images
-  bool rayTracePlotFlag = false;
+  //bool rayTracePlotFlag = false;
 
   // log file output stream, initialize
   oLog = &cerr;

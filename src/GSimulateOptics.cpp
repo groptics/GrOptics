@@ -125,7 +125,7 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
     *oLog << "  -- GSimulateOptics::startSimulations " << endl;
   }
 
-  string sFileHeader = reader->getHeader();
+  //string sFileHeader = reader->getHeader();
 
   iNShowers = numShowers;
   iNPhotons = numPhotons;
@@ -245,8 +245,6 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
 	  << nPhotons << endl;     
     // add event to all writers here
 
-    ROOT::Math::XYZVector vTmp;
-
     vector< pair<int,unsigned> > telPhotonXSize;
 
     for (iterRootWriter = mRootWriter->begin();
@@ -298,10 +296,10 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
       sort(telPhotonXSize.begin(),telPhotonXSize.end(),
            GUtilityFuncts::sortPair); 
       *oLog << "          telNum      photonNumber" << endl;
-      for (unsigned i=0;i< telPhotonXSize.size();i++) {
-        *oLog << "            " << telPhotonXSize[i].first 
+      for (unsigned i1=0;i1< telPhotonXSize.size();i1++) {
+        *oLog << "            " << telPhotonXSize[i1].first 
               << "           " 
-              << telPhotonXSize[i].second << endl;
+              << telPhotonXSize[i1].second << endl;
       }
     }
    
@@ -484,7 +482,6 @@ void GSimulateOptics::fillAllTelTree() {
   // use a string instead of a character array for the
   // file header.
   string *strP = &sFileHeader;
-  string *strV = &sVersion;
 
   vector<int> telIDVector;
   vector<float> transitTimeVector;
