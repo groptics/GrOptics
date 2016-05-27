@@ -178,6 +178,7 @@ ostream *oLog;
 /**************************   main   *****************************/
 int main(int argc, char *argv[]) {
 
+  (void) argc;  // unused
   //bool bDrawTel = false;
   bool bDrawTel = true;
   // log file output stream, initialize

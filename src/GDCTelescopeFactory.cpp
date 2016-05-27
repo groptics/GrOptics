@@ -451,7 +451,7 @@ void GDCTelescopeFactory::setPrintMode(ostream &oStr,
 
 void GDCTelescopeFactory::makeRayTracer(GDCTelescope *DCTel,DCStdOptics *opt1) {
 
-  opt1->gridOption;  // unused
+  (void) opt1->gridOption;  // unused
   //DCStdOptics optt = *opt1;
   //(void) optt;        // unused
   

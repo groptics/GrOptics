@@ -91,7 +91,7 @@ class GRootWriter
 		const unsigned int &iNInitEvents = 100000, 
                 const bool &debugBranchesFlag = false);
 
-   ~GRootWriter();
+   virtual ~GRootWriter();
 
    void addPhoton(const ROOT::Math::XYZVector &PhotonCameraLoc,
 		  const ROOT::Math::XYZVector &PhotonCameraDcos,
