@@ -443,25 +443,25 @@ void GReadSegSCStd::setupSCFactory() {
 };
 
 /******************** end of setupSCFactory ****************/
- void GReadSegSCStd::readBasicRecord(const vector<string> &tokens,
+ void GReadSegSCStd::readBasicRecord(const vector<string> &tokens1,
                                      const MirSeg &eMirPS,
-                                     SegSCStdOptics *opt) {
+                                     SegSCStdOptics *opt1) {
    mirrorSegmentDetails segTmp;
-   Int_t numMirrors = atoi(tokens.at(2).c_str());  
+   Int_t numMirrors = atoi(tokens1.at(2).c_str());  
 
-   //opt->iNumP1Mirrors = atoi(tokens.at(2).c_str()); 
-   segTmp.rmin =  atof(tokens.at(3).c_str());
-   segTmp.rmax =  atof(tokens.at(4).c_str());
-   segTmp.margin =  atof(tokens.at(5).c_str());
-   segTmp.delPhi =  atof(tokens.at(6).c_str());
-   segTmp.reflect = atoi(tokens.at(7).c_str() );
-   segTmp.roughness =  atof(tokens.at(8).c_str());
-   segTmp.posErrorX =  atof(tokens.at(9).c_str());
-   segTmp.posErrorY =  atof(tokens.at(10).c_str());
-   segTmp.posErrorZ =  atof(tokens.at(11).c_str());
-   segTmp.rotErrorPhi =  atof(tokens.at(12).c_str());
-   segTmp.rotErrorTheta =  atof(tokens.at(13).c_str());
-   segTmp.rotErrorPsi =  atof(tokens.at(14).c_str());
+   //opt1->iNumP1Mirrors = atoi(tokens1.at(2).c_str()); 
+   segTmp.rmin =  atof(tokens1.at(3).c_str());
+   segTmp.rmax =  atof(tokens1.at(4).c_str());
+   segTmp.margin =  atof(tokens1.at(5).c_str());
+   segTmp.delPhi =  atof(tokens1.at(6).c_str());
+   segTmp.reflect = atoi(tokens1.at(7).c_str() );
+   segTmp.roughness =  atof(tokens1.at(8).c_str());
+   segTmp.posErrorX =  atof(tokens1.at(9).c_str());
+   segTmp.posErrorY =  atof(tokens1.at(10).c_str());
+   segTmp.posErrorZ =  atof(tokens1.at(11).c_str());
+   segTmp.rotErrorPhi =  atof(tokens1.at(12).c_str());
+   segTmp.rotErrorTheta =  atof(tokens1.at(13).c_str());
+   segTmp.rotErrorPsi =  atof(tokens1.at(14).c_str());
    segTmp.bRead = 0;
 
    vector<mirrorSegmentDetails *> vSeg;
@@ -473,72 +473,72 @@ void GReadSegSCStd::setupSCFactory() {
    }
 
    if (eMirPS == P1) {
-     opt->iNumP1Mirrors = numMirrors;
-     opt->vSegP1 = vSeg;
+     opt1->iNumP1Mirrors = numMirrors;
+     opt1->vSegP1 = vSeg;
    }
    else if (eMirPS == P2) {
-     opt->iNumP2Mirrors = numMirrors;
-     opt->vSegP2 = vSeg;
+     opt1->iNumP2Mirrors = numMirrors;
+     opt1->vSegP2 = vSeg;
 
    }
    else if (eMirPS == S1) {
-     opt->iNumS1Mirrors = numMirrors;
-     opt->vSegS1 = vSeg;
+     opt1->iNumS1Mirrors = numMirrors;
+     opt1->vSegS1 = vSeg;
 
    }
 
   else if (eMirPS == S2) {
-     opt->iNumS2Mirrors = numMirrors;
-     opt->vSegS2 = vSeg;
+     opt1->iNumS2Mirrors = numMirrors;
+     opt1->vSegS2 = vSeg;
 
    }  
 
  };
 
 /******************** end of readBasicRecord ****************/
-void GReadSegSCStd::readChangeRecord(const vector<string> &tokens,
+void GReadSegSCStd::readChangeRecord(const vector<string> &tokens1,
                        const MirSeg &eMirPS,
-                                     SegSCStdOptics *opt) {
+                                     SegSCStdOptics *opt1) {
   mirrorSegmentDetails segTmp;
   vector<int> vListSeg;    
   vector<int>::iterator itv;
-  GUtilityFuncts::decodeMatlabString(tokens[2],vListSeg);
+  GUtilityFuncts::decodeMatlabString(tokens1[2],vListSeg);
   *oLog << "VLISTSEG " << endl;
   GUtilityFuncts::printVector(vListSeg);
 
-  segTmp.rmin =  atof(tokens.at(3).c_str());
-  segTmp.rmax =  atof(tokens.at(4).c_str());
-  segTmp.margin =  atof(tokens.at(5).c_str());
-  segTmp.delPhi =  atof(tokens.at(6).c_str());
-  segTmp.reflect = atoi(tokens.at(7).c_str() );
-  segTmp.roughness =  atof(tokens.at(8).c_str());
-  segTmp.posErrorX =  atof(tokens.at(9).c_str());
-  segTmp.posErrorY =  atof(tokens.at(10).c_str());
-  segTmp.posErrorZ =  atof(tokens.at(11).c_str());
-  segTmp.rotErrorPhi =  atof(tokens.at(12).c_str());
-  segTmp.rotErrorTheta =  atof(tokens.at(13).c_str());
-  segTmp.rotErrorPsi =  atof(tokens.at(14).c_str());
+  segTmp.rmin =  atof(tokens1.at(3).c_str());
+  segTmp.rmax =  atof(tokens1.at(4).c_str());
+  segTmp.margin =  atof(tokens1.at(5).c_str());
+  segTmp.delPhi =  atof(tokens1.at(6).c_str());
+  segTmp.reflect = atoi(tokens1.at(7).c_str() );
+  segTmp.roughness =  atof(tokens1.at(8).c_str());
+  segTmp.posErrorX =  atof(tokens1.at(9).c_str());
+  segTmp.posErrorY =  atof(tokens1.at(10).c_str());
+  segTmp.posErrorZ =  atof(tokens1.at(11).c_str());
+  segTmp.rotErrorPhi =  atof(tokens1.at(12).c_str());
+  segTmp.rotErrorTheta =  atof(tokens1.at(13).c_str());
+  segTmp.rotErrorPsi =  atof(tokens1.at(14).c_str());
   segTmp.bRead = 1;
 
-  for (int i = 0;i<vListSeg.size();i++) {
+  for (unsigned int i = 0;i<vListSeg.size();i++) {
  
     int ix = vListSeg[i];
  
     if (eMirPS == P1) {
       // update element
-      *( (opt->vSegP1)[ix -1] ) = segTmp;
+      *( (opt1->vSegP1)[ix -1] ) = segTmp;
    }
     else if (eMirPS == P2) {
       // update element
-      *( (opt->vSegP2)[ix -1] ) = segTmp;
+      *( (opt1->vSegP2)[ix -1] ) = segTmp;
     }
     else if (eMirPS == S1) {
       // update element
-      *( (opt->vSegS1)[ix -1] ) = segTmp;
+      *( (opt1->vSegS1)[ix -1] ) = segTmp;
     }
     else if (eMirPS == S2) {
       // update element
-      *( (opt->vSegS2)[ix -1] ) = segTmp;
+      *( (opt1->vSegS2)[ix -1] ) = segTmp;
     }
   } 
 
