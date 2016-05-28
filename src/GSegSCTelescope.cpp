@@ -213,7 +213,6 @@ void GSegSCTelescope::buildTelescope(bool os8)
 
   closeGeometry();
 
-  *oLog << "ssssssssssssssssssiPrtMode " << iPrtMode << endl;
   printTelescope();
   //testPerformance();
 
@@ -1134,7 +1133,7 @@ bool GSegSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
 
 void GSegSCTelescope::printTelescope() {
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << " -- GSegSCTelescope::printTelescope" << endl;
     *oLog << "      iPrtMode " << iPrtMode << endl;
@@ -1278,7 +1277,7 @@ void GSegSCTelescope::drawTelescope(const int &option) {
 void GSegSCTelescope::setPrintMode(ostream &oStr,const int prtMode) {
   bool debug = false;
   iPrtMode = prtMode;
-  oStr << "unused string stream " << endl;
+  oStr << " " << endl;
   if (debug) {
     *oLog << " -- GSegSCTelescope::setPrintMode " << iPrtMode << endl;
   } 
@@ -1288,7 +1287,7 @@ void GSegSCTelescope::setPrintMode(ostream &oStr,const int prtMode) {
 void GSegSCTelescope::setPhotonHistory(const string &rootFile,
                                        const string &treeName,
                                        const int &option) {
-  bool debug = true;
+  bool debug = false;
 
   
   bPhotonHistoryFlag = true;

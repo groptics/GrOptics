@@ -151,7 +151,7 @@ SegSCStdOptics::SegSCStdOptics(const SegSCStdOptics &sco) {
 
 /************** end of SegSCStdOptics ***********************/
 SegSCStdOptics::~SegSCStdOptics() {
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- SegSCStdOptics::~SegSCStdOptics" << endl;
   }
@@ -311,7 +311,7 @@ GSegSCTelescopeFactory(GReadSegSCStd &scReader,
 
 GSegSCTelescopeFactory::~GSegSCTelescopeFactory() {
  
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GSegSCTelescopeFactory::~GSegSCTelescopeFactory" << endl;
   }

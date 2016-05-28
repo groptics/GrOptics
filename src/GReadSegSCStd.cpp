@@ -87,7 +87,7 @@ GReadSegSCStd::GReadSegSCStd(const string &pilotfile) {
 /****************** end of GReadSegSCStd **********/
 
 GReadSegSCStd::~GReadSegSCStd() { 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GReadSegSCStd::~GReadSegSCStd " << endl;
   }
