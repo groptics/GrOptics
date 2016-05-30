@@ -1,6 +1,6 @@
 /*
-VERSION3.1
-2March2015
+VERSION4.0
+30May2016
 */
 /*! \brief  GReadPhotonGrISU class: concrete class for reading 
       cherenkov photons from GrISU formatted asci files

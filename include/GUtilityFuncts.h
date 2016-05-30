@@ -1,6 +1,6 @@
 /*
-VERSION3.1
-2March2015
+VERSION4.0
+30May2016
 */
 /*!  GUtilityFuncts
      utility functions for use in new optics code

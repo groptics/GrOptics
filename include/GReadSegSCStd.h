@@ -1,6 +1,6 @@
 /*
-VERSION3.1
-2March2015
+VERSION4.0
+30May2016
 */
 /*! \brief  GReadSegSCStd class: concrete class for reading 
       standard telescope configurations for use by telescope factory

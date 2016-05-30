@@ -1,6 +1,6 @@
 /*
-VERSION3.1
-2March2015
+VERSION4.0
+30May2016
 */
 /*!  GDCRayTracer concrete class for implementing DC raytracer with
   using ROOT for shadowing only, as in grisudet
