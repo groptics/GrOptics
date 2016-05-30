@@ -533,7 +533,7 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
 
   // create hist point arrays
   const int kN = vDeg.size();
-
+ 
   //TH1D* histT[kN];   // time histograms
   TGraph* graRMS = new TGraph;
   graRMS->SetTitle(";Field angle (deg);2 #times max{RMS_{sagital}, RMS_{tangential}} (arcmin)");
@@ -677,7 +677,6 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
 
   string imageFilename;
 
-
   TCanvas* canSpot = new TCanvas("canSpot", "canSpot", 1200, 600);
   canSpot->Divide(4, 2);
   TCanvas* canTime = new TCanvas("canTime", "canTime", 1200, 600);
@@ -689,12 +688,13 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
     canTime->cd(i + 1);
     vHistT[i]->DrawCopy();
   }
+ 
   imageFilename = baseName + "_Spot." + imageFileType;
   canSpot->SaveAs(imageFilename.c_str());
-  
   imageFilename = baseName + "_Time." + imageFileType;
   canTime->SaveAs(imageFilename.c_str());
-  
+  //*oLog << " EXITING " << endl;
+  //exit(0); 
   TCanvas* canGrPSF = new TCanvas("canGrPSF", "canGrPSF", 600, 300);
   //canFig5->Divide(1,2);
   
@@ -710,7 +710,7 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
   canGrPSF->SaveAs(imageFilename.c_str());
 
   TCanvas* canGrTime = new TCanvas("canGrTime", "canGrTime", 600, 300);
-
+  
   //canFig5->cd(2);
   gPad->SetGridx();
   gPad->SetGridy();

@@ -121,7 +121,7 @@ For segmented SC telescope, option 0: only draw telescope
                                        surface on telescope image
                             option 20: plot all rays on telescope image
 NOTE: for ideal SC telescope, camera is not drawn - coming soon.
-* DRAWTEL 1 20
+ DRAWTEL 1 2
 
 TESTTEL <telescope number> <baseFileName for histograms>   
 THis is a very useful option for producing spot histograms and spot rms
@@ -138,4 +138,4 @@ DO THAT.
 The graphs and histograms are printed to png files using the base filenames.
 
 TESTTEL <telescope number> <baseFileName for histograms>   
- TESTTEL 1  PsfSegSpot
+* TESTTEL 1  PsfSegSpot

@@ -11,7 +11,7 @@ VERSION3.1
 #define GDEFINITION
 
 // version number
-const string VERSN("3.0");
+const string VERSN("4.0");
 
 // log file
 extern ostream *oLog;

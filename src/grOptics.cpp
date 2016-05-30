@@ -189,7 +189,6 @@ int main(int argc, char *argv[]) {
   TRint *app = 0;
   bool runApp = false;  // TRint for possible use later with 
 
-
   time_t startTime = time(NULL);
   clock_t startClock = clock();
 
@@ -260,7 +259,7 @@ int main(int argc, char *argv[]) {
       exit(0);
     }
   }
-
+  
   if ( (bDrawTelFlag) || (bDrawRayFlag) || (pilot.testTel) ) {
     app = new TRint("app",&pseudo_argc, argv,0,0,kFALSE );
     runApp = true;
@@ -296,7 +295,7 @@ int main(int argc, char *argv[]) {
   *oLog << endl 
 	<< "============= finished read command line and pilot file" 
 	<< endl << endl;
-
+ 
   ////////////////////////////////////////////////////////////
   /////// fill map (mTelDetails) of TelDetails structure
   /////// fill vector (vTelFac) of GTelescopeFactory's 
@@ -365,8 +364,6 @@ int main(int argc, char *argv[]) {
       SegSCFac = new GSegSCTelescopeFactory(*readerSegSC,vTelFac.at(i)->editFile);
     }
   }
-
-
 
   // make arrayTelescope map<telid, ArrayTel*>
   map<int, GArrayTel *> mArrayTel;
@@ -451,7 +448,7 @@ else if (telType==SEGSC) {
       
     }
   }
-
+  
   *oLog << endl
 	<< "============= finished factories and telescope making" 
 	<< endl << endl;
@@ -459,7 +456,11 @@ else if (telType==SEGSC) {
   // ready to run telescope test here using mArrayTel[telTestNum]
   if (pilot.testTel) {
     mArrayTel[pilot.testTel]->makeTelescopeTest(pilot.testTelFile);
+    *oLog << "app->Run after makeTelescopeTest in grOptics.cpp " << endl;
+    app->Run(); 
+    return 0;
   }
+
   ////////////////////////////////////////////////////////////
   /////// make a photon reader (GReadPhotonBase)
   /////// create an instance of GSimulateOptics for the raytracing
@@ -517,6 +518,7 @@ else if (telType==SEGSC) {
   /////////////////////////////////////////////////////////////
   /////// do the simulations (where do we create the output class).
   ////////////////////////////////////////////////////////////
+  
   *oLog << "================= starting simulations " << endl << endl;
   
   siO->startSimulations(pilot.nShower,pilot.nPhoton);
@@ -569,7 +571,7 @@ else if (telType==SEGSC) {
     app->Run(); 
     return 0;
   }
- 
+  //exit(0);
   // clean up. makes valgrind output easier to read
   SafeDelete(readP);  // delete photon reader
   
@@ -590,12 +592,14 @@ else if (telType==SEGSC) {
        mArrayTelIter++ ) {
     SafeDelete(mArrayTelIter->second);
   }
+ 
   // delete root writer map entries
   for (mRootWriterIter = mRootWriter.begin();
        mRootWriterIter != mRootWriter.end();
        mRootWriterIter++) {
     SafeDelete(mRootWriterIter->second);
-  } 
+  }
+ 
   SafeDelete(siO);
 
   return 0;
