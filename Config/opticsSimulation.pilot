@@ -63,7 +63,7 @@ name of grOptics log file, default use cerr (if no asterisk)
 number of showers/photons, defaults -1
   NSHOWER <numShowers, <0, no limit>
           <numPhotons, <0, no limit>
-* NSHOWER 1 100
+* NSHOWER -1 -1
 You can see the paths of all 20 photons in the ogl image when you
 run the code (all photons from the photon.cph test input file).
 
@@ -138,4 +138,4 @@ DO THAT.
 The graphs and histograms are printed to png files using the base filenames.
 
 TESTTEL <telescope number> <baseFileName for histograms>   
-* TESTTEL 1  PsfSegSpot
+ TESTTEL 1  PsfSegSpot

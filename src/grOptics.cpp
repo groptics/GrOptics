@@ -4,7 +4,7 @@ VERSION4.0
 VERSION with reordered calls to open output file and rootwriter instances
 */
 /*!  gropt.cpp
-          optics simulations main code
+           optics simulations main code
            Charlie Duke
            Grinnell College
            April,2011
@@ -314,26 +314,30 @@ int main(int argc, char *argv[]) {
   
   getTelescopeFactoryDetails(&vTelFac,&mTelDetails,pilot.arrayConfigFile);
   //////////////////////////// output file here
-  string outFileName = pilot.outFileName;  //!< name of output file
+  // TEST SKIP
   
-  TFile *fO = new TFile(outFileName.c_str(),"RECREATE");
-  if (fO->IsZombie() ) {
-    *oLog << "error opening root output file: " << outFileName << endl;
-    *oLog << "...exiting" << endl;
-    exit(-1);
+  string outFileName = pilot.outFileName;  //!< name of output file
+  TFile *fO;
+  if (pilot.testTel == 0) {
+    fO = new TFile(outFileName.c_str(),"RECREATE");
+    if (fO->IsZombie() ) {
+      *oLog << "error opening root output file: " << outFileName << endl;
+      *oLog << "...exiting" << endl;
+      exit(-1);
+    }
   }
   ///////////////// try writers here //////////
-
+ 
   map<int,GRootWriter *> mRootWriter;
   map<int,GRootWriter *>::iterator mRootWriterIter;
-
-  for (mIter=mTelDetails.begin();mIter!=mTelDetails.end();mIter++) {
-    int telID = mIter->first;
-    mRootWriter[telID] = new GRootWriter(fO,telID,pilot.outFileTelTreeName,
-                                         pilot.outFileDCos, pilot.iNInitEvents,
-                                         pilot.debugBranchesFlag);
+  if (pilot.testTel == 0) { 
+    for (mIter=mTelDetails.begin();mIter!=mTelDetails.end();mIter++) {
+      int telID = mIter->first;
+      mRootWriter[telID] = new GRootWriter(fO,telID,pilot.outFileTelTreeName,
+					   pilot.outFileDCos, pilot.iNInitEvents,
+					   pilot.debugBranchesFlag);
     }
-
+  }
   //*oLog << " EXITING " << endl;
   //exit(0);  
   // set up factories
@@ -424,7 +428,7 @@ int main(int argc, char *argv[]) {
       
     }
 
-else if (telType==SEGSC) {
+    else if (telType==SEGSC) {
 
       GTelescope *tel = SegSCFac->makeTelescope(telId,telStd);
       tel->setPrintMode(*oLog,printMode);
@@ -549,8 +553,10 @@ else if (telType==SEGSC) {
       //ctel->Update();
     }
   }
+  if (pilot.testTel == 0) {
   fO->cd();
   fO->Close();
+  }
   // no memory leak detected by valgrind so don't delete f0
   //SafeDelete(fO);
   
@@ -592,14 +598,15 @@ else if (telType==SEGSC) {
        mArrayTelIter++ ) {
     SafeDelete(mArrayTelIter->second);
   }
- 
-  // delete root writer map entries
-  for (mRootWriterIter = mRootWriter.begin();
-       mRootWriterIter != mRootWriter.end();
-       mRootWriterIter++) {
-    SafeDelete(mRootWriterIter->second);
+
+  if (pilot.testTel == 0) {
+    // delete root writer map entries
+    for (mRootWriterIter = mRootWriter.begin();
+	 mRootWriterIter != mRootWriter.end();
+	 mRootWriterIter++) {
+      SafeDelete(mRootWriterIter->second);
+    }
   }
- 
   SafeDelete(siO);
 
   return 0;
