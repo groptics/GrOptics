@@ -86,7 +86,7 @@ struct Pilot {
 
 void readPilot(struct Pilot *pilot,const string &pilotfile);
 void readConfig(struct Pilot *pilot);
-void printXYZVector(const ROOT::Math::XYZVector &vec,const string &label);
+void printXYZVector1(const ROOT::Math::XYZVector &vec,const string &label);
 
 int main(int argc, char *argv[]) {
 
@@ -186,7 +186,7 @@ int main(int argc, char *argv[]) {
   double yphotonDirKas = yCosG;  // reverse direction, invert y axis.
   double zphotonDirKas = -zCosG;
   ROOT::Math::XYZVector photonDirKas(xPhotonDirKas,yphotonDirKas,zphotonDirKas);
-  printXYZVector(photonDirKas," photon direction down WobbleR = 0.0 in kascade coordinates:");
+  GUtilityFuncts::printXYZVector(photonDirKas," photon direction down WobbleR = 0.0 in kascade coordinates:");
   
 ////////////////////////////////////////////////
 
@@ -215,12 +215,12 @@ int main(int argc, char *argv[]) {
   ROOT::Math::Rotation3D rotMatInv = rotMat.Inverse();
   // check rotation matrix:
   //ROOT::Math::XYZVector telPt(xCosPrG,yCosPrG,zCosPrG);
-  //printXYZVector(telPt,"  points to primary, ground coor");
+  //GUtilityFuncts::printXYZVector(telPt,"  points to primary, ground coor");
   //ROOT::Math::XYZVector telPtTel = rotMat*telPt;
-  //printXYZVector(telPtTel,"  points to primary, tel. coor");
+  //GUtilityFuncts::printXYZVector(telPtTel,"  points to primary, tel. coor");
 
   //ROOT::Math::XYZVector telch = rotMatInv*telPtTel;
-  //printXYZVector(telch, " after rotMatInv ");
+  //GUtilityFuncts::printXYZVector(telch, " after rotMatInv ");
   
   // loop over showers, telescopes, photons
   //////////////////////////////////////////////////////////////////
@@ -244,21 +244,21 @@ int main(int argc, char *argv[]) {
         //z = 0.0;
         ROOT::Math::XYZVector telHit(x,y,z); // tel hit in telescope coordinates (on tel plane)
         //*oLog << "     telescope number: " << tel << endl;
-        //printXYZVector(telHit,"photon hit on telescope");
+        //GUtilityFuncts::printXYZVector(telHit,"photon hit on telescope");
         
         ROOT::Math::XYZVector telHitTG = rotMatInv*telHit;
-        //printXYZVector(telHitTG," photon hit on telescope, telescope ground coor");
+        //GUtilityFuncts::printXYZVector(telHitTG," photon hit on telescope, telescope ground coor");
         // change origin to array center.
         ROOT::Math::XYZVector telHitG = telHitTG + *(pilot.vTelLoc[tel]);
-        //printXYZVector(*(pilot.vTelLoc[tel]), " telescope location ");
-        //printXYZVector(telHitG,"      telhit from array Center"); 
+        //GUtilityFuncts::printXYZVector(*(pilot.vTelLoc[tel]), " telescope location ");
+        //GUtilityFuncts::printXYZVector(telHitG,"      telhit from array Center"); 
 
         ROOT::Math::XYZVector telHitGKas(telHitG.X(),-telHitG.Y(),telHitG.Z() );
         ////////////////////////////////////////////////
         // photon hit on ground, given the photon hit on the telescope
         ROOT::Math::XYZVector photonHitG;
         photonHitG = telHitG - (telHitG.Z()/zCosG)*photonGDir;
-        //printXYZVector(photonHitG," photon hit on the ground wrt array center");
+        //GUtilityFuncts::printXYZVector(photonHitG," photon hit on the ground wrt array center");
 
         double xHitKas = telHitGKas.X();
         double yHitKas = telHitGKas.Y();
@@ -298,7 +298,7 @@ int main(int argc, char *argv[]) {
         GUtilityFuncts::AzZnToXYcos(azPhoton1, znPhoton1,
                                     &xCosG, &yCosG);
         zCosG = sqrt(1 - xCosG*xCosG - yCosG*yCosG);
-        ROOT::Math::XYZVector photonGDir(xCosG,yCosG,zCosG);
+        //ROOT::Math::XYZVector photonGDir(xCosG,yCosG,zCosG);
         if (debug) *oLog << " photon dir.cosines (toward sky):  " << xCosG
                          << "  " << yCosG << " " << zCosG << endl;
   
@@ -307,7 +307,7 @@ int main(int argc, char *argv[]) {
         double yphotonDirKas = yCosG;  // reverse direction, invert y axis.
         double zphotonDirKas = -zCosG;
         ROOT::Math::XYZVector photonDirKas(xPhotonDirKas,yphotonDirKas,zphotonDirKas);
-        if (debug) printXYZVector(photonDirKas," photon direction down in kascade coordinates");
+        if (debug) GUtilityFuncts::printXYZVector(photonDirKas," photon direction down in kascade coordinates");
              
         ///////////////////////////////////////////////
         
@@ -475,7 +475,7 @@ void readConfig(struct Pilot *pilot) {
 };
 /*************** end of readConfig *********************/
 
-void printXYZVector(const ROOT::Math::XYZVector &vec,const string &label) {
+void printXYZVector1(const ROOT::Math::XYZVector &vec,const string &label) {
   *oLog << label << "   " << vec.X() << "  " << vec.Y() << " "
         << vec.Z() << endl;
 

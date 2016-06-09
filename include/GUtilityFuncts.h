@@ -235,5 +235,8 @@ namespace GUtilityFuncts {
    bool sortPair(const pair<int,int> i , const pair<int,int> j);
 
    void printSegVector (const vector<mirrorSegmentDetails *> &vec);
+
+   void printXYZVector(const ROOT::Math::XYZVector &vec,const string &label);
+
 };
 #endif

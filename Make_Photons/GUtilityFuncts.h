@@ -1,6 +1,9 @@
-// version: 6.1.0    date: 2014-05-06
+/*
+VERSION4.0
+30May2016
+*/
 /*!  GUtilityFuncts
-     utility functions for general use,
+     utility functions for use in new optics code
          Version 0.0
            C. Duke
            Grinnell College
@@ -17,7 +20,7 @@
 #include "Math/Vector3D.h"
 
 extern ostream *oLog;
-extern TRandom3 TR3;
+struct mirrorSegmentDetails;
 
 namespace GUtilityFuncts {
   
@@ -204,10 +207,16 @@ namespace GUtilityFuncts {
    void AzZnToRotMat(const double &az,
                      const double &zn,
                      ROOT::Math::Rotation3D *rotM);
+  
    void offsetXYToAzZn(const double &offsetX, const double &offsetY,
                        const double &az, const double &zn,
                        double *azOffset, double *znOffset);
 
+   void tangentPlaneOffset( const double &az  , const double &zn,
+                            const double &az_t, const double &zn_t,
+                            double       *xoff, double       *yoff,
+                            int          *calc_status   ) ;
+   
    bool testZeroFloat(const double &ax);
 
    bool zeroFloatVectorFix(ROOT::Math::XYZVector *vec);
@@ -224,6 +233,10 @@ namespace GUtilityFuncts {
                          const double &roughness, const int &option=0);
 
    bool sortPair(const pair<int,int> i , const pair<int,int> j);
+
+   void printSegVector (const vector<mirrorSegmentDetails *> &vec);
+
+   void printXYZVector(const ROOT::Math::XYZVector &vec,const string &label);
 
 };
 #endif

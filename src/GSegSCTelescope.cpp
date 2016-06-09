@@ -1070,8 +1070,32 @@ bool GSegSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
       *oLog << "            " << i << "  dir " << dir[i] << endl;
     }
     *oLog <<   "            time " << x[3] << endl;
-    *oLog <<   "            fStatus " << fStatusLast << endl;
-    *oLog <<   "            enum for fStatus {kRun, kStop, kExit, kFocus, kSuspend, kAbsorb} " << endl;
+    *oLog <<   "            fStatus " << fStatusLast << "  ";
+    //*oLog <<   "            enum for fStatus {kRun, kStop, kExit, kFocus, kSuspend, kAbsorb} " << endl;
+ 
+    if (fStatusLast == kRun) {
+      *oLog << "  kRun " << endl;
+    }
+    else if (fStatusLast == kStop) {
+      *oLog << "  kStop " << endl;
+    }
+     else if (fStatusLast == kExit) {
+      *oLog << "  kExit " << endl;
+    }
+    else if (fStatusLast == kStop) {
+      *oLog << "  kStop " << endl;
+    }
+    else if (fStatusLast == kFocus) {
+      *oLog << "  kFocus " << endl;
+    }
+    else if (fStatusLast == kSuspend) {
+      *oLog << "  kSuspend " << endl;
+    }
+        else if (fStatusLast == kAbsorb) {
+      *oLog << "  kAbsorb " << endl;
+    }
+
+   *oLog << endl;
     *oLog <<   "            *photonTime " << *photonTime << endl;
   }
 
@@ -1109,9 +1133,39 @@ bool GSegSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
     if ( ( (eRayPlotType == FOCUSONLY) && (fStatusLast == 3) ) ||
          (eRayPlotType == ALLSURFACES) ) {
       *oLog << " ready to draw polyline" << endl;
+      *oLog << "      ray->GetNpoints(): " << ray->GetNpoints() << endl;
       TPolyLine3D *pol = ray->MakePolyLine3D();
+      for (Int_t ii = 0 ;ii < pol->GetN(); ii++ ) {
+	*oLog << ii << "  " << (pol->GetP())[ii] << endl;
+      }
       pol->Print("all");
-      *oLog << " fStatusLast " << fStatusLast << endl;
+      *oLog << " fStatusLast " << fStatusLast << "  ";
+      if (fStatusLast == 0) {
+	*oLog << "kRun" << endl;
+      }
+      else if (fStatusLast == 1) {
+	*oLog << "kStop" << endl;
+      }
+      else if (fStatusLast == 2) {
+	*oLog << "kExit" << endl;
+      }
+      else if (fStatusLast == 3) {
+	*oLog << "kFocus" << endl;
+      }
+      else if (fStatusLast == 4) {
+	*oLog << "kSuspend" << endl;
+      }
+      else if (fStatusLast == 5) {
+	*oLog << "kAbsorb" << endl;
+      }
+      else if (fStatusLast == 1) {
+	*oLog << "kStop" << endl;
+      }
+      else {
+	*oLog << " can't interpret fStatusLast" << endl;
+      }
+      *oLog << endl;
+      
       pol->SetLineColor(2);
       pol->Draw();
       gPad->Update();

@@ -1333,3 +1333,11 @@ void GUtilityFuncts::tangentPlaneOffset( const double &az  , const double &zn,
   *xoff = cos_el * sin_azdif / denom ;
   *yoff = ( ( sin_el * cos_el_t ) - ( cos_el * sin_el_t * cos_azdif ) ) / denom ;
 }
+/*********************** end of tangentPlaneOffset **********/
+
+void GUtilityFuncts::printXYZVector(const ROOT::Math::XYZVector &vec,const string &label) {
+  *oLog << label << "   " << vec.X() << "  " << vec.Y() << " "
+        << vec.Z() << endl;
+
+}
+/*************** end of printXYZVector *********************/
