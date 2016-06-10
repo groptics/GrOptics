@@ -50,7 +50,7 @@ Uses only telescope location and radii from the veritas configuration file
 * CONFG ../Config/veritas.cfg
 
 NUMBR <numevents: default 1> <numphotons: default 10000 >
-* NUMBR  1 100000
+* NUMBR  1 5
 
 SEEDR <integer: default 0> random number generator seed for TRandom3
 * SEEDR 63565
@@ -74,7 +74,7 @@ opticsSimulation.pilot for a more detailed description of the coordinate
 systems.
 OFFSET <WobbleX> <WobbleY> <WobbleR>
 default values (no asterisk) all 0.0
-* OFFSET 0.0 1.0 0.4
+* OFFSET 1.0 0.0 0.0
  OFFSET 0.0 0.0 0.0
 
 for debugging only, prints lots of intermediate steps.  Use with a small

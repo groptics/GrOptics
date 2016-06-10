@@ -1,10 +1,16 @@
+/*
+VERSION4.0
+30May2016
+*/
+
 /*!  makePhotonsPtSrc.cpp
-     version 2.0
-     28March2016
+
      Charlie Duke
      Grinnell College
 
-    makePhotonsOffset.cpp produces a grisudet or grOptics compatible .cph file 
+   usage:  makePhotonsOffset [name of pilotfile: default makePhotonsOffset.pilot
+
+   makePhotonsOffset.cpp produces a grisudet or grOptics compatible .cph file 
    of cherenkov photons offset from a specified primary direction. 
    The photons are randomly placed on the telescope area with  
    radius increased by 10%.  Telescope locations and radii are from 
@@ -14,21 +20,16 @@
    All log information goes to cerr.
 
    Testing of this code is straightforward using a photonHistory.root debug
-   file from grOptics. Or, when using grisudet, create a photonhistory file
+   file from grOptics. Or, when using grisudet, you first create a photonhistory file
    (see detector.pilot) and use the utility code to move the history data
    into a root file.
-
-   usage:  makePhotonsOffset [name of pilotfile: default makePhotonsOffset.pilot
-
-   Coor.System: ground X(East), Y(North), Z(up). When pointing to zenith,
-   the telescope axes are parallel to these
-   ground coordinate axes.  The camera axes are slightly different, camera
-   X axis is parallel to the telescope x axis; the camera y axis is
-   opposite to the telescope y axis (thus permitting x camera to the right and y
-   camera up when facing the camera with telescope in stow position).
-
-
-   usage:  makePhotonsPtSrc [name of pilotfile: default makePhotonsPtSrc.pilot]
+ 
+   Coor.System: ground X(East), Y(North), Z(up). When pointing to zenith, the 
+   telescope axes are parallel to these ground coordinate axes.  The camera axes 
+   are slightly different, camera X axis is parallel to the telescope x axis; 
+   the camera y axis is opposite to the telescope y axis (thus permitting 
+   camera x axis to the right and y camera y axis up when facing the camera 
+   with telescope in stow position).
  */
 
 #include <iostream>
@@ -39,12 +40,6 @@
 #include <vector>
 #include <cmath>
 #include <map>
-//#include <deque>
-//#include <list>
-//#include <iterator>
-//#include <algorithm>
-//#include <bitset>
-//#include <iomanip>
 
 using namespace std;
 
@@ -71,11 +66,8 @@ struct Pilot {
   int maxPhotons;
   vector<ROOT::Math::XYZVector *> vTelLoc;
   vector<double> TelRadius;
- 
   UInt_t seedr;
-
   double obser; // observatory height, default 1277.06
-
   double az; // az and zn of primary
   double zn;
   double wobbleN; // telescope offset from primary direction
@@ -90,11 +82,10 @@ void printXYZVector1(const ROOT::Math::XYZVector &vec,const string &label);
 
 int main(int argc, char *argv[]) {
 
-
-  
   oLog = &cerr;
   *oLog << "  -- start of makePhotonsPtSrc" << endl;
 
+  // get pilot filename if necessary, note default name
   string pilotfile("makePhotonsOffset.pilot");
   if (argc > 2) {
     *oLog << " TOO MANY COMMAND LINE ARGUMENTS  " << endl;
@@ -105,7 +96,7 @@ int main(int argc, char *argv[]) {
     else if ( argc == 2 ) {
       pilotfile = argv[1];
     }
-  *oLog << "    pilotfile: " << pilotfile << endl;
+  *oLog << "     pilotfile: " << pilotfile << endl;
 
   Pilot pilot;
   // read pilot and configuration files
@@ -150,10 +141,12 @@ int main(int argc, char *argv[]) {
                    &xCosPrG, &yCosPrG);
 
   zCosPrG = sqrt(1 - xCosPrG*xCosPrG - yCosPrG*yCosPrG);
-
-  *oLog << " primary az zn: " << pilot.az << " " << pilot.zn << endl;
-  *oLog << " primary direction cosines: " << xCosPrG << " " << yCosPrG << "  " 
-        << zCosPrG << endl;
+  
+  *oLog << "     ground coordinate system,  X(East), Y(North), Z(Up) " << endl;
+  *oLog << "     kascade coordinate system, X(East), Y(South), Z(Down)" << endl;
+  *oLog << endl << " primary/telescope az zn: " << pilot.az << " " << pilot.zn << endl;
+  *oLog << " primary/telescope direction cosines, ground coor.sys.: " << xCosPrG << " " << yCosPrG << "  " 
+        << zCosPrG << endl << endl;
 
   //////////////////////////////////////////////////////////////////////
   // get photon unit vector when WobbleR = 0.0
@@ -179,14 +172,18 @@ int main(int argc, char *argv[]) {
                    &xCosG, &yCosG);
   zCosG = sqrt(1 - xCosG*xCosG - yCosG*yCosG);
   ROOT::Math::XYZVector photonGDir(xCosG,yCosG,zCosG);
-  *oLog << " photon direction cosines (toward sky) WobbleR = 0.0:  " << xCosG << "  " << yCosG << " " << zCosG << endl;
-  
+ 
+  *oLog << " photon direction cosines in ground coor. (toward sky), WobbleR = 0.0:  " << endl;
+  *oLog << "    " <<  xCosG << "  " << yCosG << " " << zCosG << endl;
+  *oLog << " photon direction cosines in kascade coor. (downward), WobbleR = 0.0:  " << endl;
+  *oLog << "    " <<  -xCosG << "  " << yCosG << " " << zCosG << endl;
+   
   // get photon dir cosines in kascade coordinates.
-  double xPhotonDirKas = -xCosG;
-  double yphotonDirKas = yCosG;  // reverse direction, invert y axis.
-  double zphotonDirKas = -zCosG;
-  ROOT::Math::XYZVector photonDirKas(xPhotonDirKas,yphotonDirKas,zphotonDirKas);
-  GUtilityFuncts::printXYZVector(photonDirKas," photon direction down WobbleR = 0.0 in kascade coordinates:");
+  //double xPhotonDirKas1 = -xCosG;
+  //double yphotonDirKas1 = yCosG;  // reverse direction, invert y axis.
+  //double zphotonDirKas1 = -zCosG;
+  //ROOT::Math::XYZVector photonDirKas1(xPhotonDirKas1,yphotonDirKas1,zphotonDirKas1);
+  //GUtilityFuncts::printXYZVector(photonDirKas1," photon direction down, WobbleR = 0.0 in kascade coordinates:");
   
 ////////////////////////////////////////////////
 
@@ -213,24 +210,30 @@ int main(int argc, char *argv[]) {
   ROOT::Math::Rotation3D rotMat;
   GUtilityFuncts::AzZnToRotMat(azPr,znPr,&rotMat);
   ROOT::Math::Rotation3D rotMatInv = rotMat.Inverse();
-  // check rotation matrix:
-  //ROOT::Math::XYZVector telPt(xCosPrG,yCosPrG,zCosPrG);
-  //GUtilityFuncts::printXYZVector(telPt,"  points to primary, ground coor");
-  //ROOT::Math::XYZVector telPtTel = rotMat*telPt;
-  //GUtilityFuncts::printXYZVector(telPtTel,"  points to primary, tel. coor");
+  if (debug) {
+    *oLog << endl << "    check rotation matrix " << endl;
+    // check rotation matrix:
+    ROOT::Math::XYZVector telPt(xCosPrG,yCosPrG,zCosPrG);
+    GUtilityFuncts::printXYZVector(telPt,"  points to primary, ground coor");
+    ROOT::Math::XYZVector telPtTel = rotMat*telPt;
+    GUtilityFuncts::printXYZVector(telPtTel,"  points to primary, tel. coor");
 
-  //ROOT::Math::XYZVector telch = rotMatInv*telPtTel;
-  //GUtilityFuncts::printXYZVector(telch, " after rotMatInv ");
-  
+    ROOT::Math::XYZVector telch = rotMatInv*telPtTel;
+    GUtilityFuncts::printXYZVector(telch, " after rotMatInv ");
+    *oLog<< "   end check rotation matrix " << endl << endl;
+  }
   // loop over showers, telescopes, photons
   //////////////////////////////////////////////////////////////////
   for (int j=0;j<pilot.maxShowers;j++) {
+    *oLog << "Shower loop, shower number: " << j << endl;
     // write S line
     fprintf(outunit,"S 0.0  0.0 0.0 %f %f 1277.06 -1 -1 -1 \n",-xCosPrG, yCosPrG);
     
-    //for (unsigned tel = 0;tel < pilot.TelRadius.size(); tel++) {
-    for (unsigned tel = 0;tel < 1; tel++) {
-      
+    for (unsigned tel = 0;tel < pilot.TelRadius.size(); tel++) {
+    //for (unsigned tel = 0;tel < 1; tel++) {
+      if (1) {
+	*oLog << "     Telescope loop, telescope number: " << tel << endl;
+      }
       for (int ip = 0;ip<pilot.maxPhotons;ip++) {
         
         // find photon hit randomly on telescope plane
@@ -239,27 +242,32 @@ int main(int argc, char *argv[]) {
         double x = r*cos(phi);
         double y = r*sin(phi);
         double z = 0.0;
-        //x = 0.0;
-        //y = 1.0;
-        //z = 0.0;
+        x = 0.0;
+        y = 1.0;
+        z = 0.0;
         ROOT::Math::XYZVector telHit(x,y,z); // tel hit in telescope coordinates (on tel plane)
-        //*oLog << "     telescope number: " << tel << endl;
-        //GUtilityFuncts::printXYZVector(telHit,"photon hit on telescope");
-        
-        ROOT::Math::XYZVector telHitTG = rotMatInv*telHit;
-        //GUtilityFuncts::printXYZVector(telHitTG," photon hit on telescope, telescope ground coor");
-        // change origin to array center.
+	if (debug) {
+	  *oLog << "     telescope number: " << tel << endl;
+	  GUtilityFuncts::printXYZVector(telHit,"photon hit on telescope");
+        }
+	ROOT::Math::XYZVector telHitTG = rotMatInv*telHit;
+	if (debug) {
+	  GUtilityFuncts::printXYZVector(telHitTG," photon hit on telescope, telescope ground coor");
+	}
+	// change origin to array center.
         ROOT::Math::XYZVector telHitG = telHitTG + *(pilot.vTelLoc[tel]);
-        //GUtilityFuncts::printXYZVector(*(pilot.vTelLoc[tel]), " telescope location ");
-        //GUtilityFuncts::printXYZVector(telHitG,"      telhit from array Center"); 
-
+	if (debug) {
+	  GUtilityFuncts::printXYZVector(*(pilot.vTelLoc[tel]), " telescope location ");
+	  GUtilityFuncts::printXYZVector(telHitG,"      telhit from array Center"); 
+	}
         ROOT::Math::XYZVector telHitGKas(telHitG.X(),-telHitG.Y(),telHitG.Z() );
         ////////////////////////////////////////////////
         // photon hit on ground, given the photon hit on the telescope
         ROOT::Math::XYZVector photonHitG;
         photonHitG = telHitG - (telHitG.Z()/zCosG)*photonGDir;
-        //GUtilityFuncts::printXYZVector(photonHitG," photon hit on the ground wrt array center");
-
+	if (debug) {
+	  GUtilityFuncts::printXYZVector(photonHitG," photon hit on the ground wrt array center");
+	}
         double xHitKas = telHitGKas.X();
         double yHitKas = telHitGKas.Y();
         double emissionHt = 10000.0;
@@ -299,9 +307,13 @@ int main(int argc, char *argv[]) {
                                     &xCosG, &yCosG);
         zCosG = sqrt(1 - xCosG*xCosG - yCosG*yCosG);
         //ROOT::Math::XYZVector photonGDir(xCosG,yCosG,zCosG);
-        if (debug) *oLog << " photon dir.cosines (toward sky):  " << xCosG
+        if (debug) {
+	  *oLog << " photon dir.cosines (toward sky):  " << xCosG
                          << "  " << yCosG << " " << zCosG << endl;
-  
+	  double aztmp = 0.0, zntmp= 0.0;
+	  GUtilityFuncts::XYcosToAzZn(xCosG, yCosG, &aztmp, &zntmp);
+	  *oLog << "  photon az zn " << aztmp << "  " << zntmp << endl;
+	}
         // get photon dir cosines in kascade coordinates.
         double xPhotonDirKas = -xCosG;
         double yphotonDirKas = yCosG;  // reverse direction, invert y axis.
@@ -321,7 +333,7 @@ int main(int argc, char *argv[]) {
     }  // end of telescope loop
     
   }  // end of shower loop
-  
+  *oLog << endl << "end of shower, telescope, and photon loops: all done" << endl; 
   
 };
 /*************** end of main *********************/
@@ -372,7 +384,7 @@ void readPilot(struct Pilot *pilot,const string &pilotfile) {
   pi->set_flag(flag);
   while (pi->get_line_vector(tokens) >= 0) {
     pilot->seedr = (UInt_t) atoi(tokens[0].c_str());
-  }
+   }
   flag = "OBSER";
   pi->set_flag(flag);
   while (pi->get_line_vector(tokens) >= 0) {

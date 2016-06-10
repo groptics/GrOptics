@@ -44,7 +44,7 @@ bool VG_Pilot::addPilotFile(const string &pilotfile) {
 
   // open pilot file for input
 
-  int debug = 1;
+  int debug = 0;
   if (debug >0) {
     *oLog << " -- VG_Pilot::addPilotFile " << endl;
     *oLog << "       adding pilotfile: " << pilotfile << endl;
@@ -128,9 +128,9 @@ int VG_Pilot::get_line_vector(vector<string> &line_vector) {
 }
 //******************** end of get_line_vector
 
-void VG_Pilot::tokenizer(string& str, vector<string>& tokens) {
+void VG_Pilot::tokenizer(string& str, vector<string>& tokens1) {
 
-  tokens.clear();
+  tokens1.clear();
   string strc = str;
   // string can contain matlab entries, e.g. [1 3 5], so simple
   // tokenizer doesn't work.
@@ -188,7 +188,7 @@ void VG_Pilot::tokenizer(string& str, vector<string>& tokens) {
       exit(0);
     }
 
-   tokens.push_back(tokenstr);
+   tokens1.push_back(tokenstr);
   }
 
   return; 
