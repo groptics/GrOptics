@@ -1,9 +1,9 @@
-#  version: 6.1.0    date: 2014-05-06
-# template makefile
+#
+#VERSION4.0
+#30May2016
+#
 #      C. Duke
 #  Grinnell College
-#   Version 2.0
-#   May, 2011
 #
 # dependencies: root (no gsl or tmva)
 include Makefile.common
@@ -16,11 +16,7 @@ INCLUDEFLAGS  += -I.
 CXXFLAGS += $(INCLUDEFLAGS)
 
 OBJECTSPTSRC =  VG_Pilot.o
-OBJECTS =  VG_Pilot.o GUtilityFuncts.o
-
-
-# define directory to receive all .o files
-#OBJ := obj
+OBJECTS =  VG_Pilot.o GUtilityFuncts.o GDefinition.o
 
 # pattern rule for any application code, e.g. vg_get_data
 # where a corresponding .cpp code must exist in a VPATH directory
@@ -49,11 +45,6 @@ makePhotonsPtSrc: makePhotonsPtSrc.o $(OBJECTSPTSRC)
 	@$(CXX) $(CXXFLAGS) -c $<
 	@echo "Done"
 
-#VGA_GeoTelescopeDict.cpp: VGA_GeoTelescope.h VGA_GeoTelescopeLinkDef.h
-#	@printf "Generating dictionary $< ... "
-#	rootcint -v -f $@ -c -p $^
-#	@echo "Done"
-
 var: 
 	@echo "ld   $(LD)"
 	@echo "archsoflags $(ARCHSOFLAGS)"
@@ -80,7 +71,7 @@ Makefile.depend:
 
 DEPEND=echo > Makefile.depend0 &&\
 	makedepend -s "\#DEPEND LIST DONT DELETE" -- $(INCLUDEFLAGS) \
-		-Y --  src/*.cpp  include/*.h \
+		-Y --  *.cpp  *.h \
 		-f Makefile.depend0 > /dev/null 2>&1 &&\
 	sed "s/^[a-zA-Z0-9]*\///" Makefile.depend0 > Makefile.depend &&\
 	rm -f Makefile.depend0

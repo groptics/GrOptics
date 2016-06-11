@@ -1,3 +1,7 @@
+/*
+VERSION4.0
+30May2016
+*/
 // version: 6.1.0    date: 2014-05-06
 /*! \brief VG_Pilot class for reading pilotfiles.
 

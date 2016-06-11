@@ -1,8 +1,10 @@
-April 2015
+VERSION4.0
+30May2016
+
 Charlie Duke
 Grinnell College
 
-see the pilot files for more documentation
+see the pilot file for more documentation
 
 usage: using the repository makePhotonsOffset.pilot
        
@@ -10,34 +12,47 @@ usage: using the repository makePhotonsOffset.pilot
           makePhotonsOffset
 
 to create the veritasStarOffset.cph file containing 500,000 photons on each
-of the 4 veritas telescopes. Telescope locations and radii are in the
-../Config/veritas.cfg file.  Note that as specified in the
-makePhotonsOffset.pilot, the photons all are incident from the zenith with
-no wobble offset.  
+telescope. Telescope locations and radii are in the
+pilot file (or they can come directly from a veritas.cfg telescope 
+configuration file, e.g. ../Config/veritas.cfg.
 
-Use veritasStarOffset.cph as the input file to grOptics (set the filename
-in the main grOptics pilot file). From the
-photonhistory files, you, for example, can plot from the treeviewer:
-    facet hits: facetX vs facetY where reflectFlag>0 (successful facet
+IMPORTANT: for use with grOptics, make sure that the telescope locations
+used here agree with locations given in the ARRAYTEL records in the 
+GrOptics/Config/arrayConfig.cfg file. However, you only need include a 
+subset of the telescopes from the arrayConfig.cfg file here (you might
+be only interested in one telescope for the many specified in the 
+arrayConfig.cfg file).  
+
+Note that as specified in the makePhotonsOffset.pilot file, the photons 
+all are incident from the zenith with no wobble offset.  See the pilot file
+for instructions about changing the photon directions relative to the 
+direction of the telescope.  
+
+Use veritasStarOffset.cph as the input file either to grisudet or 
+to grOptics (set the filename. From the grisudet photonhistory files,
+you can, for example, use the standard utility code to move the 
+photon history file into a root tree.  Then from the treeviewer, you 
+may wish to plot the facet hits:
+    facetX vs facetY where reflectFlag>0 (successful facet
     reflections or onFacetFlag > 0 (on facet hits).  
-
-From the photonLocation.root file, a good plot to check the facet
-orientation is photonDcosX vs photonDcosY.  These direction cosines
-describe the direction of the reflected photon (on its way to the camera).
-
 You can also compare the above plots with the shadowing on and with the
 shadowing off to see the effect of shadowing and to test the shadowing geometry.
 
-------------------------------------------------------------------
-I'll make this code easier to use over the next month and will make the
-documentation specific to GrOptics rather than to GrISU. In the meanwhile,
-the code is easy to use provided that you:
+For grOptics, you can use either the the photonLocation.root file or
+the photonhistory_Telx.root file to produce a variety of interesting 
+plots, often involving cuts on the status and nPoints parameters. These
+are described in the GrOptics Users Guide. in the GrOptics/README 
+directory,
 
-    Make sure the telescope locations are the same in both the array
-    configuration file and the Davies-Cotton configuration file. 
+///////////////////////////////////
+11June2016
+Future Plans: 
 
-    Make sure that the number of telescope record in the DC configuration
-    file is correct.
+enter more than one wobble offset in the pilot file
+so create a given number of photons for each wobble offset.  This
+will enable us to create root scripts, for example, to have better 
+control over plotting the point-spread function. At present the 
+plotting is hard coded in the GrOptics code.
 
-
+Make example plots for inclusion in the Users Guide.
 

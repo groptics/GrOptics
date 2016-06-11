@@ -1,8 +1,12 @@
-  version: 2.0
-  date: 28March2016
+
+VERSION4.0
+30May2016
 
   pilot file for makePhotonsOffset
-
+  
+  usage:  makePhotonsOffset [name of pilotfile: default makePhotonsOffset.pilot
+  active records in this pilot file:  begin with an asterisk (*).
+  
    This code is useful for testing ray tracing through any type ACT
    telescope. Given a telescope pointing direction (Azimuth and zenith
    angle), the photons can selectively all be parallel to the telescope
@@ -12,68 +16,76 @@
    These options facilitate determining e.g. point-spread functions and
    other measures of the telescope performance.
 
-   /////////////////////////////////////////////////////////////////////
-
    makePhotonsOffset.cpp produces a grisudet or grOptics compatible .cph file 
-   of cherenkov photons offset from a specified primary direction. 
+   of cherenkov photons offset from a specified primary or telescope pointing direction. 
    The photons are randomly placed on the telescope area with  
    radius increased by 10%.  Telescope locations and radii are from 
-   a standard veritas GrISU or GrOptics telescope configuration file. The code has 
-   a ROOT dependency. 
+   a standard veritas GrISU configuration file or any other file with the
+   appropriate telescope location and mirror radii records.
 
+   This code has a ROOT dependency. 
    All log and debug information goes to cerr.
 
    Testing of this code is straightforward using a photonHistory.root debug
-   file from grOptics. Or, when using grisudet, create a photonhistory file
-   (see detector.pilot) and use the utility code to move the history data
-   into a root file.
+   file from grOptics or from grisudet. When using grisudet, you should create
+   a photonhistory file (see detector.pilot) and use the usual utility code
+   to move the history data into a root file. For grOptics, the history data
+   output file is already in a root tree.
 
-   usage:  makePhotonsOffset [name of pilotfile: default makePhotonsOffset.pilot
+   Coor.Systems:
 
-   Coor.System: ground X(East), Y(North), Z(up). When pointing to zenith,
-   the telescope axes are parallel to these ground coordinate axes.
-   The camera axes are slightly different, camera X axis is parallel to
+   ground:  X(East), Y(North), Z(up).
+
+   telescope: When pointing to zenith, the telescope axes are parallel to the
+   ground coordinate axes.
+
+   kascade: the .cph input file to grOptics and to grisudet use the Kascade
+   coordinate system:  X(East), Y(South), Z(down).
+   
+   camera: The camera axes are slightly different, camera X axis is parallel to
    the telescope x axis; the camera y axis is opposite to the telescope
    y axis (thus permitting x camera to the right and y
-   camera up when facing the camera with telescope in stow position).
+   camera up when facing the camera with veritas telescope in stow position).
 
-    OUTFL <filename: default stdout> 
+OUTFL <filename: default stdout> 
     formatted as .cph input file to grOptics or to grisudet
     Default (no asterisk): stdout
 * OUTFL veritasStarOffset.cph
 
-    CONFG  <filename: no default>
-	GrISU-type configuration file,
-	needed for telescope locations and radii only
-
-Uses only telescope location and radii from the veritas configuration file
-* CONFG ../Config/veritas.cfg
+CONFG  <filename: no default>
+    name of file containing telescope locations and radii in
+    format from GrISU veritas configuration file. Can be this
+    file or the veritas.cfg file in the Config directory.
+    See TLLOC AND MIROR records later in this file for det
+ CONFG ../Config/veritas.cfg
+* CONFG ./makePhotonsOffset.pilot
 
 NUMBR <numevents: default 1> <numphotons: default 10000 >
+    Normally, create one shower and set the number of photons to some large number
 * NUMBR  1 5
 
 SEEDR <integer: default 0> random number generator seed for TRandom3
 * SEEDR 63565
 
-H record in cph file, height of observatory, default 1277.06
+Height of observatory, default 1277.06
+Necessary for H record in .cph file
 * OBSER 1277.06
 
-azimuth and zenith angle of primary (degrees).
+AZZN <telescope Azimuth> <telescope zenith angle> 
+    The telescope will point in this direction on the sky, photons can be offset per
+    the OFFSET record.
 * AZZN 0.0 30.0
 
 The OFFSET record sets the direction of the Cherenkov photons. 
-With zero wobble offset (wobbleX/Y/R = 0.0), all photons are parallel
-to the primary.  When wobbleR = 0.0, all photons are offset by WobbleX/Y
-to the primary and all have the same direction.  With WobbleR > 0.01,
-the photon directions are uniformly distributed within the WobbleR circle
-with center at WobbleX/Y.
+With zero wobble offset (wobbleX/Y/R = 0.0), all photon directions are parallel
+to the telescope direction.  When wobbleR = 0.0, ALL photons are offset by WobbleX/Y
+to the telescope direction.  With WobbleR > 0.01, the photon directions are
+uniformly distributed within the WobbleR circle with center at WobbleX/Y.
 
-The observatory latitude is set in the code to 90 degrees so that wobble X and
-wobble Y are along the camera axes. See detector.pilot or
-opticsSimulation.pilot for a more detailed description of the coordinate
-systems.
 OFFSET <WobbleX> <WobbleY> <WobbleR>
-default values (no asterisk) all 0.0
+   The observatory latitude is set in the code to 90 degrees so that wobble X and
+   wobble Y are along the camera axes. 
+   default values (no asterisk) all 0.0
 * OFFSET 1.0 0.0 0.0
  OFFSET 0.0 0.0 0.0
 
@@ -81,3 +93,17 @@ for debugging only, prints lots of intermediate steps.  Use with a small
 number of photons. Prints to cerr.
 Turn on with "* DEBUG 1", default is off, i.e. "* DEBUG 0"
 * DEBUG 0
+
+The telescope locations (copied from Config/veritas.cfg), can be adopted to any telescope type)
+TLLOC telnum  xtel ytel ztel (remaining fields not used and can be removed)
+* TLLOC 1     75.0   0.0  0.0 12.0 0.0 0.0
+* TLLOC 2     0.0  -75.0  0.0 12.0 0.0 0.0
+* TLLOC 3   -75.0    0.0  0.0 12.0 0.0 0.0
+* TLLOC 4     0.0   75.0  0.0 12.0 0.0 0.0
+
+The mirror radii (photons thrown circle of radius 10% larger than mirror radius)
+MIROR telnum mirRadius  (remaining fields unused)
+* MIROR 1 7.0 12.0 0. 1 357
+* MIROR 2 7.0 12.0 0. 1 357
+* MIROR 3 7.0 12.0 0. 1 357
+* MIROR 4 7.0 12.0 0. 1 357

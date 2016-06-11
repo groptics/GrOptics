@@ -1,13 +1,12 @@
-#  version: 6.1.0    date: 2014-05-06
- # Makefile.common
-#  Version 2.0, removed gsl and tmva libraries
-#     C. Duke
-# Grinnell College
-# May, 2011
-
+#
+#VERSION4.0
+#30May2016
+#
+#      C. Duke
+#  Grinnell College
 
 # Makefile.common to be included at the beginning of all Makefiles for
-# compiling and linking GrISep code, can be used for non-GrISep applications
+# compiling and linking Make_Photons codes
 
 SHELL=bash
 
