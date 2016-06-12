@@ -86,8 +86,13 @@ OFFSET <WobbleX> <WobbleY> <WobbleR>
    The observatory latitude is set in the code to 90 degrees so that wobble X and
    wobble Y are along the camera axes. 
    default values (no asterisk) all 0.0
-* OFFSET 1.0 0.0 0.0
+ OFFSET 1.0 0.0 0.0
  OFFSET 0.0 0.0 0.0
+
+Code development: multiple offset lines, cycle through
+* OFFSET1 0.0 2.0 3.0
+* OFFSET1 1.0 2.5 3.4
+* OFFSET1 1.5 2.8 3.6
 
 for debugging only, prints lots of intermediate steps.  Use with a small
 number of photons. Prints to cerr.
@@ -98,12 +103,12 @@ The telescope locations (copied from Config/veritas.cfg), can be adopted to any 
 TLLOC telnum  xtel ytel ztel (remaining fields not used and can be removed)
 * TLLOC 1     75.0   0.0  0.0 12.0 0.0 0.0
 * TLLOC 2     0.0  -75.0  0.0 12.0 0.0 0.0
-* TLLOC 3   -75.0    0.0  0.0 12.0 0.0 0.0
-* TLLOC 4     0.0   75.0  0.0 12.0 0.0 0.0
+ TLLOC 3   -75.0    0.0  0.0 12.0 0.0 0.0
+ TLLOC 4     0.0   75.0  0.0 12.0 0.0 0.0
 
 The mirror radii (photons thrown circle of radius 10% larger than mirror radius)
 MIROR telnum mirRadius  (remaining fields unused)
 * MIROR 1 7.0 12.0 0. 1 357
 * MIROR 2 7.0 12.0 0. 1 357
-* MIROR 3 7.0 12.0 0. 1 357
-* MIROR 4 7.0 12.0 0. 1 357
+ MIROR 3 7.0 12.0 0. 1 357
+ MIROR 4 7.0 12.0 0. 1 357

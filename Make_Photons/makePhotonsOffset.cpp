@@ -65,6 +65,7 @@ struct Pilot {
   int maxShowers;
   int maxPhotons;
   vector<ROOT::Math::XYZVector *> vTelLoc;
+  vector<ROOT::Math::XYZVector *> vOffset;  // code development
   vector<double> TelRadius;
   UInt_t seedr;
   double obser; // observatory height, default 1277.06
@@ -103,6 +104,8 @@ int main(int argc, char *argv[]) {
   readPilot(&pilot,pilotfile);
   readConfig(&pilot);
 
+  *oLog << "  -- begin main program " << endl;
+
   bool debug = pilot.debug;
   
   // write photon density to log file
@@ -127,6 +130,7 @@ int main(int argc, char *argv[]) {
   else {
     outunit =fopen(pilot.outFileName.c_str(),"w");
   }
+  *oLog << "cph output file opened: " << pilot.outFileName << endl;
   
   // set up unit vectors for primary (the position defined by WobbleX/Y).
   ////////////////////////////////////////////////////////////////////
@@ -142,6 +146,8 @@ int main(int argc, char *argv[]) {
 
   zCosPrG = sqrt(1 - xCosPrG*xCosPrG - yCosPrG*yCosPrG);
   
+  *oLog << "Just a reminder... the S and P records in the output file " 
+      << "are in kascade coordinates " << endl;
   *oLog << "     ground coordinate system,  X(East), Y(North), Z(Up) " << endl;
   *oLog << "     kascade coordinate system, X(East), Y(South), Z(Down)" << endl;
   *oLog << endl << " primary/telescope az zn: " << pilot.az << " " << pilot.zn << endl;
@@ -409,6 +415,22 @@ void readPilot(struct Pilot *pilot,const string &pilotfile) {
     }
     pilot->wobbleR = atof(tokens[2].c_str());
   }
+  
+  flag = "OFFSET1";
+
+  int numOffset = 0;
+  numOffset = pi->set_flag(flag);
+  
+  // read wobble offsets
+  for (int i = 0;i<numOffset;i++) {
+    pi->get_line_vector(tokens);
+    pilot->vOffset.push_back(new ROOT::Math::XYZVector ); 
+    double xOffs = atof(tokens[0].c_str());
+    double yOffs = atof(tokens[1].c_str());
+    double rOffs = atof(tokens[2].c_str());
+    (pilot->vOffset[i])->SetXYZ(xOffs,yOffs,rOffs);   
+  }    
+
   flag = "DEBUG";
   pi->set_flag(flag);
   while (pi->get_line_vector(tokens) >= 0) {
@@ -427,6 +449,13 @@ void readPilot(struct Pilot *pilot,const string &pilotfile) {
   *oLog << "          wobbleE/N/R    " << pilot->wobbleE << "  "
         << pilot->wobbleN << "  " << pilot->wobbleR << endl;
   *oLog << "          debug          " << pilot->debug << endl;
+  *oLog << "          Number of Offsets " << (pilot->vOffset).size() << endl;
+  for (unsigned i = 0;i<(pilot->vOffset).size();i++) {
+    *oLog << "          Offset " << i+1 << "     " << (pilot->vOffset[i])->X() 
+    << "      "
+    << (pilot->vOffset[i])->Y() << "     "
+    << (pilot->vOffset[i])->Z() << endl;
+  }
   delete pi;
 };
 /*************** end of readPilot *********************/
@@ -471,18 +500,18 @@ void readConfig(struct Pilot *pilot) {
     pilot->TelRadius[iTel-1] = radius*1.1;  // increase radius by 10%
                          
   }
-
-  /*
-   *oLog << "      configuration file tel.loc / radii" << endl;
-   for (int iTel = 0;iTel<numTel;iTel++) {
-   double x = pilot->vTelLoc[iTel]->X();
-   double y = pilot->vTelLoc[iTel]->Y();
-   double z = pilot->vTelLoc[iTel]->Z();
-   *oLog << "   " << iTel << " " << x 
-   << "  " << y << "  " << z << "  /  " 
-   << pilot->TelRadius[iTel] << endl;
-   }
-  */
+    
+  *oLog << endl << "      Reading telescope locations and radii" << endl;
+  *oLog << "      tel_num       X       Y      Z       R" << endl;
+  for (int iTel = 0;iTel<numTel;iTel++) {
+    double x = pilot->vTelLoc[iTel]->X();
+    double y = pilot->vTelLoc[iTel]->Y();
+    double z = pilot->vTelLoc[iTel]->Z();
+    *oLog << "          " << iTel+1 << "        " << x 
+        << "       " << y << "      " << z << "      " 
+        << pilot->TelRadius[iTel] << endl;
+  }
+  *oLog << "  -- end of reading telescope configurations" << endl << endl;
   
 };
 /*************** end of readConfig *********************/
