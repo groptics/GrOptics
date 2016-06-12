@@ -133,6 +133,11 @@ int main(int argc, char *argv[]) {
   *oLog << "cph output file opened: " << pilot.outFileName << endl;
   
   // set up unit vectors for primary (the position defined by WobbleX/Y).
+  *oLog << "Just a reminder... the S and P records in the output file " 
+      << "are in kascade coordinates " << endl;
+  *oLog << "     ground coordinate system,  X(East), Y(North), Z(Up) " << endl;
+  *oLog << "     kascade coordinate system, X(East), Y(South), Z(Down)" << endl;
+
   ////////////////////////////////////////////////////////////////////
   // get primary unit vector from its az/zn in ground coordinates,
   double xCosPrG = 0.0;  // primary direction cosines, ground coordinate system
@@ -146,12 +151,9 @@ int main(int argc, char *argv[]) {
 
   zCosPrG = sqrt(1 - xCosPrG*xCosPrG - yCosPrG*yCosPrG);
   
-  *oLog << "Just a reminder... the S and P records in the output file " 
-      << "are in kascade coordinates " << endl;
-  *oLog << "     ground coordinate system,  X(East), Y(North), Z(Up) " << endl;
-  *oLog << "     kascade coordinate system, X(East), Y(South), Z(Down)" << endl;
-  *oLog << endl << " primary/telescope az zn: " << pilot.az << " " << pilot.zn << endl;
-  *oLog << " primary/telescope direction cosines, ground coor.sys.: " << xCosPrG << " " << yCosPrG << "  " 
+  *oLog << endl << "telescope az = " << pilot.az
+	<< "   zn =  " << pilot.zn << endl;
+  *oLog << "telescope direction cosines toward the sky, ground coor.sys.: " << xCosPrG << " " << yCosPrG << "  " 
         << zCosPrG << endl << endl;
 
   //////////////////////////////////////////////////////////////////////
@@ -170,7 +172,7 @@ int main(int argc, char *argv[]) {
   // in a larger zenith angle (larger azimuth) for the photon in comparison to the primary.
   GUtilityFuncts::wobbleToAzZn(-wobbleN,-wobbleE,latitude,azPr,znPr,&azPhoton,&znPhoton);
 
-  *oLog << " photon with WobbleR = 0.0, Az Zn " << azPhoton*(TMath::RadToDeg()) << "  " 
+  *oLog << "photon with WobbleR = 0.0, az = " <<  azPhoton*(TMath::RadToDeg()) << "   zn = " 
         << znPhoton*(TMath::RadToDeg()) << endl;
 
   // get photon direction cosines (pointing to the sky)
@@ -179,20 +181,14 @@ int main(int argc, char *argv[]) {
   zCosG = sqrt(1 - xCosG*xCosG - yCosG*yCosG);
   ROOT::Math::XYZVector photonGDir(xCosG,yCosG,zCosG);
  
-  *oLog << " photon direction cosines in ground coor. (toward sky), WobbleR = 0.0:  " << endl;
-  *oLog << "    " <<  xCosG << "  " << yCosG << " " << zCosG << endl;
-  *oLog << " photon direction cosines in kascade coor. (downward), WobbleR = 0.0:  " << endl;
-  *oLog << "    " <<  -xCosG << "  " << yCosG << " " << zCosG << endl;
-   
-  // get photon dir cosines in kascade coordinates.
-  //double xPhotonDirKas1 = -xCosG;
-  //double yphotonDirKas1 = yCosG;  // reverse direction, invert y axis.
-  //double zphotonDirKas1 = -zCosG;
-  //ROOT::Math::XYZVector photonDirKas1(xPhotonDirKas1,yphotonDirKas1,zphotonDirKas1);
-  //GUtilityFuncts::printXYZVector(photonDirKas1," photon direction down, WobbleR = 0.0 in kascade coordinates:");
-  
-////////////////////////////////////////////////
+  *oLog << "photon direction cosines in ground coor. toward the sky, WobbleR = 0.0:  ";
+  *oLog  <<  xCosG << "  " << yCosG << " " << zCosG << endl;
+  *oLog << "photon direction cosines in kascade coor. (downward), WobbleR = 0.0:  ";
+  *oLog  <<  -xCosG << "  " << yCosG << " " << zCosG << endl << endl;
+    
+  ////////////////////////////////////////////////
 
+  *oLog << "writing header to " << pilot.outFileName << endl;
   // write header to output
   fprintf(outunit,"* HEADF  <--Start of header lines\n");
   fprintf(outunit,
@@ -206,7 +202,7 @@ int main(int argc, char *argv[]) {
 
   fprintf(outunit,"* DATAF  <-- Start of data\n");
   //////////////////////////////////////////////
-
+  *oLog << "writing R and H records to: " << pilot.outFileName << endl;
   // print R and H lines
   fprintf(outunit,"R 1.0\n");
   fprintf(outunit,"H %f\n",pilot.obser);
@@ -231,113 +227,118 @@ int main(int argc, char *argv[]) {
   // loop over showers, telescopes, photons
   //////////////////////////////////////////////////////////////////
   for (int j=0;j<pilot.maxShowers;j++) {
-    *oLog << "Shower loop, shower number: " << j << endl;
-    // write S line
+    *oLog << "shower number: " << j << "  ,writing S line "<< endl;
     fprintf(outunit,"S 0.0  0.0 0.0 %f %f 1277.06 -1 -1 -1 \n",-xCosPrG, yCosPrG);
-    
-    for (unsigned tel = 0;tel < pilot.TelRadius.size(); tel++) {
-    //for (unsigned tel = 0;tel < 1; tel++) {
-      if (1) {
-	*oLog << "     Telescope loop, telescope number: " << tel << endl;
-      }
-      for (int ip = 0;ip<pilot.maxPhotons;ip++) {
-        
-        // find photon hit randomly on telescope plane
-        double r = pilot.TelRadius[tel]*sqrt(TR3.Rndm());
-        double phi = TR3.Rndm()*(TMath::TwoPi());
-        double x = r*cos(phi);
-        double y = r*sin(phi);
-        double z = 0.0;
-        x = 0.0;
-        y = 1.0;
-        z = 0.0;
-        ROOT::Math::XYZVector telHit(x,y,z); // tel hit in telescope coordinates (on tel plane)
-	if (debug) {
-	  *oLog << "     telescope number: " << tel << endl;
-	  GUtilityFuncts::printXYZVector(telHit,"photon hit on telescope");
-        }
-	ROOT::Math::XYZVector telHitTG = rotMatInv*telHit;
-	if (debug) {
-	  GUtilityFuncts::printXYZVector(telHitTG," photon hit on telescope, telescope ground coor");
-	}
-	// change origin to array center.
-        ROOT::Math::XYZVector telHitG = telHitTG + *(pilot.vTelLoc[tel]);
-	if (debug) {
-	  GUtilityFuncts::printXYZVector(*(pilot.vTelLoc[tel]), " telescope location ");
-	  GUtilityFuncts::printXYZVector(telHitG,"      telhit from array Center"); 
-	}
-        ROOT::Math::XYZVector telHitGKas(telHitG.X(),-telHitG.Y(),telHitG.Z() );
-        ////////////////////////////////////////////////
-        // photon hit on ground, given the photon hit on the telescope
-        ROOT::Math::XYZVector photonHitG;
-        photonHitG = telHitG - (telHitG.Z()/zCosG)*photonGDir;
-	if (debug) {
-	  GUtilityFuncts::printXYZVector(photonHitG," photon hit on the ground wrt array center");
-	}
-        double xHitKas = telHitGKas.X();
-        double yHitKas = telHitGKas.Y();
-        double emissionHt = 10000.0;
-        if (debug) *oLog << "  photon hit in kas coor. " << xHitKas << " " << yHitKas << endl;
 
-        ///////////// get photon direction /////////////
-        double wobbleE1 = wobbleE;  // tmp variables to keep wobbleE/N constant
-        double wobbleN1 = wobbleN;
-        
-        // get wobbleE/N by adding wobbleRand
-        if (pilot.wobbleR > 0.01) {
-          if (debug) *oLog << " ======== wobbleE/N before " << wobbleE << "  " << wobbleN << endl;
-          double wobRrand = wobbleR*sqrt(TR3.Rndm());
-          double wobTrand = (TMath::TwoPi())*TR3.Rndm();
-          double delE     = wobRrand*cos(wobTrand);
-          double delN     = wobRrand*sin(wobTrand);
-          wobbleE1     = wobbleE + delE;
-          wobbleN1     = wobbleN + delN;
-          if (debug) *oLog << " ======== delE/N wobbleE/N after " << delE << "  " << delN
-               << "  " << wobbleE1 << "  " << wobbleN1 << endl;
-        }
-        else {
-          if (debug) *oLog << " ===============  wobbleE/N wobbleR=0 " << wobbleE1
-                           << "  " << wobbleN1 << endl;
-        }
-        // changng the wobble sign just means that a positive wobbleN (E) in the pilot file results
-        // in a larger zenith angle (larger azimuth) for the photon in comparison to the primary.
-        double azPhoton1 = 0.0;
-        double znPhoton1 = 0.0;
-        GUtilityFuncts::wobbleToAzZn(-wobbleN1,-wobbleE1,latitude,azPr,znPr,&azPhoton1,&znPhoton1);
+    for (int ios = 0;ios<1;ios++) {
+      //////////////// start of wobble loop ///////////////////
 
-        if (debug) *oLog << " photon1 Az Zn: " << azPhoton1*(TMath::RadToDeg()) << "  " 
-              << znPhoton1*(TMath::RadToDeg()) << endl;
 
-        // get photon direction cosines (pointing to the sky)
-        GUtilityFuncts::AzZnToXYcos(azPhoton1, znPhoton1,
-                                    &xCosG, &yCosG);
-        zCosG = sqrt(1 - xCosG*xCosG - yCosG*yCosG);
-        //ROOT::Math::XYZVector photonGDir(xCosG,yCosG,zCosG);
-        if (debug) {
-	  *oLog << " photon dir.cosines (toward sky):  " << xCosG
-                         << "  " << yCosG << " " << zCosG << endl;
-	  double aztmp = 0.0, zntmp= 0.0;
-	  GUtilityFuncts::XYcosToAzZn(xCosG, yCosG, &aztmp, &zntmp);
-	  *oLog << "  photon az zn " << aztmp << "  " << zntmp << endl;
-	}
-        // get photon dir cosines in kascade coordinates.
-        double xPhotonDirKas = -xCosG;
-        double yphotonDirKas = yCosG;  // reverse direction, invert y axis.
-        double zphotonDirKas = -zCosG;
-        ROOT::Math::XYZVector photonDirKas(xPhotonDirKas,yphotonDirKas,zphotonDirKas);
-        if (debug) GUtilityFuncts::printXYZVector(photonDirKas," photon direction down in kascade coordinates");
-             
-        ///////////////////////////////////////////////
-        
-        fprintf(outunit,"P %f %f %f %f %f 6 %d 2 %d\n",xHitKas,
-                yHitKas, xPhotonDirKas,yphotonDirKas,
-                emissionHt,pilot.waveLgt,tel+1);
-        
-        
-      }  // end of photon loop
+      /////////////////////////////////////////////////////////
       
-    }  // end of telescope loop
-    
+      for (unsigned tel = 0;tel < pilot.TelRadius.size(); tel++) {
+	//for (unsigned tel = 0;tel < 1; tel++) {
+	if (1) {
+	  *oLog << "     Telescope loop, telescope number: " << tel << endl;
+	}
+	for (int ip = 0;ip<pilot.maxPhotons;ip++) {
+	  
+	  // find photon hit randomly on telescope plane
+	  double r = pilot.TelRadius[tel]*sqrt(TR3.Rndm());
+	  double phi = TR3.Rndm()*(TMath::TwoPi());
+	  double x = r*cos(phi);
+	  double y = r*sin(phi);
+	  double z = 0.0;
+	  //x = 0.0;
+	  //y = 1.0;
+	  //z = 0.0;
+	  ROOT::Math::XYZVector telHit(x,y,z); // tel hit in telescope coordinates (on tel plane)
+	  if (debug) {
+	    *oLog << "     telescope number: " << tel << endl;
+	    GUtilityFuncts::printXYZVector(telHit,"photon hit on telescope");
+	  }
+	  ROOT::Math::XYZVector telHitTG = rotMatInv*telHit;
+	  if (debug) {
+	    GUtilityFuncts::printXYZVector(telHitTG," photon hit on telescope, telescope ground coor");
+	  }
+	  // change origin to array center.
+	  ROOT::Math::XYZVector telHitG = telHitTG + *(pilot.vTelLoc[tel]);
+	  if (debug) {
+	    GUtilityFuncts::printXYZVector(*(pilot.vTelLoc[tel]), " telescope location ");
+	    GUtilityFuncts::printXYZVector(telHitG,"      telhit from array Center"); 
+	  }
+	  ROOT::Math::XYZVector telHitGKas(telHitG.X(),-telHitG.Y(),telHitG.Z() );
+	  ////////////////////////////////////////////////
+	  // photon hit on ground, given the photon hit on the telescope
+	  ROOT::Math::XYZVector photonHitG;
+	  photonHitG = telHitG - (telHitG.Z()/zCosG)*photonGDir;
+	  if (debug) {
+	    GUtilityFuncts::printXYZVector(photonHitG," photon hit on the ground wrt array center");
+	  }
+	  double xHitKas = telHitGKas.X();
+	  double yHitKas = telHitGKas.Y();
+	  double emissionHt = 10000.0;
+	  if (debug) *oLog << "  photon hit in kas coor. " << xHitKas << " " << yHitKas << endl;
+	  
+	  ///////////// get photon direction /////////////
+	  double wobbleE1 = wobbleE;  // tmp variables to keep wobbleE/N constant
+	  double wobbleN1 = wobbleN;
+	  
+	  // get wobbleE/N by adding wobbleRand
+	  if (pilot.wobbleR > 0.01) {
+	    if (debug) *oLog << " ======== wobbleE/N before " << wobbleE << "  " << wobbleN << endl;
+	    double wobRrand = wobbleR*sqrt(TR3.Rndm());
+	    double wobTrand = (TMath::TwoPi())*TR3.Rndm();
+	    double delE     = wobRrand*cos(wobTrand);
+	    double delN     = wobRrand*sin(wobTrand);
+	    wobbleE1     = wobbleE + delE;
+	    wobbleN1     = wobbleN + delN;
+	    if (debug) *oLog << " ======== delE/N wobbleE/N after " << delE << "  " << delN
+			     << "  " << wobbleE1 << "  " << wobbleN1 << endl;
+	  }
+	  else {
+	    if (debug) *oLog << " ===============  wobbleE/N wobbleR=0 " << wobbleE1
+			     << "  " << wobbleN1 << endl;
+	  }
+	  // changng the wobble sign just means that a positive wobbleN (E) in the pilot file results
+	  // in a larger zenith angle (larger azimuth) for the photon in comparison to the primary.
+	  double azPhoton1 = 0.0;
+	  double znPhoton1 = 0.0;
+	  GUtilityFuncts::wobbleToAzZn(-wobbleN1,-wobbleE1,latitude,azPr,znPr,&azPhoton1,&znPhoton1);
+	  
+	  if (debug) *oLog << " photon1 Az Zn: " << azPhoton1*(TMath::RadToDeg()) << "  " 
+			   << znPhoton1*(TMath::RadToDeg()) << endl;
+	  
+	  // get photon direction cosines (pointing to the sky)
+	  GUtilityFuncts::AzZnToXYcos(azPhoton1, znPhoton1,
+				      &xCosG, &yCosG);
+	  zCosG = sqrt(1 - xCosG*xCosG - yCosG*yCosG);
+	  //ROOT::Math::XYZVector photonGDir(xCosG,yCosG,zCosG);
+	  if (debug) {
+	    *oLog << " photon dir.cosines (toward sky):  " << xCosG
+		  << "  " << yCosG << " " << zCosG << endl;
+	    double aztmp = 0.0, zntmp= 0.0;
+	    GUtilityFuncts::XYcosToAzZn(xCosG, yCosG, &aztmp, &zntmp);
+	    *oLog << "  photon az zn " << aztmp << "  " << zntmp << endl;
+	  }
+	  // get photon dir cosines in kascade coordinates.
+	  double xPhotonDirKas = -xCosG;
+	  double yphotonDirKas = yCosG;  // reverse direction, invert y axis.
+	  double zphotonDirKas = -zCosG;
+	  ROOT::Math::XYZVector photonDirKas(xPhotonDirKas,yphotonDirKas,zphotonDirKas);
+	  if (debug) GUtilityFuncts::printXYZVector(photonDirKas," photon direction down in kascade coordinates");
+	  
+	  ///////////////////////////////////////////////
+	  
+	  fprintf(outunit,"P %f %f %f %f %f 6 %d 2 %d\n",xHitKas,
+		  yHitKas, xPhotonDirKas,yphotonDirKas,
+		  emissionHt,pilot.waveLgt,tel+1);
+	  
+	  
+	}  // end of photon loop
+      
+      }  // end of telescope loop
+    }
   }  // end of shower loop
   *oLog << endl << "end of shower, telescope, and photon loops: all done" << endl; 
   
