@@ -30,6 +30,11 @@ VERSION4.0
    the camera y axis is opposite to the telescope y axis (thus permitting 
    camera x axis to the right and y camera y axis up when facing the camera 
    with telescope in stow position).
+
+   The code can loop through a variety of photon offsets set in the pilot file. This can
+   provide more flexibility for analyzing, e.g. point-spread functions with root scripts.
+   The alternative is using hard-coded telescope test photons from the GrOptics code.  There
+   are no hard-coded test photons in the grisudet code.
  */
 
 #include <iostream>
@@ -71,9 +76,6 @@ struct Pilot {
   double obser; // observatory height, default 1277.06
   double az; // az and zn of primary
   double zn;
-  double wobbleN; // telescope offset from primary direction
-  double wobbleE;
-  double wobbleR;  // radius centered on wobbleN and wobbleE
   bool debug;      // when true, print intermediate results
 };
 
@@ -163,43 +165,38 @@ int main(int argc, char *argv[]) {
   double zCosG = 0.0;
   double azPhoton   = 0.0;
   double znPhoton   = 0.0;
-  double wobbleE = (pilot.wobbleE)*(TMath::DegToRad()); 
-  double wobbleN = (pilot.wobbleN)*(TMath::DegToRad());
-  double wobbleR = (pilot.wobbleR)*(TMath::DegToRad());
+  double wobbleE = 0.0; 
+  double wobbleN = 0.0;
+  double wobbleR = 0.0;
   double latitude= 90.0*(TMath::DegToRad());
- 
-  // changng the wobble sign just means that a positive wobbleN (E) in the pilot file results
-  // in a larger zenith angle (larger azimuth) for the photon in comparison to the primary.
-  GUtilityFuncts::wobbleToAzZn(-wobbleN,-wobbleE,latitude,azPr,znPr,&azPhoton,&znPhoton);
-
-  *oLog << "photon with WobbleR = 0.0, az = " <<  azPhoton*(TMath::RadToDeg()) << "   zn = " 
-        << znPhoton*(TMath::RadToDeg()) << endl;
-
-  // get photon direction cosines (pointing to the sky)
-  GUtilityFuncts::AzZnToXYcos(azPhoton, znPhoton,
-                   &xCosG, &yCosG);
-  zCosG = sqrt(1 - xCosG*xCosG - yCosG*yCosG);
-  ROOT::Math::XYZVector photonGDir(xCosG,yCosG,zCosG);
- 
-  *oLog << "photon direction cosines in ground coor. toward the sky, WobbleR = 0.0:  ";
-  *oLog  <<  xCosG << "  " << yCosG << " " << zCosG << endl;
-  *oLog << "photon direction cosines in kascade coor. (downward), WobbleR = 0.0:  ";
-  *oLog  <<  -xCosG << "  " << yCosG << " " << zCosG << endl << endl;
-    
   ////////////////////////////////////////////////
 
   *oLog << "writing header to " << pilot.outFileName << endl;
   // write header to output
   fprintf(outunit,"* HEADF  <--Start of header lines\n");
+  fprintf(outunit,"   pilot file %s\n",pilotfile.c_str());
   fprintf(outunit,
           "   configuration file %s\n",pilot.configFileName.c_str());
   fprintf(outunit,"   nShowers nPhotons %d  %d\n",pilot.maxShowers,
           pilot.maxPhotons);
   fprintf(outunit,"   primary az zn %f %f\n",pilot.az,pilot.zn);
-  fprintf(outunit,"   wobble E N %f %f %f\n",pilot.wobbleE,pilot.wobbleN,pilot.wobbleR);
-  fprintf(outunit,"   photon az zn WobbleR = 0.0  %f %f\n",azPhoton*(TMath::RadToDeg()),
-          znPhoton*(TMath::RadToDeg()));
 
+  for (unsigned ios = 0;ios<(pilot.vOffset).size();ios++) {
+    double wE = (pilot.vOffset[ios])->X(); 
+    double wN = (pilot.vOffset[ios])->Y();
+    double wR = (pilot.vOffset[ios])->Z();
+    fprintf(outunit,"   wobble E N R %f %f %f\n",wE,wN,wR);
+  }
+ 
+  unsigned numTelH = (pilot.vTelLoc).size();
+  for (unsigned iTel = 0;iTel<numTelH;iTel++) {
+    double xT = pilot.vTelLoc[iTel]->X();
+    double yT = pilot.vTelLoc[iTel]->Y();
+    double zT = pilot.vTelLoc[iTel]->Z();
+    double rT = pilot.TelRadius[iTel];
+    fprintf(outunit,"   telNum X/Y/Z/R %d   %f   %f   %f   %f\n",iTel+1,xT,yT,zT,rT);
+  }
+  
   fprintf(outunit,"* DATAF  <-- Start of data\n");
   //////////////////////////////////////////////
   *oLog << "writing R and H records to: " << pilot.outFileName << endl;
@@ -224,25 +221,56 @@ int main(int argc, char *argv[]) {
     GUtilityFuncts::printXYZVector(telch, " after rotMatInv ");
     *oLog<< "   end check rotation matrix " << endl << endl;
   }
+  *oLog << endl << "  -- starting loops over showers, wobbles, telescopes, and photons "
+	<< endl << endl;
   // loop over showers, telescopes, photons
   //////////////////////////////////////////////////////////////////
   for (int j=0;j<pilot.maxShowers;j++) {
     *oLog << "shower number: " << j << "  ,writing S line "<< endl;
     fprintf(outunit,"S 0.0  0.0 0.0 %f %f 1277.06 -1 -1 -1 \n",-xCosPrG, yCosPrG);
+ 
+    for (unsigned ios = 0;ios<(pilot.vOffset).size();ios++) {
+      *oLog << endl << "  wobble number = " << ios << endl;
+      xCosG = 0.0;  // photon direction cosines, ground coordinate system
+      yCosG = 0.0;  // pointing to the sky, not downward
+      zCosG = 0.0;
+      azPhoton   = 0.0;
+      znPhoton   = 0.0;
+      wobbleE = (pilot.vOffset[ios])->X()*(TMath::DegToRad()); 
+      wobbleN = (pilot.vOffset[ios])->Y()*(TMath::DegToRad());
+      wobbleR = (pilot.vOffset[ios])->Z()*(TMath::DegToRad());
 
-    for (int ios = 0;ios<1;ios++) {
+      *oLog << "  wobbleE/N/R " << wobbleE*(TMath::RadToDeg())
+	    << "  " << wobbleN*(TMath::RadToDeg())
+	    << "  " << wobbleR*(TMath::RadToDeg()) << endl;
       //////////////// start of wobble loop ///////////////////
+      // changng the wobble sign just means that a positive wobbleN (E) in the pilot file results
+      // in a larger zenith angle (larger azimuth) for the photon in comparison to the primary.
 
+      GUtilityFuncts::wobbleToAzZn(-wobbleN,-wobbleE,latitude,azPr,znPr,&azPhoton,&znPhoton);
 
+      *oLog << "  photon with WobbleR = 0.0, az = " <<  azPhoton*(TMath::RadToDeg()) << "   zn = " 
+	    << znPhoton*(TMath::RadToDeg()) << endl;
+
+      // get photon direction cosines (pointing to the sky)
+      GUtilityFuncts::AzZnToXYcos(azPhoton, znPhoton,
+				  &xCosG, &yCosG);
+      zCosG = sqrt(1 - xCosG*xCosG - yCosG*yCosG);
+      ROOT::Math::XYZVector photonGDir(xCosG,yCosG,zCosG);
+ 
+      *oLog << "  photon direction cosines in ground coor. toward the sky, WobbleR = 0.0:  ";
+      *oLog  <<  xCosG << "  " << yCosG << " " << zCosG << endl;
+      *oLog << "  photon direction cosines in kascade coor. (downward), WobbleR = 0.0:  ";
+      *oLog  <<  -xCosG << "  " << yCosG << " " << zCosG << endl << endl;
       /////////////////////////////////////////////////////////
       
       for (unsigned tel = 0;tel < pilot.TelRadius.size(); tel++) {
 	//for (unsigned tel = 0;tel < 1; tel++) {
 	if (1) {
-	  *oLog << "     Telescope loop, telescope number: " << tel << endl;
+	  *oLog << "    telescope number: " << tel << endl;
+	  *oLog << "    starting photon loop " << endl;
 	}
 	for (int ip = 0;ip<pilot.maxPhotons;ip++) {
-	  
 	  // find photon hit randomly on telescope plane
 	  double r = pilot.TelRadius[tel]*sqrt(TR3.Rndm());
 	  double phi = TR3.Rndm()*(TMath::TwoPi());
@@ -285,7 +313,7 @@ int main(int argc, char *argv[]) {
 	  double wobbleN1 = wobbleN;
 	  
 	  // get wobbleE/N by adding wobbleRand
-	  if (pilot.wobbleR > 0.01) {
+	  if (wobbleR > 0.01) {
 	    if (debug) *oLog << " ======== wobbleE/N before " << wobbleE << "  " << wobbleN << endl;
 	    double wobRrand = wobbleR*sqrt(TR3.Rndm());
 	    double wobTrand = (TMath::TwoPi())*TR3.Rndm();
@@ -332,16 +360,13 @@ int main(int argc, char *argv[]) {
 	  
 	  fprintf(outunit,"P %f %f %f %f %f 6 %d 2 %d\n",xHitKas,
 		  yHitKas, xPhotonDirKas,yphotonDirKas,
-		  emissionHt,pilot.waveLgt,tel+1);
+		  emissionHt,pilot.waveLgt,tel+1);	  
 	  
-	  
-	}  // end of photon loop
-      
+	}  // end of photon loop     
       }  // end of telescope loop
-    }
+    }  // end of offset loop
   }  // end of shower loop
-  *oLog << endl << "end of shower, telescope, and photon loops: all done" << endl; 
-  
+  *oLog << endl << "end of shower, telescope, and photon loops: all done" << endl;  
 };
 /*************** end of main *********************/
 
@@ -358,9 +383,9 @@ void readPilot(struct Pilot *pilot,const string &pilotfile) {
   pilot->obser          =  1277.06;
   pilot->az             = 0.0;
   pilot->zn             = 0.0;
-  pilot->wobbleN        = 0.0;
-  pilot->wobbleE        = 0.0;
-  pilot->wobbleR        = 0.0;
+  //pilot->wobbleN        = 0.0;
+  //pilot->wobbleE        = 0.0;
+  //pilot->wobbleR        = 0.0;
   pilot->debug          = 0;
 
   vector<string> tokens;
@@ -403,21 +428,8 @@ void readPilot(struct Pilot *pilot,const string &pilotfile) {
     pilot->az = atof(tokens[0].c_str());
     pilot->zn = atof(tokens[1].c_str());
   }
+
   flag = "OFFSET";
-  pi->set_flag(flag);
-  while (pi->get_line_vector(tokens) >= 0) {
-    pilot->wobbleE = atof(tokens[0].c_str());
-    pilot->wobbleN = atof(tokens[1].c_str());
-    if (tokens.size() < 3) {
-      *oLog << " **********************  NEED THREE ENTRIES IN THE OFFSET RECORD"
-            << endl;
-      *oLog << " ENDING PROGRAM" << endl;
-      exit(0);
-    }
-    pilot->wobbleR = atof(tokens[2].c_str());
-  }
-  
-  flag = "OFFSET1";
 
   int numOffset = 0;
   numOffset = pi->set_flag(flag);
@@ -447,8 +459,8 @@ void readPilot(struct Pilot *pilot,const string &pilotfile) {
   *oLog << "          obser.height   " << pilot->obser << endl;
   *oLog << "          star azimuth   " << pilot->az << endl;
   *oLog << "          star zenith    " << pilot->zn << endl;
-  *oLog << "          wobbleE/N/R    " << pilot->wobbleE << "  "
-        << pilot->wobbleN << "  " << pilot->wobbleR << endl;
+  //*oLog << "          wobbleE/N/R    " << pilot->wobbleE << "  "
+  //      << pilot->wobbleN << "  " << pilot->wobbleR << endl;
   *oLog << "          debug          " << pilot->debug << endl;
   *oLog << "          Number of Offsets " << (pilot->vOffset).size() << endl;
   for (unsigned i = 0;i<(pilot->vOffset).size();i++) {

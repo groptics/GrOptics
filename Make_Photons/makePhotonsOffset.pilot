@@ -81,18 +81,16 @@ With zero wobble offset (wobbleX/Y/R = 0.0), all photon directions are parallel
 to the telescope direction.  When wobbleR = 0.0, ALL photons are offset by WobbleX/Y
 to the telescope direction.  With WobbleR > 0.01, the photon directions are
 uniformly distributed within the WobbleR circle with center at WobbleX/Y.
+You may have more than one OFFSET, the code will loop through the set of
+offsets and create photons for each offset of each telescope.
 
 OFFSET <WobbleX> <WobbleY> <WobbleR>
    The observatory latitude is set in the code to 90 degrees so that wobble X and
    wobble Y are along the camera axes. 
    default values (no asterisk) all 0.0
- OFFSET 1.0 0.0 0.0
- OFFSET 0.0 0.0 0.0
 
-Code development: multiple offset lines, cycle through
-* OFFSET1 0.0 2.0 3.0
-* OFFSET1 1.0 2.5 3.4
-* OFFSET1 1.5 2.8 3.6
+* OFFSET 0.0 0.0 0.0
+* OFFSET 0.0 1.0 0.0
 
 for debugging only, prints lots of intermediate steps.  Use with a small
 number of photons. Prints to cerr.
