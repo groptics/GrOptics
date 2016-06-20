@@ -202,8 +202,8 @@ int main(int argc, char *argv[]) {
   *oLog << "  -- testtelescopeAzZn " << endl;
   testtelescopeAzZn(0.0,  //azimuth
                     30.0, //zenith
-                    0.0,  // wobbleN
-                    -0.5,  // wobbleE
+                    1.0,  // wobbleN
+                    1.0,  // wobbleE
                     0.0,  // offsetX
                     0.0,  // offsetY
                     90.0); // latitude
@@ -319,6 +319,11 @@ void testtelescopeAzZn(const double &primAz,
   double telOffsetYr = telOffsetY * (TMath::DegToRad()); 
   double latituder = latitude * (TMath::DegToRad()); 
 
+  *oLog << "primAz primAn " << primAz << "  " << primZn << endl;
+  *oLog << "wobbleN wobbleE " << wobbleN << "  " << wobbleE << endl;
+  *oLog << "telOffsetX telOffsetY " << telOffsetX << "  " << telOffsetY << endl;
+  *oLog << "latitude " << latitude << endl;
+  
   GUtilityFuncts::telescopeAzZn(primAzr,primZnr,wobbleNr,wobbleEr,
                                 telOffsetXr,telOffsetYr,latituder,
                                 &telAzr,&telZnr,&sourceXr,&sourceYr);
