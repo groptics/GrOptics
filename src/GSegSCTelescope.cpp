@@ -1419,16 +1419,17 @@ void GSegSCTelescope::fillPhotonHistory() {
   }
   hisF->cd();
   hisT->Fill();
-
 };
 /************************* end of fillPhotonHistory *****/
 
 void GSegSCTelescope::initializePhotonHistoryParms() {
   
   fPlateScaleFactor10 = fPlateScaleFactor * 10.0;
-  *oLog << "in initializePhotonHistoryParms" << endl;
-  *oLog << "      " << fPlateScaleFactor << "  " << fPlateScaleFactor10 << endl;
-  
+  bool debug = false;
+  if (debug) {
+    *oLog << "in initializePhotonHistoryParms" << endl;
+    *oLog << "      " << fPlateScaleFactor << "  " << fPlateScaleFactor10 << endl;
+  }
 };
 /************************* end of initializePhotonHistoryParms *****/
 
@@ -1445,7 +1446,7 @@ void GSegSCTelescope::writePhotonHistory() {
     // the file owns the tree and will delete it
     SafeDelete(hisF);
     hisF = 0;
- }
+  }
  
 };
 /************************* end of writePhotonHistory *****/

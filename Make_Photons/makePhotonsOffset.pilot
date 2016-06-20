@@ -74,7 +74,7 @@ Necessary for H record in .cph file
 AZZN <star Azimuth> <star zenith angle> 
     These parameters define the star location on the sky.  The telescope can be offset per
     the OFFSET record.
-* AZZN 0.0 10.0
+* AZZN 0.0 30.0
 
 The OFFSET record sets the direction of the Cherenkov photons. 
 With zero wobble offset (wobbleX/Y/R = 0.0), all photon directions are parallel
@@ -90,10 +90,10 @@ OFFSET <WobbleX> <WobbleY> <WobbleR>
    recommend the telescope azimuth be 0.0 and zenith be 30.0.
    default values (no asterisk) all 0.0
 
+ OFFSET 0.0 0.0 0.0
 * OFFSET 0.0 1.0 0.0
-* OFFSET 0.0 2.0 0.0
 * OFFSET 1.0 0.0 0.0
-* OFFSET 2.0 0.0 0.0
+ OFFSET 1.5 0.0 0.0
 
 for debugging only, prints lots of intermediate steps.  Use with a small
 number of photons. Prints to cerr.
