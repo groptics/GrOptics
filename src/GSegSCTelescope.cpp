@@ -1396,7 +1396,7 @@ void GSegSCTelescope::makePhotonHistoryBranches() {
 
   hisT->Branch("status",&fStatusLast,"status/I");
   hisT->Branch("nPoints",&fNPoints,"nPoints/I");
-  hisT->Branch("plateSFac",&fPlateScaleFactor,"plateSFac/D");
+  hisT->Branch("plateSFac",&fPlateScaleFactor10,"plateSFac/D");
   hisT->Branch("injectX",&fInitialInjectLoc[0],"injectX/D");
   hisT->Branch("injectY",&fInitialInjectLoc[1],"injectY/D");
   hisT->Branch("injectZ",&fInitialInjectLoc[2],"injectZ/D");
@@ -1424,7 +1424,11 @@ void GSegSCTelescope::fillPhotonHistory() {
 /************************* end of fillPhotonHistory *****/
 
 void GSegSCTelescope::initializePhotonHistoryParms() {
-
+  
+  fPlateScaleFactor10 = fPlateScaleFactor * 10.0;
+  *oLog << "in initializePhotonHistoryParms" << endl;
+  *oLog << "      " << fPlateScaleFactor << "  " << fPlateScaleFactor10 << endl;
+  
 };
 /************************* end of initializePhotonHistoryParms *****/
 
@@ -1523,53 +1527,54 @@ void GSegSCTelescope::initialize() {
   fTelRadius = 0.0;
   fFMeters = 0.0;
 
-  fAvgTransitTime = 0.0;
-  fPlateScaleFactor = 0.0;
-  fphotWaveLgt = 0.0;
+  fAvgTransitTime     = 0.0;
+  fPlateScaleFactor   = 0.0;
+  fPlateScaleFactor10 = 0.0;
+  fphotWaveLgt        = 0.0;
   fphotonToTopVolTime = 0.0;
-  fInjectTime = 0.0; 
-  fInjectLambda = 0.0;
-  fF = 0.0;
-  fAlpha = 0.0;
-  fQ = 0.0;
-  fRpMax = 0.0; 
-  fRpMin = 0.0; 
-  fZp = 0.0;
-  fP = 0;
-  fRsMax = 0.0;
-  fRsMin = 0.0;
-  fZs = 0.0;
-  fNs = 0;
+  fInjectTime         = 0.0; 
+  fInjectLambda       = 0.0;
+  fF       = 0.0;
+  fAlpha   = 0.0;
+  fQ       = 0.0;
+  fRpMax   = 0.0; 
+  fRpMin   = 0.0; 
+  fZp      = 0.0;
+  fP       = 0;
+  fRsMax   = 0.0;
+  fRsMin   = 0.0;
+  fZs           = 0.0;
+  fNs           = 0;
   iNumP1Mirrors = 0;
   iNumP2Mirrors = 0;
-  iNParS = 0;
+  iNParS        = 0;
   iNumS1Mirrors = 0;
   iNumS2Mirrors = 0;
 
   historyFileName = "";
-  fTimeLast = 0.0;
+  fTimeLast      = 0.0;
   iHistoryOption = 0;
-  fStatusLast = 0;
-  fNPoints = 0;
-  fRotationOffset = 0.0;
-  fKappa1 = 0.0;
-  fKappa2 = 0.0;
+  fStatusLast    = 0;
+  fNPoints       = 0;
+  fRotationOffset= 0.0;
+  fKappa1        = 0.0;
+  fKappa2        = 0.0;
   fRf = 0.0;
   fZf = 0.0;
 
   bpBaffleFlag = false;
   fpBRadOffset = 0.0;
-  fpBLen = 0.0;
-  fpBZOffset = 0.0;
-  fpBTilt = 0.0;
+  fpBLen       = 0.0;
+  fpBZOffset   = 0.0;
+  fpBTilt      = 0.0;
   
   bsBaffleFlag = false;
   fsBRadOffset = 0.0;
-  fsBLen = 0.0;
-  fsBZOffset = 0.0;
-  fsBTilt = 0.0;
+  fsBLen       = 0.0;
+  fsBZOffset   = 0.0;
+  fsBTilt      = 0.0;
 
-  bCameraFlag = false;
+  bCameraFlag        = false;
   bPhotonHistoryFlag = false;
   fPixelSize   = 0.0;
   fSubCells    = 0;
@@ -1579,7 +1584,7 @@ void GSegSCTelescope::initialize() {
   fMAPMTOffset = 0.0;
   fMAPMTGap    = 0.0;
   fMAPMTRefIndex        = 0.0;
-  bSingleMAPMTmodule = false;
+  bSingleMAPMTmodule    = false;
 
   fCathodeTopRelToFocalSurface       = 0.0;
   fWindowBottomRelToFocalSurface     = 0.0;
@@ -1602,18 +1607,18 @@ void GSegSCTelescope::initialize() {
   fFocalSurfacePsiOffset   = 0.0;  
 
   bRayPlotModeFlag = false;
-  eRayPlotType = FOCUSONLY;  
+  eRayPlotType     = FOCUSONLY;  
 
   eTelType = SEGSC;
 
   // set gl picture colors: black/1, red/2/, green/3,blue/4, brown/28/49
-  iPrimaryColor =38;
+  iPrimaryColor   = 38;
   iSecondaryColor = iPrimaryColor;
   iSecondaryObscurationColor = 1;
-  iPrimaryObscurationColor = iSecondaryObscurationColor;
-  iMAPMTObscurationColor = iSecondaryObscurationColor;
-  iMAPMTCathodeColor = 2;
-  iMAPMTWindowColor = 3; 
+  iPrimaryObscurationColor   = iSecondaryObscurationColor;
+  iMAPMTObscurationColor     = iSecondaryObscurationColor;
+  iMAPMTCathodeColor   = 2;
+  iMAPMTWindowColor    = 3; 
   iEntranceWindowColor = 1;
 
   for (int i = 0;i<3;i++) {
@@ -1621,8 +1626,8 @@ void GSegSCTelescope::initialize() {
     fphotonInjectDir[i] = 0.0;
     fInjectLoc[i] = 0.0;
     fInjectDir[i] = 0.0;
-    fLocLast[i] = 0.0;
-    fDirLast[i] = 0.0;
+    fLocLast[i]   = 0.0;
+    fDirLast[i]   = 0.0;
     fInitialInjectLoc[i] = 0.0;
   }
 };

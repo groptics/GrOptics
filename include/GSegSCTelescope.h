@@ -62,6 +62,7 @@ class GSegSCTelescope : public GTelescope {
 
   double fAvgTransitTime;
   Double_t fPlateScaleFactor;
+  Double_t fPlateScaleFactor10;
 
   double fphotonInjectLoc[3];
   double fphotonInjectDir[3];
