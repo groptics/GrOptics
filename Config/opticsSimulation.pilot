@@ -43,10 +43,11 @@ Only records with an initial "*" are active.
 cherenkov photon GRISU-type input file, 
 same type input file as for grisudet. 
 FILEIN <filename>  
- FILEIN ./Config/photon.cph
+* FILEIN ./Config/photon.cph
 
 see GrOptics/Make_Photons/README 
-* FILEIN ./Make_Photons/veritasStarOffset.cph
+ FILEIN ./Make_Photons/veritasStarOffset.cph
+
 
 camera output root file specification type
       - root file name

@@ -237,9 +237,9 @@ GDCTelescope::GDCTelescope() {
   dRadius         = 0.0;
   dFocLgt         = 0.0;
   dCamRad         = 0.0;
-  dPlateScaleFactor = 0.0;
-  dFocError       = 0.0;
-
+  dPlateScaleFactor   = 0.0;
+  dPlateScaleFactor10 = 0.0;
+  dFocError           = 0.0;
   iTelID          = 0;
   iStdID          = 0;
   eTelType     = DC;
@@ -561,6 +561,7 @@ void GDCTelescope::makePhotonHistoryBranches() {
   hisT->Branch("telX",&telX,"telX/D");
   hisT->Branch("telY",&telY,"telY/D");
   hisT->Branch("telZ",&telZ,"telZ/D");
+  hisT->Branch("plateSFac",&dPlateScaleFactor10,"plateSFac/D");
 
   hisT->Branch("onFacetFlag",&onFacetFlag,"onFacetFlag/I");
   hisT->Branch("facetNum",&facetNum,"facetNum/I");
@@ -626,6 +627,8 @@ void GDCTelescope::initializePhotonHistoryParms() {
   telY = defaultF;
   telZ = defaultF;
   fTimeToOnTelescope = defaultF;
+
+  dPlateScaleFactor10 = 10.0 * dPlateScaleFactor;
 
   onFacetFlag = 0;
   facetNum = defaultI;

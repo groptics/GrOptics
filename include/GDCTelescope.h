@@ -126,6 +126,7 @@ class GDCTelescope : public GTelescope {
   double dFocLgt;          //!< telescope focal length (meters)
   double dCamRad;          //!< camera radius (mm)
   double dPlateScaleFactor; //!< plate scale factor (cm/deg)
+  double dPlateScaleFactor10; //!< plate scale factor (mm/deg)
   double dFocError;        //!< focusing error (meters) >0 camera too far
   
   double dCameraRadius;    //!< camera radius

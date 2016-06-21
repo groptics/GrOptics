@@ -70,7 +70,7 @@ struct Pilot {
   int maxShowers;
   int maxPhotons;
   vector<ROOT::Math::XYZVector *> vTelLoc;
-  vector<ROOT::Math::XYZVector *> vOffset;  // code development
+  vector<ROOT::Math::XYZVector *> vOffset;
   vector<double> TelRadius;
   UInt_t seedr;
   double obser; // observatory height, default 1277.06
@@ -236,7 +236,7 @@ int main(int argc, char *argv[]) {
       zCosG = 0.0;
       azPhoton   = 0.0;
       znPhoton   = 0.0;
-      wobbleE = (pilot.vOffset[ios])->X()*(TMath::DegToRad()); 
+      wobbleE = -(pilot.vOffset[ios])->X()*(TMath::DegToRad()); 
       wobbleN = (pilot.vOffset[ios])->Y()*(TMath::DegToRad());
       wobbleR = (pilot.vOffset[ios])->Z()*(TMath::DegToRad());
 
@@ -438,12 +438,20 @@ void readPilot(struct Pilot *pilot,const string &pilotfile) {
   for (int i = 0;i<numOffset;i++) {
     pi->get_line_vector(tokens);
     pilot->vOffset.push_back(new ROOT::Math::XYZVector ); 
-    double xOffs = atof(tokens[0].c_str());
+    double xOffs =  (atof(tokens[0].c_str()));
     double yOffs = atof(tokens[1].c_str());
     double rOffs = atof(tokens[2].c_str());
     (pilot->vOffset[i])->SetXYZ(xOffs,yOffs,rOffs);   
-  }    
+  }
+  if (numOffset == 0) {
+    pilot->vOffset.push_back(new ROOT::Math::XYZVector ); 
+    double xOffs = 0.0;
+    double yOffs = 0.0;
+    double rOffs = 0.0;
+    (pilot->vOffset[0])->SetXYZ(xOffs,yOffs,rOffs);   
+  }
 
+  
   flag = "DEBUG";
   pi->set_flag(flag);
   while (pi->get_line_vector(tokens) >= 0) {
