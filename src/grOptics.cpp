@@ -235,7 +235,7 @@ int main(int argc, char *argv[]) {
   bool bDrawRayFlag = false;
   enum RayPlotType eRayType;
   
-  if (pilot.telToDraw == true) {
+  if (pilot.telToDraw > 0) {
     if (pilot.telDrawOption < 3 ) {
       bDrawTelFlag = true;
       bDrawRayFlag = false;
@@ -391,6 +391,11 @@ int main(int argc, char *argv[]) {
     if (telType==DC) {
       GTelescope *tel = DCFac->makeTelescope(telId,telStd);
       tel->setPrintMode(*oLog,printMode);
+
+      *oLog << "  DEBUG DRAW telToDraw: " << pilot.telToDraw << "  telId" << telId << endl;
+      *oLog << "       bDrawTelFlag " << bDrawTelFlag << "  draw option " << pilot.telDrawOption << endl;
+      
+      
       if ( (pilot.telToDraw == telId)  && (bDrawTelFlag) ) {
 	tel->drawTelescope(pilot.telDrawOption);
 	app->Run(); 

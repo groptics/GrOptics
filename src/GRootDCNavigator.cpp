@@ -1162,11 +1162,15 @@ const char * GRootDCNavigator::getPositionDirection(double *pos1,
 //****************************************************
 void GRootDCNavigator::drawTelescope(const int &option) {
   (void) option;  // unused
-
+  
+  bool debug = true;
+  if (debug) {
+    *oLog << "in GRootDCNavigator::drawTelescope" << endl;
+  }
+  
   gGeoManager = fGeom;
   gGeoManager->GetMasterVolume()->Draw("ogl");
 
-  //   Draw("pad");        // use defaults in Draw if no openGL graphics
 };
 
 //****************************************************

@@ -475,13 +475,20 @@ void GDCTelescope::printTelescope() {
 /********************** end of printTelescope *****************/
 
 void GDCTelescope::drawTelescope(const int &option) {
+  bool debug = false;
+  if (debug) {
+    *oLog << "in GDCTelescope::drawTelescope" << endl;
+  }
+
   (void) option;  // unused
   if (eRayTracerType == RTDCROOT ) {
     rayTracer->printRayTracer();
-    *oLog << " ready to draw the telescope" << endl;
+    if (debug) {
+      *oLog << " ready to draw the DC telescope from GDCTelescope::drawTelescope" << endl;
+    }
   }
   else {
-    *oLog << " can not draw telescope without a root raytracer"
+    *oLog << " can not draw telescope without a root raytracer, in GDCTelescope::drawTelescope"
 	  << endl;
   }
 };
