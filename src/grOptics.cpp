@@ -390,11 +390,7 @@ int main(int argc, char *argv[]) {
     yoffsettel = mIter->second->telOffSetY;
     if (telType==DC) {
       GTelescope *tel = DCFac->makeTelescope(telId,telStd);
-      tel->setPrintMode(*oLog,printMode);
-
-      *oLog << "  DEBUG DRAW telToDraw: " << pilot.telToDraw << "  telId" << telId << endl;
-      *oLog << "       bDrawTelFlag " << bDrawTelFlag << "  draw option " << pilot.telDrawOption << endl;
-      
+      tel->setPrintMode(*oLog,printMode);      
       
       if ( (pilot.telToDraw == telId)  && (bDrawTelFlag) ) {
 	tel->drawTelescope(pilot.telDrawOption);

@@ -32,6 +32,7 @@ class GArrayTel {
   TelType telType;    //!< telescope type enum
   int telID;          //!< telescope array ID
   int telStd;         //!< telescope standard number
+  double fPlateScaleFactor;
 
   // primary parameters
   ROOT::Math::XYZVector vSCoreGC;  //!< primary coreHit ground coor.
@@ -173,6 +174,10 @@ class GArrayTel {
   TelType getTelescopeType() {
     return telType;
   };
+
+  double getPlateScaleFactor() {
+    return fPlateScaleFactor;
+  }
 
   double getAvgTransitTime() {
     return tel->getAvgTransitTime();

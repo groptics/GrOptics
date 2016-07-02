@@ -119,7 +119,8 @@ GArrayTel::GArrayTel(const ROOT::Math::XYZVector telLocGrd,
   fFixedPointing   = false ;
   fFixedPointingAz = 0.0   ;
   fFixedPointingEl = 0.0   ;
-
+  fPlateScaleFactor = tel->getPlateScaleFactor();
+  
   // initialize rotation matrix
   // will use later in setting up rotation matrix for telCoors.
   //tel->getPointingOffset(&fpointingOffsetX,&fpointingOffsetX);
@@ -556,7 +557,7 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
 
   // get focal length of telescope
   double fLgt = tel->getFocalLength();
-  double fPlateScaleFactor = tel->getPlateScaleFactor();
+  fPlateScaleFactor = tel->getPlateScaleFactor();
   if (debug) {
     *oLog << "          focal length " << fLgt << endl;
     *oLog << "          FPLATESCALE " << fPlateScaleFactor << endl;

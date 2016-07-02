@@ -486,6 +486,9 @@ void GSimulateOptics::fillAllTelTree() {
   // file header.
   string *strP = &sFileHeader;
 
+  vector<int> telTypeVector;
+  vector<double> telPlateSFactorVector;
+  
   vector<int> telIDVector;
   vector<float> transitTimeVector;
   vector<float> telLocXGCVector;
@@ -503,6 +506,10 @@ void GSimulateOptics::fillAllTelTree() {
        iterArrayTel++) {
     int telid = iterArrayTel->first;
     double avgTransitTime = iterArrayTel->second->getAvgTransitTime();
+    //*oLog << "TELTYPE " << iterArrayTel->second->getTelescopeType() << endl;
+    //*oLog << "  PLATE " << iterArrayTel->second->getPlateScaleFactor() << endl;
+    telPlateSFactorVector.push_back(iterArrayTel->second->getPlateScaleFactor());
+    telTypeVector.push_back(iterArrayTel->second->getTelescopeType());
     telIDVector.push_back(telid);
     transitTimeVector.push_back( (float)avgTransitTime );
 
@@ -524,6 +531,8 @@ void GSimulateOptics::fillAllTelTree() {
   allTel->Branch("globalEffic",&fGlobalEffic,"globalEffic/D");
   allTel->Branch("obsHgt",&fObsHgt,"obsHgt/D");
   allTel->Branch("telIDVector",&telIDVector);
+  allTel->Branch("telTypeVector", &telTypeVector);
+  allTel->Branch("telPlateSFacVector",&telPlateSFactorVector);
   allTel->Branch("telLocXVector",&telLocXGCVector);
   allTel->Branch("telLocYVector",&telLocYGCVector);
   allTel->Branch("telLocZVector",&telLocZGCVector);

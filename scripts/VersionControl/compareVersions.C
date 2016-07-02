@@ -1,4 +1,8 @@
-/* root script to produce text output of the GrOptics output rootfile in
+/* 
+ VERSION4.0 
+ 30May2016
+
+   root script to produce text output of the GrOptics output rootfile in
    a single file.  Do this for two different versions and then run 
    unix "diff" or "meld", etc. on these two files. If they are the same,
    then the versions produce the same output.

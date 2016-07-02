@@ -1,9 +1,9 @@
-# run this script in the GrOptics directory to change the version listing
+# run this bash script in the GrOptics directory to change the version listing
 # in all relevant files
 
-#  Charlie Duke
-#  10MAY2012
-#  Grinnell College
+# changeVersion.C
+# VERSION4.0 
+# 30May2016
 
 #  command line parameters are:
 #     1. current version line
@@ -36,5 +36,14 @@ sed  -i "s/$3/$4/g" Config/*.pilot
 
 sed  -i "s/$1/$2/g" Config/*.cfg
 sed  -i "s/$3/$4/g" Config/*.cfg
+
+sed  -i "s/$1/$2/g" scripts/*.C
+sed  -i "s/$3/$4/g" scripts/*.C
+
+sed  -i "s/$1/$2/g" scripts/VersionControl/*.C
+sed  -i "s/$3/$4/g" scripts/VersionControl/*.C
+sed  -i "s/$1/$2/g" scripts/VersionControl/*.sh
+sed  -i "s/$3/$4/g" scripts/VersionControl/*.sh
+
 
 echo "BE SURE TO MANUALLY CHANGE VERSION IN GDEFINITION.H"
