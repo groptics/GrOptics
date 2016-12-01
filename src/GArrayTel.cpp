@@ -189,8 +189,10 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
     // If fixed pointing is specified, manually set telescope az/zn to a fixed position,
     // and calculate the event's offset in the tangential camera plane fSrcRelToTelescopeX/Y
     fAzTel =        fFixedPointingAz   ; 
-    fZnTel = ( PI - fFixedPointingEl ) ;
-    
+    fZnTel = ( TMath::PiOver2() - fFixedPointingEl ) ;
+    *oLog << "fAzTel " << fAzTel*(TMath::RadToDeg()) << endl;
+    *oLog << "fZnTel " << fZnTel*(TMath::RadToDeg()) << endl;
+
     // We have our telescope pointing and our event direction, so we need to compute
     // the tangent-plane offset of the event in the tangential plane of the telescope
     int status = -1 ;
@@ -199,14 +201,21 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
                                         &fSrcRelToTelescopeX,
                                         &fSrcRelToTelescopeY,
                                         &status ) ;
-    *oLog << "  fSrcRelToTelescopeX/Y = " << setw(7) << setprecision(5) << fSrcRelToTelescopeX * TMath::RadToDeg() << " " << fSrcRelToTelescopeY * TMath::RadToDeg() << endl;
+    *oLog << "  fSrcRelToTelescopeX/Y = " << setw(7) << setprecision(5)
+	  << fSrcRelToTelescopeX * TMath::RadToDeg() << " "
+	  << fSrcRelToTelescopeY * TMath::RadToDeg() << endl;
     *oLog << "  status                = " << status << endl;
 
     if ( status != 0 ) {
       *oLog << endl;
-      *oLog << "Error, cannot process event at az/el " << fAzPrim*TMath::DegToRad() << "," << (90.0 - (fZnPrim*TMath::RadToDeg())) << endl;
-      *oLog << "  when telescope is pointing at az/el " << fAzTel*TMath::DegToRad() << "," << fAzPrim*TMath::RadToDeg() << endl;
-      *oLog << "  These two directions are too far apart (status=" << status << ") when calculating the tangential coordinates of the event, should generall be within 90 deg of each other." << endl;
+      *oLog << "Error, cannot process event at az/el "
+	    << fAzPrim*TMath::DegToRad() << ","
+	    << (90.0 - (fZnPrim*TMath::RadToDeg())) << endl;
+      *oLog << "  when telescope is pointing at az/el "
+	    << fAzTel*TMath::DegToRad() << ","
+	    << fAzPrim*TMath::RadToDeg() << endl;
+      *oLog << "  These two directions are too far apart (status=" << status
+	    << ") when calculating the tangential coordinates of the event, should generall be within 90 deg of each other." << endl;
       exit(1);
     }
     

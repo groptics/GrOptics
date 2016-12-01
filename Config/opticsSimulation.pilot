@@ -82,6 +82,10 @@ wobble Y, North: WOBBLE 0.0 0.5 0.0 31.675  (offset toward Polaris)
 wobble X, East : WOBBLE 0.5 0.0 0.0 31.675  (offset perpendicular to hour circle)
 * WOBBLE 0.0 0.0 0.0 90.0
 
+azimuth and elevation for fixed telescope pointing direction for
+all telescopes (currently testing this option)
+ FIXTELAZELDEG 0.0 60.0
+
 array configuration file
  ARRAYCONFIG <filename: default ./Config/arrayConfig.cfg>
 * ARRAYCONFIG ./Config/arrayConfig.cfg

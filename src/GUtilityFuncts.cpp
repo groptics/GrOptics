@@ -691,11 +691,11 @@ double GUtilityFuncts::fieldRot(const double &zn, const double &az,
     *oLog << "      phiR  : " << (TMath::RadToDeg())*phiR << endl;
   }
   if (debug) {
-    *oLog << "        get phir from atan2(sinR,cosR) , zero = both are 0" 
+    *oLog << "        get phir from atan2(sinR,cosR) , atan2(0.0) = 0 " 
           << endl;
     *oLog << "         sinR cosR " << sinR << "  " << cosR << endl;
     phiR = ( (sinR!=0.0)||(cosR!=0.0) ? atan2(sinR,cosR) : 0.0);
-    *oLog << "      " << phiR*(TMath::RadToDeg()) << endl;
+    *oLog << "    phiR from atan2  " << phiR*(TMath::RadToDeg()) << endl;
   }
 
   return phiR;
@@ -744,11 +744,12 @@ int GUtilityFuncts::XYcosToAzZn(const double &xcos, const double &ycos,
   double epsilon = numeric_limits<double>::epsilon();
 
   double r = xcos*xcos+ycos*ycos;
-  if (r > 0.0) {
+  Bool_t testZero = TMath::AreEqualAbs(r,0.0,epsilon); 
+  if (!testZero) {
     *zn=asin(sqrt(r));
     *az=atan2(xcos,ycos);
 
-    Bool_t testZero = TMath::AreEqualAbs(*az,0.0,epsilon); 
+    testZero = TMath::AreEqualAbs(*az,0.0,epsilon); 
     if (testZero) {
       *az = 0.0;
     }
@@ -782,10 +783,10 @@ void GUtilityFuncts::wobbleToAzZn(const double &wobbleN,
                                      double *aZNew, 
                                      double *zNNew) {
 
-  // in the rotated coordinate system (from aZ,zN), the vector
-  // to the offset point in the tangent plane is (
-
-
+  // The wobble angle here is on the unit sphere, not the tangent plane.
+  // C. Duke: 11Nov2016 this method is now correct, see commented out lines
+  //  This function is unused in GrOptics code. could remove at some point
+  
   bool debug = false;
   if (debug) {
     *oLog << "  -- GUtilityFuncts::wobbleToAzZn " << endl;
@@ -802,10 +803,12 @@ void GUtilityFuncts::wobbleToAzZn(const double &wobbleN,
     *oLog << "     field rotation " << rot*(TMath::RadToDeg())
           << endl;
   }
-
-  double delZn = -wobbleN*cos(rot)+wobbleE*sin(rot);
-  double delTheta = -wobbleN*sin(rot) - wobbleE*cos(rot);
-  if (debug) {
+  // changes in zenith angle and theta now have correct signs.
+  //double delZn = -wobbleN*cos(rot)+wobbleE*sin(rot);
+  //double delTheta = -wobbleN*sin(rot) - wobbleE*cos(rot);
+  double delZn = -wobbleN*cos(rot) - wobbleE*sin(rot);
+  double delTheta = -wobbleN*sin(rot) + wobbleE*cos(rot);
+    if (debug) {
     *oLog << "     delZn delTheta  " << delZn*(TMath::RadToDeg())
           << " " << delTheta*(TMath::RadToDeg())
           << endl;
@@ -903,6 +906,227 @@ void GUtilityFuncts::offsetXYToAzZn(const double &offsetX, const double &offsetY
   }
 };
 /************** end of offsetXYToAzZn  ********************/
+
+void GUtilityFuncts::telescopeAzZnNew(const double &primAz,
+                                   const double &primZn,
+                                   const double &wobbleN,
+                                   const double &wobbleE,
+                                   const double &telOffsetX,
+                                   const double &telOffsetY,
+                                   const double &latitude,
+                                   double *telAz,double *telZn,
+                                   double *sourceX,double *sourceY) {
+
+  /*  function to determine the az,zn of the telscope. The telescope is moved from 
+      the primAz,primZn location through the vector (wobbleN,wobbleE) on the tangent 
+      plane after adding the telescope offset vector.  The Source vector is the location
+      of the source (primAz,primZn) location on the tangent plane centered at the new 
+      location of the telescope.  The usual coordinate systems apply: x(East), Y(North),
+      and z(Up) for the ground system.  The tangent plane coordinates are y(down from the 
+      zenith), x (perpendicular to y in the direction of increasing azimuth).
+   */
+  bool debug = false;
+  
+  *sourceX = 0.0;
+  *sourceY = 0.0;
+
+  double epsilon = numeric_limits<double>::epsilon();
+
+  if (debug) {
+    *oLog << "------------------------------------------------" << endl;
+    *oLog << "  -- GUtilityFuncts::telescopeAzZnNew"  << endl;
+    *oLog << "         prim Az / Zn   " << primAz*(TMath::RadToDeg())
+          << "  /  " << primZn*(TMath::RadToDeg()) << endl;
+    *oLog << "         wobbleN / E    " << wobbleN*(TMath::RadToDeg())
+          << "  /  " << wobbleE*(TMath::RadToDeg()) << endl;
+    *oLog << "         latitude       " << latitude*(TMath::RadToDeg()) << endl;
+    *oLog << "         telOffSetX / Y " << telOffsetX*(TMath::RadToDeg())
+          << "  /  " << telOffsetY*(TMath::RadToDeg()) << endl;
+    *oLog << "--------------------------------------------------" << endl;
+  }
+  bool haveWobbleFlag =  ! ((TMath::AreEqualAbs(wobbleN,0.0,epsilon)) && (TMath::AreEqualAbs(wobbleE,0.0,epsilon) ) );
+  bool haveOffsetFlag =  ! ((TMath::AreEqualAbs(telOffsetX,0.0,epsilon)) && (TMath::AreEqualAbs(telOffsetY,0.0,epsilon) ) );
+
+  *telAz = primAz;
+  *telZn = primZn;
+
+  if ( (haveWobbleFlag || haveOffsetFlag) ) {
+    if (debug) {
+      *oLog << " ready to offset/wobble " << endl;
+      *oLog << "------------------------------" << endl;
+    }
+  
+
+    /* find telescope az/zn after telescope offsets. The offsetx/y is the 
+       arc length in radians along a great circle arc starting at the origin
+       of the tangent plane (at the location of the primary on the unit 
+       sphere.) If "a" is the arc length, then the equivalent distance, "b",
+       along the tangent plane is "b = tan(a)". The offsets are along the
+       telescope X and Y axes where a positive y offset increases the 
+       telescope zenith angle and a positive x offset increases the telescope 
+       azimuth and will slightly increase the zenith angle since the x 
+       offset is along a great circle (all straight lines on the tangent
+       plane are along a great circle on the unit sphere).
+    */
+    if (haveOffsetFlag) {
+      // get offset distances on tangent plane (Tp)
+      double telOffsetXTp = tan(telOffsetX);
+      double telOffsetYTp = tan(telOffsetY);
+      
+      if (debug) {
+	*oLog << "get offset distances on the tangent plane from tan(offsetx/y) " << endl;
+	DEBUG(telOffsetX); DEBUG(telOffsetY);
+	DEBUG(telOffsetXTp); DEBUG(telOffsetYTp);
+	DEBUG(telOffsetX*(TMath::RadToDeg())); DEBUG(telOffsetY*(TMath::RadToDeg()));
+	DEBUG(telOffsetXTp*(TMath::RadToDeg())); DEBUG(telOffsetYTp*(TMath::RadToDeg()));
+      }
+      // get new unit vector locating the telescope in telescope coordinates
+      // by adding (0,0,1) to the x and y coordinates and finding the unit vector.
+      // Use the unit vector to find the az/zn for the telescope.
+      //        first the rotation matrix. 
+      ROOT::Math::RotationZ rz1(primAz);
+      ROOT::Math::RotationX rx1(primZn);
+      ROOT::Math::Rotation3D rotM1 = rx1*rz1;
+      
+      //        then the direction cosines toward the unit sphere for the primary
+      double xcos0,ycos0;
+      GUtilityFuncts::AzZnToXYcos(primAz,primZn,&xcos0,&ycos0);
+      
+      if (debug) {
+	*oLog << "---------" << endl;
+	*oLog << "direction cosines for the primary" << endl;
+	double zcos0 = sqrt(1 - xcos0*xcos0 - ycos0*ycos0);
+	DEBUG(xcos0); DEBUG(ycos0); DEBUG(zcos0);
+      }
+      // 
+      ROOT::Math::XYZVector vTel1(telOffsetXTp, telOffsetYTp,1.0);
+      ROOT::Math::XYZVector vTel1Gr = rotM1.Inverse()*vTel1.Unit();
+      double az1,zn1;
+      GUtilityFuncts::XYcosToAzZn(vTel1Gr.X(),vTel1Gr.Y(),&az1,&zn1);
+      
+      if (debug) {
+	*oLog << "----------" << endl;
+	GUtilityFuncts::printGenVector(vTel1); *oLog << " vTel1; vector to offset point " << endl;
+	*oLog << "            on tangent plane in tangent plane coor." << endl;
+	GUtilityFuncts::printGenVector(vTel1Gr); *oLog << "  vTel1Gr Unit vector in ground coordinates" << endl;
+	*oLog << "----------" << endl;
+	*oLog << "new Az/Zn after teloffsets " << az1*(TMath::RadToDeg())
+	      << "  " << zn1*(TMath::RadToDeg()) << endl;
+      }
+      // update telAz and telZn, no wobble offsets yet.
+      *telAz = az1;
+      *telZn = zn1;
+    }
+    
+    if (haveWobbleFlag) {
+      // get the rotation matrix from ground to telescope coordinates
+      double wobbleNTp = tan(wobbleN);
+      double wobbleETp = tan(wobbleE);
+
+      if (debug) {
+	*oLog << "----------------- starting wobble section " << endl;
+	DEBUG(wobbleN); DEBUG(wobbleE);
+	DEBUG(wobbleN*(TMath::RadToDeg())); DEBUG(wobbleE*(TMath::RadToDeg()));
+	DEBUG(wobbleNTp); DEBUG(wobbleETp);
+	DEBUG(wobbleNTp*(TMath::RadToDeg())); DEBUG(wobbleETp*(TMath::RadToDeg()));
+      }
+      
+      ROOT::Math::RotationZ rz2(*telAz);
+      ROOT::Math::RotationX rx2(*telZn);
+      ROOT::Math::Rotation3D rotM2 = rx2*rz2;
+      
+      double wobbleX = 0.0, wobbleY = 0.0, fRot = 0.0;
+      
+      fRot = GUtilityFuncts::fieldRot(*telZn,*telAz,latitude);
+      wobbleY = -wobbleNTp*cos(fRot) - wobbleETp*sin(fRot);
+      wobbleX = -wobbleNTp*sin(fRot) + wobbleETp*cos(fRot);
+      
+      ROOT::Math::XYZVector vTel2(wobbleX, wobbleY,1.0);
+      ROOT::Math::XYZVector vTel2Gr = rotM2.Inverse()*vTel2.Unit();
+      double az2,zn2;
+      double xcos2 = vTel2Gr.X();
+      double ycos2 = vTel2Gr.Y();
+      GUtilityFuncts::XYcosToAzZn(xcos2,ycos2,&az2,&zn2);
+      
+      *telAz = az2;
+      *telZn = zn2;
+      
+      if (debug) {
+	*oLog << "---------------" << endl;
+	GUtilityFuncts::printGenVector(vTel2); *oLog << " vTel2 to wobble offset point on tangent plane" << endl;
+	*oLog << "                        in tangent plane coordinates" << endl;
+	*oLog << "                        includes prior telOffsets " << endl;
+	GUtilityFuncts::printGenVector(vTel2Gr); *oLog << "  vTel2Gr Unit vector in ground coordinates" << endl;
+	*oLog << "----------" << endl;
+	*oLog << "new Az/Zn after teloffsets and wobble offsets " << az2*(TMath::RadToDeg())
+	      << "  " << zn2*(TMath::RadToDeg()) << endl;
+      }
+    }
+  }
+  if (debug) {
+    *oLog << " ======= final az/zn values ========= " << endl;
+    DEBUG((*telAz)*(TMath::RadToDeg())); DEBUG((*telZn)*(TMath::RadToDeg()));
+    
+    // get source location relative to telescope for testing.
+    /*  locates source primAz, primZn
+	locates telescope *telAz, *telZn
+    */
+    // unit vector to telescope location, and rotation matrix to telescope system
+    double cosxTelGr, cosyTelGr, coszTelGr;
+
+    ROOT::Math::RotationZ rz3(*telAz);
+    ROOT::Math::RotationX rx3(*telZn);
+    ROOT::Math::Rotation3D rotM3 = rx3*rz3;
+    
+    GUtilityFuncts::AzZnToXYcos(*telAz,*telZn,&cosxTelGr,&cosyTelGr);
+    coszTelGr = sqrt(1 - cosxTelGr*cosxTelGr - cosyTelGr*cosyTelGr);
+    ROOT::Math::XYZVector tel3Gr(cosxTelGr,cosyTelGr,coszTelGr);
+
+    // telescope location in telescope reference system
+    ROOT::Math::XYZVector tel3tel = rotM3*tel3Gr;
+    
+    /*
+      n1 = unit vector (on unit sphere) in ground coor. locating telescope = vTel2Gr
+      n2 = unit vector locating source in ground coor. = (xcos0,ycos0,sqrt(1-xcos02 - ycos02) )
+      b = vector from Tel to Source (grnd.coor) = ( n2/(n2.n1) ) - n1  (n2.n1) = dot product. 
+    */
+    /*
+      double zcos0 = sqrt(1 - xcos0*xcos0 - ycos0*ycos0);  // xyzcos0 locates the source
+      double zcos2 = sqrt(1 - xcos2*xcos2 - ycos2*ycos2);  // xyzcos2 locates the telescope
+      double dotP = xcos0*xcos2 + ycos0*ycos2 + zcos0*zcos2;
+      
+      double bcosx = (xcos0/dotP) - xcos2;
+      double bcosy = (ycos0/dotP) - ycos2;
+      double bcosz = (zcos0/dotP) - zcos2;
+      *oLog << "   source on tangent plane in ground coor " << bcosx << "   " << bcosy << "   " << bcosz << endl;
+      ROOT::Math::XYZVector tel2sVGr(bcosx,bcosy,bcosz);
+      ROOT::Math::XYZVector tel2sVTelTp = rotM2*tel2sVGr;
+      GUtilityFuncts::printGenVector(tel2sVTelTp); *oLog << "    tel2sVTelTp  " << endl;
+      *oLog << "   tel2sVTelTp in degrees " << tel2sVTelTp.X()*TMath::RadToDeg() << "   "
+      << tel2sVTelTp.Y() * TMath::RadToDeg() << "   " << tel2sVTelTp.Z() * TMath::RadToDeg() << endl;
+    */
+    // test for rotational matrix, should get (0,0,1) for tel. location in tel coor.
+    //ROOT::Math::XYZVector telLocTest = rotM2*
+    
+  }
+
+//GUtilityFuncts::offsetXYToAzZn(wobbleX, wobbleY,az,zn,
+//				 telAz,telZn);             
+
+
+  // get the offsets for the tangent plane and determine unit vector pointing to
+  // the offset point on the tangent plane.
+
+  // move back to ground coordinates and find the new az/zn for the telescope
+
+
+  // Same process for the wobble offsets
+  // get the rotation matrix from ground to telescope coordinates
+
+  // find the wobble offsets for the tangent plane, the field rotation
+};
+
+
 void GUtilityFuncts::telescopeAzZn(const double &primAz,
                                    const double &primZn,
                                    const double &wobbleN,
@@ -990,7 +1214,7 @@ void GUtilityFuncts::telescopeAzZnRot(const double &primAz,
                                       double *telAz,double *telZn,
                                       double *sourceX,double *sourceY) {
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GUtilityFuncts::telescopeAzZnRot"  << endl;
     *oLog << "     prim Az / Zn   " << primAz*(TMath::RadToDeg())
@@ -1100,27 +1324,35 @@ void GUtilityFuncts::telescopeAzZnRot(const double &primAz,
   
 };
 
-
-void GUtilityFuncts::XYZcosToRotMat(const double &xcos,
+//-----------------------------------------------------------------
+void GUtilityFuncts::XYcosToRotMat(const double &xcos,
                                const double &ycos,
-                               const double &zcos,
                                ROOT::Math::Rotation3D *rotM) {
+  /* Construct the rotation matrix for moving a unit vector in ground coordinates
+     to telescope coordinates given at az/zn on the unit sphere 
+  */
   // INCOMPLETE, DO NOT USE, DO NOT CALL
-  (void) zcos; // unused
-  (void) rotM; // unused
   double az,zn;
   GUtilityFuncts::XYcosToAzZn(xcos,ycos,&az,&zn);
+  ROOT::Math::RotationZ rz(az);
+  ROOT::Math::RotationX rx(zn);
+  *rotM = rx*rz;
 
 };
 /*****************  end of rotXYZcos ***************/
 void GUtilityFuncts::AzZnToRotMat(const double &az,
                                   const double &zn,
                                   ROOT::Math::Rotation3D *rotM) {
-  
+  bool debug = false;
   ROOT::Math::RotationZ rz(az);
   ROOT::Math::RotationX rx(zn);
   *rotM = rx*rz;
 
+  if (debug) {
+    *oLog << "    in GUtilityFuncts::AzZnToRotMat" << endl;
+    *oLog << "      az zn " << az*TMath::RadToDeg() << "   "
+	  << zn*TMath::RadToDeg() << endl;
+  }
 };
 /*****************  end of rotXYZcos ***************/
 bool GUtilityFuncts::testZeroFloat(const double &ax) {

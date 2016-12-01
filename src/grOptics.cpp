@@ -742,10 +742,17 @@ int pilotPrint(const Pilot &pilot) {
   *oLog << "         testTel base filename   " << pilot.testTelFile << endl;
   *oLog << "         debugBranchesFlag       " << pilot.debugBranchesFlag << endl;
   *oLog << "         fixedPointing " << pilot.fixedPointing << endl;
-  *oLog << "         fixedPointingAz " << pilot.fixedPointingAz << endl;
-  *oLog << "         fixedPointingEl " << pilot.fixedPointingEl << endl;
-  *oLog << endl;
-
+  if (pilot.fixedPointing) {
+    
+    *oLog << "         fixedPointingAz radians/degrees "
+	  << pilot.fixedPointingAz << "  "
+	  << (pilot.fixedPointingAz)*TMath::RadToDeg() << endl;
+    
+    *oLog << "         fixedPointingEl radians/degrees "
+	  << pilot.fixedPointingEl << "  "
+	  << (pilot.fixedPointingEl)*TMath::RadToDeg() << endl;
+  }
+   
   return 1;
 };
 /*********************** end of pilotPrint ***************************************/
@@ -788,8 +795,10 @@ int readPilot(Pilot *pilot) {
 
   GPilot *pi = new GPilot(spilotfile);
 
-  double PI =  3.141592654;     /*   Value of pi */
-
+  //double PI =  3.141592654;     /*   Value of pi */
+  // use root constant
+  double PI = TMath::Pi();
+    
   string flag = "FILEIN";
   pi->set_flag(flag);
   while (pi->get_line_vector(tokens) >=0) {
@@ -896,20 +905,28 @@ int readPilot(Pilot *pilot) {
   pi->set_flag(flag);
   while (pi->get_line_vector(tokens) >=0) {
     if (tokens.size() == 2 ) {
-      // read in settings for manually fixing the telescope pointing for the entire run of this program
+      // read in settings for manually fixing the telescope pointing
+      //for the entire run of this program
       // will ignore any wobbling settings
       pilot->fixedPointing   = true ;
       
-      // read in the geographic azimuth in degrees (0deg=GeoNorth, 90deg=East), and switch it to groptic's coordinate system
-      double az = ( atof(tokens.at(0).c_str()) * TMath::DegToRad() ) + PI;
+      // read in the geographic azimuth in degrees (0deg=GeoNorth,
+      // 90deg=East), and switch it to groptic's coordinate system
+      //double az = ( atof(tokens.at(0).c_str()) * TMath::DegToRad() ) + PI;
+
+      // read in usual az referenced to North toward East
+      double az = ( atof(tokens.at(0).c_str()) * TMath::DegToRad() );
       if ( az >= 2.0 * PI ) {
         az -= 2.0 * PI ;
       }
       pilot->fixedPointingAz = az ;
       
       // read in the telescope elevation in degrees from the horizon, 
-      // and convert it to groptics's coordinate system where elevation is degrees from nadir (add 90)
-      pilot->fixedPointingEl = (PI/2.0) + ( atof(tokens.at(1).c_str()) * TMath::DegToRad() ) ; 
+      // and convert it to groptics's coordinate system where
+      //elevation is degrees from nadir (add 90)
+      //pilot->fixedPointingEl = (PI/2.0) +
+      //( atof(tokens.at(1).c_str()) * TMath::DegToRad() ) ; 
+      pilot->fixedPointingEl = atof(tokens.at(1).c_str()) * TMath::DegToRad(); 
     }
   }  
   

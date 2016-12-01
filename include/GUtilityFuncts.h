@@ -168,9 +168,24 @@ namespace GUtilityFuncts {
    double fieldRot(const double &zn, const double &az,
                    const double &latitude);
 
+   /*! \brief find azimuth and zenith angles from given x and y direction cosines
+
+     \param xcos x-direction cosine of vector pointing to azimuth and zenith defined point
+     \param ycos y-direction cosine of vector pointing to azimuth and zenith defined point
+     \param[out] az  pointer to azimuthal angle determined from xcos and ycos
+     \param[out] zn  pointer to zenith angle determined from xcos and ycos.
+     \return 0
+    */
    int XYcosToAzZn(const double &xcos, const double &ycos,
                                       double *az,double *zn);
-
+   /*! \brief find unit vector pointing to given azimuth and zenith angles defined point on sphere.
+     
+     \param az  azimuthal angle of point on unit sphere
+     \param zn  zenith angle of point on unit sphere
+     \param xcos pointer to x direction cosine of vector to point defined by az and zn
+     \param ycos pointer to y direction cosine of vector to point defined by az and zn.
+     \return 0
+    */
    int AzZnToXYcos(const double &az,const double &zn,
                    double *xcos, double *ycos);
 
@@ -188,6 +203,16 @@ namespace GUtilityFuncts {
                       const double &latitude,
                       double *telAz,double *telZn,
                       double *sourceX,double *sourceY);
+
+   void telescopeAzZnNew(const double &primAz,
+			 const double &primZn,
+			 const double &wobbleN,
+			 const double &wobbleE,
+			 const double &telOffsetX,
+			 const double &telOffsetY,
+			 const double &latitude,
+			 double *telAz,double *telZn,
+			 double *sourceX,double *sourceY);
    
    void telescopeAzZnRot(const double &primAz,
                          const double &primZn,
@@ -199,10 +224,9 @@ namespace GUtilityFuncts {
                          double *telAz,double *telZn,
                          double *sourceX,double *sourceY);
    
-   void XYZcosToRotMat(const double &xcos,
-                               const double &ycos,
-                               const double &zcos,
-                       ROOT::Math::Rotation3D *rotM);
+   void XYcosToRotMat(const double &xcos,
+		      const double &ycos,
+		      ROOT::Math::Rotation3D *rotM);
    
    void AzZnToRotMat(const double &az,
                      const double &zn,
