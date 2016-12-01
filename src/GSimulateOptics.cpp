@@ -415,62 +415,6 @@ void GSimulateOptics::printDebugPrimary() {
 };
 /************** end of printDebugPhoton ******************/
 
-void GSimulateOptics::makeRotMatrixGrdToSky() {
-
-  // not currently used
-  bool debug = false;
-
-  ////////////////////////////////////////
-  // determine telescope location from wobble offsets
-  // tested with matlab for fWobbleR > 0
-
-  double wobbleETmp = fWobbleE;
-  double wobbleNTmp = fWobbleN;
-    
-  if (fWobbleR > 0.0001) {
-    double wobRrand = fWobbleR*sqrt(TR3.Rndm());
-    double wobTrand = (TMath::TwoPi())*TR3.Rndm();
-    double delE     = wobRrand*cos(wobTrand);
-    double delN     = wobRrand*sin(wobTrand);
-    wobbleETmp     += delE;
-    wobbleNTmp     += delN;
-  }
-  else {
-    // otherwise, wobbleETmp and wobbleNTmp are ok for the offsets
-  }
-
-  GUtilityFuncts::wobbleToAzZn(wobbleNTmp,wobbleETmp,fLatitude,
-                               fAzPrim,fZnPrim,&fAzTel,&fZnTel);
-  
-  // get location of the telescope on the sky, dir cosines
-  double xc=0.0, yc=0.0, zc=0.0;
-  GUtilityFuncts::AzZnToXYcos(fAzTel,fZnTel,&xc,&yc);
-
-  zc = sqrt(1 - xc*xc - yc*yc);
-  vTelDcosGrd = new ROOT::Math::XYZVector(xc,yc,zc);
-  if (debug) {
-    *oLog << " tel.pointing in grd.coor ";
-    GUtilityFuncts::printGenVector(*vTelDcosGrd); 
-    *oLog << endl;
-  }  
-
-  // need a coordinate system rotation to the telescope system
-  // XYZ rotations "actively" rotate the vector, not the coor.sys.
-  ROOT::Math::RotationZ rz(fAzTel);
-  ROOT::Math::RotationX rx(fZnTel);
-
-  rotGrdToTel = new ROOT::Math::Rotation3D;
-  *rotGrdToTel = rx*rz;
-
-  if (debug) {
-    // confirm for debugging, use matrix to rotation tel to tel coor.
-    // should get unit vector
-    ROOT::Math::XYZVector vTel_TelCoor = (*rotGrdToTel)*(*vTelDcosGrd);
-    *oLog << " tel.location in tel coordinates using rot matrix ";
-    GUtilityFuncts::printGenVector(vTel_TelCoor);
-    *oLog << endl;
-  }
-};
 /************** end of :makeRotMatrixGrdToSky ******************/
 
 void GSimulateOptics::fillAllTelTree() {

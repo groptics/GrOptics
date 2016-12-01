@@ -158,12 +158,6 @@ class GSimulateOptics {
    */
   void makeWobbleOffset();
 
-  /*!
-   */
-  void makeRotMatrixGrdToSky();
-
-  /*!
-   */
   void printDebugTelescope();
 
   /*!
