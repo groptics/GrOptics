@@ -160,7 +160,6 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
   fWobbleN = WobbleTNc;
   fWobbleE = WobbleTEc;
   fLatitude = Latitude;
-  double PI = 3.141592654 ;
   
   if (debug) {
     *oLog << "  -- GArrayTel::setPrimary: telID = " << telID << endl;

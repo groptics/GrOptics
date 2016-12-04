@@ -189,11 +189,18 @@ namespace GUtilityFuncts {
    int AzZnToXYcos(const double &az,const double &zn,
                    double *xcos, double *ycos);
 
+   /*! \brief
+
+    */
    void wobbleToAzZn(const double &wobbleN, const double &wobbleE,
                      const double &latitude,
                      const double &aZ, const double &zN,
                      double *aZNew, double *zNNew);
 
+   /*! \brief
+
+
+    */
    void telescopeAzZn(const double &primAz,
                       const double &primZn,
                       const double &wobbleN,
@@ -204,6 +211,10 @@ namespace GUtilityFuncts {
                       double *telAz,double *telZn,
                       double *sourceX,double *sourceY);
 
+   /*! \brief
+
+
+    */
    void telescopeAzZnNew(const double &primAz,
 			 const double &primZn,
 			 const double &wobbleN,
@@ -214,6 +225,10 @@ namespace GUtilityFuncts {
 			 double *telAz,double *telZn,
 			 double *sourceX,double *sourceY);
    
+   /*! \brief
+
+
+    */
    void telescopeAzZnRot(const double &primAz,
                          const double &primZn,
                          const double &wobbleN,
@@ -228,38 +243,78 @@ namespace GUtilityFuncts {
 		      const double &ycos,
 		      ROOT::Math::Rotation3D *rotM);
    
+   /*! \brief
+
+
+    */
    void AzZnToRotMat(const double &az,
                      const double &zn,
                      ROOT::Math::Rotation3D *rotM);
   
+   /*! \brief
+
+
+    */
    void offsetXYToAzZn(const double &offsetX, const double &offsetY,
                        const double &az, const double &zn,
                        double *azOffset, double *znOffset);
 
+   /*! \brief
+
+
+    */
    void tangentPlaneOffset( const double &az  , const double &zn,
                             const double &az_t, const double &zn_t,
                             double       *xoff, double       *yoff,
                             int          *calc_status   ) ;
    
-   bool testZeroFloat(const double &ax);
+   /*! \brief
 
+
+    */
+   bool testZeroFloat(double *ax, const int &zeroFlag);
+
+   /*! \brief
+
+
+    */
    bool zeroFloatVectorFix(ROOT::Math::XYZVector *vec);
 
+   /*! \brief
+
+
+    */
    bool photonReflect(const vector<double> &refCoeff,
                       const vector<double> &refWaveLgt,
                       const double &reflect,
                       const double &photonWaveLgt );
                          
 
+   /*! \brief
+
+
+    */
    void reflectDirection(const ROOT::Math::XYZVector &vnormUnit,
                          const ROOT::Math::XYZVector &vphotonUnit,
                          ROOT::Math::XYZVector *vphotonReflDcos,
                          const double &roughness, const int &option=0);
 
+   /*! \brief
+
+
+    */
    bool sortPair(const pair<int,int> i , const pair<int,int> j);
 
+   /*! \brief
+
+
+    */
    void printSegVector (const vector<mirrorSegmentDetails *> &vec);
 
+   /*! \brief
+
+
+    */
    void printXYZVector(const ROOT::Math::XYZVector &vec,const string &label);
 
 };

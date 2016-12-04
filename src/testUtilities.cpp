@@ -96,14 +96,20 @@ void printFieldRot(double az, double zn, double latitude);
 void printAzZnToXYcos(double az, double zn);
 void printXYcosToAzZn(double xcos, double ycos);
 
-void printWobbleToAzZn(double wobbleN, double wobbleE,double latitude,
-                       double az, double zn);
 void testAzZnToRotMat(double az, double zn, double x, double y, double z);
 
 void testOffsetXYToAzZn(double offsetX, double offsetY,
                         double az, double zn);
 
 void testtelescopeAzZn(const double &primAz,
+                       const double &primZn,
+                       const double &wobbleN,
+                       const double &wobbleE,
+                       const double &telOffsetX,
+                       const double &telOffsetY,
+                       const double &latitude);
+
+void testtelescopeAzZnRot(const double &primAz,
                        const double &primZn,
                        const double &wobbleN,
                        const double &wobbleE,
@@ -121,17 +127,7 @@ int main() {
   oLog = &cerr;
 
   *oLog << " ---------------entering testUtilities-------------- " << endl;
-  if (1) {
-    *oLog << "========== test GUtilityFunct::wobbleToAzZn ==============" << endl;
-    // find new az/zn for wobbled direction from given az/zn. (need fieldRot).
-    printWobbleToAzZn(0.0,  //wobbleN
-		      5.0,  // wobbleE
-		      90.0, // latitude
-		      0.0,  // az
-		      90.0); // zn
-    *oLog << "===================== end of tests for wobbleToAzZn =============" << endl;
-  }
- 
+  
   if (0) {  
     *oLog << "===================== test  GUtilityFunct::fieldRot ===================" << endl << endl;
     printFieldRot(350.0,  // az
@@ -158,25 +154,24 @@ int main() {
     *oLog << "================= tests for telescopeAzZn ====================" << endl;
     testtelescopeAzZn(30.0,  //azimuth
 		      60.0, //zenith
-		      2.0,  // wobbleN
+		      0.0,  // wobbleN
 		      0.0,  // wobbleE
 		      0.0,  // offsetX
-		      2.0,  // offsetY
+		      3.0,  // offsetY
 		      45.0); // latitude
     *oLog << "================== end of tests for telescopeAzZn =============" <<endl;
   }
-  
-  if (0) {
-    *oLog << "============== tests for GUtilityFunct::wobbleToAzZn ==============" << endl;
-    printWobbleToAzZn(0.0,  // wobbleN
+  if(1) {
+    *oLog << "================= tests for telescopeAzZnRot ==================" << endl;
+    testtelescopeAzZnRot(30.0,  //azimuth
+		      60.0, //zenith
+		      0.0,  // wobbleN
 		      0.0,  // wobbleE
-		      90.0, // latitude
-		      0.0,  // az
-		      30.0); //zn
-
-    *oLog << "==================== end of tests for wobbleToAzZn ============" << endl;
-
+		      0.0,  // offsetX
+		      3.0,  // offsetY
+		      45.0); // latitude
   }
+  
   if (0) {
     *oLog << "=============== tests for GUtilityFunct::AzZnToRotMat ============" << endl;
     // checks out ok. November 2016 C.Duke
@@ -238,26 +233,6 @@ void printXYcosToAzZn(double xcos, double ycos) {
     GUtilityFuncts::AzZnToXYcos(az,zn,&xcos,&ycos);
     *oLog << "         xcos = " << xcos << "  ycos = "<< ycos << endl;
 }
-
-void printWobbleToAzZn(double wobbleN, double wobbleE,double latitude,
-                       double az, double zn) {
-
-  double wobbleNr = wobbleN*TMath::DegToRad();
-  double wobbleEr = wobbleE*TMath::DegToRad(); 
-  double latituder = latitude*TMath::DegToRad();
-  double azr = az*TMath::DegToRad();
-  double znr = zn*TMath::DegToRad();
-
-  double azNew = 0.0; double znNew = 0.0;
-
-  GUtilityFuncts::wobbleToAzZn(wobbleNr,wobbleEr,latituder,
-                               azr,znr,&azNew,&znNew);
-                               
-  cout << "  wobbleN wobbleE latitude az zn azNew znNew "
-       << wobbleN << "  " << wobbleE << "  " << latitude << "  " 
-       << az << "  " << zn << "     " << azNew*TMath::RadToDeg()
-       << "   " << znNew*TMath::RadToDeg() << endl;  
-};
 
 void testAzZnToRotMat(double az, double zn, double x, double y, double z) {
   double azr = (TMath::DegToRad())*az;
@@ -334,7 +309,8 @@ void testtelescopeAzZn(const double &primAz,
   *oLog << "t1.1elOffsetX telOffsetY " << telOffsetX << "  " << telOffsetY << endl;
   *oLog << "wobbleN wobbleE " << wobbleN << "  " << wobbleE << endl;
   *oLog << "latitude " << latitude << endl;
-  
+
+  //USE EITHER NEW OR NON-NEW
   GUtilityFuncts::telescopeAzZnNew(primAzr,primZnr,wobbleNr,wobbleEr,
                                 telOffsetXr,telOffsetYr,latituder,
                                 &telAzr,&telZnr,&sourceXr,&sourceYr);
@@ -415,6 +391,40 @@ void testtelescopeAzZn(const double &primAz,
           << " " << zn3*(TMath::RadToDeg()) << endl;
   }
   
+  
+};
+void testtelescopeAzZnRot(const double &primAz,
+			  const double &primZn,
+			  const double &wobbleN,
+			  const double &wobbleE,
+			  const double &telOffsetX,
+			  const double &telOffsetY,
+			  const double &latitude) {
+  double telAzr = 0.0;
+  double telZnr = 0.0;
+  double sourceXr = 0.0;
+  double sourceYr = 0.0;
+
+  double primAzr = primAz * (TMath::DegToRad()); 
+  double primZnr = primZn * (TMath::DegToRad()); 
+  double wobbleNr = wobbleN * (TMath::DegToRad()); 
+  double wobbleEr = wobbleE * (TMath::DegToRad()); 
+  double telOffsetXr = telOffsetX * (TMath::DegToRad()); 
+  double telOffsetYr = telOffsetY * (TMath::DegToRad()); 
+  double latituder = latitude * (TMath::DegToRad()); 
+
+  *oLog << "primAz primZn " << primAz << "  " << primZn << endl;
+  *oLog << "t1.1elOffsetX telOffsetY " << telOffsetX << "  " << telOffsetY << endl;
+  *oLog << "wobbleN wobbleE " << wobbleN << "  " << wobbleE << endl;
+  *oLog << "latitude " << latitude << endl;
+  
+  GUtilityFuncts::telescopeAzZnRot(primAzr,primZnr,wobbleNr,wobbleEr,
+                                telOffsetXr,telOffsetYr,latituder,
+                                &telAzr,&telZnr,&sourceXr,&sourceYr);
+
+  DEBUG(telAzr*TMath::RadToDeg()); DEBUG(telZnr*TMath::RadToDeg());
+  return;
+   
   
 };
 

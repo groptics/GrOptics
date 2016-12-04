@@ -44,8 +44,8 @@ using namespace ROOT::Math;
 bool GUtilityFuncts::polyInside(const int &sides, const double &alpha, 
                                   const double &radius, 
                                   const double &x, const double &y) {
-  double PI =  3.141592654;     /*   Value of pi */
-
+  
+  double PI = TMath::Pi();
   double theta,dist;
   double phi;
 
@@ -775,61 +775,6 @@ int GUtilityFuncts::XYcosToAzZn(const double &xcos, const double &ycos,
 };
 /************** end of XYcosToAzZn ********************/
 
-void GUtilityFuncts::wobbleToAzZn(const double &wobbleN, 
-                                     const double &wobbleE,
-                                     const double &latitude,
-                                     const double &aZ, 
-                                     const double &zN,
-                                     double *aZNew, 
-                                     double *zNNew) {
-
-  // The wobble angle here is on the unit sphere, not the tangent plane.
-  // C. Duke: 11Nov2016 this method is now correct, see commented out lines
-  //  This function is unused in GrOptics code. could remove at some point
-  
-  bool debug = false;
-  if (debug) {
-    *oLog << "  -- GUtilityFuncts::wobbleToAzZn " << endl;
-    *oLog << "     wobbleN / E " << wobbleN*(TMath::RadToDeg())
-          << " " << wobbleE*(TMath::RadToDeg()) 
-          << endl;
-    *oLog << "     az zn       " << aZ*(TMath::RadToDeg())
-          << " " << zN*(TMath::RadToDeg()) << endl;
-  }
-
-  double rot = GUtilityFuncts::fieldRot(zN,aZ,latitude);
-
-  if (debug) {
-    *oLog << "     field rotation " << rot*(TMath::RadToDeg())
-          << endl;
-  }
-  // changes in zenith angle and theta now have correct signs.
-  //double delZn = -wobbleN*cos(rot)+wobbleE*sin(rot);
-  //double delTheta = -wobbleN*sin(rot) - wobbleE*cos(rot);
-  double delZn = -wobbleN*cos(rot) - wobbleE*sin(rot);
-  double delTheta = -wobbleN*sin(rot) + wobbleE*cos(rot);
-    if (debug) {
-    *oLog << "     delZn delTheta  " << delZn*(TMath::RadToDeg())
-          << " " << delTheta*(TMath::RadToDeg())
-          << endl;
-  }
-
-  *zNNew = zN + delZn;
-
-  if (zN > 0.00001) {
-    *aZNew = aZ + (delTheta/sin(zN));
-  }
-  else {
-    *aZNew = aZ;
-  }
-
-  if (debug) {
-    *oLog << "     zNNew aZNew " << (*zNNew)*(TMath::RadToDeg())
-          << " " << (*aZNew)*(TMath::RadToDeg()) << endl; 
-  }
-
-};
-/************** end of wobbleToAzZn ********************/
 void GUtilityFuncts::offsetXYToAzZn(const double &offsetX, const double &offsetY,
                     const double &az, const double &zn,
                     double *azOffset, double *znOffset) {
@@ -1076,14 +1021,14 @@ void GUtilityFuncts::telescopeAzZnNew(const double &primAz,
 
     ROOT::Math::RotationZ rz3(*telAz);
     ROOT::Math::RotationX rx3(*telZn);
-    ROOT::Math::Rotation3D rotM3 = rx3*rz3;
+    //ROOT::Math::Rotation3D rotM3 = rx3*rz3;
     
     GUtilityFuncts::AzZnToXYcos(*telAz,*telZn,&cosxTelGr,&cosyTelGr);
     coszTelGr = sqrt(1 - cosxTelGr*cosxTelGr - cosyTelGr*cosyTelGr);
     ROOT::Math::XYZVector tel3Gr(cosxTelGr,cosyTelGr,coszTelGr);
 
     // telescope location in telescope reference system
-    ROOT::Math::XYZVector tel3tel = rotM3*tel3Gr;
+    //ROOT::Math::XYZVector tel3tel = rotM3*tel3Gr;
     
     /*
       n1 = unit vector (on unit sphere) in ground coor. locating telescope = vTel2Gr
@@ -1247,78 +1192,78 @@ void GUtilityFuncts::telescopeAzZnRot(const double &primAz,
     double yOffsetAll = 0.0;
     if ( (wobbleN !=0.0)|| (wobbleE != 0.0) ) {
         fRot = GUtilityFuncts::fieldRot(primZn,primAz,latitude);
-        wobbleY = -wobbleN*cos(fRot) + wobbleE*sin(fRot);
-        wobbleX = - wobbleN*sin(fRot) - wobbleE*cos(fRot);
-        xOffsetAll = wobbleX + telOffsetX;
-        yOffsetAll = wobbleY + telOffsetY;
-        *sourceX = xOffsetAll;
-        *sourceY = yOffsetAll;
+        wobbleY = -wobbleN*cos(fRot) - wobbleE*sin(fRot);
+        wobbleX = - wobbleN*sin(fRot) + wobbleE*cos(fRot);
+    }
+    xOffsetAll = wobbleX + telOffsetX;
+    yOffsetAll = wobbleY + telOffsetY;
+    *sourceX = xOffsetAll;
+    *sourceY = yOffsetAll;
        
-        if (debug) {
-          *oLog << "     fRot           " << fRot*(TMath::RadToDeg()) << endl;
-          *oLog << "     wobbleX / Y    " << wobbleX*(TMath::RadToDeg())
-                << "  /  " << wobbleY*(TMath::RadToDeg()) << endl;
-          *oLog << "     xOffsetAll / y " << xOffsetAll*(TMath::RadToDeg())
-                << "  /  " << yOffsetAll*(TMath::RadToDeg()) << endl;
-          double totalOffset = sqrt(xOffsetAll*xOffsetAll
-                                    + yOffsetAll*yOffsetAll);
-          totalOffset = totalOffset*(TMath::RadToDeg()); 
-          *oLog << "     total offset " << totalOffset << endl;
-        }
+    if (debug) {
+      *oLog << "     fRot           " << fRot*(TMath::RadToDeg()) << endl;
+      *oLog << "     wobbleX / Y    " << wobbleX*(TMath::RadToDeg())
+	    << "  /  " << wobbleY*(TMath::RadToDeg()) << endl;
+      *oLog << "     xOffsetAll / y " << xOffsetAll*(TMath::RadToDeg())
+	    << "  /  " << yOffsetAll*(TMath::RadToDeg()) << endl;
+      double totalOffset = sqrt(xOffsetAll*xOffsetAll
+				+ yOffsetAll*yOffsetAll);
+      totalOffset = totalOffset*(TMath::RadToDeg()); 
+      *oLog << "     total offset " << totalOffset << endl;
+    }
         
-        // vector to tangent point in prim. coor.system, 
-        double xp,yp,zp;
-        xp = xOffsetAll;
-        yp = yOffsetAll;
-        zp = 1.0;
+    // vector to tangent point in prim. coor.system, 
+    double xp,yp,zp;
+    xp = xOffsetAll;
+    yp = yOffsetAll;
+    zp = 1.0;
+    
+    // rotate coor. system back to ground system
+    ROOT::Math::XYZVector vTang(xp,yp,zp);
+    ROOT::Math::XYZVector vGrd = (rotPrim->Inverse())*vTang;
+    
+    if (debug) {
+      *oLog << "      vTang  ";
+      GUtilityFuncts::printGenVector(vTang); *oLog << endl; 
+      
+      *oLog << "      vGrd   ";
+      GUtilityFuncts::printGenVector(vGrd); *oLog << endl;
+    }
+    // normalize vGrd
+    // This unit vector points at the telescope location on the sky.
+    vGrd = vGrd.Unit();
+    
+    // get aZ and zN for telescope
+    XYcosToAzZn(vGrd.X(), vGrd.Y(), telAz, telZn);
 
-        // rotate coor. system back to ground system
-        ROOT::Math::XYZVector vTang(xp,yp,zp);
-        ROOT::Math::XYZVector vGrd = (rotPrim->Inverse())*vTang;
-
-        if (debug) {
-          *oLog << "      vTang  ";
-          GUtilityFuncts::printGenVector(vTang); *oLog << endl; 
-
-          *oLog << "      vGrd   ";
-          GUtilityFuncts::printGenVector(vGrd); *oLog << endl;
-        }
-        // normalize vGrd
-        // This unit vector points at the telescope location on the sky.
-        vGrd = vGrd.Unit();
-       
+    if (debug) {
+      *oLog << "     vGrdUnit   ";
+      GUtilityFuncts::printGenVector(vGrd); *oLog << endl;
+      *oLog << "     telAz / Zn " << *telAz << " " << *telZn << endl;
+    }
         
-        // get aZ and zN for telescope
-        XYcosToAzZn(vGrd.X(), vGrd.Y(), telAz, telZn);
-
-        if (debug) {
-          *oLog << "     vGrdUnit   ";
-          GUtilityFuncts::printGenVector(vGrd); *oLog << endl;
-          *oLog << "     telAz / Zn " << *telAz << " " << *telZn << endl;
-        }
-        
-        if (debug) {
-          // print primary and tel Az,Zn
-          *oLog << "    primary Az Zn  " << primAz*(TMath::RadToDeg())
-                << "  " << primZn*(TMath::RadToDeg()) << endl;
-          *oLog << "    teles   Az Zn  " << (*telAz)*(TMath::RadToDeg())
-                << "  " << (*telZn)*(TMath::RadToDeg()) 
-                << endl;
-          double deltaZn = (primZn - (*telZn))*(TMath::RadToDeg());
-          double deltaAz = (primAz - (*telAz))*(TMath::RadToDeg());
-          double avgZn = (primZn + *telZn)/2.0;
-          double deltaTh = deltaAz*sin(avgZn);
-          double angSep = sqrt(deltaZn*deltaZn + deltaTh*deltaTh); 
-
-          *oLog << "    deltaZn deltaAz deltaTh " << deltaZn << "  " 
-                << deltaAz << "  " << deltaTh << endl;
-          *oLog << "    angular separation between telescope and primary " 
-                << angSep << endl;
-
-          
-        }
+    if (debug) {
+      // print primary and tel Az,Zn
+      *oLog << "    primary Az Zn  " << primAz*(TMath::RadToDeg())
+	    << "  " << primZn*(TMath::RadToDeg()) << endl;
+      *oLog << "    teles   Az Zn  " << (*telAz)*(TMath::RadToDeg())
+	    << "  " << (*telZn)*(TMath::RadToDeg()) 
+	    << endl;
+      double deltaZn = (primZn - (*telZn))*(TMath::RadToDeg());
+      double deltaAz = (primAz - (*telAz))*(TMath::RadToDeg());
+      double avgZn = (primZn + *telZn)/2.0;
+      double deltaTh = deltaAz*sin(avgZn);
+      double angSep = sqrt(deltaZn*deltaZn + deltaTh*deltaTh); 
+      
+      *oLog << "    deltaZn deltaAz deltaTh " << deltaZn << "  " 
+	    << deltaAz << "  " << deltaTh << endl;
+      *oLog << "    angular separation between telescope and primary " 
+	    << angSep << endl;
+      
+      
     }
   }
+  
 
   SafeDelete(rotPrim);
   
@@ -1355,28 +1300,33 @@ void GUtilityFuncts::AzZnToRotMat(const double &az,
   }
 };
 /*****************  end of rotXYZcos ***************/
-bool GUtilityFuncts::testZeroFloat(const double &ax) {
-    return TMath::AreEqualAbs(ax,0.0,numeric_limits<float>::epsilon());
+bool GUtilityFuncts::testZeroFloat(double *ax, const int &zeroFlag) {
 
+  bool testEq = TMath::AreEqualAbs(*ax,0.0,numeric_limits<float>::epsilon());
+  if ( (testEq ==true) && (zeroFlag ==1) ) {
+      *ax = 0.0;
+    }
+  return testEq;
 };
 /*****************  end of testZeroFloat ***************/
 
 bool GUtilityFuncts::zeroFloatVectorFix(ROOT::Math::XYZVector *vec) {
   
   bool test = false;
-  if (GUtilityFuncts::testZeroFloat(vec->X()) ) {
+  
+  if (TMath::AreEqualAbs(vec->X(),0.0,numeric_limits<float>::epsilon())) {
     vec->SetX(0.0);
     test = true;
   }
-  if (GUtilityFuncts::testZeroFloat(vec->Y()) ) {
+  if (TMath::AreEqualAbs(vec->Y(),0.0,numeric_limits<float>::epsilon())) {
     vec->SetY(0.0);
     test = true;
   }
-  if (GUtilityFuncts::testZeroFloat(vec->Z()) ) {  
+  if (TMath::AreEqualAbs(vec->Z(),0.0,numeric_limits<float>::epsilon())) {
     vec->SetZ(0.0);
     test = true;
   }
-  return true;
+  return test;
 
 };
 /*****************  end of zeroFloatVectorFix ***************/
@@ -1433,8 +1383,6 @@ bool GUtilityFuncts::photonReflect(const vector<double> &refCoeff,
         break;
       }
     }
-    
-
   }
   if (debug) {
     *oLog << "       reflection completed, if refl = 0.0.  no reflection" 
@@ -1451,7 +1399,6 @@ void GUtilityFuncts::reflectDirection(const ROOT::Math::XYZVector &vnormUnit,
                       const ROOT::Math::XYZVector &vphotonUnit,
                       ROOT::Math::XYZVector *vphotonReflDcos,
                       const double &roughness, const int &option) {
-  
   bool debug = false;
   if (debug) {
     *oLog << "  -- GUtilityFuncts::reflectDirection" << endl;
@@ -1520,7 +1467,7 @@ void GUtilityFuncts::tangentPlaneOffset( const double &az  , const double &zn,
   *oLog << "tangentPlaneOffset()" << endl;
   
   // constants
-  double PI       =  3.141592654 ;     /*   Value of pi */
+  double PI = TMath::Pi();
   double accuracy = 1e-6         ;
   
   // switch to elevation
