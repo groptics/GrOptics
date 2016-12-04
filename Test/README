@@ -1,1 +1,14 @@
-The Orig files were created prior to code changes in GUtilityFuncts and elsewhere.  Following changes, run the code with the photon.cph testfile.  Use the configuration and pilot files in this directory in the Config subdirectory.  Then, compare the root files with the "orig" root files, either looking at the cherenkov image or individual photons.  I'll write root scripts to do this based on a root tutorial.  More about this later.
+December 4, 2016
+Charlie Duke, Grinnell College
+
+1. The root script, comparePhotonLocationTrees.C, compares the photon camera locations and incoming
+   directions from two grOptics root output files, The script reads a given tree from two output root files and
+   plots of photon locations and directions in one tree versus that variable in the second tree. It provides
+   an output table of the first 30 entries in the trees for a detailed comparison.  Finally, it tests each pair
+   of locations or directions and provides a count of the number of pairs that differ by a given amount using
+   TMath::AreEqualAbs(a,b,episilon) where episilon is set in the code to 0.0001.
+
+   See the comments at the begining of comparePhotonLocationTrees.C for more details in using this code.  It is
+   very useful in testing code revisions that should not change the output photon location or direction values.
+
+   

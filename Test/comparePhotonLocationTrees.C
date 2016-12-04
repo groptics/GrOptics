@@ -1,15 +1,20 @@
 // compare output variables from two photonLocation trees created by GrOptics.  This is useful in
 // testing code changes that should not change the output variables.
-//   code based on treefriend.C in root tutorials directory.
+//   code somewhat based on treefriend.C in root tutorials directory.
 //       Charlie Duke, Grinnell College
 //       December 2, 2016
 
 // The default names of the input files are:
 //    photonLocationOrig.root and photonLocation.root.
-// The default name of the tree in each of these files is T1, T2, T3,...
-// In testing the SegSC modeling, I assign the SegSC telescope to T1.
-// For the moment, the default name of the tree is T1
-      
+// The default name of the tree in each of these files is T1.
+
+// execute as a root script, i.e. "root comparePhotonLocationTrees.C" 
+
+// The .cfg and .pilot files used to produce the photonLocationOrig.root file are in the
+// GrOptics/Test/Config directory.  Thus, these files may be copied to the GrOptics/Config
+// directory for use in creating a photonLocation.root file for comparison with the
+// photonLocationOrig.root output file (both must use identical input files).
+
 #include "TTree.h"
 #include "TFile.h"
 #include "TRandom.h"
@@ -127,23 +132,18 @@ void CompareTrees() {
      if (!TMath::AreEqualAbs( (*photonDcosY)[i], (*fphotonDcosY)[i],episilon) ) {
        icountNotEqualCosY += 1;
      }
-
-
    }
+   
    cout << "icountNotEqualX    " << icountNotEqualX << endl;
    cout << "icountNotEqualY    " << icountNotEqualY << endl;
    cout << "icountNotEqualCosX " << icountNotEqualCosX << endl;
    cout << "icountNotEqualCosY " << icountNotEqualCosY << endl;
-   
-
-   
-
-   
+      
    delete f;
    delete ff;
 }
 
 void comparePhotonLocationTrees() {
-   
    CompareTrees();
+   cout << " ------------- execution complete ---------------" << endl;
 }
