@@ -191,14 +191,6 @@ namespace GUtilityFuncts {
 
    /*! \brief
 
-    */
-   void wobbleToAzZn(const double &wobbleN, const double &wobbleE,
-                     const double &latitude,
-                     const double &aZ, const double &zN,
-                     double *aZNew, double *zNNew);
-
-   /*! \brief
-
 
     */
    void telescopeAzZn(const double &primAz,
@@ -224,26 +216,8 @@ namespace GUtilityFuncts {
 			 const double &latitude,
 			 double *telAz,double *telZn,
 			 double *sourceX,double *sourceY);
-   
-   /*! \brief
-
-
-    */
-   void telescopeAzZnRot(const double &primAz,
-                         const double &primZn,
-                         const double &wobbleN,
-                         const double &wobbleE,
-                         const double &telOffsetX,
-                         const double &telOffsetY,
-                         const double &latitude,
-                         double *telAz,double *telZn,
-                         double *sourceX,double *sourceY);
-   
-   void XYcosToRotMat(const double &xcos,
-		      const double &ycos,
-		      ROOT::Math::Rotation3D *rotM);
-   
-   /*! \brief
+         
+   /*! \brief using this
 
 
     */
@@ -251,7 +225,7 @@ namespace GUtilityFuncts {
                      const double &zn,
                      ROOT::Math::Rotation3D *rotM);
   
-   /*! \brief
+   /*! \brief using this
 
 
     */
@@ -267,6 +241,16 @@ namespace GUtilityFuncts {
                             const double &az_t, const double &zn_t,
                             double       *xoff, double       *yoff,
                             int          *calc_status   ) ;
+   
+   void tangentPlaneOffsetNew( const double &az  , const double &zn,
+                            const double &az_t, const double &zn_t,
+                            double       *xoff, double       *yoff,
+                            int          *calc_status   ) ;
+
+
+   void sourceOnTelescopePlane(const double &az_s, const double &zn_s,
+			       const double &az_t, const double &zn_t,
+			       double *x, double *y);
    
    /*! \brief
 

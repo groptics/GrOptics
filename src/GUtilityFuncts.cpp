@@ -1149,142 +1149,8 @@ void GUtilityFuncts::telescopeAzZn(const double &primAz,
   }
 };
 
-void GUtilityFuncts::telescopeAzZnRot(const double &primAz,
-                                      const double &primZn,
-                                      const double &wobbleN,
-                                      const double &wobbleE,
-                                      const double &telOffsetX,
-                                      const double &telOffsetY,
-                                      const double &latitude,
-                                      double *telAz,double *telZn,
-                                      double *sourceX,double *sourceY) {
 
-  bool debug = false;
-  if (debug) {
-    *oLog << "  -- GUtilityFuncts::telescopeAzZnRot"  << endl;
-    *oLog << "     prim Az / Zn   " << primAz*(TMath::RadToDeg())
-          << "  /  " << primZn*(TMath::RadToDeg()) << endl;
-    *oLog << "     wobbleN / E    " << wobbleN*(TMath::RadToDeg())
-          << "  /  " << wobbleE*(TMath::RadToDeg()) << endl;
-    *oLog << "     latitude       " << latitude*(TMath::RadToDeg()) << endl;
-    *oLog << "     telOffSetX / Y " << telOffsetX*(TMath::RadToDeg())
-          << "  /  " << telOffsetY*(TMath::RadToDeg()) << endl;
-  }
-
-  ROOT::Math::Rotation3D *rotPrim = new ROOT::Math::Rotation3D;
-  GUtilityFuncts::AzZnToRotMat(primAz,primZn,rotPrim);
-
-  if ( (wobbleN==0.0)&&(wobbleE==0.0)&&
-       (telOffsetX==0.0)&&(telOffsetY==0.0) ) {
-    *telAz = primAz;
-    *telZn = primZn;
-  }
-  else {
-    // find and add components in the tangent plane to the primary 
-    // unit vector that locates the center of the tangent plane, all
-    // The primary location vector is (0,0,1) in this frame.
-
-    double wobbleX = 0.0;
-    double wobbleY = 0.0;
-    double fRot;
-
-    double xOffsetAll = 0.0;
-    double yOffsetAll = 0.0;
-    if ( (wobbleN !=0.0)|| (wobbleE != 0.0) ) {
-        fRot = GUtilityFuncts::fieldRot(primZn,primAz,latitude);
-        wobbleY = -wobbleN*cos(fRot) - wobbleE*sin(fRot);
-        wobbleX = - wobbleN*sin(fRot) + wobbleE*cos(fRot);
-    }
-    xOffsetAll = wobbleX + telOffsetX;
-    yOffsetAll = wobbleY + telOffsetY;
-    *sourceX = xOffsetAll;
-    *sourceY = yOffsetAll;
-       
-    if (debug) {
-      *oLog << "     fRot           " << fRot*(TMath::RadToDeg()) << endl;
-      *oLog << "     wobbleX / Y    " << wobbleX*(TMath::RadToDeg())
-	    << "  /  " << wobbleY*(TMath::RadToDeg()) << endl;
-      *oLog << "     xOffsetAll / y " << xOffsetAll*(TMath::RadToDeg())
-	    << "  /  " << yOffsetAll*(TMath::RadToDeg()) << endl;
-      double totalOffset = sqrt(xOffsetAll*xOffsetAll
-				+ yOffsetAll*yOffsetAll);
-      totalOffset = totalOffset*(TMath::RadToDeg()); 
-      *oLog << "     total offset " << totalOffset << endl;
-    }
-        
-    // vector to tangent point in prim. coor.system, 
-    double xp,yp,zp;
-    xp = xOffsetAll;
-    yp = yOffsetAll;
-    zp = 1.0;
-    
-    // rotate coor. system back to ground system
-    ROOT::Math::XYZVector vTang(xp,yp,zp);
-    ROOT::Math::XYZVector vGrd = (rotPrim->Inverse())*vTang;
-    
-    if (debug) {
-      *oLog << "      vTang  ";
-      GUtilityFuncts::printGenVector(vTang); *oLog << endl; 
-      
-      *oLog << "      vGrd   ";
-      GUtilityFuncts::printGenVector(vGrd); *oLog << endl;
-    }
-    // normalize vGrd
-    // This unit vector points at the telescope location on the sky.
-    vGrd = vGrd.Unit();
-    
-    // get aZ and zN for telescope
-    XYcosToAzZn(vGrd.X(), vGrd.Y(), telAz, telZn);
-
-    if (debug) {
-      *oLog << "     vGrdUnit   ";
-      GUtilityFuncts::printGenVector(vGrd); *oLog << endl;
-      *oLog << "     telAz / Zn " << *telAz << " " << *telZn << endl;
-    }
-        
-    if (debug) {
-      // print primary and tel Az,Zn
-      *oLog << "    primary Az Zn  " << primAz*(TMath::RadToDeg())
-	    << "  " << primZn*(TMath::RadToDeg()) << endl;
-      *oLog << "    teles   Az Zn  " << (*telAz)*(TMath::RadToDeg())
-	    << "  " << (*telZn)*(TMath::RadToDeg()) 
-	    << endl;
-      double deltaZn = (primZn - (*telZn))*(TMath::RadToDeg());
-      double deltaAz = (primAz - (*telAz))*(TMath::RadToDeg());
-      double avgZn = (primZn + *telZn)/2.0;
-      double deltaTh = deltaAz*sin(avgZn);
-      double angSep = sqrt(deltaZn*deltaZn + deltaTh*deltaTh); 
-      
-      *oLog << "    deltaZn deltaAz deltaTh " << deltaZn << "  " 
-	    << deltaAz << "  " << deltaTh << endl;
-      *oLog << "    angular separation between telescope and primary " 
-	    << angSep << endl;
-      
-      
-    }
-  }
-  
-
-  SafeDelete(rotPrim);
-  
-};
-
-//-----------------------------------------------------------------
-void GUtilityFuncts::XYcosToRotMat(const double &xcos,
-                               const double &ycos,
-                               ROOT::Math::Rotation3D *rotM) {
-  /* Construct the rotation matrix for moving a unit vector in ground coordinates
-     to telescope coordinates given at az/zn on the unit sphere 
-  */
-  // INCOMPLETE, DO NOT USE, DO NOT CALL
-  double az,zn;
-  GUtilityFuncts::XYcosToAzZn(xcos,ycos,&az,&zn);
-  ROOT::Math::RotationZ rz(az);
-  ROOT::Math::RotationX rx(zn);
-  *rotM = rx*rz;
-
-};
-/*****************  end of rotXYZcos ***************/
+/***************** end of telescopeAzZn  ***************/
 void GUtilityFuncts::AzZnToRotMat(const double &az,
                                   const double &zn,
                                   ROOT::Math::Rotation3D *rotM) {
@@ -1447,9 +1313,36 @@ void GUtilityFuncts::printSegVector (const vector<mirrorSegmentDetails *> &vec) 
           << t->rotErrorPhi << " " << t->rotErrorTheta << " " << t->rotErrorPsi
           << endl;
   }
-
+  ///////////////////////////////////////////////////////////
 };
+void GUtilityFuncts::tangentPlaneOffsetNew( const double &az  , const double &zn,
+                            const double &az_t, const double &zn_t,
+                            double       *xoff, double       *yoff,
+                            int          *calc_status   ) {
 
+  bool debug = true;
+  *xoff = 0;
+  *yoff = 0;
+  *calc_status = 0;
+  if (debug) {
+    *oLog << "--------- GUtilityFuncts::tangentPlaneOffsetNew -----" << endl;
+    *oLog << "az, zn " << az*TMath::RadToDeg() << "  " << zn * TMath::RadToDeg()
+	  << endl;
+    *oLog << "az_t, zn_t " << az_t*TMath::RadToDeg() << "  " << zn_t * TMath::RadToDeg()
+	  << endl;
+    *oLog << "initial values xoff, yoff, calc_status " << *xoff << "  " << *yoff
+	  << "  " << *calc_status << endl;
+  }
+
+  // use spherical triangle formed by zenith, az/zn, and az_t/zn_t points on unit sphere
+  // get rotation angle
+  double rot = GUtilityFuncts::fieldRot(zn_t, az_t - az,
+					TMath::PiOver2() - zn);
+  if (debug) {
+    *oLog << "rot " << rot *TMath::RadToDeg() << endl; 
+  }
+};
+//////////////////////////////////////////////////////////////////
 void GUtilityFuncts::tangentPlaneOffset( const double &az  , const double &zn,
                                          const double &az_t, const double &zn_t,
                                          double       *xoff, double       *yoff,
@@ -1520,3 +1413,65 @@ void GUtilityFuncts::printXYZVector(const ROOT::Math::XYZVector &vec,const strin
 
 }
 /*************** end of printXYZVector *********************/
+void GUtilityFuncts::sourceOnTelescopePlane(const double &az_s, const double &zn_s,
+					    const double &az_t, const double &zn_t,
+					    double *x, double *y) {
+  *x = 0.0;
+  *y = 0.0;
+  
+  bool debug = true;
+  if (debug) {
+    *oLog << "---------- in GUtilityFuncts::sourceOnTelescopePlane -------" << endl;
+    *oLog << "    az_s  zn_x  " << az_s*TMath::RadToDeg() << "  " << zn_s*TMath::RadToDeg()
+	  << endl;
+    *oLog << "    az_t  zn_t  " << az_t*TMath::RadToDeg() << "  " << zn_t*TMath::RadToDeg()
+	  << endl;
+  }
+
+  // find the vector in the telescope tangent plane from the plane center to the intersection of the
+  // vector locating the source vector with the tangent plane.  Do this using vector algebra rather
+  // than explicit spherical trig.
+
+  // find the unit vectors locating the telescope and the source on the unit sphere.
+  double xcos_t = 0.0;
+  double ycos_t = 0.0;
+  double zcos_t = 0.0;
+  GUtilityFuncts::AzZnToXYcos(az_t,zn_t,&xcos_t, &ycos_t);
+  zcos_t = sqrt(1 - xcos_t*xcos_t - ycos_t*ycos_t);
+  ROOT::Math::XYZVector nUnit_t(xcos_t,ycos_t,zcos_t);
+  
+  // and now the rotation matrix to get to telescope coordinates
+  ROOT::Math::Rotation3D rotM;
+  GUtilityFuncts::AzZnToRotMat(az_t,zn_t,&rotM);
+  
+  double xcos_s = 0.0;
+  double ycos_s = 0.0;
+  double zcos_s = 0.0;
+  GUtilityFuncts::AzZnToXYcos(az_s,zn_s,&xcos_s, &ycos_s);
+  zcos_s = sqrt(1 - xcos_s*xcos_s - ycos_s*ycos_s);
+  ROOT::Math::XYZVector nUnit_s(xcos_s,ycos_s,zcos_s);
+
+  // some vector algebra to find the vector to the intersection point
+  double dotP = nUnit_s.Dot(nUnit_t);
+  ROOT::Math::XYZVector tTos_vecGC = (nUnit_s/dotP) - nUnit_t; 
+  ROOT::Math::XYZVector tTos_vecTC = rotM*tTos_vecGC;
+
+  // check for zero components, set to zero is within numeric limits
+  GUtilityFuncts::zeroFloatVectorFix(&tTos_vecTC);
+  // set return x and y components, z component should always be zero.
+  *x = tTos_vecTC.X();
+  *y = tTos_vecTC.Y();
+  
+  if (debug) {
+    *oLog << "  unit vector locating source " << xcos_s << "  " << ycos_s << "  "
+	  << zcos_s << endl;
+    *oLog << "  unit vector locating telescope " << xcos_t << "  " << ycos_t << "  "
+	  << zcos_t << endl;
+    *oLog << "  dot product of tel and source unit vecs " << dotP << endl;
+    *oLog << "  nUnit_s "; GUtilityFuncts::printGenVector(nUnit_s); *oLog << endl;
+    *oLog << "  nUnit_t "; GUtilityFuncts::printGenVector(nUnit_t); *oLog << endl;
+    *oLog << "  tTos_vecGC "; GUtilityFuncts::printGenVector(tTos_vecGC); *oLog << endl;
+    *oLog << "  tTos_vecTC "; GUtilityFuncts::printGenVector(tTos_vecTC); *oLog << endl;
+    *oLog << "---------- exiting GUtilityFuncts::sourceOnTelescopePlane -------" << endl;
+  }
+};

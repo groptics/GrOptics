@@ -109,13 +109,12 @@ void testtelescopeAzZn(const double &primAz,
                        const double &telOffsetY,
                        const double &latitude);
 
-void testtelescopeAzZnRot(const double &primAz,
-                       const double &primZn,
-                       const double &wobbleN,
-                       const double &wobbleE,
-                       const double &telOffsetX,
-                       const double &telOffsetY,
-                       const double &latitude);
+void testtangentPlaneOffsetNew( const double &az  , const double &zn,
+                            const double &az_t, const double &zn_t) ;
+
+void testsourceOnTelescopePlane(const double &az_s, const double &zn_s,
+				const double &az_t, const double &zn_t);
+
 
 //int main(int argc, char *argv[]) {
 int main() {
@@ -127,6 +126,27 @@ int main() {
   oLog = &cerr;
 
   *oLog << " ---------------entering testUtilities-------------- " << endl;
+
+  if(1) {
+    *oLog << "========= test GUtilityFunct::sourceOnTelescopePlane =======" << endl;
+    testsourceOnTelescopePlane(3.0,    // source az
+			       62.0,    // source zn
+			       0.0,    // telescope az
+			       60.0);    // telescope zn
+  }
+  
+  if(0) {
+    *oLog << "========= test GUtilityFunct::tangentPlaneOffsetNew =======" << endl;
+    testtangentPlaneOffsetNew(0.0,   // source az
+			      45.0,  // source zn
+			      2.0,   // telescope az
+			      45.0);  // telescope zn
+
+			      //void testtangentPlaneOffsetNew( const double &az  , const double &zn,
+    //                      const double &az_t, const double &zn_t,
+    //                      double       *xoff, double       *yoff,
+    //                      int          *calc_status   ) ;
+  }
   
   if (0) {  
     *oLog << "===================== test  GUtilityFunct::fieldRot ===================" << endl << endl;
@@ -150,7 +170,7 @@ int main() {
 		     0.1);  // zn
     *oLog << "=================== end of tests for XYcosToAzZn =============== " << endl;
   }
-  if (1) {
+  if (0) {
     *oLog << "================= tests for telescopeAzZn ====================" << endl;
     testtelescopeAzZn(30.0,  //azimuth
 		      60.0, //zenith
@@ -161,16 +181,7 @@ int main() {
 		      45.0); // latitude
     *oLog << "================== end of tests for telescopeAzZn =============" <<endl;
   }
-  if(1) {
-    *oLog << "================= tests for telescopeAzZnRot ==================" << endl;
-    testtelescopeAzZnRot(30.0,  //azimuth
-		      60.0, //zenith
-		      0.0,  // wobbleN
-		      0.0,  // wobbleE
-		      0.0,  // offsetX
-		      3.0,  // offsetY
-		      45.0); // latitude
-  }
+
   
   if (0) {
     *oLog << "=============== tests for GUtilityFunct::AzZnToRotMat ============" << endl;
@@ -393,39 +404,57 @@ void testtelescopeAzZn(const double &primAz,
   
   
 };
-void testtelescopeAzZnRot(const double &primAz,
-			  const double &primZn,
-			  const double &wobbleN,
-			  const double &wobbleE,
-			  const double &telOffsetX,
-			  const double &telOffsetY,
-			  const double &latitude) {
-  double telAzr = 0.0;
-  double telZnr = 0.0;
-  double sourceXr = 0.0;
-  double sourceYr = 0.0;
 
-  double primAzr = primAz * (TMath::DegToRad()); 
-  double primZnr = primZn * (TMath::DegToRad()); 
-  double wobbleNr = wobbleN * (TMath::DegToRad()); 
-  double wobbleEr = wobbleE * (TMath::DegToRad()); 
-  double telOffsetXr = telOffsetX * (TMath::DegToRad()); 
-  double telOffsetYr = telOffsetY * (TMath::DegToRad()); 
-  double latituder = latitude * (TMath::DegToRad()); 
+void testtangentPlaneOffsetNew( const double &az  , const double &zn,
+				const double &az_t, const double &zn_t) {
 
-  *oLog << "primAz primZn " << primAz << "  " << primZn << endl;
-  *oLog << "t1.1elOffsetX telOffsetY " << telOffsetX << "  " << telOffsetY << endl;
-  *oLog << "wobbleN wobbleE " << wobbleN << "  " << wobbleE << endl;
-  *oLog << "latitude " << latitude << endl;
+  *oLog << "------- testtangentPlaneOffsetNew -------------" << endl;
+  *oLog << "    az zn  " << az << "  " << zn << endl;
+  *oLog << "  az_t zn_t " << az_t << "  " << zn_t << endl;  
+
+  double azr = az*TMath::DegToRad();
+  double znr = zn*TMath::DegToRad();
+  double az_tr = az_t*TMath::DegToRad();
+  double zn_tr = zn_t*TMath::DegToRad();
+
+  double xoff = 0.0;
+  double yoff = 0.0;
+  int calc_status = 0;
   
-  GUtilityFuncts::telescopeAzZnRot(primAzr,primZnr,wobbleNr,wobbleEr,
-                                telOffsetXr,telOffsetYr,latituder,
-                                &telAzr,&telZnr,&sourceXr,&sourceYr);
-
-  DEBUG(telAzr*TMath::RadToDeg()); DEBUG(telZnr*TMath::RadToDeg());
-  return;
-   
-  
+  GUtilityFuncts::tangentPlaneOffsetNew(azr,znr,az_tr,zn_tr,&xoff,&yoff,&calc_status);
+ 
 };
 
+void testsourceOnTelescopePlane(const double &az_s, const double &zn_s,
+				const double &az_t, const double &zn_t) {
+
+  *oLog << "------- testsourceOnTelescopePlane -------------" << endl;
+  *oLog << "    az_s zn_s  " << az_s << "  " << zn_s << endl;
+  *oLog << "  az_t zn_t " << az_t << "  " << zn_t << endl;  
+
+  double az_sr = az_s*TMath::DegToRad();
+  double zn_sr = zn_s*TMath::DegToRad();
+  double az_tr = az_t*TMath::DegToRad();
+  double zn_tr = zn_t*TMath::DegToRad();
+
+  double xs = 0.0;
+  double ys = 0.0;
+
+  GUtilityFuncts::sourceOnTelescopePlane(az_sr, zn_sr,
+					 az_tr, zn_tr,
+					 &xs, &ys);
+
+  *oLog << "  after sourceOnTelescopePlane " << endl;
+  *oLog << "  final values of source location in tel. plane " << xs
+	<< "  " << ys << endl;
+  *oLog << "    convert to degrees on the plane " << xs*TMath::RadToDeg()
+	<< "  " << ys*TMath::RadToDeg() << endl;
+  *oLog << "    or to degrees on the unit sphere " << atan(xs)*TMath::RadToDeg()
+	<< "  " << atan(ys)*TMath::RadToDeg() << endl;
+    
+  
+								 
+		      
+}
+ 
 

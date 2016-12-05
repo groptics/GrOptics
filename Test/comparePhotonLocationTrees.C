@@ -37,7 +37,7 @@ void CompareTrees() {
   
   float episilon = 0.0001; // for equality tests
   std::string fileOrig = "photonLocationOrig.root";
-  std::string fileTest = "photonLocation.root";
+  std::string fileTest = "../photonLocation.root";
   std::string treeName = "T1";
 
   cout << "   original filename " << fileOrig << endl;

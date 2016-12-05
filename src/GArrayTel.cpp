@@ -223,7 +223,7 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
     // position from the event position and given wobbles
 
     // get telescope az and zn
-    GUtilityFuncts::telescopeAzZn(fAzPrim,
+    GUtilityFuncts::telescopeAzZnNew(fAzPrim,
                                   fZnPrim,
                                   fWobbleN,
                                   fWobbleE,
