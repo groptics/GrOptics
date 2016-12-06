@@ -194,6 +194,7 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
 
     // We have our telescope pointing and our event direction, so we need to compute
     // the tangent-plane offset of the event in the tangential plane of the telescope
+    /*
     int status = -1 ;
     GUtilityFuncts::tangentPlaneOffset( fAzPrim, fZnPrim, 
                                         fAzTel , fZnTel, 
@@ -217,6 +218,7 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
 	    << ") when calculating the tangential coordinates of the event, should generall be within 90 deg of each other." << endl;
       exit(1);
     }
+    */
     
   } else {
     // If fixed pointing is not specified, then compute their 
@@ -310,13 +312,10 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
     *oLog << "        Core Direction tel.coor  " << endl;
     GUtilityFuncts::printGenVector(vSDcosTC); *oLog << endl;
     *oLog << "        Core Direction shower.coor  " << endl;
-    GUtilityFuncts::printGenVector(vSDcosSC); *oLog << endl;
-
-    
+    GUtilityFuncts::printGenVector(vSDcosSC); *oLog << endl; 
 
     *oLog << "        fDelay(meters): " << fDelay << endl;
   }
-
 };
 /**************end of setPrimary ***************************/
   

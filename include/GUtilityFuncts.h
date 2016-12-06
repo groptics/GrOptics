@@ -155,15 +155,14 @@ namespace GUtilityFuncts {
                              const double &rMax,
                              const double &sigma);
 
-
-   /*!  returns angle between sky location to zenith arc
+   /*!  returns angle between the sky location to zenith arc
      and the sky location to polaris arc on the celestial
      sphere.
      
      \param zn zenith angle (radians) of sky location 
      \param az azimuthal angle (radians) of sky location
      \param latitude latitude (radians) of the observatory
-     \return angle(radian) of Polaris with respect to zenith.
+     \return angle(radians) of Polaris with respect to zenith.
    */
    double fieldRot(const double &zn, const double &az,
                    const double &latitude);
@@ -189,8 +188,21 @@ namespace GUtilityFuncts {
    int AzZnToXYcos(const double &az,const double &zn,
                    double *xcos, double *ycos);
 
-   /*! \brief
-
+   /*! \brief  Determines telescope azimuth and zenith angles from source location
+     and telescope offsets/wobble angles using small angle approximations
+     
+     All angles in radians
+     \param primAz       source azimuth
+     \param primZn       source zenith angle
+     \param wobbleN      telescope wobble North (toward Polaris)
+     \param wobbleE      telescope wobble East (perpendicular to wobbleN)
+     \param telOffsetX   telescope offset along X axis of telescope system
+     \param tesOffsetY   telescope offset along Y axis of telescope system
+     \param latitude     observatory latitude
+     \param telAz        pointer to calculated telescope azimuth
+     \param telZn        pointer to calculated telescope zenith angle
+     \param sourceX      pointer to source location along X axis of telescope system
+     \param sourceY      pointer to source location along Y axis of telescope system
 
     */
    void telescopeAzZn(const double &primAz,
@@ -203,9 +215,21 @@ namespace GUtilityFuncts {
                       double *telAz,double *telZn,
                       double *sourceX,double *sourceY);
 
-   /*! \brief
-
-
+   /*! \brief  Determines telescope azimuth and zenith angles from source location
+     and telescope offsets/wobble angles with no small angle approximations
+     
+     All angles in radians
+     \param primAz       source azimuth
+     \param primZn       source zenith angle
+     \param wobbleN      telescope wobble North (toward Polaris)
+     \param wobbleE      telescope wobble East (perpendicular to wobbleN)
+     \param telOffsetX   telescope offset along X axis of telescope system
+     \param tesOffsetY   telescope offset along Y axis of telescope system
+     \param latitude     observatory latitude
+     \param telAz        pointer to calculated telescope azimuth
+     \param telZn        pointer to calculated telescope zenith angle
+     \param sourceX      pointer to source location along X axis of telescope system
+     \param sourceY      pointer to source location along Y axis of telescope system
     */
    void telescopeAzZnNew(const double &primAz,
 			 const double &primZn,
@@ -217,56 +241,81 @@ namespace GUtilityFuncts {
 			 double *telAz,double *telZn,
 			 double *sourceX,double *sourceY);
          
-   /*! \brief using this
-
-
+   /*! \brief Determines the rotation matrix from ground to telescope coordinates
+     
+     Usage: vecTelCoor = (*rotM)*vecGrdCoor where vecGrdCoor and vecTelCoor 
+     are ROOT::Math::XYZVector vectors in ground and telescope coordinates.
+     All angles in radians
+     \param az    azimuth of point on unit sphere
+     \param zn    zenith angle of point on unit sphere
+     \param rotM  Rotation3D matrix to transform a vector from gr.coor. to telescope coordinates
     */
    void AzZnToRotMat(const double &az,
                      const double &zn,
                      ROOT::Math::Rotation3D *rotM);
   
-   /*! \brief using this
+   /*! \brief  Determine the azimuth and zenith of the offset point with coordinates 
+      (offsetX, offsetY) with respect to tangent plane telescope axes.
 
-
+      All angles are in radians.
+      \param offsetX   tangent plane offset in X direction in telescope system
+      \param offsetY   tangent plane offset in Y direction in telescope system
+      \param az        azimuth of tangent plane origin
+      \param zn        zenith angle of tangent plane origin
+      \param azOffset  azimuth of offset point
+      \param znOffset  zenith angle of offset point
+      
     */
    void offsetXYToAzZn(const double &offsetX, const double &offsetY,
                        const double &az, const double &zn,
                        double *azOffset, double *znOffset);
 
-   /*! \brief
+   /*! \brief Determines source location on telescope plane given az/zn
+     angles of the source and the telescope.
 
-
+     All angles in radians.
+     \param az_s azimuth of source
+     \param zn_s zenith angle of source
+     \param az_t azimuth of telescope
+     \param zn_t zenith angle of telescope
+     \param x    pointer to source x location in telescope coordinates
+     \param y    pointer to source y location in telescope coordinates
     */
-   void tangentPlaneOffset( const double &az  , const double &zn,
-                            const double &az_t, const double &zn_t,
-                            double       *xoff, double       *yoff,
-                            int          *calc_status   ) ;
-   
-   void tangentPlaneOffsetNew( const double &az  , const double &zn,
-                            const double &az_t, const double &zn_t,
-                            double       *xoff, double       *yoff,
-                            int          *calc_status   ) ;
-
-
    void sourceOnTelescopePlane(const double &az_s, const double &zn_s,
 			       const double &az_t, const double &zn_t,
 			       double *x, double *y);
    
-   /*! \brief
+   /*! \brief Tests if a datatype double is within numeric_limits<double> 
+     of zero. If true, sets value to 0.0 if zeroFlag == 1.
 
+     Uses TMath::AreEqualAbs(*ax,0.0,numeric_limits<float>::epsilon())
+     for zero test.  
+     \param ax pointer to datatype double variable
+     \param zeroFlag  set ax to 0.0 if zero test is true
+     \return result of zero test.
 
     */
    bool testZeroFloat(double *ax, const int &zeroFlag);
 
-   /*! \brief
+   /*! \brief Tests if vector components are within numeric_limits<double>
+     of 0.0.  If true, sets the component to 0.0.
 
-
+     Uses TMath::AreEqualAbs(vec->X(),0.0,numeric_limits<double>::epsilon())
+     for zero test.
+     \param vec pointer to a ROOT::Math::XYZVector.
+     \return true if any component is set to 0.0
     */
    bool zeroFloatVectorFix(ROOT::Math::XYZVector *vec);
 
-   /*! \brief
-
-
+   /*! \brief Determines if photon will reflect from a surface. 
+     Uses reflection coefficient table plus random-number comparison
+     
+     Currently used with mirror elements of DC telescope model
+     \param refCoeff   vector of reflection coefficients 
+     \param refWaveLgt vector of wavelengths for coefficients 
+     \param reflect    reflection degradation factor
+     \param photonWaveLgt wavelength of incident photon
+     \return true if photon reflects from surface.
     */
    bool photonReflect(const vector<double> &refCoeff,
                       const vector<double> &refWaveLgt,

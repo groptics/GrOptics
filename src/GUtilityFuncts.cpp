@@ -1,6 +1,6 @@
 /*
 VERSION4.0
-30May2016
+30May2
 */
 /* GUtilityFuncts.cpp : set of utility functions
  */
@@ -1012,63 +1012,14 @@ void GUtilityFuncts::telescopeAzZnNew(const double &primAz,
     *oLog << " ======= final az/zn values ========= " << endl;
     DEBUG((*telAz)*(TMath::RadToDeg())); DEBUG((*telZn)*(TMath::RadToDeg()));
     
-    // get source location relative to telescope for testing.
-    /*  locates source primAz, primZn
-	locates telescope *telAz, *telZn
-    */
-    // unit vector to telescope location, and rotation matrix to telescope system
-    double cosxTelGr, cosyTelGr, coszTelGr;
-
-    ROOT::Math::RotationZ rz3(*telAz);
-    ROOT::Math::RotationX rx3(*telZn);
-    //ROOT::Math::Rotation3D rotM3 = rx3*rz3;
-    
-    GUtilityFuncts::AzZnToXYcos(*telAz,*telZn,&cosxTelGr,&cosyTelGr);
-    coszTelGr = sqrt(1 - cosxTelGr*cosxTelGr - cosyTelGr*cosyTelGr);
-    ROOT::Math::XYZVector tel3Gr(cosxTelGr,cosyTelGr,coszTelGr);
-
-    // telescope location in telescope reference system
-    //ROOT::Math::XYZVector tel3tel = rotM3*tel3Gr;
-    
-    /*
-      n1 = unit vector (on unit sphere) in ground coor. locating telescope = vTel2Gr
-      n2 = unit vector locating source in ground coor. = (xcos0,ycos0,sqrt(1-xcos02 - ycos02) )
-      b = vector from Tel to Source (grnd.coor) = ( n2/(n2.n1) ) - n1  (n2.n1) = dot product. 
-    */
-    /*
-      double zcos0 = sqrt(1 - xcos0*xcos0 - ycos0*ycos0);  // xyzcos0 locates the source
-      double zcos2 = sqrt(1 - xcos2*xcos2 - ycos2*ycos2);  // xyzcos2 locates the telescope
-      double dotP = xcos0*xcos2 + ycos0*ycos2 + zcos0*zcos2;
-      
-      double bcosx = (xcos0/dotP) - xcos2;
-      double bcosy = (ycos0/dotP) - ycos2;
-      double bcosz = (zcos0/dotP) - zcos2;
-      *oLog << "   source on tangent plane in ground coor " << bcosx << "   " << bcosy << "   " << bcosz << endl;
-      ROOT::Math::XYZVector tel2sVGr(bcosx,bcosy,bcosz);
-      ROOT::Math::XYZVector tel2sVTelTp = rotM2*tel2sVGr;
-      GUtilityFuncts::printGenVector(tel2sVTelTp); *oLog << "    tel2sVTelTp  " << endl;
-      *oLog << "   tel2sVTelTp in degrees " << tel2sVTelTp.X()*TMath::RadToDeg() << "   "
-      << tel2sVTelTp.Y() * TMath::RadToDeg() << "   " << tel2sVTelTp.Z() * TMath::RadToDeg() << endl;
-    */
-    // test for rotational matrix, should get (0,0,1) for tel. location in tel coor.
-    //ROOT::Math::XYZVector telLocTest = rotM2*
-    
+    // get source location relative to telescope.
+    double xs,ys;
+    GUtilityFuncts::sourceOnTelescopePlane(primAz, primZn,
+					   *telAz, *telZn,
+					   &xs, &ys);    
+    *sourceX = xs;
+    *sourceY = ys;
   }
-
-//GUtilityFuncts::offsetXYToAzZn(wobbleX, wobbleY,az,zn,
-//				 telAz,telZn);             
-
-
-  // get the offsets for the tangent plane and determine unit vector pointing to
-  // the offset point on the tangent plane.
-
-  // move back to ground coordinates and find the new az/zn for the telescope
-
-
-  // Same process for the wobble offsets
-  // get the rotation matrix from ground to telescope coordinates
-
-  // find the wobble offsets for the tangent plane, the field rotation
 };
 
 
@@ -1168,7 +1119,7 @@ void GUtilityFuncts::AzZnToRotMat(const double &az,
 /*****************  end of rotXYZcos ***************/
 bool GUtilityFuncts::testZeroFloat(double *ax, const int &zeroFlag) {
 
-  bool testEq = TMath::AreEqualAbs(*ax,0.0,numeric_limits<float>::epsilon());
+  bool testEq = TMath::AreEqualAbs(*ax,0.0,numeric_limits<double>::epsilon());
   if ( (testEq ==true) && (zeroFlag ==1) ) {
       *ax = 0.0;
     }
@@ -1180,15 +1131,15 @@ bool GUtilityFuncts::zeroFloatVectorFix(ROOT::Math::XYZVector *vec) {
   
   bool test = false;
   
-  if (TMath::AreEqualAbs(vec->X(),0.0,numeric_limits<float>::epsilon())) {
+  if (TMath::AreEqualAbs(vec->X(),0.0,numeric_limits<double>::epsilon())) {
     vec->SetX(0.0);
     test = true;
   }
-  if (TMath::AreEqualAbs(vec->Y(),0.0,numeric_limits<float>::epsilon())) {
+  if (TMath::AreEqualAbs(vec->Y(),0.0,numeric_limits<double>::epsilon())) {
     vec->SetY(0.0);
     test = true;
   }
-  if (TMath::AreEqualAbs(vec->Z(),0.0,numeric_limits<float>::epsilon())) {
+  if (TMath::AreEqualAbs(vec->Z(),0.0,numeric_limits<double>::epsilon())) {
     vec->SetZ(0.0);
     test = true;
   }
@@ -1315,97 +1266,8 @@ void GUtilityFuncts::printSegVector (const vector<mirrorSegmentDetails *> &vec) 
   }
   ///////////////////////////////////////////////////////////
 };
-void GUtilityFuncts::tangentPlaneOffsetNew( const double &az  , const double &zn,
-                            const double &az_t, const double &zn_t,
-                            double       *xoff, double       *yoff,
-                            int          *calc_status   ) {
 
-  bool debug = true;
-  *xoff = 0;
-  *yoff = 0;
-  *calc_status = 0;
-  if (debug) {
-    *oLog << "--------- GUtilityFuncts::tangentPlaneOffsetNew -----" << endl;
-    *oLog << "az, zn " << az*TMath::RadToDeg() << "  " << zn * TMath::RadToDeg()
-	  << endl;
-    *oLog << "az_t, zn_t " << az_t*TMath::RadToDeg() << "  " << zn_t * TMath::RadToDeg()
-	  << endl;
-    *oLog << "initial values xoff, yoff, calc_status " << *xoff << "  " << *yoff
-	  << "  " << *calc_status << endl;
-  }
-
-  // use spherical triangle formed by zenith, az/zn, and az_t/zn_t points on unit sphere
-  // get rotation angle
-  double rot = GUtilityFuncts::fieldRot(zn_t, az_t - az,
-					TMath::PiOver2() - zn);
-  if (debug) {
-    *oLog << "rot " << rot *TMath::RadToDeg() << endl; 
-  }
-};
 //////////////////////////////////////////////////////////////////
-void GUtilityFuncts::tangentPlaneOffset( const double &az  , const double &zn,
-                                         const double &az_t, const double &zn_t,
-                                         double       *xoff, double       *yoff,
-                                         int          *calc_status ) {
-  // Projection of spherical coordinates of one az/el direction onto a tangential plane (gnomonic projection)
-  // Function referenced from SlaLib's slaDs2tp function
-  // az  , zn   : radians, azimuth and elevation of a pointing
-  // az_t, zn_t : radians, azimuth and elevation of the center of the tangential plane
-  // xoff, yoff : (radians?) rectangular coordinates on tangent plane
-  // status     : 0 = OK, star on tangent plane
-  //              1 = error, star too far from axis
-  //              2 = error, antistar on tangent plane
-  //              3 = error, antistar too far from axis
-  *oLog << endl;
-  *oLog << "tangentPlaneOffset()" << endl;
-  
-  // constants
-  double PI = TMath::Pi();
-  double accuracy = 1e-6         ;
-  
-  // switch to elevation
-  double el   = PI - zn   ;
-  double el_t = PI - zn_t ;
-  int    pres = 7 ;
-  int    wid  = 6 ;
-  *oLog << "  event     az/el       = " ;
-  *oLog << setw(wid) << setprecision(pres) << az   * TMath::RadToDeg() << " " ;
-  *oLog << setw(wid) << setprecision(pres) << el   * TMath::RadToDeg() << endl;
-  *oLog << "  telescope az/el       = " << setw(wid) << setprecision(pres) << az_t * TMath::RadToDeg() << " " ;
-  *oLog << setw(wid) << setprecision(pres) << el_t * TMath::RadToDeg() << endl;
-  *oLog << "TRACK " << setw(wid) << setprecision(pres) << az*TMath::RadToDeg() << " " << az_t*TMath::RadToDeg() << endl;
-
-  // trig calcs
-  double sin_el_t  = sin( el_t )  ;
-  double sin_el    = sin( el   )  ;
-  double cos_el_t  = cos( el_t )  ;
-  double cos_el    = cos( el   )  ;
-  double azdif     = az - az_t    ;
-  double sin_azdif = sin( azdif ) ;
-  double cos_azdif = cos( azdif ) ;
-  
-  // reciprocal of star vector length to tangent plane
-  double denom = sin_el * sin_el_t + cos_el * cos_el_t * cos_azdif ;
- 
-  // handle bad situations (if target vector isnt even on tangential plane, etc)
-  if ( denom > accuracy ) {
-    *calc_status = 0 ;
-  } else if ( denom >= 0.0 ) { 
-    *calc_status = 1 ;
-    denom = accuracy ; 
-  } else if ( denom > -accuracy ) {
-    *calc_status = 2 ;
-    denom = -accuracy ; }
-  else {
-    *calc_status = 3 ;
-    return ;
-  }
-    
-  // compute tangent plane coordinates
-  *xoff = cos_el * sin_azdif / denom ;
-  *yoff = ( ( sin_el * cos_el_t ) - ( cos_el * sin_el_t * cos_azdif ) ) / denom ;
-}
-/*********************** end of tangentPlaneOffset **********/
 
 void GUtilityFuncts::printXYZVector(const ROOT::Math::XYZVector &vec,const string &label) {
   *oLog << label << "   " << vec.X() << "  " << vec.Y() << " "
@@ -1419,7 +1281,7 @@ void GUtilityFuncts::sourceOnTelescopePlane(const double &az_s, const double &zn
   *x = 0.0;
   *y = 0.0;
   
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "---------- in GUtilityFuncts::sourceOnTelescopePlane -------" << endl;
     *oLog << "    az_s  zn_x  " << az_s*TMath::RadToDeg() << "  " << zn_s*TMath::RadToDeg()
