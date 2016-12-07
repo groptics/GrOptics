@@ -55,7 +55,7 @@ namespace GUtilityFuncts {
 
 
   /*! \brief tokenizer function, converts to string to token vector.
-   *   delimiters are blank and comma
+       delimiters are blank and comma
 
      \param tokens vector for token strings
      \param str string for conversion to tokens
@@ -63,37 +63,33 @@ namespace GUtilityFuncts {
   void tokenizer(const string& str, vector<string>& tokens);
  
   /*! \brief convert matlab string, [n:m] or [n m o p] to vector of 
-   * signed integers
-   *  or if string is a single integer, e.g. n, put n into the vector.
+    signed integers or if string is a single integer, 
+    e.g. n, put n into the vector.
 
    */
   bool decodeMatlabString(const string &matlabStr,
                           vector<int> &numRead);
 
   /*! \brief convert matlab string, [n:m] or [n m o p] to vector of 
-   * unsigned integers
-   *  or if string is a single integer, e.g. n, put n into the vector.
+    unsigned integers
+    or if string is a single integer, e.g. n, put n into the vector.
 
    */
   bool decodeMatlabString(const string &matlabStr,
                         vector<unsigned> &numRead);
 
   /*! \brief tokenize string with leading asterisk, omit the asterisk
-   *   
-   *
 
    */
   bool getAsteriskTokens( const string &str, vector<string> & tokens);
 
   /*! \brief tokenize string, keeping intact token with matlab format
-   *
 
    */
    void tokenizeMatlab(const string &str, vector<string> &tokens);
 
-
  /*! \brief template function for printing a vector of any type
-  * example: printVector<string> vector;
+   example: printVector<string> vector;
 
   */
    template<class T>
@@ -103,8 +99,13 @@ namespace GUtilityFuncts {
          *oLog << i << "   " << vec[i] << endl;
        }
      };
-   
-   
+
+   /*! \brief template function for printing a root XYZVector or any
+     3D vector that uses methods X(), Y(), Z() to access components.
+
+     \param vec1 vector with components vec1.X(), vec1.Y(), and vec1.Z()
+
+    */
    template<class Vector1> 
      void printGenVector(const Vector1 &vec1) 
      {
@@ -115,7 +116,7 @@ namespace GUtilityFuncts {
    //string evalTelType(const TelType &teltype);
 
    /*! \brief template function for linear interpolation, using two vectors
-    *  using double datatype, returns -1.0 if outside range 
+     using double datatype, returns -1.0 if outside range 
     
     */
    double linearInterpolation2D(const vector<double> &xvec,
@@ -124,14 +125,35 @@ namespace GUtilityFuncts {
    /*! \brief add a random misallignment vector to a unit vector.  The
     angle, max_angle, is the maximum conical angle between the unit vector 
     and the misaligned unit vector. 
+
+    The misalignment directions have a constant density in the circular x/y space 
+    perpendicular to the given unit vector.  Root functions are not used in this code.
+    Not currently used in GrOptics. See GUtilityFuncts::addErrorRoot.
+    \param v[3] given unit vector
+    \param maxAngle maximum conical angle between the given unit vector and the 
+           misaligned unit vector.
    */
    void addError(double v[3], const double &max_angle);
 
    /*! \brief multiply a vector by a matrix, v2 =  A*v1
+
+     \param  a matrix of size 3 x 3
+     \param  b 3D vector
+     \param  c 3D vector result of matrix multiplication a*b.
+
     */
    void mtxMlt(double a[3][3], double b[3], double c[3]);
 
+   /*! \brief Add a random misallignment vector to a unit vector. The
+    angle, max_angle, is the maximum conical angle between the unit vector 
+    and the misaligned unit vector. 
 
+    The misalignment directions have a constant density in the circular x/y space 
+    perpendicular to the given unit vector.
+    \param vec pointer to the given unit vector
+    \param maxAngle maximum conical angle between the given unit vector and the 
+           misaligned unit vector.
+   */
    void addErrorRoot(ROOT::Math::XYZVector *vec, 
                      const Double_t &maxAngle);
 
@@ -140,16 +162,23 @@ namespace GUtilityFuncts {
         Gaussian distribued probability density proportional
         to exp(-r^2/sigma^2). 
 
-        Calculation based on probability
-        transformation to a uniformly distribued deviate. 
-    */
+        Calculation based on probability transformation 
+	to a uniformly distribued deviate.
+	\param rMax  maximum value of r in (r,theta) plane
+ 	\param sigma Gaussian parameter in exp(-r^2/sigma^2)
+	\param r     pointer to r value in (r,theta) plane
+	\param theta pointer to theta value in (r,theta) plane
+   */
    void getGaussianErrorPolarCoor(const double &rMax,
                                   const double &sigma,
                                   double *r,double *theta);
 
-   /*!  \brief adds error to unit vector, gaussian error with
+   /*!  \brief adds error to unit vector, Gaussian error with
      maximum Gaussian offset specified
 
+     \param vec   pointer to XYZVector unit vector
+     \param rMax  maximum Gaussian offset
+     \param sigma Gaussian width in exp(-r^2/sigma^2)
    */
    void addErrorGaussianRoot(ROOT::Math::XYZVector *vec, 
                              const double &rMax,
@@ -322,31 +351,40 @@ namespace GUtilityFuncts {
                       const double &reflect,
                       const double &photonWaveLgt );
                          
+   /*! \brief Determines direction of reflected photon. Surface roughness added 
+     with GUtilityFuncts::addErrorRoot(vphotonReflDcos,roughness).
 
-   /*! \brief
-
-
+     \param vnormUnit direction cosine unit vector: normal to surface
+     \param vphotonUnit direction cosine unit vector: photon direction 
+     \param vphotonReflDcos direction cosine unit vector; reflected photon 
+     \param roughness surface roughness
+     \param option not used
     */
    void reflectDirection(const ROOT::Math::XYZVector &vnormUnit,
                          const ROOT::Math::XYZVector &vphotonUnit,
                          ROOT::Math::XYZVector *vphotonReflDcos,
                          const double &roughness, const int &option=0);
 
-   /*! \brief
+   /*! \brief criteria for sort function, returns true if j.second < i.second
 
-
+     \param i  pair of integers
+     \param j  pair of integers
+     \return true if j.second < i.second
     */
    bool sortPair(const pair<int,int> i , const pair<int,int> j);
 
-   /*! \brief
+   /*! \brief prints to *oLog labeled table of characteristics of all mirror
+     segments of DC telescope.
 
-
+     \param vec pointer to vector of mirrorSegmentDetails structures
     */
    void printSegVector (const vector<mirrorSegmentDetails *> &vec);
 
-   /*! \brief
+   /*! \brief prints to *oLog a label followed by the three components of vec, 
+     a ROOT::Math::XYZVector
 
-
+     \param vec a ROOT::Math::XYZVector
+     \param label the string initially printed that labels the vector
     */
    void printXYZVector(const ROOT::Math::XYZVector &vec,const string &label);
 
