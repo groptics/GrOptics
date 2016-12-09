@@ -26,6 +26,7 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
 
 // make these as global variables for now
 std::vector<float> *photonX = 0;
@@ -35,8 +36,8 @@ std::vector<float> *photonDcosY = 0;
 
 void CompareTrees() {
   
-  float episilon = 0.0001; // for equality tests
-  std::string fileOrig = "photonLocationOrig.root";
+  float episilon = 0.01; // for equality tests
+  std::string fileOrig = "photonLocation55.root";
   std::string fileTest = "../photonLocation.root";
   std::string treeName = "T1";
 
@@ -102,45 +103,77 @@ void CompareTrees() {
    T->Draw("T1.photonDcosY:photonDcosY","","", 1, 0);
 
    // make comparison directly with epison set in code 
-   Int_t numT = 30;
+   int numT = 50;
+   if ( photonX->size() < numT) {
+     numT = photonX->size();
+   }
+   cout << "numT " << numT << endl;
    cout << endl << "photonX   fphotonX       photonY  fphotonY " << endl;
-   for (int i = 0;i<numT;i++) {
-     cout << (*photonX)[i] << "    " << (*fphotonX)[i] << "       "
-	  << (*photonY)[i] << "    " << (*fphotonY)[i] << endl;
+   for (int ij = 0;ij<numT;ij++) {
+     cout << (*photonX)[ij] << "    " << (*fphotonX)[ij] << "       "
+	  << (*photonY)[ij] << "    " << (*fphotonY)[ij] << endl;
    }
    cout << endl << "photonDcosX  fphotonDcosX   photonDcosY  fphotonDcosY " << endl;
-   for (int i = 0;i<numT;i++) {
-     cout << (*photonDcosX)[i] << "    " << (*fphotonDcosX)[i] << "       "
-	  << (*photonDcosY)[i] << "    " << (*fphotonDcosY)[i] << endl;
+   for (int ij = 0;ij<numT;ij++) {
+     cout << (*photonDcosX)[ij] << "    " << (*fphotonDcosX)[ij] << "       "
+	  << (*photonDcosY)[ij] << "    " << (*fphotonDcosY)[ij] << endl;
    }
    cout << endl;
    cout << "detailed check for equality using episilon = " << episilon << endl;
    cout << "    number of photon locations and directions to test " << photonX->size() << endl;
    int icountNotEqualX = 0, icountNotEqualY = 0;
    int icountNotEqualCosX = 0, icountNotEqualCosY = 0;
- 
-   for (i=0;i<photonX->size();i++) {
+
+   for (int i=0;i<photonX->size();i++) {
+     int ipr = 0;
+     bool printflag = false;
      if (!TMath::AreEqualAbs( (*photonX)[i], (*fphotonX)[i],episilon) ) {
        icountNotEqualX += 1;
+       printflag = true;
+       ipr = i;
+       cout << "notequalX " << i << endl;
      }
      if (!TMath::AreEqualAbs( (*photonY)[i], (*fphotonY)[i],episilon) ) {
        icountNotEqualY += 1;
-     }
+       printflag = true;
+       ipr = i;
+       cout << "notequalY " << i << endl;
+      }
      if (!TMath::AreEqualAbs( (*photonDcosX)[i], (*fphotonDcosX)[i],episilon) ) {
        icountNotEqualCosX += 1;
+       cout << "notequal cosX " << i << endl;
+       printflag = true;
+       ipr = i;
      }
      if (!TMath::AreEqualAbs( (*photonDcosY)[i], (*fphotonDcosY)[i],episilon) ) {
        icountNotEqualCosY += 1;
+       cout << "notequalCosY " << endl;
+       printflag = true;
+       ipr = i;
+     }
+     if (printflag) {
+       cout << " diff X    " << (*photonX)[ipr] << "  " << (*fphotonX)[ipr] << endl;
+       cout << " diff Y    " << (*photonY)[ipr] << "  " << (*fphotonY)[ipr] << endl;
+       cout << " diff cosX    " << (*photonDcosX)[ipr] << "  " << (*fphotonDcosX)[ipr] << endl;
+       cout << " diff cosY    " << (*photonDcosY)[ipr] << "  " << (*fphotonDcosY)[ipr] << endl;       
      }
    }
-   
+   // if you wishto see the max and min values of a vector, uncomment and edit the
+   // following three statements
+   //double maxEl = *(std::max_element( (*photonX).begin(), (*photonX).end()) );
+   //double minEl = *(std::min_element( (*photonX).begin(), (*photonX).end()) );
+   //cout << "photonX minEl  maxEl " << minEl << "  " << maxEl << endl;
+      
    cout << "icountNotEqualX    " << icountNotEqualX << endl;
    cout << "icountNotEqualY    " << icountNotEqualY << endl;
    cout << "icountNotEqualCosX " << icountNotEqualCosX << endl;
    cout << "icountNotEqualCosY " << icountNotEqualCosY << endl;
-      
-   delete f;
-   delete ff;
+   
+   // To start a tree viewer and make additional plots, uncomment these statements
+   //TCanvas *c2 = new TCanvas("c2","c2");
+   //T->StartViewer();
+   //delete f;
+   //delete ff;
 }
 
 void comparePhotonLocationTrees() {
