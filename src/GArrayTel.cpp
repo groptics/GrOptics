@@ -150,7 +150,7 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
                            const double &energyc,const double &WobbleTNc,
                            const double &WobbleTEc,
                            const double &Latitude) {
-  bool debug = false;
+  bool debug = true;
   
   vSCoreGC = vSCorec;
   vSDcosGC = vSDcosGdc;
@@ -165,7 +165,7 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
     *oLog << "  -- GArrayTel::setPrimary: telID = " << telID << endl;
     *oLog << "        core loc.Grd.Coor:  ";
     GUtilityFuncts::printGenVector(vSCoreGC); *oLog << endl;
-    *oLog << "        core Az Zn. GrdCoor:  ";
+    *oLog << "        core dirCos. GrdCoor:  ";
     GUtilityFuncts::printGenVector(vSDcosGC); *oLog << endl;
     *oLog << "        wobbleN wobbleE  " 
           << fWobbleN*(TMath::RadToDeg()) << "  " 
@@ -226,6 +226,7 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
 
     // get telescope az and zn
     GUtilityFuncts::telescopeAzZnNew(fAzPrim,
+				  //GUtilityFuncts::telescopeAzZnNew(fAzPrim,
                                   fZnPrim,
                                   fWobbleN,
                                   fWobbleE,

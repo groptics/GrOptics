@@ -62,7 +62,7 @@ name of grOptics log file, default use cerr (if no asterisk)
 number of showers/photons, defaults -1
   NSHOWER <numShowers, <0, no limit>
           <numPhotons, <0, no limit>
-* NSHOWER -1 -1
+* NSHOWER 1 50
 You can see the paths of all 20 photons in the ogl image when you
 run the code (all photons from the photon.cph test input file).
 
@@ -80,7 +80,7 @@ These offsets are thus not parallel to the camera axes.
 Example: 
 wobble Y, North: WOBBLE 0.0 0.5 0.0 31.675  (offset toward Polaris)  
 wobble X, East : WOBBLE 0.5 0.0 0.0 31.675  (offset perpendicular to hour circle)
-* WOBBLE 0.5 0.5 0.0 90.0
+* WOBBLE 0.0 0.0 0.0 90.0
 
 array configuration file
  ARRAYCONFIG <filename: default ./Config/arrayConfig.cfg>
@@ -130,7 +130,7 @@ does not use root geometry methods due to slow execution issues.  You may get
 strange results if you use other options for drawing DC telescopes (to be fixed
 soon)
 
- DRAWTEL 1 10
+* DRAWTEL 1 10
 
 TESTTEL <telescope number> <baseFileName for histograms>   
 THis is a very useful option for producing spot histograms and spot rms

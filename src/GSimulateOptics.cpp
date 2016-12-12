@@ -34,6 +34,7 @@ using namespace std;
 #include "Math/RotationY.h"
 #include "Math/RotationZ.h"
 #include "Math/Rotation3D.h"
+#include "TVector3.h"
 
 #include "GDefinition.h"
 

@@ -124,7 +124,7 @@ int main() {
 
   *oLog << " ---------------entering testUtilities-------------- " << endl;
 
-  if(1) {
+  if(0) {
     *oLog << "========= test GUtilityFunct::sourceOnTelescopePlane =======" << endl;
     testsourceOnTelescopePlane(101.0,    // source az
 			       31.0,    // source zn
@@ -154,14 +154,14 @@ int main() {
 		     0.1);  // zn
     *oLog << "=================== end of tests for XYcosToAzZn =============== " << endl;
   }
-  if (0) {
+  if (1) {
     *oLog << "================= tests for telescopeAzZn ====================" << endl;
-    testtelescopeAzZn(30.0,  //azimuth
-		      60.0, //zenith
-		      0.0,  // wobbleN
-		      0.0,  // wobbleE
+    testtelescopeAzZn(270.0,  //azimuth
+		      30.0, //zenith
+		      2.0,  // wobbleN
+		      2.0,  // wobbleE
 		      0.0,  // offsetX
-		      3.0,  // offsetY
+		      0.0,  // offsetY
 		      45.0); // latitude
     *oLog << "================== end of tests for telescopeAzZn =============" <<endl;
   }
@@ -306,10 +306,17 @@ void testtelescopeAzZn(const double &primAz,
   *oLog << "latitude " << latitude << endl;
 
   //USE EITHER NEW OR NON-NEW
+  *oLog << "=-=-=-=-= testing testelescopeAzZnNew ------------- " << endl;
   GUtilityFuncts::telescopeAzZnNew(primAzr,primZnr,wobbleNr,wobbleEr,
+				   telOffsetXr,telOffsetYr,latituder,
+				   &telAzr,&telZnr,&sourceXr,&sourceYr);
+  
+  DEBUG(telAzr*TMath::RadToDeg()); DEBUG(telZnr*TMath::RadToDeg());
+  *oLog << "=-=-=-=-= testing testelescopeAzZn ------------- " << endl;
+  GUtilityFuncts::telescopeAzZn(primAzr,primZnr,wobbleNr,wobbleEr,
                                 telOffsetXr,telOffsetYr,latituder,
                                 &telAzr,&telZnr,&sourceXr,&sourceYr);
-
+  
   DEBUG(telAzr*TMath::RadToDeg()); DEBUG(telZnr*TMath::RadToDeg());
   return;
   //==========================================

@@ -1393,14 +1393,14 @@ void GSegSCTelescope::makePhotonHistoryBranches() {
   if (debug) {
     *oLog << "  -- makePhotonHistoryBranches " << endl;
   }
-
   hisT->Branch("status",&fStatusLast,"status/I");
   hisT->Branch("nPoints",&fNPoints,"nPoints/I");
   hisT->Branch("plateSFac",&fPlateScaleFactor10,"plateSFac/D");
   hisT->Branch("injectX",&fInitialInjectLoc[0],"injectX/D");
   hisT->Branch("injectY",&fInitialInjectLoc[1],"injectY/D");
   hisT->Branch("injectZ",&fInitialInjectLoc[2],"injectZ/D");
-
+  hisT->Branch("injectDirX",&fphotonInjectDir[0],"injectDirX/D");
+  hisT->Branch("injectDirY",&fphotonInjectDir[1],"injectDirY/D");
   hisT->Branch("xLast",&fLocLast[0],"xLast/D");
   hisT->Branch("yLast",&fLocLast[1],"yLast/D");
   hisT->Branch("zLast",&fLocLast[2],"zLast/D");
