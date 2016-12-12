@@ -84,11 +84,13 @@ ifeq ($(ROOTCLING_FOUND),)
 src/GRootDCNavigatorDict.cpp: GRootDCNavigator.h GRootDCNavigatorLinkDef.h
 	@echo "Generating dictionary $< ... "
 	rootcling -v -f $@ -c  $^
+	cp src/GRootDCNavigatorDict_rdict.pcm .
 	@echo "Done"
 
 src/GRootWriterDict.cpp: GRootWriter.h GRootWriterLinkDef.h
 	@echo "Generating dictionary $< ... "
-	rootcling -v -f $@ -c  $^
+	rootcling -v -f $@ -c  $^ 
+	cp src/GRootWriterDict_rdict.pcm .
 	@echo "Done"
 
 else
@@ -150,7 +152,7 @@ testR:
 	@echo INCDIR $(INCDIR)
 
 cleanGrOptics: 
-	rm -rf grOptics coorTrans src/*Dict* include/*Dict* obj/*.o \
+	rm -rf grOptics *.pcm coorTrans src/*Dict* include/*Dict* obj/*.o \
             Makefile.depend 
 
 cleanRobast: 
