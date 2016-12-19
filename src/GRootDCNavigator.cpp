@@ -47,8 +47,6 @@ using namespace std;
 #include "GDCTelescope.h"
 #include "GRootDCNavigator.h"
 
-ClassImp(GRootDCNavigator);
-
 // debug macro
 #define DEBUG(x) *oLog << #x << " = " << x << endl
 

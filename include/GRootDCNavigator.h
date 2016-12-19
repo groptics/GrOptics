@@ -116,7 +116,6 @@ class GRootDCNavigator {
   // debug print: print all variables, not totally implemented, don't use
   void printVariables();
 
-  ClassDef(GRootDCNavigator,1);
 };
 
 #endif

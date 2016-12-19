@@ -135,7 +135,6 @@ class GRootWriter
      return numPhotonX;
    }
    
-   ClassDef(GRootWriter,1);
 };
 
 #endif

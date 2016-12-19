@@ -42,8 +42,6 @@ $(OBJ)/GArrayTel.o $(OBJ)/GSimulateOptics.o \
 $(OBJ)/GOrderedGrid.o $(OBJ)/GRootDCNavigator.o \
 $(OBJ)/GRootWriter.o  $(OBJ)/GSCTelescope.o \
 $(OBJ)/GReadSCStd.o  $(OBJ)/GSCTelescopeFactory.o \
-$(OBJ)/GRootDCNavigatorDict.o \
-$(OBJ)/GRootWriterDict.o \
 $(OBJ)/GSegSCTelescope.o \
 $(OBJ)/GSegSCTelescopeFactory.o \
 $(OBJ)/GReadSegSCStd.o \
@@ -79,37 +77,11 @@ $(OBJ)/%.o : %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Done"
 
-ifeq ($(ROOTCLING_FOUND),)
+#ifeq ($(ROOTCLING_FOUND),)
 # to create root dictionary using rootcling
-src/GRootDCNavigatorDict.cpp: GRootDCNavigator.h GRootDCNavigatorLinkDef.h
-	@echo "Generating dictionary $< ... "
-	rootcling -v -f $@ -c  $^
-	cp src/GRootDCNavigatorDict_rdict.pcm .
-	@echo "Done"
-
-src/GRootWriterDict.cpp: GRootWriter.h GRootWriterLinkDef.h
-	@echo "Generating dictionary $< ... "
-	rootcling -v -f $@ -c  $^ 
-	cp src/GRootWriterDict_rdict.pcm .
-	@echo "Done"
-
-else
+#else
 # to create root dictionary using rootcint
-src/GRootDCNavigatorDict.cpp: GRootDCNavigator.h GRootDCNavigatorLinkDef.h
-	@echo "Generating dictionary $< ... "
-	rootcint -v -f $@ -c  $^
-	@echo "rootcint SHELL mv src/GRootDCNavigatorDict.h include/."
-	mv $(SRCDIR)/GRootDCNavigatorDict.h $(INCDIR)/.
-	@echo "Done"
-
-src/GRootWriterDict.cpp: GRootWriter.h GRootWriterLinkDef.h
-	@echo "Generating dictionary $< ... "
-	rootcint -v -f $@ -c  $^
-	@echo "rootcint SHELL mv src/GRootWriterDict.h include/."
-	mv $(SRCDIR)/GRootWriterDict.h $(INCDIR)/.
-	@echo "Done"
-endif
-
+#endif
 
 robast: $(ROOTMAP)
 

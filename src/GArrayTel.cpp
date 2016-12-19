@@ -150,7 +150,7 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
                            const double &energyc,const double &WobbleTNc,
                            const double &WobbleTEc,
                            const double &Latitude) {
-  bool debug = true;
+  bool debug = false;
   
   vSCoreGC = vSCorec;
   vSDcosGC = vSDcosGdc;
