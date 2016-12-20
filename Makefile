@@ -28,24 +28,20 @@ all: robast grReaderFactory grOptics
 # directory to receive all .o files
 OBJ := obj
 
-OBJECTS =  $(OBJ)/GUtilityFuncts.o $(OBJ)/GPilot.o \
-$(OBJ)/GTelescope.o $(OBJ)/GDCTelescope.o \
-$(OBJ)/GTelescopeFactory.o $(OBJ)/GDCTelescopeFactory.o \
-$(OBJ)/GReadDCStdBase.o  $(OBJ)/GReadDCStdGrISU.o \
-$(OBJ)/GDCGeometry.o  $(OBJ)/GGeometryBase.o \
-$(OBJ)/GRayTracerBase.o  \
-$(OBJ)/GDCRayTracer.o  \
-$(OBJ)/GDefinition.o \
-$(OBJ)/GReadPhotonGrISU.o $(OBJ)/GReadPhotonBase.o \
-$(OBJ)/GArrayTel.o $(OBJ)/GSimulateOptics.o \
-$(OBJ)/GOrderedGrid.o $(OBJ)/GRootDCNavigator.o \
-$(OBJ)/GRootWriter.o  $(OBJ)/GSCTelescope.o \
-$(OBJ)/GReadSCStd.o  $(OBJ)/GSCTelescopeFactory.o \
-$(OBJ)/GSegSCTelescope.o \
-$(OBJ)/GSegSCTelescopeFactory.o \
-$(OBJ)/GReadSegSCStd.o \
-$(OBJ)/GSegmentedMirror.o \
-$(OBJ)/GSegmentedObscuration.o
+SRCDIR:=src
+SrcSuf := cpp
+ObjSuf := o
+
+#INCS    :=      $(filter-out $(INCDIR)/LinkDef.h,$(wildcard $(INCDIR)/*.h))
+SRCS    :=      $(filter-out $(SRCDIR)/GArray_Tel_noGraphs_4.0deg.%,$(wildcard $(SRCDIR)/G*.$(SrcSuf)))
+OBJS_SUF    :=      $(patsubst %.$(SrcSuf),%.$(ObjSuf),$(SRCS)) $(DICTO)
+#OBJECTS  := $(patsubst src/%,obj/%,$(OBJS_SUF))
+OBJECTS  := $(patsubst $(SRCDIR)/%.$(SrcSuf),$(OBJDIR)%.$(ObjSuf),$(SRCS))  $(DICTO) 
+
+
+print:
+	@echo SRCS $(SRCS)
+	@echo OBJECTS $(OBJECTS)
 
 TESTOBJECTS = $(OBJ)/GUtilityFuncts.o $(OBJ)/GDefinition.o 
 
@@ -127,6 +123,9 @@ cleanGrOptics:
             Makefile.depend 
 
 cleanRobast: 
+	cd $(ROBAST_VER); make clean
+
+removeRobast:
 	rm -rf $(ROBAST_VER) $(ROBAST_TGZ)
 
 clean: cleanGrOptics
