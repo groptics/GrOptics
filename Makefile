@@ -8,6 +8,7 @@
 # dependencies: root and gsl
 # robast is downloaded, see url in Makefile.common
 
+#include Makefile.common
 include Makefile.common
 
 # for ROBAST build (NOTE: ROBAST's include dir is added to INCLUDEFLAGS)
@@ -22,9 +23,7 @@ vpath %.cpp src
 CXXFLAGS += $(INCLUDEFLAGS)
 
 .PHONY:	all
-#.PHONY all
 all: robast grReaderFactory grOptics
-#all: robast grOptics
 
 # directory to receive all .o files
 OBJ := obj
@@ -83,19 +82,19 @@ $(OBJ)/%.o : %.cpp
 # to create root dictionary using rootcint
 #endif
 
-robast: $(ROOTMAP)
-
-$(ROBAST_TGZ):
-	echo Downloading from $(ROBAST_URL) into $(ROBAST_TGZ)
-	#curl -L $(ROBAST_URL) > $(ROBAST_TGZ)
-
-$(ROBAST_VER): $(ROBAST_TGZ)
-	#tar zxvf $(ROBAST_TGZ)
-
-$(ROOTMAP): 
+.PHONY: robast
+robast:
+ifeq ($(filter $(ROBAST_DIR), $(wildcard */)),)
+	@echo download ROBAST tar file, no $(ROBAST_VER) directory
+	curl -L $(ROBAST_URL) > $(ROBAST_TGZ)
+	tar zxvf $(ROBAST_TGZ)
+	@echo copying ROBASTEditedFile/AOpticalComponent.cxx to robast src directory
+	cp ROBASTEditedFile/AOpticalComponent.cxx ROBAST-2.4.1/src/.
+else
+	@echo  $(ROBAST_DIR) directory already exists
+endif
 	cd $(ROBAST_VER);\
 	make
-
 var: 
 	@echo "ld   $(LD)"
 	@echo "archsoflags $(ARCHSOFLAGS)"
