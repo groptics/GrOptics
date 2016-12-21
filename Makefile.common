@@ -1,6 +1,14 @@
+# Makefile.common
+#VERSION4.0 
+#30May2016
+#     C. Duke
+# Grinnell College
+# June 21, 2010
+
 # Makefile.common file for root and ROBAST based codes
 
 #------------------------------------------------------------
+#  adopted from ROBAST Makefile, December 2016
 #  set ROOT environmental variables from root's Makefile.arch, need to find it first
 # older version
 MAKEARCH	:=	$(shell find -L $(ROOTSYS)/test -name Makefile.arch 2> /dev/null)
@@ -15,21 +23,9 @@ RC := root-config
 MAKEARCH	:=	$(wildcard $(shell $(RC) --etcdir)/Makefile.arch)
 endif
 
-#  and get root variables
+#  and get the details from Makefile.arch
 include $(MAKEARCH)
-# MAKEARCH generates the following variables and flags (partial list)
-# CXX, LD
-#CXXFLAGS     += $(ROOTCFLAGS)
-#LDFLAGS      += $(ROOTLDFLAGS)
-#LIBS          = $(ROOTLIBS) $(SYSLIBS)
-#GLIBS         = $(ROOTGLIBS) $(SYSLIBS)
-#ObjSuf        = o
-#SrcSuf        = cxx
-#ExeSuf        =
-#DllSuf        = so
-#OutPutOpt     = -o # keep whitespace after "-o"
-#OPT
-#OPT2
+
 #---------------------------------------------------------------
 
 #   add additional root libraries.
@@ -38,12 +34,15 @@ LIBS += -lGeomBuilder  -lGeomPainter  -lGeom -lGed
 
 #----------------------------------------------------------------
 #  is cling available, if so use rootcling to produce root dictionaries
+# currently no GrOptics uses no root dictionaries, so the following is unnecessary,
+# but is included for completeness
 ifeq ($(ROOTCLING),)
 ROOTCLING	:=	$(ROOTCINT)
 else
 ROOTCLING_FOUND	:= 1
 endif
 #------------------------------------------------------
+# set the ROBAST details
 
 ROBAST_VER_NUM := 2.4.1
 ROBAST_DIR := ROBAST-$(ROBAST_VER_NUM)/
@@ -60,6 +59,7 @@ LIBS          += -lROBAST
 ARCH1 :=$(shell uname)
 ifeq ($(ARCH1),Linux)
 # passes option "-rpath v1.2.0" to the linker to set the
-# run path (which hasn't been set in LD_LIBRARY_PATH)
+# runtime path (which hasn't been set in LD_LIBRARY_PATH)
+# I think we could use the -R flag, I'll figure this out later
 LDFLAGS += -Xlinker -rpath -Xlinker $(ROBAST_VER)
 endif

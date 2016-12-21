@@ -8,13 +8,16 @@
 # dependencies: root and gsl
 # robast is downloaded, see url in Makefile.common
 
-#include Makefile.common
 include Makefile.common
 
-# for ROBAST build (NOTE: ROBAST's include dir is added to INCLUDEFLAGS)
-#include Makefile.robast
-
 INCLUDEFLAGS  += -I. -I./include
+
+# directory to receive all .o files
+OBJDIR := obj
+
+SRCDIR := src
+SrcSuf := cpp
+ObjSuf := o
 
 vpath %.h include
 vpath %.cpp src
@@ -25,49 +28,43 @@ CXXFLAGS += $(INCLUDEFLAGS)
 .PHONY:	all
 all: robast grReaderFactory grOptics
 
-# directory to receive all .o files
-OBJ := obj
-
-SRCDIR:=src
-SrcSuf := cpp
-ObjSuf := o
-
-#INCS    :=      $(filter-out $(INCDIR)/LinkDef.h,$(wildcard $(INCDIR)/*.h))
+# make list of all G* source files
 SRCS    :=      $(filter-out $(SRCDIR)/GArray_Tel_noGraphs_4.0deg.%,$(wildcard $(SRCDIR)/G*.$(SrcSuf)))
-OBJS_SUF    :=      $(patsubst %.$(SrcSuf),%.$(ObjSuf),$(SRCS)) $(DICTO)
-#OBJECTS  := $(patsubst src/%,obj/%,$(OBJS_SUF))
-OBJECTS  := $(patsubst $(SRCDIR)/%.$(SrcSuf),$(OBJDIR)%.$(ObjSuf),$(SRCS))  $(DICTO) 
+# make list of object files to create, DICTO is currently empty
+OBJECTS  := $(patsubst $(SRCDIR)/%.$(SrcSuf),$(OBJDIR)/%.$(ObjSuf),$(SRCS))  $(DICTO) 
 
-
+#------------------------------------------------------------------
+.PHONY: print
 print:
 	@echo SRCS $(SRCS)
 	@echo OBJECTS $(OBJECTS)
+	@echo OBJDIR $(OBJDIR)
 
-TESTOBJECTS = $(OBJ)/GUtilityFuncts.o $(OBJ)/GDefinition.o 
+TESTOBJECTS = $(OBJDIR)/GUtilityFuncts.o $(OBJDIR)/GDefinition.o 
 
 # set target
-testUtilities: $(OBJ)/testUtilities.o  $(TESTOBJECTS)
+testUtilities: $(OBJDIR)/testUtilities.o  $(TESTOBJECTS)
 	@echo "building testUtilities"
 	$(LD) $(LDFLAGS) -pg $(LIBS) $^ $(OutPutOpt) $@
 	@echo SRCDIR $(SRCDIR)
 	@echo INCDIR $(INCDIR)
 
-grOptics: $(OBJ)/grOptics.o $(OBJECTS)
+grOptics: $(OBJDIR)/grOptics.o $(OBJECTS)
 	@echo "building grOptics"
 	$(LD) $(LDFLAGS) $(LIBS) $^ $(OutPutOpt) $@
 
-grReaderFactory: $(OBJ)/grReaderFactory.o $(OBJECTS)
+grReaderFactory: $(OBJDIR)/grReaderFactory.o $(OBJECTS)
 	@echo "building grTestSegReaderFactory"
 	$(LD) $(LDFLAGS) $(LIBS) $^ $(OutPutOpt) $@
 
-%:$(OBJ)/%.o 
+%:$(OBJDIR)/%.o 
 	@echo "Building $@ ... "
 	$(LD) $(LDFLAGS) $^ $(LIBS) $(OutPutOpt) $@
 	@echo "Done"
 	@echo ""
 
 # rule for any compiling any .cpp file
-$(OBJ)/%.o : %.cpp
+$(OBJDIR)/%.o : %.cpp
 	@echo "        Compiling $< ... "
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Done"
@@ -119,7 +116,7 @@ testR:
 	@echo INCDIR $(INCDIR)
 
 cleanGrOptics: 
-	rm -rf grOptics *.pcm coorTrans src/*Dict* include/*Dict* obj/*.o \
+	rm -rf grOptics *.pcm coorTrans $(SRCDIR)/*Dict* $(INCDIR)/*Dict* $(OBJDIR)/*.o \
             Makefile.depend 
 
 cleanRobast: 
@@ -132,7 +129,7 @@ clean: cleanGrOptics
 
 DEPEND=echo > Makefile.depend0 &&\
 	makedepend -s "\#DEPEND LIST DONT DELETE" -- $(INCLUDEFLAGS) \
-		-Y --  src/*.cpp  include/*.h  \
+		-Y --  $(SRCDIR)/*.cpp  $(INCDIR)/*.h  \
 		-f Makefile.depend0 > /dev/null 2>&1 &&\
 	sed "s/^[a-zA-Z0-9]*\//obj\//" Makefile.depend0 > Makefile.depend &&\
 	rm -f Makefile.depend0
