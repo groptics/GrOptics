@@ -14,13 +14,10 @@ INCLUDEFLAGS  += -I. -I./include
 
 # directory to receive all .o files
 OBJDIR := obj
-
 SRCDIR := src
+INCDIR := include
 SrcSuf := cpp
 ObjSuf := o
-
-vpath %.h include
-vpath %.cpp src
 
 # add INCLUDEFLAGS  
 CXXFLAGS += $(INCLUDEFLAGS)
@@ -39,6 +36,8 @@ print:
 	@echo SRCS $(SRCS)
 	@echo OBJECTS $(OBJECTS)
 	@echo OBJDIR $(OBJDIR)
+	@echo OutPutOpt $(OutPutOpt)
+	@echo INCDIR $(INCDIR)
 
 TESTOBJECTS = $(OBJDIR)/GUtilityFuncts.o $(OBJDIR)/GDefinition.o 
 
@@ -64,7 +63,7 @@ grReaderFactory: $(OBJDIR)/grReaderFactory.o $(OBJECTS)
 	@echo ""
 
 # rule for any compiling any .cpp file
-$(OBJDIR)/%.o : %.cpp
+$(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	@echo "        Compiling $< ... "
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Done"
