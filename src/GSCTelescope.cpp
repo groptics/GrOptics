@@ -853,16 +853,59 @@ bool GSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
     // do we draw the ray.
     if ( ( (eRayPlotType == FOCUSONLY) && (fStatusLast == 3) ) ||
          (eRayPlotType == ALLSURFACES) ) {
+      
+
+      /*  following was in SCTelescope, replace with SegSC code, 1Jan2017 C.Duke
       *oLog << " ready to draw polyline" << endl;
       TPolyLine3D *pol = ray->MakePolyLine3D();
       pol->Print("all");
       cout << " fStatusLast " << fStatusLast << endl;
       pol->SetLineColor(2);
       pol->Draw();
+      */
+
+      *oLog << " ready to draw polyline" << endl;
+      *oLog << "      ray->GetNpoints(): " << ray->GetNpoints() << endl;
+      TPolyLine3D *pol = ray->MakePolyLine3D();
+      for (Int_t ii = 0 ;ii < pol->GetN(); ii++ ) {
+	*oLog << ii << "  " << (pol->GetP())[ii] << endl;
+      }
+      pol->Print("all");
+      *oLog << " fStatusLast " << fStatusLast << "  ";
+      if (fStatusLast == 0) {
+	*oLog << "kRun" << endl;
+      }
+      else if (fStatusLast == 1) {
+	*oLog << "kStop" << endl;
+      }
+      else if (fStatusLast == 2) {
+	*oLog << "kExit" << endl;
+      }
+      else if (fStatusLast == 3) {
+	*oLog << "kFocus" << endl;
+      }
+      else if (fStatusLast == 4) {
+	*oLog << "kSuspend" << endl;
+      }
+      else if (fStatusLast == 5) {
+	*oLog << "kAbsorb" << endl;
+      }
+      else if (fStatusLast == 1) {
+	*oLog << "kStop" << endl;
+      }
+      else {
+	*oLog << " can't interpret fStatusLast" << endl;
+      }
+      *oLog << endl;
+      
+      pol->SetLineColor(2);
+      pol->Draw();
+      gPad->Update();
     }
   }
 
   return ray->IsFocused();
+
 };
 /********************** end of getCameraPhotonLocation *****************/
 
