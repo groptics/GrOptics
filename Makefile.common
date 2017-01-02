@@ -45,7 +45,6 @@ endif
 # set the ROBAST details
 
 ROBAST_VER_NUM := 2.4.1
-ROBAST_DIR := ROBAST-$(ROBAST_VER_NUM)/
 ROBAST_VER := ROBAST-$(ROBAST_VER_NUM)
 ROBAST_TGZ := ROBAST-$(ROBAST_VER_NUM).tar.gz
 ROBAST_BASE_URL := https://codeload.github.com/ROBAST/ROBAST/tar.gz

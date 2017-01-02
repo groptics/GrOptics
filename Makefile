@@ -3,7 +3,11 @@
 #30May2016
 #      C. Duke
 #  Grinnell College
-
+# UPDATED VERSION
+# Makefile for grOptics.  requires root and robast. robast downloaded
+# using curl if necessary.  Code changes to robast classes necessary for
+# using robast with GrOptics copied to robast prior to robast compilation
+# (see directory GrOptics/ROBASTEditedFile contents)
 #
 # dependencies: root and gsl
 # robast is downloaded, see url in Makefile.common
@@ -22,8 +26,10 @@ ObjSuf := o
 # add INCLUDEFLAGS  
 CXXFLAGS += $(INCLUDEFLAGS)
 
-.PHONY:	all
-all: robast grReaderFactory grOptics
+.PHONY:	all printDebug robast var includeflags cxxflags ldflags \
+	libs cleanGrOptics cleanRobast removeRobast
+
+all: robast grOptics
 
 # make list of all G* source files
 SRCS    :=      $(filter-out $(SRCDIR)/GArray_Tel_noGraphs_4.0deg.%,$(wildcard $(SRCDIR)/G*.$(SrcSuf)))
@@ -31,13 +37,15 @@ SRCS    :=      $(filter-out $(SRCDIR)/GArray_Tel_noGraphs_4.0deg.%,$(wildcard $
 OBJECTS  := $(patsubst $(SRCDIR)/%.$(SrcSuf),$(OBJDIR)/%.$(ObjSuf),$(SRCS))  $(DICTO) 
 
 #------------------------------------------------------------------
-.PHONY: print
-print:
+printDebug:
 	@echo SRCS $(SRCS)
 	@echo OBJECTS $(OBJECTS)
-	@echo OBJDIR $(OBJDIR)
 	@echo OutPutOpt $(OutPutOpt)
+	@echo ROOTCLING_FOUND $(ROOTCLING_FOUND)
+	@echo PWD $(PWD)
+	@echo SRCDIR $(SRCDIR)
 	@echo INCDIR $(INCDIR)
+	@echo OBJDIR $(OBJDIR)
 
 TESTOBJECTS = $(OBJDIR)/GUtilityFuncts.o $(OBJDIR)/GDefinition.o 
 
@@ -74,19 +82,46 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 # to create root dictionary using rootcint
 #endif
 
-.PHONY: robast
+# -------------  ROBAST -----------------------------------
+# search for ROBAST_VER directory
+
+# get edit files for ROBAST from robast edit directory
+EDIT_DIR := ROBASTEditedFile
+INCFILE := $(wildcard $(EDIT_DIR)/*.h)
+CXXFILE := $(wildcard $(EDIT_DIR)/*.cxx)
+COPY_FILE = $(EDIT_DIR)/copyFile
+
+# see if ROBAST is already installed, look for directory
+ROBDIR = $(strip $(wildcard $(ROBAST_VER) ) ) 
+
+ifeq ($(ROBDIR),)
 robast:
-ifeq ($(filter $(ROBAST_DIR), $(wildcard */)),)
-	@echo download ROBAST tar file, no $(ROBAST_VER) directory
+	@echo did not find $(ROBAST_VER) directory
+	@echo     ready to download ROBAST into tar file
 	curl -L $(ROBAST_URL) > $(ROBAST_TGZ)
-	tar zxvf $(ROBAST_TGZ)
-	@echo copying ROBASTEditedFile/AOpticalComponent.cxx to robast src directory
-	cp ROBASTEditedFile/AOpticalComponent.cxx ROBAST-2.4.1/src/.
+	@echo     ready to untar ROBAST into $(ROBAST_VER) directory
+	tar zxf $(ROBAST_TGZ)
+	@echo     ready to copy robast edit files
+	$(foreach f,$(CXXFILE), cp $(f) $(ROBAST_VER)/src/.; )
+	$(foreach f,$(INCFILE), cp $(f) $(ROBAST_VER)/include/.;) 
+	touch $(COPY_FILE)
+	cd $(ROBAST_VER); make
+	@echo    robast ready and waiting
+
 else
-	@echo  $(ROBAST_DIR) directory already exists
+.PHONY: robast
+robast: $(COPY_FILE)
+	@echo    robast ready and waiting
 endif
-	cd $(ROBAST_VER);\
-	make
+
+$(COPY_FILE): $(CXXFILE) $(INCFILE)
+	@echo     ready to copy robast edit files
+	$(foreach f,$(filter %.cxx, $?), cp $(f) $(ROBAST_VER)/src/.;) 
+	$(foreach f,$(filter %.h, $?), cp $(f) $(ROBAST_VER)/include/.;) 
+
+	touch $(COPY_FILE)
+	cd $(ROBAST_VER); make;
+
 var: 
 	@echo "ld   $(LD)"
 	@echo "archsoflags $(ARCHSOFLAGS)"
@@ -103,26 +138,17 @@ ldflags:
 libs:
 	@echo "libs:  $(LIBS)"
 
-ifeq ($(ROOTCLING),)
-  TMPV = 1
-endif
-
-testR:
-	@echo ROOTCLING_FOUND $(ROOTCLING_FOUND)
-	@echo PWD $(PWD)
-	@echo TMPV $(TMPV)
-	@echo SRCDIR $(SRCDIR)
-	@echo INCDIR $(INCDIR)
-
 cleanGrOptics: 
-	rm -rf grOptics *.pcm coorTrans $(SRCDIR)/*Dict* $(INCDIR)/*Dict* $(OBJDIR)/*.o \
-            Makefile.depend 
+	rm -rf grOptics *.pcm $(SRCDIR)/*Dict* $(INCDIR)/*Dict* $(OBJDIR)/*.o \
+            Makefile.depend grReaderFactory
 
-cleanRobast: 
-	cd $(ROBAST_VER); make clean
+cleanRobast:
+	cd $(ROBAST_VER); make clean;
+	rm -f  $(COPY_FILE)
 
 removeRobast:
 	rm -rf $(ROBAST_VER) $(ROBAST_TGZ)
+	rm -f  $(COPY_FILE)
 
 clean: cleanGrOptics
 
@@ -143,3 +169,5 @@ include Makefile.depend
 
 # DO NOT DELETE
 #DEPEND LIST DONT DELETE
+
+
