@@ -92,7 +92,8 @@ CXXFILE := $(wildcard $(EDIT_DIR)/*.cxx)
 COPY_FILE = $(EDIT_DIR)/copyFile
 
 # see if ROBAST is already installed, look for directory
-ROBDIR = $(strip $(wildcard $(ROBAST_VER) ) ) 
+ROBDIR = $(wildcard $(ROBAST_VER))
+#ROBDIR = $(strip $(wildcard $(ROBAST_VER))) 
 
 ifeq ($(ROBDIR),)
 robast:
