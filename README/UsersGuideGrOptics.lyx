@@ -85,7 +85,7 @@ GrOptics User's Guide
 \begin_inset Newline newline
 \end_inset
 
- Version 2.2
+ Version 4.0
 \end_layout
 
 \begin_layout Author
@@ -171,6 +171,12 @@ key "GROPTICS"
 \end_inset
 
  gives the code download site.
+ 
+\end_layout
+
+\begin_layout Abstract
+I created this file using lyx and converted the .lyx file to html using htlatex,
+ a utility available in my macTeX package on osx.
 \end_layout
 
 \begin_layout Standard
@@ -236,10 +242,10 @@ key "CARE"
 \begin_layout Standard
 There are no intrinsic limits to the number or type of telescopes placed
  in the air Cherenkov telescope (ACT) array.
- Currently, the code contains two concrete telescope classes: for VERITAS
- DC telescopes and for SC telescopes.
- All array and telescope parameters are placed in input pilot or configuration
- files.
+ Currently, the code contains three telescope classes: for VERITAS DC telescopes
+, SC telescopes, and for SC telescopes with segmented mirrors.
+ Input pilot or configuration files contain all the array and telescope
+ parameters.
 \end_layout
 
 \begin_layout Subsection
@@ -285,8 +291,8 @@ key "ROOT"
 \end_layout
 
 \begin_layout Itemize
-Follow package instructions to configure and to make, but do not specify
- a –prefix directory with configure.
+Follow package instructions to compile and link ROOT; it's best not to specify
+ a –prefix directory.
  
 \end_layout
 
@@ -314,7 +320,7 @@ textless
 
  rootDirectory
 \begin_inset ERT
-status collapsed
+status open
 
 \begin_layout Plain Layout
 
@@ -330,7 +336,7 @@ textgreater
 
 \end_deeper
 \begin_layout Enumerate
-The SC telescope class uses the ROBAST package 
+The SC and SEGSC telescope classes use the ROBAST package 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "ROBAST"
@@ -353,7 +359,7 @@ make
  file to be compatible with GrOptics.
  The new file is copied using Makefile commands to the ROBAST src directory
  prior to compilation.
- All of this should be transparent to all users.
+ These details should be transparent to all users.
  
 \end_layout
 
@@ -371,6 +377,7 @@ key "GROPTICS"
 make
 \emph default
  to produce the grOptics executable.
+ The ROBAST download and file copy occurs during this step.
 \end_layout
 
 \begin_layout Enumerate
@@ -388,6 +395,7 @@ photonLocation.root
 .
  Other test possibilities (see later sections) for using this configuration
  are telescope drawings and psf camera plots.
+ 
 \end_layout
 
 \begin_layout Subsection
@@ -422,12 +430,13 @@ opticsSimulation.pilot
 arrayConfig.cfg
 \emph default
 , defines the ACT array.
- You'll see the downloaded file defines a four-telescope DC array that is
- compatible with the 
+ You'll see the downloaded file defines a four-telescope array that is compatibl
+e with the 
 \emph on
 photon.cph
 \emph default
  test input Cherenkov photon file.
+ The first telescope is a SEGSC telescope; the remaining thre are DC telescopes.
  The parameters in these files are documented both in these files and in
  following sections in this document.
 \end_layout
@@ -446,8 +455,8 @@ opticsSimulation.pilot
  surface for each telescope in this file.
  You'll also find a history ROOT file for each telescope which documents
  the history of each photon incident onto the telescope (useful for debugging).
- You can turn off the creation of these files by removing the leading asterisk
- of the 
+ You can turn off the creation of these history files by removing the leading
+ asterisk of the 
 \emph on
 PHOTONHIST 
 \emph default
@@ -459,8 +468,8 @@ To create an
 \emph on
 opengl
 \emph default
- drawing of a Davies-Cotton telescope using the ROOT geometry classes, add
- a leading asterisk to the 
+ drawing of a telescope using the ROOT geometry classes, add a leading asterisk
+ to the 
 \emph on
 DRAWTEL
 \emph default
@@ -468,50 +477,35 @@ DRAWTEL
 \emph on
 opticsSimulation.pilot
 \emph default
- and execute 
+, select the telescope, and execute 
 \emph on
 grOptics
 \emph default
 .
  Note that for DC telescopes, the code does not draw the mirror facets as
  the ray-tracing for the facets does not use the ROOT geometry classes.
- Have a look at the 
-\emph on
-canSpot
-\emph default
- figure.
+ For SC and SEGSC telescopes, the ROOT geometry classes will draw the complete
+ telescope, including photon ray-traces if you have selected that option.
 \end_layout
 
 \begin_layout Enumerate
-To replace an DC telescope with an SC telescope, open the 
+To change telescope types, open the 
 \emph on
 arrayConfig.cfg
 \emph default
- file and activate the 
-\emph on
-TELFAC SC
-\emph default
- SC telescope factory record.
- Then, in one of the 
+ file and activate the appropriate telescope factory record.
+ Then, in the 
 \emph on
 ARRAYTEL
 \emph default
- records replace the 
-\emph on
-DC
-\emph default
- with 
-\emph on
-SC
-\emph default
-.
+ records use the DC, SEGSC, or SC telescope types.
  You can then run the same tests as described above.
- Note that the ROOT geometry classes will draw the complete SC telescope
- (in contrast to the DC telescope drawing)
+ 
 \end_layout
 
 \begin_layout Enumerate
-To produce a series of spot patterns on the camera, activate the 
+To produce a series of spot patterns on the camera using internally produced
+ photons, activate the 
 \emph on
 TESTTEL
 \emph default
@@ -519,34 +513,7 @@ TESTTEL
 \emph on
 opticsSimulation.pilot
 \emph default
- by adding an asterisk.
- Since the code produces the spot photons internally, change the 
-\emph on
-NSHOWER
-\emph default
- from 
-\begin_inset Formula $-1$
-\end_inset
-
- and 
-\begin_inset Formula $-1$
-\end_inset
-
- to 
-\begin_inset Formula $1$
-\end_inset
-
- and 
-\begin_inset Formula $1$
-\end_inset
-
- (fixing this requirement is on my to do list).
- Execute 
-\emph on
-grOptics
-\emph default
-.
- 
+ by adding a leading asterisk.
 \end_layout
 
 \begin_layout Standard
@@ -607,7 +574,7 @@ DevelopersGuideGrOptics.pdf
 \end_layout
 
 \begin_layout Standard
-GrOptics uses standard C++ plus ROOT.
+GrOptics uses standard C++ plus ROOT and the ROBAST package.
 \end_layout
 
 \begin_layout Subsection
@@ -625,8 +592,8 @@ name "SSS:STEL"
 \end_layout
 
 \begin_layout Standard
-The GrOptics package currently produces telescopes from each of two telescope
- factories, one for DC telescopes and one for SC telescopes.
+The GrOptics package currently produces telescopes from each of three telescope
+ factories, for DC telescopes, SC telescopes and for SEGSC telescopes.
  All telescope parameters are in configuration files to maintain maximum
  flexibility.
  However, having separate configuration files for each array telescope leads
@@ -645,6 +612,8 @@ GrOptics/Config
  change a parameter for a range of telescopes and elements within each telescope
 , e.g., facet reflectivities.
  Edit records for additional parameters can easily be added.
+ Currently, this editing procedure is only possible for DC telescopes; I'll
+ add similar editing later.
 \end_layout
 
 \begin_layout Standard
@@ -759,8 +728,8 @@ z: up
 \end_inset
 
  forming a right-handed system.
- Note that the telescope locations in the VERITAS GrISU configuration file
- use this coordinate system.
+ The telescope locations in the VERITAS GrISU configuration file use this
+ coordinate system.
 \end_layout
 
 \begin_layout Subsubsection
@@ -809,7 +778,7 @@ For historical reasons, the camera coordinate system's y axis is a reflection
 
 \begin_layout Standard
 In the output tree of grOptics, the photon locations on the camera are in
- camera coordinates, both for DC and for SC telescopes.
+ camera coordinates for all telescope types.
  I'll add an input flag later to select photon camera locations in either
  telescope or camera coordinates.
 \end_layout
@@ -1220,7 +1189,7 @@ textgreater
 
 \end_inset
 
- //
+ 
 \end_layout
 
 \begin_deeper
@@ -1665,7 +1634,11 @@ textgreater
 
 \end_inset
 
- : coordinates (deg) of source in field of view 
+ : coordinates (deg) of source in field of view
+\begin_inset Newline newline
+\end_inset
+
+
 \begin_inset ERT
 status collapsed
 
@@ -1704,7 +1677,11 @@ textless
 
 \end_inset
 
- latitude
+ 
+\begin_inset Newline newline
+\end_inset
+
+latitude
 \begin_inset ERT
 status collapsed
 
@@ -1721,7 +1698,7 @@ textgreater
 \begin_inset Newline newline
 \end_inset
 
- If the latitude is less than 90 degrees, the source position in x corresponds
+If the latitude is less than 90 degrees, the source position in x corresponds
  to an offset in the east west direction while the y position corresponds
  to north south.
  
@@ -2022,7 +1999,7 @@ textless
 
 \end_inset
 
- factory type: DC or SC 
+ factory type: DC, SEGSC, or SC 
 \begin_inset ERT
 status collapsed
 
@@ -2186,7 +2163,7 @@ textgreater
 
 \begin_deeper
 \begin_layout Quote
-The array numbering eed not be sequential and can be a subset of the array
+The array numbering need not be sequential and can be a subset of the array
  used to create the photon file.
  
 \end_layout
@@ -2411,15 +2388,15 @@ textgreater
 \begin_inset Newline newline
 \end_inset
 
- 1: print summary information 
+1: print summary information 
 \begin_inset Newline newline
 \end_inset
 
- 2: add geometry details 
+2: add geometry details 
 \begin_inset Newline newline
 \end_inset
 
- 3: add facet details 
+3: add facet details 
 \begin_inset Newline newline
 \end_inset
 
@@ -2502,7 +2479,7 @@ g multiple entries in a single record.
 \begin_inset Formula $[1:3]=[1\;\;2\;\;3]$
 \end_inset
 
- and 
+ 
 \begin_inset Newline newline
 \end_inset
 
@@ -3569,6 +3546,32 @@ status collapsed
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section
+Appendices
+\end_layout
+
+\begin_layout Subsection
+Formats for this file
+\end_layout
+
+\begin_layout Standard
+I created this users guide using lyx to produce a .lyx file (lyx is a nice
+ gui based tex editor).
+ The .tex file is exported from lyx using the latex(plain) option.
+ The html file is created by htlatex from this .tex file, i.e.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+htlatex UsersGuideGrOptics.tex
+\begin_inset Quotes erd
+\end_inset
+
+.
+ The pdf file is exporeted from lyx via the export pdflatex option.
+ All of this on osx.
 \end_layout
 
 \begin_layout Bibliography

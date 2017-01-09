@@ -108,23 +108,11 @@ bool GUtilityFuncts::polyInside(const int &sides, const double &alpha,
 
   /* if sides = 0, then always return 0 */
   return false;
-}
-
+};
 /********************  end of polyInside ***************/
-
-//void GUtilityFuncts::tokenizer(const string& str, vector<string>& tokens) {
-  
-//string buf; // Have a buffer string
-//stringstream ss(str); // Insert the string into a stream
-  
-//while (ss >> buf)
-//  tokens.push_back(buf);
-//}
-/********************  end of tokenizer ************/
 
 void GUtilityFuncts::tokenizer(const string& str, 
                                      vector<string>& tokens) {
-
   tokens.clear();
   // tokenizer with multiple delimiters
   char delim[] = " ,";
@@ -141,9 +129,7 @@ void GUtilityFuncts::tokenizer(const string& str,
 
     tokens.push_back(str.substr(start,idx - start));
   }
-
-
-}
+};
 /********************  end of tokenizer ************/
 
 bool GUtilityFuncts::decodeMatlabString(const string &matlabStr,
@@ -353,8 +339,7 @@ bool GUtilityFuncts::getAsteriskTokens(const string &str,
     }
     
    return true;   // successful tokenize asterisk record
-  }
-                          
+  }                         
   return false;  // there was no asterisk
 };
 /*************** end of getAsteriskTokens ************/
@@ -405,7 +390,7 @@ void GUtilityFuncts::tokenizeMatlab(const string &str, vector<string> &tokens) {
 double GUtilityFuncts::linearInterpolation2D(const vector<double> &xvec,
                                              const vector<double> &yvec,
                                              const double xval) {
-
+  // Currently unused and untested
   bool debug = false;
   if (debug) {
     *oLog << " -- GUtilityFuncts::linearInterpolation2D" << endl;
@@ -469,9 +454,8 @@ double GUtilityFuncts::linearInterpolation2D(const vector<double> &xvec,
   }
 
   return interVal;
-
 };
-//**************** end of linearInterpolation2D ****************
+/**************** end of linearInterpolation2D ****************/
 
 void GUtilityFuncts::addError(double v[3], const double &max_angle) {
   /*
@@ -649,8 +633,6 @@ void GUtilityFuncts::addErrorGaussianRoot(ROOT::Math::XYZVector *vec,
     GUtilityFuncts::printGenVector(*vec); *oLog << endl;
     *oLog << endl;
   }
-  
-
 };
 /************** end of addErrorGaussianRoot ********************/
 
@@ -1021,7 +1003,7 @@ void GUtilityFuncts::telescopeAzZnNew(const double &primAz,
     *sourceY = ys;
   }
 };
-
+/**************** end of telescopeAzZnNew ************************/
 
 void GUtilityFuncts::telescopeAzZn(const double &primAz,
                                    const double &primZn,
@@ -1099,9 +1081,8 @@ void GUtilityFuncts::telescopeAzZn(const double &primAz,
     }
   }
 };
-
-
 /***************** end of telescopeAzZn  ***************/
+
 void GUtilityFuncts::AzZnToRotMat(const double &az,
                                   const double &zn,
                                   ROOT::Math::Rotation3D *rotM) {
@@ -1240,15 +1221,14 @@ void GUtilityFuncts::reflectDirection(const ROOT::Math::XYZVector &vnormUnit,
     *oLog << "        vphotonReflDcos with roughness ";
     GUtilityFuncts::printGenVector(*vphotonReflDcos); *oLog << endl;
   }
-
-
 };
-/******************* end of reflectDirection ***************/ 
+/******************* end of reflectDirection ***************/
+
 bool GUtilityFuncts::sortPair(const pair<int,int> i , 
                               const pair<int,int> j)  {
   return (j.second < i.second);
 };
-/*****************************************************/
+/******************** end of sortPair *********************************/
 
 void GUtilityFuncts::printSegVector (const vector<mirrorSegmentDetails *> &vec) {
   *oLog << "        num rmin    rmax marg dPhi refl rough errXYZ rotErrABC"
@@ -1264,10 +1244,8 @@ void GUtilityFuncts::printSegVector (const vector<mirrorSegmentDetails *> &vec) 
           << t->rotErrorPhi << " " << t->rotErrorTheta << " " << t->rotErrorPsi
           << endl;
   }
-  ///////////////////////////////////////////////////////////
 };
-
-//////////////////////////////////////////////////////////////////
+/***************************** end of printSegVector **********************/
 
 void GUtilityFuncts::printXYZVector(const ROOT::Math::XYZVector &vec,const string &label) {
   *oLog << label << "   " << vec.X() << "  " << vec.Y() << " "
@@ -1337,3 +1315,4 @@ void GUtilityFuncts::sourceOnTelescopePlane(const double &az_s, const double &zn
     *oLog << "---------- exiting GUtilityFuncts::sourceOnTelescopePlane -------" << endl;
   }
 };
+/**************************** end of sourceOnTelescopePlane ********************/
