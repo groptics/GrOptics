@@ -2,13 +2,7 @@
 VERSION4.0
 30May2016
 */
-/*! \brief GDCTelescope concrete class for ACT telescopes
-  inherits from GTelescope
 
-GDCTelescope provides the concrete class for Davies-Cotton
-telescopes
-
-*/
 #ifndef GDCTELESCOPE
 #define GDCTELESCOPE
 
@@ -21,7 +15,7 @@ class TTree;
 #include "Math/GenVector/RotationYfwd.h"
 #include "Math/GenVector/RotationZfwd.h"
 
-/*! \brief DCStdFacet structure contains parameters for one 
+/*! DCStdFacet structure contains parameters for one 
          facet and a print method for printing these parameters
  */
 struct DCStdFacet {
@@ -34,22 +28,22 @@ struct DCStdFacet {
    */
   DCStdFacet(const DCStdFacet &dcf);
 
-  /*!  \brief determent location of facet curvature center
+  /*!  \brief determine location of facet curvature center
               with added mis_align error 
 
       \param focLgt telescope focal length
    */
   void findFacetCurvatureCenter(const double &focLgt);
 
-  /*! \brief determine rotation matrix for coordinate system
-             rotation from telescope frame to facet surface frame.
+  /*! determine rotation matrix for coordinate system
+      rotation from telescope frame to facet surface frame.
 
-             Facet frame has z axis perpendicular to facet surface
-             and y axis in the telescope y-z plane.
+      Facet frame has z axis perpendicular to facet surface
+      and y axis in the telescope y-z plane.
    */
   void findFacetPlaneRotationMatrix();
   
-  /*!  \brief determine unit vector normal to the facet plane and location
+  /*!  determine unit vector normal to the facet plane and location
               vector of the center of the facet plane. The facet plane covers the
               front of the facet. The intersection of the facet with its plane is the
               facet polygon. The polygon external radius is the external radius of
@@ -57,7 +51,8 @@ struct DCStdFacet {
    */
   void findFacetPlane();
 
-  /*! \brief printDCStdFacet prints facet parameters
+  /*! printDCStdFacet prints facet parameters.
+
       \param oStr output stream
    */
   void printDCStdFacet(ostream &oStr=cout);
@@ -93,11 +88,6 @@ struct DCStdFacet {
 };
 /**************************end of DCStdFacet ******************************/
 
-/*! \brief GDCTelescope contains the full description of a single
-       telescope, including a ray-tracing method. Class inherits from
-       GTelescope
-*/
-
 // forward declarations
 class GGeometryBase;
 class GRayTracerBase;
@@ -105,7 +95,13 @@ enum TelType;
 enum GeoType;
 enum RayTracerType;
 
+/*! GDCTelescope concrete class for ACT telescopes
+  inherits from GTelescope.
 
+GDCTelescope provides the concrete class for Davies-Cotton
+telescopes.
+
+*/
 class GDCTelescope : public GTelescope {
 
   friend class GRayTracerBase;
@@ -215,91 +211,101 @@ double fTransitTime;                //!< photon total transit time (from inject 
 
  public:
 
-  /*! \brief GDCTelescope constructor
+  /*! GDCTelescope constructor.
    */
   GDCTelescope();
 
-  /*! \brief GDCTelescope destructor 
+  /*! GDCTelescope destructor.
    */
   ~GDCTelescope();
 
-
-
-  /*! \brief injectPhoton for ray tracing through telescope (may need additional parameters later
-    e.g. time?? 
+  /*! Inject Photon for ray tracing through telescope.
 
     \param photonLoc  photon ground location relative to telescope (tel.coor)
     \param photonDir  photon dirCosines in telescope coor. 
+    \param photWavegt photon wavelength
   */
   void injectPhoton(const ROOT::Math::XYZVector &photonLocT,
                     const ROOT::Math::XYZVector &photonDirT,
                     const double &photWaveLgt);
 
-  /*! \brief getCameraPhotonLocation gets camera location following ray tracing. 
-         SHOULD RETURN BOOL IN CASE PHOTON DOESN'T REACH CAMERA
+  /*! Obtain camera location following ray tracing. 
 
-         \param x  photon camera x location (CHANGE TO POINTER)
-         \param y  photon camera y location (CHANGE TO POINTER)
-         \param z  photon camera z location (CHANGE TO POINTER)
+         \param photonLoc pointer to vector with photon camera location
+         \param photonDcos pointer to vector with photon dir.cosines prior to camera hit
+         \param photonTime pointer to photon transit time from injection point to camera location
+	 \return true if photon strikes the camera, false otherwise.
   */
-  //void getCameraPhotonLocation(double &x,double &y,double &z);
   bool getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
                                ROOT::Math::XYZVector *photonDcos,
                                double *photonTime);
-
-/*! \brief setLogFile  used for logging photons, document later
- */
-  //void setLogFile(const ofstream &logFile);
   
-  /*! \brief printTelescope prints various details, document later
+  /*! Print telescope details.
     
-    \param oStr output stream
-    \param prtMode print mode, to be documented later
   */
   void printTelescope();
 
+  /*! Draws the telescope in opengl drawing.
+
+    /param option currently unused, no need to include in call.
+
+   */
   void drawTelescope(const int &option = 0);
 
-  /*! \brief setPrintMode used for setting printing details
+  /*! Sets PrintMode used for setting printing details
     
     \param oStr output stream
-    \param prtMode pring mode, fix up later
+    \param prtMode print mode, see printTelescope method
   */
   void setPrintMode(ostream &oStr=cout,const int prtMode=0);
     
-  /*! \brief 
-    
+  /*! setup PhotonHistory details.
+
+    \param rootFile root filename for photonhistory tree
+    \param treeName root history tree name 
+    \param option not used.
    */ 
   void setPhotonHistory(const string &rootFile,const string &treeName,
                         const int &option = 0);
 
+  /*! write photon history file.*/
   void writePhotonHistory();
 
+  /*! Return average transit time. */
   double getAvgTransitTime() {
     return dAvgTransitTime;
   }
 
+  /*! Return telescope radius. */
   double getTelescopeRadius() {
     return dRadius;
   }
 
+  /*! Return focal length. */
   double getFocalLength() {
     return dFocLgt;
   }
 
+  /*! Return platescale factor. */
   double getPlateScaleFactor() {
     return dPlateScaleFactor;
   }
 
+  /*! Return camera radius */
   double getCameraRadius() {
     return dCamRad;
   }
 
+  /*! Return ideal transit time */
   double getIdealTransitTime() {
     double tm = (dFocLgt/TMath::C() ) * 1.0e09;
     return tm;
   }
 
+  /*! Set rayplot mode.
+
+    \param eRayplot ray plot mode, note enum RayPlotType.
+   */
   void setRayPlotMode(const enum RayPlotType &eRayPlot) {
     (void) eRayPlot;  // unused
   };

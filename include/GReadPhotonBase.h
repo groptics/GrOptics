@@ -14,6 +14,9 @@ VERSION4.0
 // forward declarations
 #include "Math/Vector3Dfwd.h"
 
+/*! base class for photon reader
+
+ */
 class GReadPhotonBase {
 
  protected:
@@ -28,13 +31,15 @@ class GReadPhotonBase {
   /*! setInputfile 
          open input file and read preliminary records 
          up to first shower records.
+
       \param infile inputFile name
       \return true file successfully opened
-      \return false file can't be opened
+
    */
   virtual bool setInputFile(const string &infile) = 0;
 
-  /*! get header string
+  /*! get header string from photon input file.
+
     \return header as a string
     \return "" if no header found
 						
@@ -43,7 +48,8 @@ class GReadPhotonBase {
 
   /*!  getPrimary
        get primary details from current record 
-       then call getLine() to read next record
+       then call getLine() to read next record.
+
        \param pCore vector of grd.coor core location (meters)
        \param pDCos vector of primary direction cosines
        \param Az  primary azimuth (radians)
@@ -62,7 +68,8 @@ class GReadPhotonBase {
 
   /*!  getPhoton
        get cherenkov photon details from current record
-       then call getLine() to read next record
+       then call getLine() to read next record.
+
        \param pGrd vector of photon loc. in ground coor. (meters)
        \param pDcos vector of photon direction cosines in ground coor.
        \param pAz photon azimuth (radians)
@@ -84,11 +91,13 @@ class GReadPhotonBase {
                  int *pTel) = 0;
 
   /*! getObsHeight: get observatory height
+
       \return obsHeight obervatory height about sea level (meters)
    */
   virtual double getObsHeight() = 0;
 
   /*! getGlobalEffic: get global efficiency
+
       \return globalEffic global efficiency
    */
   virtual double getGlobalEffic() = 0;

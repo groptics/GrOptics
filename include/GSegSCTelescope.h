@@ -2,15 +2,7 @@
 VERSION4.0
 30May2016
 */
-/*! \brief GSCTelescope concrete class for ACT telescopes
-  inherits from GTelescope
 
-GSCTelescope provides the concrete class for a Schwarzschild-Couder
-telescope.  Inherits from GTelescope base class. This class is based on 
-Akira Okamura's NewSCT.C root script included in the GrOptics/scripts/SegSC
-directory
-
-*/
 #ifndef GSEGSCTELESCOPE
 #define GSEGSCTELESCOPE
 
@@ -23,10 +15,6 @@ directory
 #include "Math/GenVector/RotationZfwd.h"
 
 #include "AOpticsManager.h"
-//class AOpticalComponent;
-/*! \brief GSegSCTelescope contains the full description of a single
-       SegSC telescope. Class inherits from GTelescope
-*/
 
 // forward declarations
 enum TelType;
@@ -39,6 +27,14 @@ class AGeoAsphericDisk;
 class SegmentedMirror;
 class SegmentedObscuration;
 
+/*! GSCTelescope concrete class for ACT telescopes
+  inherits from GTelescope.
+
+  GSCTelescope provides the concrete class for a Schwarzschild-Couder
+  telescope.  Inherits from GTelescope base class. This class is based on 
+  Akira Okamura's NewSCT.C root script included in the GrOptics/scripts/SegSC
+  directory
+*/
 class GSegSCTelescope : public GTelescope {
 
   friend class GSegSCTelescopeFactory;
@@ -53,12 +49,12 @@ class GSegSCTelescope : public GTelescope {
   TTree *hisT;
 
   //!< top volume dimensions
-  Double_t fTX;  // set at 30.0 for now, in SCTelescope = 15.0. make graphs first
+  Double_t fTX; 
   Double_t fTY;
   Double_t fTZ;
 
-  int iTelID;  //!< telescope id in the array.
-  int iStdID;  //!< telescope standard number from the telescope factory
+  int iTelID;  //*< telescope id in the array.
+  int iStdID;  //*< telescope standard number from the telescope factory
 
   double fAvgTransitTime;
   Double_t fPlateScaleFactor;
@@ -75,18 +71,18 @@ class GSegSCTelescope : public GTelescope {
   Double_t fInjectLambda;
  
   // general telescope parameters
-  Double_t fF;     // Focal length
-  Double_t fFMeters; // focal length in meters
-  Double_t fAlpha; // \alpha
+  Double_t fF;     //*< Focal length
+  Double_t fFMeters; //*< focal length in meters
+  Double_t fAlpha; //*< \alpha
   Double_t fQ;     // q
   Double_t fTelRadius;
 
   // primary parameters
-  Double_t fRpMax; // Primary radius max
-  Double_t fRpMin; // Primary radius min
-  Double_t fZp;  // primary position on z axis
-  Int_t     fNp;   // Number of coefficients for the primary
-  Double_t* fP;   // Polynomial coefficients (p0, p1 ...)
+  Double_t fRpMax; //*< Primary radius max
+  Double_t fRpMin; //*< Primary radius min
+  Double_t fZp;  //*< primary position on z axis
+  Int_t     fNp;   //*< Number of coefficients for the primary
+  Double_t* fP;   //*< Polynomial coefficients (p0, p1 ...)
   vector<Double_t> fzp;
 
   // colors of elements in gl picture (set in initialize method)
@@ -101,11 +97,11 @@ class GSegSCTelescope : public GTelescope {
   Int_t iEntranceWindowColor;
 
   // secondary parameters
-  Double_t fRsMax; // Secondary radius max
-  Double_t fRsMin; // Secondary radius min
-  Double_t fZs;  // secondary position on z axis
-  Int_t     fNs;   // Number of coefficients for the secondary
-  Double_t* fS;   // Polynomial coefficients (s0, s1 ...)
+  Double_t fRsMax; //*< Secondary radius max
+  Double_t fRsMin; //*< Secondary radius min
+  Double_t fZs;  //*< secondary position on z axis
+  Int_t     fNs;   //*< Number of coefficients for the secondary
+  Double_t* fS;   //*< Polynomial coefficients (s0, s1 ...)
   Int_t iNParS;
   vector<Double_t> fzs;
 
@@ -199,7 +195,7 @@ class GSegSCTelescope : public GTelescope {
   bool bRayPlotModeFlag;
   enum RayPlotType eRayPlotType;
 
-  TelType eTelType; //!< telescope type enum (here will be SC)
+  TelType eTelType; //!< telescope type enum (here value is SC)
 
   void makePhotonHistoryBranches();
 
@@ -230,15 +226,15 @@ class GSegSCTelescope : public GTelescope {
 
  public:
 
-  /*! \brief GSCTelescope constructor
+  /*! GSCTelescope constructor
    */
   GSegSCTelescope();
 
-  /*! \brief GSCTelescope destructor 
+  /*! GSCTelescope destructor 
    */
   ~GSegSCTelescope();
 
-  /*! \brief Build an ideal SC telescope with an FOV of 8 deg diameter. More
+  /*! Build an ideal SC telescope. More
       realistic design and parameter reader should be implemented.
       See http://jelley.wustl.edu/actwiki/images/0/05/VVV-OSdefinitions_v2.pdf
 
@@ -258,10 +254,11 @@ class GSegSCTelescope : public GTelescope {
 
   void closeGeometry();
 
-  /*! \brief injectPhoton for ray tracing through telescope
+  /*! injectPhoton for ray tracing through telescope.
 
-    \param photonLoc  photon ground location relative to telescope (tel.coor)
-    \param photonDir  photon dirCosines in telescope coor. 
+    \param photonLocT  photon ground location relative to telescope (tel.coor)
+    \param photonDirT  photon dirCosines in telescope coor. 
+    \param photWaveLgt photon wavelength in nm
   */
   void injectPhoton(const ROOT::Math::XYZVector &photonLocT,
                     const ROOT::Math::XYZVector &photonDirT,

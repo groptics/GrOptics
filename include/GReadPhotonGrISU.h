@@ -2,10 +2,7 @@
 VERSION4.0
 30May2016
 */
-/*! \brief  GReadPhotonGrISU class: concrete class for reading 
-      cherenkov photons from GrISU formatted asci files
 
- */
 
 #ifndef GREADPHOTONGRISU
 #define GREADPHOTONGRISU
@@ -13,6 +10,10 @@ VERSION4.0
 // forward declaratiosn
 #include "Math/Vector3Dfwd.h"
 
+/*! GReadPhotonGrISU class: concrete class for reading 
+      cherenkov photons from GrISU formatted asci files.
+
+ */
 class GReadPhotonGrISU: public GReadPhotonBase {
 
   istream *pInStream; //!< input file stream pointer (can be file or cin)
@@ -57,8 +58,7 @@ class GReadPhotonGrISU: public GReadPhotonBase {
   double fWobbleR;
   double fLatitude;
 
-  /*!  \brief getLine.  Get the next input record. This record becomes
-                     the current record.
+  /*!  Get the next input record and set to the current record.
 
       Place the string in the sFileLine variable. Set the eRecType
       enum variable to identify the record type for the current record.
@@ -74,28 +74,24 @@ class GReadPhotonGrISU: public GReadPhotonBase {
 
  public:
   
-  //! constructor
+  //! constructor for GrISU Photon reader
   GReadPhotonGrISU();
 
   //!  destructor
   ~GReadPhotonGrISU();
 
-  /*! setInputfile 
-         open input file and read preliminary records 
-         up to first shower records.
-      \param infile inputFile name, if infile = "",
-              take input from cin.
-      \return true file successfully opened
-      \return false file can't be opened
+  /*!  Open input file and read preliminary records up to first shower records.
+
+      \param infile inputFile name, if infile = "", take input from stdin.
+      \return true file successfully opened, otherwise false
    */
   bool setInputFile(const string &infile);
 
-  //! get header string 
+  //! get header string from input file
   string getHeader() {return sInFileHeader;};
 
-  /*!  getPrimary
-       get primary details from current record 
-       then call getLine() to read next record
+  /*!  get primary details from current record then call getLine() to read next record.
+
        \param pCore vector of grd.coor core location (meters)
        \param pDCos vector of primary direction cosines
        \param Az  primary azimuth (radians)
@@ -112,9 +108,9 @@ class GReadPhotonGrISU: public GReadPhotonBase {
                   unsigned int *showerid);
 
 
-  /*!  getPhoton
-       get cherenkov photon details from current record
-       then call getLine() to read next record
+  /*!  get cherenkov photon details from current record
+       then call getLine() to read next record.
+
        \param pGrd vector of p loc. with respect to telescope (meters)
        \param pDcos vector of photon direction cosines
        \param pAz photon azimuth (radians)
@@ -135,12 +131,14 @@ class GReadPhotonGrISU: public GReadPhotonBase {
                  double *pWaveLgt, int *pType,
                  int *pTel);
 
-  /*! getObsHeight: get observatory height
+  /*! getObsHeight: get observatory height.
+
       \return obsHeight obervatory height about sea level (meters)
    */
   double getObsHeight() { return fObsHgt; };
 
-  /*! getGlobalEffic: get global efficiency
+  /*! getGlobalEffic: get global efficiency.
+
       \return globalEffic global efficiency
    */
   double getGlobalEffic(){ return fGlobalEffic; };

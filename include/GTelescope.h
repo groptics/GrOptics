@@ -2,12 +2,10 @@
 VERSION4.0
 30May2016
 */
-/*! \brief GTelescope base class for ACT telescopes
-
+/*
 GTelescope provides the base class for DC and SC telescope
 concrete classes
 
-     Version 0.0
      C. Duke
      Grinnell College
      August 30, 2010
@@ -24,28 +22,44 @@ concrete classes
 class GGeometryBase;
 class GRayTracerBase;
 
+/*! GTelescope base class for ACT telescopes
+ */
 class GTelescope {
  private:
-  //float _location;
 
  protected:
 
-  // used by all telescope types for various printing modes
-  ostream *oPrtStrm;
+  ostream *oPrtStrm; //*< used by all telescope types for various printing modes
   int iPrtMode;
 
  public:
 
+  //*! constructor
   GTelescope();
 
+  //*! virtual destructor
   virtual ~GTelescope() {  };
 
 
+  /*! inject photon into the telescope in telescope coordinate system.
+
+    \param photonLocT 3D vector giving photon location, telescope coordinates
+    \param photonDirT 3D vector giving photon dir.cosines in telescope coordinates
+    \param photWaveLgt photon wavelength in nanometers
+
+   */
   virtual void injectPhoton(const ROOT::Math::XYZVector &photonLocT,
                             const ROOT::Math::XYZVector &photonDirT,
                             const double &photWaveLgt) = 0;
 
-  //virtual void getCameraPhotonLocation(double &x,double &y,double &z) = 0;
+  /*! get photon location on telescope camera after ray tracing.
+
+    \param photonLoc pointer to 3D vector giving camera location of photon
+    \param photonDcos pointer to 3D vector giving dir.cosines of photon prior to 
+    striking camera.
+    \param photonTime transit time of photon through telescope.
+
+   */
   virtual bool getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
                                        ROOT::Math::XYZVector *photonDcos,
                                        double *photonTime) = 0;

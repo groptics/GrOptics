@@ -251,8 +251,6 @@ GDCTelescope::GDCTelescope() {
   mVCoeffs = 0;
 
   rayTracer = 0;
-  //  nbinsx = 0;
-  //nbinsy = 0;
   
   bEditAlignFlag    = false;    
   bEditReflectFlag  = false;  
