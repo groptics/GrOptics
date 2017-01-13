@@ -37,7 +37,16 @@
 \index_command default
 \paperfontsize default
 \spacing single
-\use_hyperref false
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
 \papersize default
 \use_geometry false
 \use_package amsmath 2
@@ -134,7 +143,7 @@ Nagoya University
 \end_layout
 
 \begin_layout Date
-January 2, 2017
+January 11, 2017
 \end_layout
 
 \begin_layout Abstract
@@ -158,11 +167,10 @@ key "CORSIKA"
  The output to a ROOT file records individual photons striking the camera
  surface.
  The package models both VERITAS Davies-Cotton (DC) and Schwarzchild-Coudee
- SC) telescopes with all telescope parameters taken from input files.
+ (SC, SEGSC) telescopes with all telescope parameters taken from input files.
  There is no limit to the number or type of array telescopes.
- Adding new telescope types, input and output formats, etc.
- is straightforward using standard C++ coding techniques with existing base
- classes.
+ Adding new telescope types or input and output formats, is straightforward
+ using standard C++ coding techniques with existing base classes.
  Reference 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -170,46 +178,8 @@ key "GROPTICS"
 
 \end_inset
 
- gives the code download site.
+ gives the GrOptics download site.
  
-\end_layout
-
-\begin_layout Abstract
-I created this file using lyx and converted the .lyx file to html using htlatex,
- a utility available in my macTeX package on osx.
-\end_layout
-
-\begin_layout Standard
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-%-------------------------------------------------------------
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-%-------------------------------------------------------------
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Section
@@ -648,6 +618,7 @@ Coordinate Systems
 Understanding the coordinate systems used in our simulation codes is always
  difficult, especially if your memory is as bad as mine.
  So, these descriptions should help.
+ 
 \end_layout
 
 \begin_layout Subsubsection
@@ -783,37 +754,14 @@ In the output tree of grOptics, the photon locations on the camera are in
  telescope or camera coordinates.
 \end_layout
 
+\begin_layout Subsubsection
+Azimuth, zenith angle, and elevation
+\end_layout
+
 \begin_layout Standard
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-%-------------------------------------------------------------
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
-status collapsed
-
-\begin_layout Plain Layout
-
-%-------------------------------------------------------------
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
+In all cases, the azimuthal angle is measured from the North toward the
+ East.
+ The zenith angle and elevation are measured as usual.
 \end_layout
 
 \begin_layout Section
@@ -3557,21 +3505,29 @@ Formats for this file
 \end_layout
 
 \begin_layout Standard
-I created this users guide using lyx to produce a .lyx file (lyx is a nice
- gui based tex editor).
- The .tex file is exported from lyx using the latex(plain) option.
- The html file is created by htlatex from this .tex file, i.e.
+I created this users guide using 
+\emph on
+lyx
+\emph default
+ to produce a .lyx file (
+\emph on
+lyx
+\emph default
+ is a nice gui-based tex editor).
+ The .tex and .html files are exported from lyx using the latex(plain) and
+ html export options.
+ The .pdf file was exported from lyx using one of the PDF export options.
+ Note that the 
+\emph on
+PDF (dvipdfm) 
+\emph default
+option does not include the hyperlinks in the .pdf file.
+ If you make changes in the .tex file, you can import the new tex file into
  
-\begin_inset Quotes eld
-\end_inset
-
-htlatex UsersGuideGrOptics.tex
-\begin_inset Quotes erd
-\end_inset
-
+\emph on
+lyx
+\emph default
 .
- The pdf file is exporeted from lyx via the export pdflatex option.
- All of this on osx.
 \end_layout
 
 \begin_layout Bibliography

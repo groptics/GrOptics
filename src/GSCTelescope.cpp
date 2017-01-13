@@ -108,14 +108,14 @@ GSCTelescope::GSCTelescope() {
 
   hisF = 0;
   hisT = 0;
+  /*
   for (int i = 0;i<3;i++) {
     fInjectLoc[i] = 0.0;
     fInjectDir[i] = 0.0;
   }
 
-  fInjectTime   = 0.0;
   fInjectLambda = 0.0;
-
+  */
   oPrtStrm = oLog;
   iPrtMode = 0;
 
@@ -188,9 +188,8 @@ GSCTelescope::~GSCTelescope() {
 };
 /********************** end of ~GSCTelescope *****************/
 
-void GSCTelescope::buildTelescope(bool os8)
+void GSCTelescope::buildTelescope()
 {
-  (void) os8; // unused parameter
   
   gGeoManager = 0;
   manager = new AOpticsManager("manager","My 3D Project");
@@ -908,15 +907,6 @@ bool GSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
 
 };
 /********************** end of getCameraPhotonLocation *****************/
-
-//void GSCTelescope::setLogFile(const ofstream &logFile) {
-//bool debug = false;
-//if (debug) {
-//  *oLog << " -- GSCTelescope::setLogFile " << logFile << endl;
-//}
-//
-//};
-/********************** end of setLogFile *****************/
 
 void GSCTelescope::printTelescope() {
 

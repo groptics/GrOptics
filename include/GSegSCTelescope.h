@@ -237,10 +237,8 @@ class GSegSCTelescope : public GTelescope {
   /*! Build an ideal SC telescope. More
       realistic design and parameter reader should be implemented.
       See http://jelley.wustl.edu/actwiki/images/0/05/VVV-OSdefinitions_v2.pdf
-
-      \param os8 If true, OS8 parameters in the PDF will be used, or else OS10
    */
-  void buildTelescope(bool os8 = true);
+  void buildTelescope();
 
   void addIdealFocalPlane();
 
@@ -275,17 +273,11 @@ class GSegSCTelescope : public GTelescope {
   bool getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
                                ROOT::Math::XYZVector *photonDcos,
                                double *photonTime);
-
-/*! \brief setLogFile  used for logging photons, document later
-  not currently used,  *oLog global set as default. oPrtStrm is
-  set in GTelescope constructor to *oLog.
- */
-  //void setLogFile(const ofstream &logFile);
   
-  /*! \brief printTelescope prints various details, document later
+  /*! select a print option
     
     \param oStr output stream
-    \param prtMode print mode, to be documented later
+    \param prtMode print mode
   */
   void printTelescope();
 

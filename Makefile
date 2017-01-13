@@ -30,6 +30,7 @@ CXXFLAGS += $(INCLUDEFLAGS)
 	libs cleanGrOptics cleanRobast removeRobast
 
 all: robast grOptics
+	@echo grOptics ready and waiting
 
 # make list of all G* source files
 SRCS    :=      $(filter-out $(SRCDIR)/GArray_Tel_noGraphs_4.0deg.%,$(wildcard $(SRCDIR)/G*.$(SrcSuf)))

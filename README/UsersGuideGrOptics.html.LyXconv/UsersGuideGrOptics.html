@@ -8,13 +8,17 @@ Version 4.0</title>
 <meta name="originator" content="TeX4ht (http://www.tug.org/tex4ht/)"> 
 <!-- html --> 
 <meta name="src" content="UsersGuideGrOptics.tex"> 
-<meta name="date" content="2017-01-05 15:47:00"> 
+<meta name="date" content="2017-01-13 09:31:00"> 
 <link rel="stylesheet" type="text/css" href="UsersGuideGrOptics.css"> 
 </head><body 
 >
    <div class="maketitle">
+                                                                  
 
+                                                                  
+                                                                  
 
+                                                                  
 
 <h2 class="titleHead">GrOptics User&#8217;s Guide<br />
 Version 4.0</h2>
@@ -36,16 +40,16 @@ class="cmr-12">Furo-cho, Chikusa-ku, Nagoya 464-8601, Japan</span>
 <br />                <span 
 class="cmr-12">oxon@mac.com</span></div><br />
 <div class="date" ><span 
-class="cmr-12">January 2, 2017</span></div>
+class="cmr-12">January 11, 2017</span></div>
    </div><div 
 class="abstract" 
 >
 <div class="center" 
 >
-<!--l. 36--><p class="noindent" >
-<!--l. 36--><p class="noindent" ><span 
+<!--l. 42--><p class="noindent" >
+<!--l. 42--><p class="noindent" ><span 
 class="cmbx-9">Abstract</span></div>
-     <!--l. 37--><p class="indent" >    <span 
+     <!--l. 43--><p class="indent" >    <span 
 class="cmr-9">GrOptics is a detailed simulation program for ray-tracing Cherenkov</span>
      <span 
 class="cmr-9">photons through large arrays of atmospheric Cherenkov telescopes. Shower</span>
@@ -68,28 +72,25 @@ class="cmr-9">records  individual  photons  striking  the  camera  surface.  The
      <span 
 class="cmr-9">models  both  VERITAS  Davies-Cotton  (DC)  and  Schwarzchild-Coudee</span>
      <span 
-class="cmr-9">SC) telescopes with all telescope parameters taken from input files. There</span>
+class="cmr-9">(SC, SEGSC) telescopes with all telescope parameters taken from input</span>
      <span 
-class="cmr-9">is no limit to the number or type of array telescopes. Adding new telescope</span>
+class="cmr-9">files. There is no limit to the number or type of array telescopes. Adding</span>
      <span 
-class="cmr-9">types, input and output formats, etc. is straightforward using standard</span>
+class="cmr-9">new telescope types or input and output formats, is straightforward using</span>
      <span 
-class="cmr-9">C++ coding techniques with existing base classes. Reference </span><span class="cite"><span 
+class="cmr-9">standard C++ coding techniques with existing base classes. Reference </span><span class="cite"><span 
 class="cmr-9">[</span><a 
 href="#XGROPTICS"><span 
 class="cmr-9">1</span></a><span 
-class="cmr-9">]</span></span> <span 
-class="cmr-9">gives the</span>
+class="cmr-9">]</span></span>
      <span 
-class="cmr-9">code download site.</span>
-     <!--l. 49--><p class="indent" >     <span 
-class="cmr-9">I created this file using lyx and converted the .lyx file to html using</span>
-     <span 
-class="cmr-9">htlatex, a utility available in my macTeX package on osx.</span>
+class="cmr-9">gives the GrOptics download site.</span>
 </div>
-
    <h3 class="sectionHead"><span class="titlemark">1   </span> <a 
  id="x1-10001"></a>Introduction</h3>
+                                                                  
+
+                                                                  
 <!--l. 58--><p class="noindent" >GrOptics is a detailed C++ Monte Carlo ray-tracing program to study the passage of
 atmospheric Cherenkov photons through telescopes designed to study atmospheric
 Cherenkov air showers. Photons produced by standard air shower codes enter the
@@ -140,7 +141,6 @@ class="cmti-10">make </span>when producing the
      The new file is copied using Makefile commands to the ROBAST src
      directory prior to compilation. These details should be transparent to all
      users.
-
      </li>
      <li 
   class="enumerate" id="x1-2006x3">After installing ROOT, download the GrOptics git repository <span class="cite">[<a 
@@ -148,6 +148,9 @@ href="#XGROPTICS">1</a>]</span>. Go to the
      GrOptics directory and run <span 
 class="cmti-10">make </span>to produce the grOptics executable. The
      ROBAST download and file copy occurs during this step.
+                                                                  
+
+                                                                  
      </li>
      <li 
   class="enumerate" id="x1-2008x4">To test the installation, execute <span 
@@ -201,7 +204,6 @@ class="cmti-10">grOptics</span>. Note
      complete telescope, including photon ray-traces if you have selected that
      option.
      </li>
-
      <li 
   class="enumerate" id="x1-3006x3">To change telescope types, open the <span 
 class="cmti-10">arrayConfig.cfg </span>file and activate the
@@ -209,6 +211,9 @@ class="cmti-10">arrayConfig.cfg </span>file and activate the
 class="cmti-10">ARRAYTEL </span>records
      use the DC, SEGSC, or SC telescope types. You can then run the same
      tests as described above.
+                                                                  
+
+                                                                  
      </li>
      <li 
   class="enumerate" id="x1-3008x4">To  produce  a  series  of  spot  patterns  on  the  camera  using  internally
@@ -250,10 +255,12 @@ these dimensions requires a separate standard telescope.
 <!--l. 182--><p class="noindent" >The telescope factories provide individual standard telescopes, after editing, to the
 ACT array as defined by telescope type, standard ID number, ground location, and
 pointing offset. Telescope numbering starts at 1, not 0.
-
 <!--l. 187--><p class="noindent" >
    <h4 class="subsectionHead"><span class="titlemark">2.3   </span> <a 
  id="x1-70002.3"></a>Coordinate Systems</h4>
+                                                                  
+
+                                                                  
 <!--l. 189--><p class="noindent" >Understanding the coordinate systems used in our simulation codes is always
 difficult, especially if your memory is as bad as mine. So, these descriptions should
 help.
@@ -289,13 +296,15 @@ new x axis through the elevation angle. This new coordinate system is the
 &#8221;telescope coordinate system&#8221;. Prior to injection into the GTelescope class, the
 photons undergo a coordinate transformation to this telescope coordinate
 system.
-
 <!--l. 228--><p class="noindent" >
    <h5 class="subsubsectionHead"><span class="titlemark">2.3.4   </span> <a 
  id="x1-110002.3.4"></a>Array Coordinate System</h5>
 <!--l. 230--><p class="noindent" >Prior to added pointing misalignments, all telescopes point to the same
 location on the sky with coordinate systems previously defined. The array
 coordinate system is similarly defined, but its origin is at the origin of the
+                                                                  
+
+                                                                  
 array.
 <!--l. 235--><p class="noindent" >
    <h5 class="subsubsectionHead"><span class="titlemark">2.3.5   </span> <a 
@@ -308,23 +317,28 @@ to the right.
 <!--l. 244--><p class="indent" >   In the output tree of grOptics, the photon locations on the camera are in camera
 coordinates for all telescope types. I&#8217;ll add an input flag later to select photon camera
 locations in either telescope or camera coordinates.
-<!--l. 253--><p class="noindent" >
+<!--l. 249--><p class="noindent" >
+   <h5 class="subsubsectionHead"><span class="titlemark">2.3.6   </span> <a 
+ id="x1-130002.3.6"></a>Azimuth, zenith angle, and elevation</h5>
+<!--l. 251--><p class="noindent" >In all cases, the azimuthal angle is measured from the North toward the East. The
+zenith angle and elevation are measured as usual.
+<!--l. 254--><p class="noindent" >
    <h3 class="sectionHead"><span class="titlemark">3   </span> <a 
- id="x1-130003"></a>Input Files</h3>
-<!--l. 255--><p class="noindent" >The git repository contains input files for steering the simulation, setting up the
+ id="x1-140003"></a>Input Files</h3>
+<!--l. 256--><p class="noindent" >The git repository contains input files for steering the simulation, setting up the
 array, and defining the standard telescopes. These files have unique record flags and
 can be self-referential for combining into single files.
-<!--l. 260--><p class="noindent" >
+<!--l. 261--><p class="noindent" >
    <h4 class="subsectionHead"><span class="titlemark">3.1   </span> <a 
- id="x1-140003.1"></a>Simulation Steering</h4>
-<!--l. 262--><p class="noindent" >The default input steering file is <span 
+ id="x1-150003.1"></a>Simulation Steering</h4>
+<!--l. 263--><p class="noindent" >The default input steering file is <span 
 class="cmti-10">GrOptics/Config/opticsSimulation.pilot</span>. Execute
 <span 
 class="cmti-10">grOptics -h </span>so obtain command line options to use other filenames. The
 <span 
 class="cmti-10">opticsSimulation.pilot </span>file is fully documented. Much of the documentation is
 reproduced here for completeness.
-<!--l. 267--><p class="indent" >   The <span 
+<!--l. 268--><p class="indent" >   The <span 
 class="cmti-10">opticsSimulation.pilot </span>file contains the following records. Each record has a
 leading asterisk (not reproduced here) when active. In the following list,
 the bolded name is the record flag with the adjustable parameter listing
@@ -344,9 +358,11 @@ class="cmmi-10">&#x003E;&#x003C;</span>TreeName<span
 class="cmmi-10">&#x003E;&#x003C;</span>telBaseTreeName<span 
 class="cmmi-10">&#x003E;&#x003C;</span>photonDirCosBranchFlag<span 
 class="cmmi-10">&#x003E;</span>
-         <div class="quote">
+                                                                  
 
-         <!--l. 277--><p class="noindent" ><span 
+                                                                  
+         <div class="quote">
+         <!--l. 278--><p class="noindent" ><span 
 class="cmmi-10">&#x003C;</span>root filename<span 
 class="cmmi-10">&#x003E;</span>: name of output data root file <br 
 class="newline" /><span 
@@ -375,7 +391,7 @@ class="cmmi-10">&#x003C;</span>number Showers<span
 class="cmmi-10">&#x003E;&#x003C;</span>number Photons<span 
 class="cmmi-10">&#x003E;</span>
          <div class="quote">
-         <!--l. 294--><p class="noindent" ><span 
+         <!--l. 295--><p class="noindent" ><span 
 class="cmmi-10">&#x003C;</span>number Showers<span 
 class="cmmi-10">&#x003E;</span>: <span 
 class="cmmi-10">&#x003C;</span>0, no limit <br 
@@ -408,7 +424,7 @@ class="cmmi-10">&#x003E;&#x003C;</span>source Extension<span
 class="cmmi-10">&#x003E;&#x003C;</span>latitude<span 
 class="cmmi-10">&#x003E;</span>
          <div class="quote">
-         <!--l. 306--><p class="noindent" ><span 
+         <!--l. 307--><p class="noindent" ><span 
 class="cmmi-10">&#x003C;</span>xSource<span 
 class="cmmi-10">&#x003E;&#x003C;</span>ySource<span 
 class="cmmi-10">&#x003E;</span>: coordinates (deg) of source in field of
@@ -442,7 +458,6 @@ class="cmmi-10">&#x003C;</span>telescope number<span
 class="cmmi-10">&#x003E;&#x003C;</span>baseName for histograms <span 
 class="cmmi-10">&#x003E;</span><br 
 class="newline" />
-
      </dd><dt class="description">
 <span 
 class="cmbx-10">PHOTONHISTORY</span> </dt><dd 
@@ -453,10 +468,10 @@ class="cmmi-10">&#x003E;&#x003C;</span>tree
 class="cmmi-10">&#x003E;</span><br 
 class="newline" />
      </dd></dl>
-<!--l. 331--><p class="noindent" >
+<!--l. 332--><p class="noindent" >
    <h4 class="subsectionHead"><span class="titlemark">3.2   </span> <a 
- id="x1-150003.2"></a>Array Configuration</h4>
-<!--l. 333--><p class="noindent" >The default array configuration filename, set in <span 
+ id="x1-160003.2"></a>Array Configuration</h4>
+<!--l. 334--><p class="noindent" >The default array configuration filename, set in <span 
 class="cmti-10">GrOptics/Config/opticsSimulation.pilot</span>,
 is <span 
 class="cmti-10">GrOptics/Config/arrayConfig.cfg</span>. This file specifies telescope locations, types, and
@@ -464,14 +479,14 @@ configuration files for standard telescopes. Edit records for individual telesco
 usually appear in this file. The <span 
 class="cmti-10">arrayConfig.cfg </span>file is fully documented. Much of the
 documentation is reproduced here for completeness.
-<!--l. 340--><p class="indent" >   The array defined here may be a subset of the array used to create the photon
+<!--l. 341--><p class="indent" >   The array defined here may be a subset of the array used to create the photon
 file.
-<!--l. 346--><p class="indent" >
+<!--l. 347--><p class="indent" >
      <dl class="description"><dt class="description">
 <span 
 class="cmbx-10">TELFAC</span> </dt><dd 
 class="description">telescope factory type and parameters
-     <!--l. 349--><p class="noindent" ><span 
+     <!--l. 350--><p class="noindent" ><span 
 class="cmmi-10">&#x003C;</span>factory type: DC, SEGSC, or SC <span 
 class="cmmi-10">&#x003E;</span><br 
 class="newline" /><span 
@@ -489,14 +504,14 @@ class="newline" />
 class="cmbx-10">ARRAYTEL</span> </dt><dd 
 class="description">parameters listed below
          <div class="quote">
-         <!--l. 357--><p class="noindent" ><span 
+         <!--l. 358--><p class="noindent" ><span 
 class="cmmi-10">&#x003C;</span>telescope number, <span 
 class="cmmi-10">&#x003E;</span>0 <span 
 class="cmmi-10">&#x003E;</span>
     <div class="quote">
-    <!--l. 359--><p class="noindent" >The array numbering need not be sequential and can
+    <!--l. 360--><p class="noindent" >The array numbering need not be sequential and can
     be a subset of the array used to create the photon file.</div>
-         <!--l. 362--><p class="noindent" ><span 
+         <!--l. 363--><p class="noindent" ><span 
 class="cmmi-10">&#x003C;</span>x telescope location (meters)<span 
 class="cmmi-10">&#x003E;</span><br 
 class="newline" /><span 
@@ -519,9 +534,11 @@ class="newline" /><span
 class="cmmi-10">&#x003C;</span>telescope print mode <span 
 class="cmmi-10">&#x003E;</span>: fully implemented for DC telescopes
          only
+                                                                  
 
+                                                                  
     <div class="quote">
-    <!--l. 372--><p class="noindent" >0: no printing <br 
+    <!--l. 373--><p class="noindent" >0: no printing <br 
 class="newline" />1: print summary information <br 
 class="newline" />2: add geometry details <br 
 class="newline" />3: add facet details <br 
@@ -529,10 +546,10 @@ class="newline" />
     </div>
          </div>
      </dd></dl>
-<!--l. 383--><p class="noindent" >
+<!--l. 384--><p class="noindent" >
    <h4 class="subsectionHead"><span class="titlemark">3.3   </span> <a 
- id="x1-160003.3"></a>Telescope Parameter Editing</h4>
-<!--l. 387--><p class="noindent" >The telescope editing records in the git repository are contained in the
+ id="x1-170003.3"></a>Telescope Parameter Editing</h4>
+<!--l. 388--><p class="noindent" >The telescope editing records in the git repository are contained in the
 <span 
 class="cmti-10">arrayConfig.cfg </span>file. The editing flags are <span 
 class="cmti-10">EDITDCTEL </span>for DC telescopes
@@ -540,28 +557,30 @@ and <span
 class="cmti-10">EDITSCTEL </span>for SC telescopes. Only the <span 
 class="cmti-10">EDITDCTEL </span>are currently
 implemented.
-<!--l. 392--><p class="noindent" >
+<!--l. 393--><p class="noindent" >
    <h5 class="subsubsectionHead"><span class="titlemark">3.3.1   </span> <a 
- id="x1-170003.3.1"></a>Colon Numbering Notation</h5>
-<!--l. 394--><p class="noindent" >The colon numbering notation (used in Matlab and Octave) is useful for containing
+ id="x1-180003.3.1"></a>Colon Numbering Notation</h5>
+<!--l. 395--><p class="noindent" >The colon numbering notation (used in Matlab and Octave) is useful for containing
 multiple entries in a single record. It is easily explained with several examples.
 <br 
 class="newline" />
-<!--l. 398--><p class="indent" >
+<!--l. 399--><p class="indent" >
      <div class="quote">
-     <!--l. 399--><p class="noindent" >[1 : 3] = [1<span style="margin-left:2.77695pt" class="tmspace"></span><span style="margin-left:2.77695pt" class="tmspace"></span>2<span style="margin-left:2.77695pt" class="tmspace"></span><span style="margin-left:2.77695pt" class="tmspace"></span>3] <br 
+     <!--l. 400--><p class="noindent" >[1 : 3] = [1<span style="margin-left:2.77695pt" class="tmspace"></span><span style="margin-left:2.77695pt" class="tmspace"></span>2<span style="margin-left:2.77695pt" class="tmspace"></span><span style="margin-left:2.77695pt" class="tmspace"></span>3] <br 
 class="newline" />[1 : 3<span style="margin-left:2.77695pt" class="tmspace"></span><span style="margin-left:2.77695pt" class="tmspace"></span>5] = [1<span style="margin-left:2.77695pt" class="tmspace"></span><span style="margin-left:2.77695pt" class="tmspace"></span>2<span style="margin-left:2.77695pt" class="tmspace"></span><span style="margin-left:2.77695pt" class="tmspace"></span>3<span style="margin-left:2.77695pt" class="tmspace"></span><span style="margin-left:2.77695pt" class="tmspace"></span>5] <br 
 class="newline" />
      </div>
-<!--l. 403--><p class="noindent" >Thus, if the telescope number in an EDITDCTEL record is [1 : 3], the telescope
+<!--l. 404--><p class="noindent" >Thus, if the telescope number in an EDITDCTEL record is [1 : 3], the telescope
 parameter changes defined on the remainer of the record will apply to telescope
 numbers 1, 2, and 3. Similarly, if the telescope number is [4<span style="margin-left:2.77695pt" class="tmspace"></span><span style="margin-left:2.77695pt" class="tmspace"></span>5 : 8<span style="margin-left:2.77695pt" class="tmspace"></span><span style="margin-left:2.77695pt" class="tmspace"></span>10<span style="margin-left:2.77695pt" class="tmspace"></span><span style="margin-left:2.77695pt" class="tmspace"></span>11], the changes
 will apply to telescopes 4, 5, 6, 7, 8, 10,and 11.
-<!--l. 409--><p class="noindent" >
+<!--l. 410--><p class="noindent" >
    <h5 class="subsubsectionHead"><span class="titlemark">3.3.2   </span> <a 
- id="x1-180003.3.2"></a>DC Telescope Editing</h5>
+ id="x1-190003.3.2"></a>DC Telescope Editing</h5>
+                                                                  
 
-<!--l. 411--><p class="noindent" >The edit records normally are placed in the <span 
+                                                                  
+<!--l. 412--><p class="noindent" >The edit records normally are placed in the <span 
 class="cmti-10">arrayConfigure.cfg </span>file. These edit
 records apply to specific telescopes, not to standard telescopes. The telescope
 factories create the telescopes and then look for edit records specific to that
@@ -571,7 +590,7 @@ telescope.
 class="cmbx-10">EDITDCTEL</span> </dt><dd 
 class="description">DC telescope edit record
          <div class="quote">
-         <!--l. 418--><p class="noindent" ><span 
+         <!--l. 419--><p class="noindent" ><span 
 class="cmmi-10">&#x003C;</span>telescope number (matlab notation)<span 
 class="cmmi-10">&#x003E;</span><br 
 class="newline" /><span 
@@ -587,13 +606,13 @@ class="cmmi-10">&#x003E;</span><span
 class="cmti-10">align </span>or <span 
 class="cmti-10">reflect </span>are current options
     <div class="quote">
-    <!--l. 425--><p class="noindent" >Parameter following <span 
+    <!--l. 426--><p class="noindent" >Parameter following <span 
 class="cmti-10">align </span><br 
 class="newline" /><span 
 class="cmmi-10">&#x003C;</span>maximum misalignment (degrees)<span 
 class="cmmi-10">&#x003E;</span><br 
 class="newline" />
-    <!--l. 428--><p class="noindent" >Parameters following <span 
+    <!--l. 429--><p class="noindent" >Parameters following <span 
 class="cmti-10">reflect </span><br 
 class="newline" /><span 
 class="cmmi-10">&#x003C;</span>blur radius <span 
@@ -606,13 +625,13 @@ class="cmmi-10">&#x003C;</span>reflective curve (int) <span
 class="cmmi-10">&#x003E;</span><br 
 class="newline" /></div>
          </div>
-     <!--l. 434--><p class="noindent" >Examples: <br 
+     <!--l. 435--><p class="noindent" >Examples: <br 
 class="newline" />EDITDCTEL [1:2] FACET [1:50] align 0.5 <br 
 class="newline" />EDITDCTEL [5:10] FACET [10:100] reflect 0.2 0.95 2</dd></dl>
-<!--l. 439--><p class="noindent" >
+<!--l. 440--><p class="noindent" >
    <h5 class="subsubsectionHead"><span class="titlemark">3.3.3   </span> <a 
- id="x1-190003.3.3"></a>SC Telescope Editing</h5>
-<!--l. 441--><p class="noindent" >The edit records normally are placed in the <span 
+ id="x1-200003.3.3"></a>SC Telescope Editing</h5>
+<!--l. 442--><p class="noindent" >The edit records normally are placed in the <span 
 class="cmti-10">arrayConfigure.cfg </span>file. These edit
 records apply to specific telescopes, not to standard telescopes. The telescope
 factories create the telescopes and then look for edit records specific to that
@@ -621,18 +640,20 @@ telescope.
 <span 
 class="cmbx-10">EDITSCTEL</span> </dt><dd 
 class="description">SC telescope edit record, no options implemented at present</dd></dl>
-<!--l. 450--><p class="noindent" >
+<!--l. 451--><p class="noindent" >
    <h4 class="subsectionHead"><span class="titlemark">3.4   </span> <a 
- id="x1-200003.4"></a>Standard Telescopes</h4>
+ id="x1-210003.4"></a>Standard Telescopes</h4>
+                                                                  
 
-<!--l. 452--><p class="noindent" >The telescope DC and SC factories produce standard, editable telescopes
+                                                                  
+<!--l. 453--><p class="noindent" >The telescope DC and SC factories produce standard, editable telescopes
 for the array. The standard telescope configuration files are given in the
 <span 
 class="cmti-10">arrayConfiguration.cfg </span>file.
-<!--l. 459--><p class="noindent" >
+<!--l. 460--><p class="noindent" >
    <h5 class="subsubsectionHead"><span class="titlemark">3.4.1   </span> <a 
- id="x1-210003.4.1"></a>Davies-Cotton Telescopes</h5>
-<!--l. 461--><p class="noindent" >At present, the only implemented DC telescope is the VERITAS telescope. Please be
+ id="x1-220003.4.1"></a>Davies-Cotton Telescopes</h5>
+<!--l. 462--><p class="noindent" >At present, the only implemented DC telescope is the VERITAS telescope. Please be
 careful about changing the dimensions of this telescope. In particular, the dimensions
 and placements of the supporting quad arms and cross arms for the focus box are
 tightly coupled to the telescope dimensions. The file, <span 
@@ -641,16 +662,16 @@ defines 4 standard VERITAS telescopes, all with identical dimensions. The file
 contains a series of records partially defining each of the 4 standard telescopes
 followed by a sample, partial VERITAS telescope configuration file from the GrISU
 VERITAS simulation package.
-<!--l. 474--><p class="noindent" >
+<!--l. 475--><p class="noindent" >
    <h5 class="subsubsectionHead"><span class="titlemark">3.4.2   </span> <a 
- id="x1-220003.4.2"></a>Schwarzchild-Coudee Telescopes</h5>
-<!--l. 482--><p class="noindent" >
+ id="x1-230003.4.2"></a>Schwarzchild-Coudee Telescopes</h5>
+<!--l. 483--><p class="noindent" >
    <h3 class="sectionHead"><span class="titlemark">4   </span> <a 
- id="x1-230004"></a>Data Files</h3>
-<!--l. 487--><p class="noindent" >
+ id="x1-240004"></a>Data Files</h3>
+<!--l. 488--><p class="noindent" >
    <h4 class="subsectionHead"><span class="titlemark">4.1   </span> <a 
- id="x1-240004.1"></a>Input Data Files</h4>
-<!--l. 489--><p class="noindent" >The photon Cherenkov file begins with a header followed by photon lines (see
+ id="x1-250004.1"></a>Input Data Files</h4>
+<!--l. 490--><p class="noindent" >The photon Cherenkov file begins with a header followed by photon lines (see
 <span 
 class="cmti-10">GrOptics/Config/photon.cph</span>. The header file contains information passed from
 shower and photon production code. All header information must occur between
@@ -671,179 +692,187 @@ class="cmti-10">H </span>record carries the observatory height in meters <br
 class="newline" />The <span 
 class="cmti-10">S </span>record indicates the start of a new shower and contains information about the
 primary in this order:
-<!--l. 509--><p class="indent" >
+<!--l. 510--><p class="indent" >
+                                                                  
 
+                                                                  
      <ol  class="enumerate1" >
      <li 
-  class="enumerate" id="x1-24002x1">Primary energy in TeV
+  class="enumerate" id="x1-25002x1">Primary energy in TeV
      </li>
      <li 
-  class="enumerate" id="x1-24004x2">x coordinate of the core (meters)
+  class="enumerate" id="x1-25004x2">x coordinate of the core (meters)
      </li>
      <li 
-  class="enumerate" id="x1-24006x3">y coordinate of the core (meters)
+  class="enumerate" id="x1-25006x3">y coordinate of the core (meters)
      </li>
      <li 
-  class="enumerate" id="x1-24008x4">x-direction cosine of the core
+  class="enumerate" id="x1-25008x4">x-direction cosine of the core
      </li>
      <li 
-  class="enumerate" id="x1-24010x5">y-direction cosine of the core
+  class="enumerate" id="x1-25010x5">y-direction cosine of the core
      </li>
      <li 
-  class="enumerate" id="x1-24012x6">observatory height (meters)
+  class="enumerate" id="x1-25012x6">observatory height (meters)
      </li>
      <li 
-  class="enumerate" id="x1-24014x7">three negative random-number seeds</li></ol>
-<!--l. 518--><p class="noindent" >The <span 
+  class="enumerate" id="x1-25014x7">three negative random-number seeds</li></ol>
+<!--l. 519--><p class="noindent" >The <span 
 class="cmti-10">P </span>record contains the Cherenkov photon details as follows:
-<!--l. 522--><p class="indent" >
+<!--l. 523--><p class="indent" >
      <ol  class="enumerate1" >
      <li 
-  class="enumerate" id="x1-24016x1">x-coordinate (meters) on the ground relative to an individual telescope at
+  class="enumerate" id="x1-25016x1">x-coordinate (meters) on the ground relative to an individual telescope at
      telescope level for CORSIKA or at ground level for KASCADE.
      </li>
      <li 
-  class="enumerate" id="x1-24018x2">y-coordinate (meters) on the ground relative to an individual telescope at
+  class="enumerate" id="x1-25018x2">y-coordinate (meters) on the ground relative to an individual telescope at
      telescope level for CORSIKA or at ground level for KASCADE.
      </li>
      <li 
-  class="enumerate" id="x1-24020x3">x-direction cosine in ground coordinates
+  class="enumerate" id="x1-25020x3">x-direction cosine in ground coordinates
      </li>
      <li 
-  class="enumerate" id="x1-24022x4">y-direction cosine in ground coordinates
+  class="enumerate" id="x1-25022x4">y-direction cosine in ground coordinates
      </li>
      <li 
-  class="enumerate" id="x1-24024x5">height (meters) of emission
+  class="enumerate" id="x1-25024x5">height (meters) of emission
      </li>
      <li 
-  class="enumerate" id="x1-24026x6">relative time (nsecs) of emission
+  class="enumerate" id="x1-25026x6">relative time (nsecs) of emission
      </li>
      <li 
-  class="enumerate" id="x1-24028x7">wavelength (nanometers)
+  class="enumerate" id="x1-25028x7">wavelength (nanometers)
      </li>
      <li 
-  class="enumerate" id="x1-24030x8">particle type
+  class="enumerate" id="x1-25030x8">particle type
      </li>
      <li 
-  class="enumerate" id="x1-24032x9">telescope id number intercepting the photon</li></ol>
+  class="enumerate" id="x1-25032x9">telescope id number intercepting the photon</li></ol>
+                                                                  
 
-<!--l. 538--><p class="noindent" >
+                                                                  
+<!--l. 539--><p class="noindent" >
    <h4 class="subsectionHead"><span class="titlemark">4.2   </span> <a 
- id="x1-250004.2"></a>Output Data Trees</h4>
-<!--l. 542--><p class="noindent" >
+ id="x1-260004.2"></a>Output Data Trees</h4>
+<!--l. 543--><p class="noindent" >
    <h5 class="subsubsectionHead"><span class="titlemark">4.2.1   </span> <a 
- id="x1-260004.2.1"></a>allTel Tree</h5>
-<!--l. 544--><p class="noindent" >The allTel tree contains information that is constant for all showers in the file. The
+ id="x1-270004.2.1"></a>allTel Tree</h5>
+<!--l. 545--><p class="noindent" >The allTel tree contains information that is constant for all showers in the file. The
 tree branches are as follows:
-<!--l. 548--><p class="indent" >
+<!--l. 549--><p class="indent" >
      <ol  class="enumerate1" >
      <li 
-  class="enumerate" id="x1-26002x1">fileHeader string
+  class="enumerate" id="x1-27002x1">fileHeader string
      </li>
      <li 
-  class="enumerate" id="x1-26004x2">globalEffic globalEffic/D
+  class="enumerate" id="x1-27004x2">globalEffic globalEffic/D
      </li>
      <li 
-  class="enumerate" id="x1-26006x3">obsHgt obsHgt/D
+  class="enumerate" id="x1-27006x3">obsHgt obsHgt/D
      </li>
      <li 
-  class="enumerate" id="x1-26008x4">telIDVector vector<span 
+  class="enumerate" id="x1-27008x4">telIDVector vector<span 
 class="cmmi-10">&#x003C;</span>int<span 
 class="cmmi-10">&#x003E;</span>
      </li>
      <li 
-  class="enumerate" id="x1-26010x5">telLocXVector vector<span 
+  class="enumerate" id="x1-27010x5">telLocXVector vector<span 
 class="cmmi-10">&#x003C;</span>float<span 
 class="cmmi-10">&#x003E;</span>
      </li>
      <li 
-  class="enumerate" id="x1-26012x6">telLocYVector vector<span 
+  class="enumerate" id="x1-27012x6">telLocYVector vector<span 
 class="cmmi-10">&#x003C;</span>float<span 
 class="cmmi-10">&#x003E;</span>
      </li>
      <li 
-  class="enumerate" id="x1-26014x7">telLocZVector vector<span 
+  class="enumerate" id="x1-27014x7">telLocZVector vector<span 
 class="cmmi-10">&#x003C;</span>float<span 
 class="cmmi-10">&#x003E;</span>
      </li>
      <li 
-  class="enumerate" id="x1-26016x8">transitTimeVector vector<span 
+  class="enumerate" id="x1-27016x8">transitTimeVector vector<span 
 class="cmmi-10">&#x003C;</span>float<span 
 class="cmmi-10">&#x003E;</span></li></ol>
-<!--l. 559--><p class="noindent" >
+<!--l. 560--><p class="noindent" >
    <h5 class="subsubsectionHead"><span class="titlemark">4.2.2   </span> <a 
- id="x1-270004.2.2"></a>Individual Telescope Tree</h5>
-<!--l. 561--><p class="noindent" >Each telescope has its own tree. The branches are as follows:
-<!--l. 564--><p class="indent" >
+ id="x1-280004.2.2"></a>Individual Telescope Tree</h5>
+<!--l. 562--><p class="noindent" >Each telescope has its own tree. The branches are as follows:
+<!--l. 565--><p class="indent" >
      <ol  class="enumerate1" >
      <li 
-  class="enumerate" id="x1-27002x1">eventNumber eventNumber/i
+  class="enumerate" id="x1-28002x1">eventNumber eventNumber/i
      </li>
      <li 
-  class="enumerate" id="x1-27004x2">primaryType primaryType/i
+  class="enumerate" id="x1-28004x2">primaryType primaryType/i
      </li>
      <li 
-  class="enumerate" id="x1-27006x3">primaryEnergy primaryEnergy/F
+  class="enumerate" id="x1-28006x3">primaryEnergy primaryEnergy/F
+                                                                  
 
+                                                                  
      </li>
      <li 
-  class="enumerate" id="x1-27008x4">Xcore Xcore/F
+  class="enumerate" id="x1-28008x4">Xcore Xcore/F
      </li>
      <li 
-  class="enumerate" id="x1-27010x5">Ycore Ycore/F
+  class="enumerate" id="x1-28010x5">Ycore Ycore/F
      </li>
      <li 
-  class="enumerate" id="x1-27012x6">Xcos Xcos/F
+  class="enumerate" id="x1-28012x6">Xcos Xcos/F
      </li>
      <li 
-  class="enumerate" id="x1-27014x7">Ycos Ycos/F
+  class="enumerate" id="x1-28014x7">Ycos Ycos/F
      </li>
      <li 
-  class="enumerate" id="x1-27016x8">Xsource Xsource/F
+  class="enumerate" id="x1-28016x8">Xsource Xsource/F
      </li>
      <li 
-  class="enumerate" id="x1-27018x9">Ysource Ysource/F
+  class="enumerate" id="x1-28018x9">Ysource Ysource/F
      </li>
      <li 
-  class="enumerate" id="x1-27020x10">delay delay/F
+  class="enumerate" id="x1-28020x10">delay delay/F
      </li>
      <li 
-  class="enumerate" id="x1-27022x11">photonX vector<span 
+  class="enumerate" id="x1-28022x11">photonX vector<span 
 class="cmmi-10">&#x003C;</span>float<span 
 class="cmmi-10">&#x003E;</span>
      </li>
      <li 
-  class="enumerate" id="x1-27024x12">photonY vector<span 
+  class="enumerate" id="x1-28024x12">photonY vector<span 
 class="cmmi-10">&#x003C;</span>float<span 
 class="cmmi-10">&#x003E;</span>
      </li>
      <li 
-  class="enumerate" id="x1-27026x13">time vector<span 
+  class="enumerate" id="x1-28026x13">time vector<span 
 class="cmmi-10">&#x003C;</span>float<span 
 class="cmmi-10">&#x003E;</span>
      </li>
      <li 
-  class="enumerate" id="x1-27028x14">wavelength vector<span 
+  class="enumerate" id="x1-28028x14">wavelength vector<span 
 class="cmmi-10">&#x003C;</span>float<span 
 class="cmmi-10">&#x003E;</span></li></ol>
-<!--l. 584--><p class="noindent" >
+<!--l. 585--><p class="noindent" >
    <h3 class="sectionHead"><span class="titlemark">5   </span> <a 
- id="x1-280005"></a>Graphical Output Options</h3>
-<!--l. 592--><p class="noindent" >
+ id="x1-290005"></a>Graphical Output Options</h3>
+<!--l. 593--><p class="noindent" >
    <h3 class="sectionHead"><span class="titlemark">6   </span> <a 
- id="x1-290006"></a>Appendices</h3>
-<!--l. 594--><p class="noindent" >
+ id="x1-300006"></a>Appendices</h3>
+<!--l. 595--><p class="noindent" >
    <h4 class="subsectionHead"><span class="titlemark">6.1   </span> <a 
- id="x1-300006.1"></a>Formats for this file</h4>
-<!--l. 596--><p class="noindent" >I created this users guide using lyx to produce a .lyx file (lyx is a nice gui based tex
+ id="x1-310006.1"></a>Formats for this file</h4>
+<!--l. 597--><p class="noindent" >I created this users guide using lyx to produce a .lyx file (lyx is a nice gui based tex
 editor). The .tex file is exported from lyx using the latex(plain) option. The html file
 is created by htlatex from this .tex file, i.e. &#8220;htlatex UsersGuideGrOptics.tex&#8221;. The
-pdf file is exporeted from lyx via the export pdflatex option. All of this on
+pdf file is exported from lyx via the export pdflatex option. All of this on
 osx.
+                                                                  
 
+                                                                  
    <h3 class="likesectionHead"><a 
- id="x1-310006.1"></a>References</h3>
-<!--l. 602--><p class="noindent" >
+ id="x1-320006.1"></a>References</h3>
+<!--l. 603--><p class="noindent" >
    <div class="thebibliography">
    <p class="bibitem" ><span class="biblabel">
  [1]<span class="bibsp">&#x00A0;&#x00A0;&#x00A0;</span></span><a 
@@ -883,5 +912,6 @@ class="newline" />See also http://root.cern.ch/drupal/
     
 </body></html> 
 
+                                                                  
 
 

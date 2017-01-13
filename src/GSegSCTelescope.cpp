@@ -132,9 +132,9 @@ GSegSCTelescope::~GSegSCTelescope() {
 };
 /********************** end of ~GSegSCTelescope *****************/
 
-void GSegSCTelescope::buildTelescope(bool os8)
+void GSegSCTelescope::buildTelescope()
 {
-  (void) os8; //unused
+
   // fix units
   fFMeters = fF;
   fF = fF*m;

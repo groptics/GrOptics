@@ -2,19 +2,17 @@
 VERSION4.0
 30May2016
 */
-/*! \brief GDefinition Functions: general definitions, enums and associated
+/*! GDefinition Functions: general definitions, enums and associated
   functions to return enum strings.      
-
- */
+*/
 
 #ifndef GDEFINITION
 #define GDEFINITION
 
-// version number
-const string VERSN("4.0");
+const string VERSN("4.0"); /*< current GrOptics version number   */
 
 // log file
-extern ostream *oLog;
+extern ostream *oLog; //< pointer to log file streamer
 
 // may want to put this in a namespace later
 
@@ -67,71 +65,73 @@ enum RayPlotType {FOCUSONLY, ALLSURFACES  };
 
 // global variables
 #include "TRandom3.h"  // fix this up later
-extern TRandom3 TR3; //!< random number global class
-extern string Versn;  //!< version number, set in main
 
-/*! returns string with name of RdType enum parameter
+extern TRandom3 TR3; //!< random number generator, set in grOptics
+
+/*! returns string with name of RdType enum parameter.
     returns "" if no match
  */
 string getRdType(const enum RdType &rdType);
 
-/*! returns string with name of RdType enum parameter
+/*! returns string with name of RdType enum parameter.
     returns "" if no match
  */
 enum RdType getRdTypeEnum(const string &rdTypeStr);
 
-/*! returns string with name of RdType enum parameter
+/*! returns string with name of RdType enum parameter.
     returns "" if no match
  */
 string getOfType(const enum OfType &rdType);
 
-/*! returns string with name of OfType enum parameter
+/*! returns string with name of OfType enum parameter.
     returns "" if no match
  */
 enum OfType getOfTypeEnum(const string &ofTypeStr);
 
-/*! returns string with name of TelType enum parameter
+/*! returns string with name of TelType enum parameter.
     returns "" if no match
  */
 string getTelType(const enum TelType &rdType);
 
-/*! returns string with name of OfType enum parameter
+/*! returns string with name of OfType enum parameter.
     returns "" if no match
  */
 enum TelType getTelTypeEnum(const string &telTypeStr);
 
-/*! returns string with name of FacetShape enum parameter
+/*! returns string with name of FacetShape enum parameter.
     returns "" if no match
  */
 string getFacetShape(const enum FacetShape &rdType);
 
-/*! returns string with name of FacetShape enum parameter
+/*! returns string with name of FacetShape enum parameter.
     returns "" if no match
  */
 enum FacetShape getFacetShapeEnum(const string &facetShapeStr);
 
-/*! returns string with name of RayTracerType enum parameter
+/*! returns string with name of RayTracerType enum parameter.
     returns "" if no match
  */
 string getRayTracerType(const enum RayTracerType &rdType);
 
-/*! returns string with name of FacetShape enum parameter
+/*! returns string with name of FacetShape enum parameter.
     returns "" if no match
  */
 enum RayTracerType getRayTracerTypeEnum(const string &rayTracerTypeStr);
 
-/*! returns string with name of Type enum parameter
+/*! returns string with name of Type enum parameter.
     returns "" if no match
  */
 string getGeoType(const enum GeoType &geoType);
 
-/*! returns string with name of FacetShape enum parameter
+/*! returns string with name of FacetShape enum parameter.
     returns "" if no match
  */
 enum GeoType getGeoTypeEnum(const string &geoTypeStr);
 
 extern std::string TESTSR;
 
+/*! structurer to hold details for the mirror segments for the SEGSC telescope
+ */
 struct mirrorSegmentDetails {
   Double_t rmin;
   Double_t rmax;

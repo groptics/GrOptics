@@ -2,13 +2,7 @@
 VERSION4.0
 30May2016
 */
-/*! \brief GSCTelescope concrete class for ACT telescopes
-  inherits from GTelescope
 
-GSCTelescope provides the concrete class for a Schwarzschild-Couder
-telescope.  Inherits from GTelescope base class.
-
-*/
 #ifndef GSCTELESCOPE
 #define GSCTELESCOPE
 
@@ -27,15 +21,16 @@ class TGraph;
 #include "Math/GenVector/RotationZfwd.h"
 
 #include "AOpticsManager.h"
-//class AOpticalComponent;
-/*! \brief GSCTelescope contains the full description of a single
-       SC telescope. Class inherits from GTelescope
+
+/*! GSCTelescope models a single SC telescope; inherits from GTelescope
 */
 
 // forward declarations
 enum TelType;
 
-// stubs for all methods
+/*! GSCTelescope class modeling a Schwarzschild-Couder telescope; 
+  inherits from GTelescope 
+*/
 class GSCTelescope : public GTelescope {
 
   friend class GSCTelescopeFactory;
@@ -59,11 +54,6 @@ class GSCTelescope : public GTelescope {
   double fphotWaveLgt;
   Double_t fphotonToTopVolTime;
 
-  Double_t fInjectLoc[3];
-  Double_t fInjectDir[3];
-  Double_t fInjectTime;  // only sent to history file
-  Double_t fInjectLambda;
-   
   TGraph *gPrimRefl;
   double fPrimMaxLmda;
   double fPrimMinLmda;
@@ -158,66 +148,59 @@ class GSCTelescope : public GTelescope {
 
  public:
 
-  /*! \brief GSCTelescope constructor
+  /*! GSCTelescope constructor.
    */
   GSCTelescope();
 
-  /*! \brief GSCTelescope destructor 
+  /*! GSCTelescope destructor. 
    */
   ~GSCTelescope();
 
-  /*! \brief Build an ideal SC telescope with an FOV of 8 deg diameter. More
+  /*! Build an ideal SC telescope.  More
       realistic design and parameter reader should be implemented.
-      See http://jelley.wustl.edu/actwiki/images/0/05/VVV-OSdefinitions_v2.pdf
-
-      \param os8 If true, OS8 parameters in the PDF will be used, or else OS10
+      See http://jelley.wustl.edu/actwiki/images/0/05/VVV-OSdefinitions_v2.pdf;
    */
-  void buildTelescope(bool os8 = true);
+  void buildTelescope();
 
-  /*! \brief injectPhoton for ray tracing through telescope
+  /*! inject photon into the telescope in telescope coordinate system.
 
-    \param photonLoc  photon ground location relative to telescope (tel.coor)
-    \param photonDir  photon dirCosines in telescope coor. 
+    \param photonLocT 3D vector giving photon location, telescope coordinates
+    \param photonDirT 3D vector giving photon dir.cosines in telescope coordinates
+    \param photWaveLgt photon wavelength in nanometers
   */
   void injectPhoton(const ROOT::Math::XYZVector &photonLocT,
                     const ROOT::Math::XYZVector &photonDirT,
                     const double &photWaveLgt);
 
-  /*! \brief getCameraPhotonLocation gets camera location following ray tracing. 
-         RETURN FALSE IN CASE PHOTON DOESN'T REACH CAMERA
+  /*!  get photon location on telescope camera after ray tracing.
 
-         \param x  photon camera x location (CHANGE TO POINTER)
-         \param y  photon camera y location (CHANGE TO POINTER)
-         \param z  photon camera z location (CHANGE TO POINTER)
-	 \return true if photon reaches focal surface
+    \param photonLoc pointer to 3D vector giving camera location of photon
+    \param photonDcos pointer to 3D vector giving dir.cosines of photon prior to 
+    striking camera.
+    \param photonTime transit time of photon through telescope.
+    \return true if photon reaches camera
   */
   bool getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
                                ROOT::Math::XYZVector *photonDcos,
                                double *photonTime);
-
-/*! \brief setLogFile  used for logging photons, document later
-  not currently used,  *oLog global set as default. oPrtStrm is
-  set in GTelescope constructor to *oLog.
- */
-  //void setLogFile(const ofstream &logFile);
   
-  /*! \brief printTelescope prints various details, document later
+  /*! print telescope details to *oLog.
     
     \param oStr output stream
-    \param prtMode print mode, to be documented later
+    \param prtMode print mode, see pilot file for documentation
   */
   void printTelescope();
 
   void drawTelescope(const int &option = 0);
 
-  /*! \brief setPrintMode used for setting printing details
+  /*! select print mode
     
     \param oStr output stream
-    \param prtMode pring mode, fix up later
+    \param prtMode print mode
   */
   void setPrintMode(ostream &oStr=cout,const int prtMode=0);
    
-  /*! \brief 
+  /*! 
     
    */ 
   void setPhotonHistory(const string &rootFile,const string &treeName,

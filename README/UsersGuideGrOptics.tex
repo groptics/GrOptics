@@ -4,6 +4,11 @@
 \usepackage[latin9]{inputenc}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage[unicode=true,pdfusetitle,
+ bookmarks=true,bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
+ {hyperref}
+\usepackage{breakurl}
 
 \makeatletter
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
@@ -31,7 +36,7 @@ Nagoya University \\
  Furo-cho, Chikusa-ku, Nagoya 464-8601, Japan \\
  oxon@mac.com}
 
-\date{January 2, 2017}
+\date{January 11, 2017}
 \maketitle
 \begin{abstract}
 GrOptics is a detailed simulation program for ray-tracing Cherenkov
@@ -40,18 +45,12 @@ Shower packages, such as GrISU \cite{GRISU} and CORSIKA \cite{CORSIKA},
 provide Cherenkov photons after conversion to GrISU format. The output
 to a ROOT file records individual photons striking the camera surface.
 The package models both VERITAS Davies-Cotton (DC) and Schwarzchild-Coudee
-SC) telescopes with all telescope parameters taken from input files.
-There is no limit to the number or type of array telescopes. Adding
-new telescope types, input and output formats, etc. is straightforward
+(SC, SEGSC) telescopes with all telescope parameters taken from input
+files. There is no limit to the number or type of array telescopes.
+Adding new telescope types or input and output formats, is straightforward
 using standard C++ coding techniques with existing base classes. Reference
-\cite{GROPTICS} gives the code download site. 
-
-I created this file using lyx and converted the .lyx file to html
-using htlatex, a utility available in my macTeX package on osx.
+\cite{GROPTICS} gives the GrOptics download site. 
 \end{abstract}
-%-------------------------------------------------------------
-%-------------------------------------------------------------
-
 
 \section{Introduction}
 
@@ -188,7 +187,7 @@ starts at $1$, not $0$.
 
 Understanding the coordinate systems used in our simulation codes
 is always difficult, especially if your memory is as bad as mine.
-So, these descriptions should help.
+So, these descriptions should help. 
 
 \subsubsection{GrISU Ground Coordinate System}
 
@@ -246,9 +245,10 @@ are in camera coordinates for all telescope types. I'll add an input
 flag later to select photon camera locations in either telescope or
 camera coordinates.
 
-%-------------------------------------------------------------
-%-------------------------------------------------------------
+\subsubsection{Azimuth, zenith angle, and elevation}
 
+In all cases, the azimuthal angle is measured from the North toward
+the East. The zenith angle and elevation are measured as usual.
 
 \section{Input Files}
 
@@ -594,11 +594,8 @@ Each telescope has its own tree. The branches are as follows:
 \subsection{Formats for this file}
 
 I created this users guide using lyx to produce a .lyx file (lyx is
-a nice gui based tex editor). The .tex file is exported from lyx using
-the latex(plain) option. The html file is created by htlatex from
-this .tex file, i.e. ``htlatex UsersGuideGrOptics.tex''. The pdf
-file is exporeted from lyx via the export pdflatex option. All of
-this on osx.
+a nice gui based tex editor). The .tex, .pdf, and .html files are
+exported from lyx using the latex(plain) and html options. 
 \begin{thebibliography}{1}
 \bibitem{GROPTICS} GrOptics git repository (read only) \\
  git clone http://gtlib.gatech.edu/pub/IACT/GrOptics.git

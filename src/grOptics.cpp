@@ -68,7 +68,7 @@ using namespace std;
 
 TRandom3 TR3;
 
-/*! \brief structure to hold command line entries
+/*! structure to hold command line entries.
  */
 struct Cline {
   string pilotfile;    //!< name of pilot file
@@ -81,7 +81,7 @@ struct Cline {
   vector<double> vWobble;    //!< wobble entries
 };
 
-/*! \brief structure to hold pilot file entries
+/*! structure to hold pilot file entries.
  */
 struct Pilot {
   string pilotfile;     //!< name of pilot file
@@ -120,7 +120,7 @@ struct Pilot {
   unsigned iNInitEvents;
 };
 
-/*! \brief structure to hold telescope factory parameters
+/*! structure to hold telescope factory parameters.
  */
 struct TelFactory {
   TelType telType;  //!< telescope type (DC/SC)
@@ -129,6 +129,8 @@ struct TelFactory {
   string editFile;  //!< edit filename
 };
 
+/*! structure to hold telescope details
+ */
 struct TelDetails {
   int telID;       //!< number of telescope in the array
   int telStd;      //!< telescope standard number
@@ -142,36 +144,38 @@ struct TelDetails {
 
 #define DEBUGS(x) *oLog << "      " << #x << " = " << x << endl
 
-/*! /brief function to show command-line help
+/*! Function to show command-line help.
  */
 int commandLineHelp();
 
-/*! /brief function to read command-line entries
+/*! Function to read command-line entries.
  */
 int readCommandLine(int argc, char *argv[], Cline *cline);
 
-/*! /brief function to print command-line entries
+/*! Function to print command-line entries.
  */
 void printCommandLine( Cline *cline);
 
-/*! /brief function to print pilot structure
+/*! Function to print pilot structure.
  */
 int pilotPrint(const Pilot &pilot);
 
-/*!  /brief function to read pilot file
+/*!  Function to read pilot file.
  */
 int readPilot(Pilot *pilot);
 
-/*!  /brief function to reconcile Cline and Pilot structures
+/*!  Function to reconcile Cline and Pilot structures.
  */
 int updatePilot(const Cline &cline,Pilot *pilot);
 
-/*!  /brief function to read arrayConfigFile factory records
+/*!  Function to read arrayConfigFile factory records.
  */
 int getTelescopeFactoryDetails(vector<TelFactory *> *vTelFac,
                                  map<int,TelDetails *> *mTelDetails,
                                  const string &arrayConfigFile);
 
+/*! Function to close Root files.
+ */
 int closeRootFiles();
 
 ostream *oLog;
