@@ -15,6 +15,8 @@
 include Makefile.common
 
 INCLUDEFLAGS  += -I. -I./include
+# add INCLUDEFLAGS   
+CXXFLAGS += $(INCLUDEFLAGS)
 
 # directory to receive all .o files
 OBJDIR := obj
@@ -23,24 +25,35 @@ INCDIR := include
 SrcSuf := cpp
 ObjSuf := o
 
-# add INCLUDEFLAGS  
-CXXFLAGS += $(INCLUDEFLAGS)
+DICTO = $(OBJDIR)/GrOpticsDict.o 
+DICTS = $(SRCDIR)/GrOpticsDict.cpp 
+DICTI = $(INCDIR)/GrOpticsDict.h 
 
-.PHONY:	all printDebug robast var includeflags cxxflags ldflags \
-	libs cleanGrOptics cleanRobast removeRobast
+# make listing of all source files, add dictionary file will generate later
+FILTEROUT =  $(SRCDIR)/GArray_Tel_noGraphs_4.0deg.cpp $(SRCDIR)/GrOpticsDict.cpp  
+SRCS    :=      $(filter-out $(FILTEROUT),$(wildcard $(SRCDIR)/G*.$(SrcSuf))) $(DICTS)
+
+# make list of object files to create, DICTO is currently empty
+OBJS  := $(patsubst $(SRCDIR)/%.$(SrcSuf),$(OBJDIR)/%.$(ObjSuf),$(SRCS))
+
+#make listing of include files
+INCS := $(filter-out $(INCDIR)LinkDef.h, $(wildcard $(INCDIR)/G*.h ) ) 
+
+# make listing of include files for dictionary creation
+INCD = $(INCDIR)/GRootWriter.h 
+
+.PHONY: all printDebug robast var includeflags cxxflags ldflags \
+	libs cleanGrOptics cleanRobast removeRobast testDict
 
 all: robast grOptics
-	@echo grOptics ready and waiting
 
-# make list of all G* source files
-SRCS    :=      $(filter-out $(SRCDIR)/GArray_Tel_noGraphs_4.0deg.%,$(wildcard $(SRCDIR)/G*.$(SrcSuf)))
-# make list of object files to create, DICTO is currently empty
-OBJECTS  := $(patsubst $(SRCDIR)/%.$(SrcSuf),$(OBJDIR)/%.$(ObjSuf),$(SRCS))  $(DICTO) 
+estDict: $(DICTS)
+	@echo in testDict
 
 #------------------------------------------------------------------
 printDebug:
 	@echo SRCS $(SRCS)
-	@echo OBJECTS $(OBJECTS)
+	@echo OBJS $(OBJS)
 	@echo OutPutOpt $(OutPutOpt)
 	@echo ROOTCLING_FOUND $(ROOTCLING_FOUND)
 	@echo PWD $(PWD)
@@ -50,26 +63,20 @@ printDebug:
 
 TESTOBJECTS = $(OBJDIR)/GUtilityFuncts.o $(OBJDIR)/GDefinition.o 
 
-# set target
 testUtilities: $(OBJDIR)/testUtilities.o  $(TESTOBJECTS)
 	@echo "building testUtilities"
 	$(LD) $(LDFLAGS) -pg $(LIBS) $^ $(OutPutOpt) $@
 	@echo SRCDIR $(SRCDIR)
 	@echo INCDIR $(INCDIR)
 
-grOptics: $(OBJDIR)/grOptics.o $(OBJECTS)
+grOptics: $(OBJDIR)/grOptics.o $(OBJS)
 	@echo "building grOptics"
 	$(LD) $(LDFLAGS) $(LIBS) $^ $(OutPutOpt) $@
 
-grReaderFactory: $(OBJDIR)/grReaderFactory.o $(OBJECTS)
+grReaderFactory: $(OBJDIR)/grReaderFactory.o $(OBJS)
 	@echo "building grTestSegReaderFactory"
 	$(LD) $(LDFLAGS) $(LIBS) $^ $(OutPutOpt) $@
 
-%:$(OBJDIR)/%.o 
-	@echo "Building $@ ... "
-	$(LD) $(LDFLAGS) $^ $(LIBS) $(OutPutOpt) $@
-	@echo "Done"
-	@echo ""
 
 # rule for any compiling any .cpp file
 $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
@@ -77,11 +84,24 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 	@echo "Done"
 
-#ifeq ($(ROOTCLING_FOUND),)
+
+ifneq ($(ROOTCLING_FOUND),)
 # to create root dictionary using rootcling
-#else
+$(DICTS): $(INCD) $(INCDIR)/LinkDef.h
+	@echo "Generating dictionary with rootcling $< ... "
+	rootcling -v -f $@ -c  $^
+	@cp src/GrOpticsDict_rdict.pcm .	
+	@echo "Done"
+
+else
 # to create root dictionary using rootcint
-#endif
+$(DICTS): $(INCD) $(INCDIR)/LinkDef.h
+	@echo "Generating GrOpticsDict dictionary $< ... "
+	rootcint -v -f $@ -c  $^
+	@echo "rootcint SHELL mv src/GRootWriterDict.h include/."
+	cp src/GrOpticsDict.h  include/.
+	@echo "Done"
+endif
 
 # -------------  ROBAST -----------------------------------
 # search for ROBAST_VER directory
@@ -140,9 +160,24 @@ ldflags:
 libs:
 	@echo "libs:  $(LIBS)"
 
+objs:
+	@echo $(OBJS)
+
+srcs:
+	@echo $(SRCS)
+incs:
+	@echo $(INCS)
+
+incd:
+	@echo $(INCD)
+dicts:
+	@echo $(DICTS)
+dicti:
+	@echo $(DICTI)
+
 cleanGrOptics: 
 	rm -rf grOptics *.pcm $(SRCDIR)/*Dict* $(INCDIR)/*Dict* $(OBJDIR)/*.o \
-            Makefile.depend grReaderFactory
+            Makefile.depend grReaderFactory $(COPY_FILE) *.pcm
 
 cleanRobast:
 	cd $(ROBAST_VER); make clean;
