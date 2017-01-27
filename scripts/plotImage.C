@@ -34,6 +34,7 @@
    Grinnell College
    December 6, 2012
  */
+void plotImage()
 {
   cout << " entering plotImage" << endl;
   gROOT->Reset();
