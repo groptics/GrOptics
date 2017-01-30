@@ -10,6 +10,8 @@ VERSION4.0
 #ifndef GROOTWRITER
 #define GROOTWRITER
 
+#include <vector>
+
 // forward declarations (use include files for CINT
 class TTree;
 class TFile;
@@ -135,7 +137,7 @@ class GRootWriter
      return numPhotonX;
    }
    
-   ClassDef(GRootWriter,1);
+   //ClassDef(GRootWriter,1);
 };
 
 #endif

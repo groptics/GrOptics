@@ -37,7 +37,7 @@ using namespace std;
 #include "GDefinition.h"
 #include "GRootWriter.h"
 
-ClassImp(GRootWriter);
+//ClassImp(GRootWriter);
 
 GRootWriter::GRootWriter( TFile *tfile,const unsigned int &iTelID,
 			  const string &treeBaseName1,
