@@ -103,7 +103,16 @@ class GArrayTel {
   GArrayTel();
 
   /*!  constructor
+    \param telLocGrd telescope location in ground coordinates
+    \param telOffsetX telescope x-offset on the sky, telescope coordinates
+    \param telOffsetY telescope y-offset on the sky, telescope coordinates
+    \param teltype enum designating telescope type
+    \param telid telescope id number
+    \param telstd standard telescope id for this telescope
+    \param printMode printMode option
+    \param ctel pointer to telescope instance produced by telescope factory
    */
+  // C.Duke 2Feb2017, check if teltype and telstd are needed (get from ctel)
   GArrayTel(const ROOT::Math::XYZVector telLocGrd,
             const double &telOffsetX,
             const double &telOffsetY,
@@ -113,11 +122,20 @@ class GArrayTel {
 	    const int &printMode,
 	    GTelescope *ctel);
 
-  /*!
+  /*! destructor
    */
   ~GArrayTel();
 
   /*!  \ brief set all primary parameters
+    \param vSCorec
+    \param vSDcosGdc
+    \param AzPrimc
+    \param ZnPrimc
+    \param energyc
+    \param ZnPrimc
+    \param WobbleTNc
+    \param WobbleTEc
+    \param Latitude 
    */
   void setPrimary(const ROOT::Math::XYZVector &vSCorec,
                   const ROOT::Math::XYZVector &vSDcosGdc,
