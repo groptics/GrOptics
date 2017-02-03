@@ -109,10 +109,10 @@ class GArrayTel {
     \param teltype enum designating telescope type
     \param telid telescope id number
     \param telstd standard telescope id for this telescope
-    \param printMode printMode option
+    \param printMode printMode, see ARRAYTEL input record for details.
     \param ctel pointer to telescope instance produced by telescope factory
    */
-  // C.Duke 2Feb2017, check if teltype and telstd are needed (get from ctel)
+  // C.Duke 2Feb2017, check if teltype and telstd are set in telescope instance earlier
   GArrayTel(const ROOT::Math::XYZVector telLocGrd,
             const double &telOffsetX,
             const double &telOffsetY,
@@ -127,15 +127,14 @@ class GArrayTel {
   ~GArrayTel();
 
   /*!  \ brief set all primary parameters
-    \param vSCorec
-    \param vSDcosGdc
-    \param AzPrimc
-    \param ZnPrimc
-    \param energyc
-    \param ZnPrimc
-    \param WobbleTNc
-    \param WobbleTEc
-    \param Latitude 
+    \param vSCorec primary ground loc. vector, ground coor. system
+    \param vSDcosGdc primary dir.cos. vector, ground coor. system
+    \param AzPrimc primary azimuthal angle
+    \param ZnPrimc primary zenith angle
+    \param energyc primary energy
+    \param WobbleTNc  wobble offset, celestial North (radians)
+    \param WobbleTEc wobble offset, celestial East (radians)
+    \param Latitude observatory latitude
    */
   void setPrimary(const ROOT::Math::XYZVector &vSCorec,
                   const ROOT::Math::XYZVector &vSDcosGdc,
@@ -144,7 +143,17 @@ class GArrayTel {
                   const double &WobbleTEc,
                   const double &Latitude);
   
-  /*!   \brief 
+  /*!   set all photon parameters
+
+    \param pGrd photon ground location vector, ground coordinates
+    \param pDcos photon dir.cos. vector, ground coordinates
+    \param pAz photon azimuthal angle (radians)
+    \param pZn photon zenith angle (radians)
+    \param pHgtEmiss photon height of emission (meters)
+    \param pTime photon ground arrival time (nanoseconds)
+    \param pWaveLgt photon wavelength (nanometers)
+    \param pType particle type id that emitted the photon
+    \param pTel telescope number for photon
    */ 
   void setPhoton(const ROOT::Math::XYZVector &pGrd,
                  const ROOT::Math::XYZVector &pDcos,
@@ -153,11 +162,15 @@ class GArrayTel {
                  const double &pWaveLgt, const int &pType,
                  const int &pTel);
   
-  /*!
+  /*!  prints some ArrayTel telescope parameters, useful in debugging.
+    Not currently used.
    */
   void printArrayTel();
 
-  /*!
+  /*! sets photon history parameters 
+    \param rootFile root filename for photon history tree
+    \param treeName name of root tree containing history details
+    \param option option parameter (unused at the moment?)
    */
   void setPhotonHistory(const string &rootFile,
                         const string &treeName,
@@ -166,6 +179,8 @@ class GArrayTel {
     tel->setPhotonHistory(rootFile,treeName,option);
   };
 
+  /*!
+   */
   void setFixedPointing(const bool pointingflag, const double az_deg, const double el_deg ) ;
   
   void writePhotonHistory() {
