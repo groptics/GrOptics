@@ -795,9 +795,7 @@ int readPilot(Pilot *pilot) {
 
   GPilot *pi = new GPilot(spilotfile);
 
-  //double PI =  3.141592654;     /*   Value of pi */
-  // use root constant
-  double PI = TMath::Pi();
+  //double PI = TMath::Pi();
     
   string flag = "FILEIN";
   pi->set_flag(flag);
@@ -999,6 +997,19 @@ int getTelescopeFactoryDetails(vector<TelFactory *> *vTelFac,
       (*mTelDetails)[telID]->zn_fixPt = znFixPt;
     }
   }
+  *oLog << "========= telescope fixed pointing listings ===========" << endl;
+  map<int,TelDetails *>::iterator mIter;  
+  for (mIter=mTelDetails->begin();mIter!=mTelDetails->end();mIter++) {
+    int telNum = mIter->first;
+    bool bFixFlag = mIter->second->bFixedPtFlag;
+    if (bFixFlag) {
+      *oLog << "  telNumber " << telNum << " fixed pointing: az "
+	    << (mIter->second->az_fixPt)*(TMath::RadToDeg()) << ", zn "
+	    << (mIter->second->zn_fixPt)*(TMath::RadToDeg()) << endl;
+    }
+  }
+  *oLog << "================= finished telescope fixed pointing listings ========" << endl;
+
   delete pi;
 
   if (0) {
@@ -1018,7 +1029,7 @@ int getTelescopeFactoryDetails(vector<TelFactory *> *vTelFac,
     *oLog << "       array telescope details " << endl;
     *oLog << "                    ";
     *oLog << "type std   locX     locY    locZ  osX  osY  prtMode FixPtFlag fixPtAz fixPtZn" << endl;
-    map<int,TelDetails *>::iterator mIter;    
+    //map<int,TelDetails *>::iterator mIter;    
     
     for (mIter=mTelDetails->begin();mIter!=mTelDetails->end();mIter++) {
       *oLog << "         telNbr= " << mIter->first << "   ";
