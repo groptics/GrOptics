@@ -90,9 +90,6 @@ GSimulateOptics::GSimulateOptics(GReadPhotonBase *read,
   fAzTel       = 0.0;
   iNShowers    = -1;
   iNPhotons    = -1;
-  fFixedPointing   = false ;
-  fFixedPointingAz = 0.0 ;
-  fFixedPointingEl = 0.0 ;
 
   fEventNumber = 0;
   
@@ -138,19 +135,7 @@ bool GSimulateOptics::startSimulations(const int &numShowers,
   // set up photon loop, if iNPhotons < 0 no limit
   int numPhTmp = iNPhotons;
   if (iNPhotons < 0) numPhTmp = 1;
-  
-  if ( fFixedPointing ) {
-    *oLog << "using fixed pointing at Az/El: (" << fFixedPointingAz * TMath::RadToDeg() << "," << fFixedPointingEl * TMath::RadToDeg() << ")" << endl;
     
-    // set each telescope to use fixed pointing
-    for (iterArrayTel=mArrayTel->begin();
-         iterArrayTel!=mArrayTel->end();
-         iterArrayTel++) {
-      // individually set each telescope to a specific azimuth and elevation
-      iterArrayTel->second->setFixedPointing( fFixedPointing, fFixedPointingAz, fFixedPointingEl ) ;
-    }
-  }
-  
   primaryFlag = false;
   
   // Start of shower loop /////////////////////////////////
@@ -497,13 +482,3 @@ void GSimulateOptics::fillAllTelTree() {
 //return test;
 //};
 
-void GSimulateOptics::setFixedPointing( bool useFixedPointing, double az, double el ) {
-  // toggle GSimulateOptics to freeze the telescopes at 
-  // a fixed azimuth and elevation for the entire program
-  // bool useFixedPointing : if true, GSimulateOptics will fix the telescopes to a single az/el
-  //                         set to false to disable it aftwards
-  fFixedPointing   = useFixedPointing ;
-  fFixedPointingAz = az ;
-  fFixedPointingEl = el ;
-}
-/************** end of setFixedPointing *****************/

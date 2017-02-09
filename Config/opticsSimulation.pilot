@@ -149,3 +149,6 @@ The graphs and histograms are printed to png files using the base filenames.
 
 TESTTEL <telescope number> <baseFileName for histograms>   
  TESTTEL 1  PsfSegSpot
+
+fixed telescope pointing option is now in the array configuration file
+See the ARRAYTEL record to set fixed pointing for individual telescopes 

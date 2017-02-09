@@ -56,9 +56,9 @@ class GArrayTel {
   double fSrcRelToCameraX;
   double fSrcRelToCameraY;
 
-  bool   fFixedPointing   ;
+  bool   bFixedPointing   ;
   double fFixedPointingAz ;
-  double fFixedPointingEl ;
+  double fFixedPointingZn ;
 
   // photon parameters
   ROOT::Math::XYZVector vPhotonGrdLocGC; //!< photon grd.loc.ground coors.
@@ -120,6 +120,9 @@ class GArrayTel {
 	    const int &telid,
             const int &telstd,
 	    const int &printMode,
+            const bool fixPtFlag,
+            const double azFix,
+            const double znFix,
 	    GTelescope *ctel);
 
   /*! destructor
@@ -178,10 +181,6 @@ class GArrayTel {
 
     tel->setPhotonHistory(rootFile,treeName,option);
   };
-
-  /*!
-   */
-  void setFixedPointing(const bool pointingflag, const double az_deg, const double el_deg ) ;
   
   void writePhotonHistory() {
 

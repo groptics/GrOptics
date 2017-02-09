@@ -140,6 +140,9 @@ struct TelDetails {
   double telOffSetX; //!< telescope pointing offset, X dir (radians)
   double telOffSetY; //!< telescope pointing offset, Y dir (radians)
   int printMode;     //!< print mode for this telescope
+  bool bFixedPtFlag;  //!< if true, use fixed pointing
+  double az_fixPt;    //!< fixed pointing azimuth (radians)
+  double zn_fixPt;    //!< fixed pointing zenith angle (radians)
 };
 
 #define DEBUGS(x) *oLog << "      " << #x << " = " << x << endl
@@ -386,6 +389,10 @@ int main(int argc, char *argv[]) {
     TelType telType = mIter->second->telType;
     int printMode = mIter->second->printMode;
 
+    bool bFixedPtFlag = mIter->second->bFixedPtFlag;
+    double azFixPt = mIter->second->az_fixPt;
+    double znFixPt = mIter->second->zn_fixPt;
+    
     ROOT::Math::XYZVector telLocGrd;
     telLocGrd = mIter->second->telLocGrd;
 
@@ -403,7 +410,9 @@ int main(int argc, char *argv[]) {
       }
       mArrayTel[telId] = new GArrayTel(telLocGrd,xoffsettel,
                                        yoffsettel,telType,
-                                       telId,telStd,printMode,tel);
+                                       telId,telStd,printMode,
+                                       bFixedPtFlag,azFixPt,znFixPt,
+                                       tel);
       
       if (pilot.photonHistoryFile != "") {
         mArrayTel[telId]->setPhotonHistory(pilot.photonHistoryFile,
@@ -424,7 +433,9 @@ int main(int argc, char *argv[]) {
       }
       mArrayTel[telId] = new GArrayTel(telLocGrd,xoffsettel,
                                        yoffsettel,telType,
-                                       telId,telStd,printMode,tel);
+                                       telId,telStd,printMode,
+                                       bFixedPtFlag,azFixPt,znFixPt,
+                                       tel);
 
       if (pilot.photonHistoryFile != "") {
         mArrayTel[telId]->setPhotonHistory(pilot.photonHistoryFile,
@@ -448,7 +459,9 @@ int main(int argc, char *argv[]) {
       }
       mArrayTel[telId] = new GArrayTel(telLocGrd,xoffsettel,
                                        yoffsettel,telType,
-                                       telId,telStd,printMode,tel);
+                                       telId,telStd,printMode,
+                                       bFixedPtFlag,azFixPt,znFixPt,
+                                       tel);
 
       if (pilot.photonHistoryFile != "") {
         mArrayTel[telId]->setPhotonHistory(pilot.photonHistoryFile,
@@ -520,10 +533,7 @@ int main(int argc, char *argv[]) {
   siO->setWobble(pilot.wobble[0],pilot.wobble[1],
 		 pilot.wobble[2],pilot.latitude);
   
-  if ( pilot.fixedPointing ) {
-    siO->setFixedPointing( pilot.fixedPointing, pilot.fixedPointingAz, pilot.fixedPointingEl ) ;
-  }
- 
+  
   /////////////////////////////////////////////////////////////
   /////// do the simulations (where do we create the output class).
   ////////////////////////////////////////////////////////////
@@ -745,17 +755,6 @@ int pilotPrint(const Pilot &pilot) {
   *oLog << "         testTel   " << pilot.testTel << endl;
   *oLog << "         testTel base filename   " << pilot.testTelFile << endl;
   *oLog << "         debugBranchesFlag       " << pilot.debugBranchesFlag << endl;
-  *oLog << "         fixedPointing " << pilot.fixedPointing << endl;
-  if (pilot.fixedPointing) {
-    
-    *oLog << "         fixedPointingAz radians/degrees "
-	  << pilot.fixedPointingAz << "  "
-	  << (pilot.fixedPointingAz)*TMath::RadToDeg() << endl;
-    
-    *oLog << "         fixedPointingEl radians/degrees "
-	  << pilot.fixedPointingEl << "  "
-	  << (pilot.fixedPointingEl)*TMath::RadToDeg() << endl;
-  }
    
   return 1;
 };
@@ -791,9 +790,6 @@ int readPilot(Pilot *pilot) {
   pilot->testTelFile = "";
   pilot->debugBranchesFlag = false;
   pilot->iNInitEvents = 100;
-  pilot->fixedPointing   = false ;
-  pilot->fixedPointingAz = 0.0 ;
-  pilot->fixedPointingEl = 0.0 ;
   vector<string> tokens;
   string spilotfile = pilot->pilotfile;
 
@@ -905,35 +901,6 @@ int readPilot(Pilot *pilot) {
       pilot->testTelFile = tokens.at(1);
     }
   }  
-  flag = "FIXTELAZELDEG" ;
-  pi->set_flag(flag);
-  while (pi->get_line_vector(tokens) >=0) {
-    if (tokens.size() == 2 ) {
-      // read in settings for manually fixing the telescope pointing
-      //for the entire run of this program
-      // will ignore any wobbling settings
-      pilot->fixedPointing   = true ;
-      
-      // read in the geographic azimuth in degrees (0deg=GeoNorth,
-      // 90deg=East), and switch it to groptic's coordinate system
-      //double az = ( atof(tokens.at(0).c_str()) * TMath::DegToRad() ) + PI;
-
-      // read in usual az referenced to North toward East
-      double az = ( atof(tokens.at(0).c_str()) * TMath::DegToRad() );
-      if ( az >= 2.0 * PI ) {
-        az -= 2.0 * PI ;
-      }
-      pilot->fixedPointingAz = az ;
-      
-      // read in the telescope elevation in degrees from the horizon, 
-      // and convert it to groptics's coordinate system where
-      //elevation is degrees from nadir (add 90)
-      //pilot->fixedPointingEl = (PI/2.0) +
-      //( atof(tokens.at(1).c_str()) * TMath::DegToRad() ) ; 
-      pilot->fixedPointingEl = atof(tokens.at(1).c_str()) * TMath::DegToRad(); 
-    }
-  }  
-  
     
   delete pi;
   return 1;
@@ -1015,10 +982,26 @@ int getTelescopeFactoryDetails(vector<TelFactory *> *vTelFac,
     (*mTelDetails)[telID]->telOffSetX = xoffset;
     (*mTelDetails)[telID]->telOffSetY = yoffset;
     (*mTelDetails)[telID]->printMode = atoi(tokens[8].c_str());
+    int fixPtFlag = 0;
+    bool bfixPtFlag = false;
+    double azFixPt = 0.0, znFixPt = 0.0;
+    (*mTelDetails)[telID]->bFixedPtFlag = false;
+    
+    if ( tokens.size() >= 12 ) {
+      fixPtFlag = atoi(tokens.at(9).c_str());
+      if (fixPtFlag >= 1) {
+        bfixPtFlag = true;
+        azFixPt = atof(tokens.at(10).c_str()) * (TMath::DegToRad());
+        znFixPt = atof(tokens.at(11).c_str()) * (TMath::DegToRad());
+      }
+      (*mTelDetails)[telID]->bFixedPtFlag = bfixPtFlag;
+      (*mTelDetails)[telID]->az_fixPt = azFixPt;
+      (*mTelDetails)[telID]->zn_fixPt = znFixPt;
+    }
   }
   delete pi;
 
-  if (debug) {
+  if (0) {
     *oLog << "       Telescope factories to instantiate" << endl;
     for (unsigned i = 0;i < vTelFac->size();++i) {
       *oLog << "         factory number " << i+1 << endl;
@@ -1034,7 +1017,7 @@ int getTelescopeFactoryDetails(vector<TelFactory *> *vTelFac,
     // print telescope details structure
     *oLog << "       array telescope details " << endl;
     *oLog << "                    ";
-    *oLog << "type std   locX     locY    locZ  osX  osY  prtMode" << endl;
+    *oLog << "type std   locX     locY    locZ  osX  osY  prtMode FixPtFlag fixPtAz fixPtZn" << endl;
     map<int,TelDetails *>::iterator mIter;    
     
     for (mIter=mTelDetails->begin();mIter!=mTelDetails->end();mIter++) {
@@ -1049,7 +1032,11 @@ int getTelescopeFactoryDetails(vector<TelFactory *> *vTelFac,
 	     << "     " 
 	     << mIter->second->telOffSetY*(TMath::RadToDeg()) 
 	     << "   " 
-	     << mIter->second->printMode << endl;
+	     << mIter->second->printMode << " "
+             << mIter->second->bFixedPtFlag << "   "
+             << (mIter->second->az_fixPt)*(TMath::RadToDeg()) << "   "
+             << (mIter->second->zn_fixPt)*(TMath::RadToDeg())
+             << endl;
     }
   }
   return 1;

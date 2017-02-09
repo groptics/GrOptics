@@ -78,7 +78,6 @@ GArrayTel::GArrayTel() {
 };
 /**************end of GArrayTel ***************************/
 
-
 GArrayTel::GArrayTel(const ROOT::Math::XYZVector telLocGrd,
                      const double &telOffsetX,
                      const double &telOffsetY,
@@ -86,13 +85,17 @@ GArrayTel::GArrayTel(const ROOT::Math::XYZVector telLocGrd,
 		     const int &telid,
                      const int &telstd,
 		     const int &printMode,
+                     const bool fixPtFlag,
+                     const double azFix,
+                     const double znFix,
 		     GTelescope *ctel )
   
   : telLocGrdGC(telLocGrd),fpointingOffsetX(telOffsetX),
     fpointingOffsetY(telOffsetY), telType(teltype),
     telID(telid), telStd(telstd), iPrintMode(printMode),
-    tel(ctel) {
-
+    bFixedPointing(fixPtFlag),fFixedPointingAz(azFix),
+    fFixedPointingZn(znFix), tel(ctel) {
+  
   fDelay   = 0;
   fWobbleN = 0.0;
   fWobbleE = 0.0;
@@ -116,9 +119,6 @@ GArrayTel::GArrayTel(const ROOT::Math::XYZVector telLocGrd,
   fSrcRelToCameraY = 0.0;
   dStoreLoc = 0;
   dStorePix = 0;
-  fFixedPointing   = false ;
-  fFixedPointingAz = 0.0   ;
-  fFixedPointingEl = 0.0   ;
   fPlateScaleFactor = tel->getPlateScaleFactor();
   
   // initialize rotation matrix
@@ -183,33 +183,30 @@ void GArrayTel::setPrimary(const ROOT::Math::XYZVector &vSCorec,
     *oLog << "        fLatitude " << fLatitude*(TMath::RadToDeg()) << endl;
   }
   
-  // NKH add here
-  if ( fFixedPointing ) {
+  if ( bFixedPointing ) {
     // If fixed pointing is specified, manually set telescope az/zn to a fixed position,
-    // and calculate the event's offset in the tangential camera plane fSrcRelToTelescopeX/Y
-    fAzTel =        fFixedPointingAz   ; 
-    fZnTel = ( TMath::PiOver2() - fFixedPointingEl ) ;
-    *oLog << "fAzTel " << fAzTel*(TMath::RadToDeg()) << endl;
-    *oLog << "fZnTel " << fZnTel*(TMath::RadToDeg()) << endl;
-    
-  } else {
-    // If fixed pointing is not specified, then compute their 
-    // position from the event position and given wobbles
+    fAzTel = fFixedPointingAz; 
+    fZnTel = fFixedPointingZn;
 
-    // get telescope az and zn
-    GUtilityFuncts::telescopeAzZnNew(fAzPrim,
-				  //GUtilityFuncts::telescopeAzZnNew(fAzPrim,
-                                  fZnPrim,
-                                  fWobbleN,
-                                  fWobbleE,
-                                  fpointingOffsetX,
-                                  fpointingOffsetY,
-                                  fLatitude,
-                                  &fAzTel,&fZnTel,
-                                  &fSrcRelToTelescopeX,
-                                  &fSrcRelToTelescopeY);  
+    GUtilityFuncts::sourceOnTelescopePlane(fAzPrim, fZnPrim,
+					   fAzTel, fZnTel,
+                                           &fSrcRelToTelescopeX,
+                                           &fSrcRelToTelescopeY);
   }
-
+  else {
+    // no fixed pointing, need to determine fAzTel and fZnTel 
+    GUtilityFuncts::telescopeAzZnNew(fAzPrim,
+                                     //GUtilityFuncts::telescopeAzZnNew(fAzPrim,
+                                     fZnPrim,
+                                     fWobbleN,
+                                     fWobbleE,
+                                     fpointingOffsetX,
+                                     fpointingOffsetY,
+                                     fLatitude,
+                                     &fAzTel,&fZnTel,
+                                     &fSrcRelToTelescopeX,
+                                     &fSrcRelToTelescopeY);  
+  }
   // see the coor.sys memo on README directory, minus sign
   // required to give source location in telescope coordinates.
   // and thus with respect to the telescope rather than the source
@@ -703,13 +700,3 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
   fOut->Close();
 };
 /************** end of makeTelescopeTest ***************************/
-
-
-void GArrayTel::setFixedPointing(const bool pointingflag, const double az, const double el ) {
-  // toggle this telescope to only point at a specific azimuth/elevation for the entire run,
-  // will ignore any wobble settings
-  fFixedPointing = pointingflag ;
-  fFixedPointingAz = az ;
-  fFixedPointingEl = el ;
-}
-/************** end of setFixedPointing ***************************/
