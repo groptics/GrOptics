@@ -41,7 +41,6 @@ ROOTCLING	:=	$(ROOTCINT)
 else
 ROOTCLING_FOUND	:= 1
 endif
-$(info "printing ROOTCLING  $(ROOTCLING) ROOTCLING_FOUND $(ROOTCLING_FOUND))
 #------------------------------------------------------
 # set the ROBAST details
 

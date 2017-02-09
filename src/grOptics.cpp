@@ -101,26 +101,22 @@ struct Pilot {
   double wobble[3];  //!< wobblex/y/r all in radians
   double latitude;  //!<  latitude in radians
 
-  int nShower;  //!< 
-  int nPhoton;  //!< 
+  int nShower;  //!< number of showers to process (all if < 0)
+  int nPhoton;  //!< number of photons to process (all if < 0)
 
-  string photonHistoryFile;  //!< 
-  string photonHistoryTree;  //!< 
-  UInt_t seed;  //!< 
+  string photonHistoryFile;  //!< name of photon history root file
+  string photonHistoryTree;  //!< name of photon history root tree
+  UInt_t seed;  //!< random number generator seed
   
-  bool   fixedPointing   ;
-  double fixedPointingAz ;
-  double fixedPointingEl ;
-
-  int telToDraw;
-  int telDrawOption;
+  int telToDraw; //!< number of telescope to draw
+  int telDrawOption; //! telescope draw option
   int testTel;  //!< telescope number for test graphs (>0). if zero no test produced
   string testTelFile; //!< base filename for test output
   bool debugBranchesFlag; //!< if true, create debug branches in output root file
-  unsigned iNInitEvents;
+  unsigned iNInitEvents; //!< vector capacity, see pilot file in Config directory
 };
 
-/*! structure to hold telescope factory parameters.
+/*! structure to hold telescope factory parameters for any type telescope
  */
 struct TelFactory {
   TelType telType;  //!< telescope type (DC/SC)
@@ -129,7 +125,7 @@ struct TelFactory {
   string editFile;  //!< edit filename
 };
 
-/*! structure to hold telescope details
+/*! structure to hold telescope details for any type telescope
  */
 struct TelDetails {
   int telID;       //!< number of telescope in the array
@@ -167,11 +163,16 @@ int pilotPrint(const Pilot &pilot);
  */
 int readPilot(Pilot *pilot);
 
-/*!  Function to reconcile Cline and Pilot structures.
+/*!  Function to reconcile Command line (Cline) and Pilot structures.
  */
 int updatePilot(const Cline &cline,Pilot *pilot);
 
-/*!  Function to read arrayConfigFile factory records.
+/*!  Function to read arrayConfigFile factory records from array config file
+  and create telescope factories.  Factories filled from TelDetails map.
+
+  \param vTelFac pointer to vector of telescope factory information
+  \param mTelDetails pointer to map of telescope details pointers, key is telNum
+  \param arrayConfigFile name of array configuration file
  */
 int getTelescopeFactoryDetails(vector<TelFactory *> *vTelFac,
                                  map<int,TelDetails *> *mTelDetails,
@@ -181,7 +182,8 @@ int getTelescopeFactoryDetails(vector<TelFactory *> *vTelFac,
  */
 int closeRootFiles();
 
-ostream *oLog;
+// ostream for all logging info. set to cerr in main
+ostream *oLog; //!< stream for log file, same in all files.
 
 /**************************   main   *****************************/
 int main(int argc, char *argv[]) {
@@ -190,13 +192,14 @@ int main(int argc, char *argv[]) {
   //bool rayTracePlotFlag = false;
 
   // log file output stream, initialize
-  oLog = &cerr;
+  oLog = &cerr;  //!< set default log output stream 
 
   int pseudo_argc = 1;
   TRint *app = 0;
   bool runApp = false;  // TRint for possible use later with 
 
-  time_t startTime = time(NULL);
+  // track execution time and clock time
+  time_t startTime = time(NULL); 
   clock_t startClock = clock();
 
   // write start date/time to stdout
@@ -313,7 +316,6 @@ int main(int argc, char *argv[]) {
   // arrayConfiguration file. 
   // get map of telescope details
 
-
   map<int,TelDetails *> mTelDetails;
   map<int,TelDetails *>::iterator mIter; 
 
@@ -345,8 +347,7 @@ int main(int argc, char *argv[]) {
 					   pilot.debugBranchesFlag);
     }
   }
-  //*oLog << " EXITING " << endl;
-  //exit(0);  
+  
   // set up factories
   GTelescopeFactory *DCFac = 0;
   GTelescopeFactory *SCFac = 0;
@@ -355,13 +356,14 @@ int main(int argc, char *argv[]) {
   GReadSCStd *readerSC = 0;
   GReadSegSCStd *readerSegSC = 0;
 
-  
+  // set up readers for telescope details
   for (unsigned i = 0;i< vTelFac.size(); ++i) {
     if (vTelFac.at(i)->telType == DC) {
       if (vTelFac.at(i)->rdType == GRISU) {
         // set up GRISU reader, make this a switch statement later
         readerDC = new GReadDCStdGrISU(vTelFac.at(i)->configFile);
-	// the factory now owns the readerDC
+	// the factory now owns the readerDC, But passed in by value!!!
+	// why not pass the pointer
         DCFac = new GDCTelescopeFactory(*readerDC,vTelFac.at(i)->editFile);
       }
     }
@@ -943,7 +945,7 @@ int getTelescopeFactoryDetails(vector<TelFactory *> *vTelFac,
     *oLog << "    -- getTelescopeFactoryDetails" << endl;
   }
   string spilotfile = arrayConfigFile;
-  vector<string> tokens;
+  vector<string> tokens;  //!< vector to hold tokens from file record
   
   if (debug) {
     *oLog << "          reading  " << spilotfile  << endl;
@@ -951,8 +953,8 @@ int getTelescopeFactoryDetails(vector<TelFactory *> *vTelFac,
   GPilot *pi = new GPilot(spilotfile);
   unsigned ic = 0;
 
-  string flag = "TELFAC";
-  pi->set_flag(flag);
+  string flag = "TELFAC"; //!< flag to read TELFAC record in array config file
+  pi->set_flag(flag);  
   while (pi->get_line_vector(tokens) >=0) {
     vTelFac->push_back(new TelFactory);
     (*vTelFac).at(ic)->telType = getTelTypeEnum(tokens.at(0));
