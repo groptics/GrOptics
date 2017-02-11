@@ -169,7 +169,7 @@ class GSegSCTelescopeFactory : public GTelescopeFactory {
   friend class GReadSegSCStd; 
 
   GReadSegSCStd *readSegSC;  //!< SegSC base reader
-
+  bool printParameters;  //!< print parameters upon construction when true
   GPilot *pi;  //!< pilot reader pointer
   vector<string> tokens;  //!< string vector for GPilot use
   string sPilotEdit;  //!< pilot file string from edit record
@@ -217,7 +217,7 @@ class GSegSCTelescopeFactory : public GTelescopeFactory {
   ~GSegSCTelescopeFactory();
 
   GSegSCTelescope *makeTelescope(const int &id,
-                               const int &std);
+				 const int &std);
   
   /*! \brief printStdTelescope debug print based on prtMode
 

@@ -276,8 +276,9 @@ void SegSCStdOptics::printSegVector (const vector<mirrorSegmentDetails *> &vec) 
 
 GSegSCTelescopeFactory::
 GSegSCTelescopeFactory(GReadSegSCStd &scReader,
-		    const string &editPilotFile) {
-
+		       const string &editPilotFile) {
+  
+  printParameters = true;
   bool debug = true;
   sPilotEdit = editPilotFile;
   if (debug) {
@@ -345,8 +346,8 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   int debug = true;
   if (debug) {
     *oLog << " -- GSegSCTelescopeFactory::makeTelescope" << endl;
-    //*oLog << "      telID  = " << id << endl;
-    //*oLog << "      telStd = " << std << endl;
+    *oLog << "      telID  = " << id << endl;
+    *oLog << "      telStd = " << std << endl;
   }
 
   Int_t idTel = id;
@@ -369,6 +370,7 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   
   SegSCTel->setTelID(idTel);
   SegSCTel->setStdID(iStdID);
+  
   SegSCTel->eTelType = opt->stdType;
   SegSCTel->fAvgTransitTime = opt->fAvgTransitTime;
   SegSCTel->fRotationOffset = opt->fRotationOffset;
@@ -383,7 +385,6 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SegSCTel->fRpMax = (opt->fRpMax);
   SegSCTel->fRpMin = (opt->fRpMin);
   SegSCTel->fZp = (opt->fZp);
-  //SegSCTel->fNp = opt->fNp;
   SegSCTel->fNp = opt->iNParP;
   SegSCTel->fzp = opt->fzp;
   // make primary poly coefficients
@@ -392,7 +393,7 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   
   (SegSCTel->fP)[0] = TMath::Power(fF,  1)* ((opt->fzp[0]));
 
-  bool printParameters = true;
+  //bool printParameters = true;
   if (printParameters) {
     *oLog << endl;
     *oLog << "  calculation of primary parameters " << endl;
