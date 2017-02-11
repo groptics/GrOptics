@@ -283,7 +283,7 @@ GSegSCTelescopeFactory(GReadSegSCStd &scReader,
   if (debug) {
     *oLog << "  -- GSegSCTelescopeFactory Constructor:  " << sPilotEdit << endl;
   }
-  iNumSCTelMade = 0;
+  iNumSegSCTelMade = 0;
   readSegSC = 0;
   pi = 0;
   sPilotEdit = "";
@@ -351,7 +351,8 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
 
   Int_t idTel = id;
   Int_t iStdID = std;
-
+  iNumSegSCTelMade++; // increment number of SegSc telescopes made by factory
+  
   // get parameters for this telescope
   itmStdOp = mStdOptics.find(iStdID);
   assert(itmStdOp != mStdOptics.end());

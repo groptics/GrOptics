@@ -168,7 +168,7 @@ class GSegSCTelescopeFactory : public GTelescopeFactory {
 
   friend class GReadSegSCStd; 
 
-  GReadSegSCStd *readSegSC;  //!< SC base reader
+  GReadSegSCStd *readSegSC;  //!< SegSC base reader
 
   GPilot *pi;  //!< pilot reader pointer
   vector<string> tokens;  //!< string vector for GPilot use
@@ -177,13 +177,14 @@ class GSegSCTelescopeFactory : public GTelescopeFactory {
   map<int,SegSCStdOptics*> mStdOptics;    //*< map of standard telescopes
   map<int,SegSCStdOptics*>::iterator itmStdOp;  //*< iterator for this map
 
-  map<int, TGraph *> *mGRefl;
-  map<int, TGraph *>::iterator itmGRefl;
+  map<int, TGraph *> *mGRefl;  //*< mirror reflection coefficients map container
+  map<int, TGraph *>::iterator itmGRefl; //*< iterator for above map container
   
-  SegSCStdOptics *opt;  //*< working stdOptics for current telescope
+  SegSCStdOptics *opt;  //*< working SegSCstdOptics structure for current telescope
   
   GSegSCTelescope *SegSCTel;  //*< pointer to working telescope
-  int iNumSCTelMade;
+  int iNumSegSCTelMade;  
+  
   /*! \brief editWorkingTelescope makes edits based on 
            pilotfile entries to telescope currently 
            under construction
