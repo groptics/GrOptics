@@ -46,7 +46,7 @@ using namespace std;
 GReadSegSCStd::GReadSegSCStd(const string &pilotfile,GSegSCTelescopeFactory *SCFactory  ) {
 
   // initialize variables
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GReadSegSCStd::GReadSegSCStd" << endl;
   }
@@ -99,7 +99,7 @@ GReadSegSCStd::~GReadSegSCStd() {
 void GReadSegSCStd::
 setSegSCTelescopeFactory(GSegSCTelescopeFactory *SCFactory) {
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GReadSegSCStd::setSegSCTelescopeFactory" << endl;
   }
@@ -119,7 +119,7 @@ setSegSCTelescopeFactory(GSegSCTelescopeFactory *SCFactory) {
 /****************** end of setSCTelescopeFactory **********/
 void GReadSegSCStd::setupSCFactory() {
 
-  bool debug = true;
+  bool debug = false;
 
   if (debug) {
     *oLog << "  -- GReadSegSCStd::setupSCFactory" << endl;
@@ -426,7 +426,7 @@ void GReadSegSCStd::setupSCFactory() {
   // 
 
   //if (iPrtMode > 0) {
-  if (0) {
+  if (debug) {
     *oLog << endl;
     *oLog << "       printing all SEGSC standard optics objects" << endl;
     for (SCFac->itmStdOp = SCFac->mStdOptics.begin();
@@ -547,7 +547,7 @@ void GReadSegSCStd::readChangeRecord(const vector<string> &tokens1,
 
 void GReadSegSCStd::getPolyCoeffs() {
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GReadSegSCStd::getPolyCoeffs " << endl;
   }
@@ -659,20 +659,23 @@ void GReadSegSCStd::getReflCoeff() {
       }
       getline(inFile,pilotline);// finish the end of the line
    
-      *oLog << "       reading in reflectivity curve " << index 
-	    << "   with " << number << " points" << endl;
-      *oLog << "             converting from nm to cm for robast" << endl;
+      if (debug) {
+	*oLog << "       reading in reflectivity curve " << index 
+	      << "   with " << number << " points" << endl;
+	*oLog << "             converting from nm to cm for robast" << endl;
+      }
+      
       if (debug) {
         *oLog << "      print reflectance vectors for index: " << index 
              << "  number of points " << number << endl;
-      *oLog << "             wavelengths stored in cm, not nm" << endl;
+	*oLog << "             wavelengths stored in cm, not nm" << endl;
         for (int i=0;i<number;i++) {
 	  double x = 0.0;
 	  double y = 0.0;
 	  grTmp->GetPoint(i,x,y);
-         *oLog << "          " << setw(4) << i << "   " 
-               << x/1.0e-07 << "     "
-               <<  y << endl;
+	  *oLog << "          " << setw(4) << i << "   " 
+		<< x/1.0e-07 << "     "
+		<<  y << endl;
         }
         *oLog << endl;
       }        

@@ -99,7 +99,7 @@ static const double  m = AOpticsManager::m();
 
 GSegSCTelescope::GSegSCTelescope() {
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::GSegSCTelescope() " << endl;
   }
@@ -134,7 +134,7 @@ GSegSCTelescope::~GSegSCTelescope() {
 
 void GSegSCTelescope::buildTelescope()
 {
-
+  bool debug = false;
   // fix units
   fFMeters = fF;
   fF = fF*m;
@@ -145,9 +145,6 @@ void GSegSCTelescope::buildTelescope()
   fRpMin = fRpMin*m;
   fRsMax = fRsMax*m;
   fRsMin = fRsMin*m;
-  //fTX = fTX*m;
-  //fTY = fTY*m;
-  //fTZ = fTZ*m;
 
   fpBRadOffset = fpBRadOffset*cm;
   fpBLen = fpBLen*cm;
@@ -168,7 +165,6 @@ void GSegSCTelescope::buildTelescope()
   fEntranceWindowOffset = fEntranceWindowOffset*mm;
   fEntranceWindowAbsLength = fEntranceWindowAbsLength*mm;
 
-  bool debug = true;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::buildTelescope" << endl;
   }
@@ -221,7 +217,7 @@ void GSegSCTelescope::buildTelescope()
 /*************************************************************************************/
 void GSegSCTelescope::makePrimarySecondaryDisks() {
 
-  bool debug = true;
+  bool debug = false;
 
   if (debug) {
     *oLog << "  --  GSegSCTelescope::makePrimarySecondaryDisks" << endl;
@@ -246,7 +242,7 @@ void GSegSCTelescope::makePrimarySecondaryDisks() {
                                    kZp + fP[0] , 0, 
                                     fRpMax, fRpMin);
 
-  if (0) {
+  if (debug) {
     *oLog << "   primary coefficients " << endl;
     *oLog << "   fNp " << fNp << endl;
     for (int i = 0;i<fNp; i++ ) {
@@ -257,7 +253,7 @@ void GSegSCTelescope::makePrimarySecondaryDisks() {
   fPrimaryV->SetPolynomials(fNp - 1, &fP[1], fNp - 1, &fP[1]);
 
   // Make the ideal volume of the secondary mirror
-  if (0) {
+  if (debug) {
     *oLog << "   secondary coefficients " << endl;
     *oLog << "   fNs " << fNs << endl;
     for (int i = 0;i<fNs; i++ ) {
@@ -285,7 +281,7 @@ void GSegSCTelescope::makePrimarySecondaryDisks() {
 /*************************************************************************************/
 
 void GSegSCTelescope::addPrimaryF() {
-  bool debug = true;
+  bool debug = false;
 
   if (debug) {
     *oLog << "  --  GSegSCTelescope::addPrimaryF" << endl;
@@ -304,7 +300,7 @@ void GSegSCTelescope::addPrimaryF() {
       
       Double_t phimin = ( (*(vSegP1.at(i))).delPhi)*i;
       Double_t phimax = ( (*(vSegP1.at(i))).delPhi)*(i+1);
-      if (0) {
+      if (debug) {
         *oLog << "    P1 pentagon segmented mirror number " << i << endl;
         *oLog << "        rmin/rmax " << rmin << " " << rmax << endl;
         *oLog << "        margin    " << margin << endl;
@@ -402,7 +398,7 @@ void GSegSCTelescope::addPrimaryMirror(const char*name,
 
 void GSegSCTelescope::addSecondaryJ() {
 
-  bool debug = true;
+  bool debug = false;
   
   if (debug) {
     *oLog << "  --  GSegSCTelescope::addSecondaryJ" << endl;
@@ -501,7 +497,7 @@ void GSegSCTelescope::addSecondaryJ() {
 
 void GSegSCTelescope::addPrimaryObscuration() {
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::AddPrimaryObscuration " << endl;
   }
@@ -523,7 +519,7 @@ void GSegSCTelescope::addPrimaryObscuration() {
 /*******************************************************************/
 void GSegSCTelescope::addSecondaryObscuration() {
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::AddSecondaryObscuration " << endl;
   }
@@ -592,7 +588,7 @@ void GSegSCTelescope::addPrimaryBaffle() {
 
   const Double_t kZp = (fF)*fZp;
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  --  GSegSCTelescope::addPrimaryBaffle" << endl;
     *oLog << "       fRpMax "<<fRpMax<<" kZp "<<kZp<<" fP[0] "<<fP[0] << endl;
@@ -619,7 +615,7 @@ void GSegSCTelescope::addSecondaryBaffle() {
   const Double_t kZs = (fF)*fZs;
   fsBTilt = -fsBTilt; 
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  --  GSegSCTelescope::addSecondaryBaffle" << endl;
     *oLog << "       fRsMax "<<fRsMax<<" kZs "<<kZs<<" fS[0] "<<fS[0] << endl;
@@ -642,7 +638,7 @@ void GSegSCTelescope::addSecondaryBaffle() {
 void GSegSCTelescope::addEntranceWindow() {
   gGeoManager = fManager;
  
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  --  GSegSCTelescope::addEntranceWindow" << endl;
     *oLog << "        fEntranceWindowThickness " << fEntranceWindowThickness << " fEntranceWindowOffset " << fEntranceWindowOffset << " fEntranceWindowN " << fEntranceWindowN <<endl;
@@ -672,7 +668,7 @@ void GSegSCTelescope::addEntranceWindow() {
 };
 /*************************************************************************************/
 void GSegSCTelescope::addIdealFocalPlane()  {
-  bool debug = true;
+  bool debug = false;
 
   if (debug) {
     *oLog << "  --  GSegSCTelescope::addIdealFocalPlane" << endl;
@@ -707,7 +703,7 @@ void GSegSCTelescope::addIdealFocalPlane()  {
 /*************************************************************************************/
 
 void GSegSCTelescope::addMAPMTFocalPlane()  {
-  bool debug = true;
+  bool debug = false;
 
   if (debug) {
     *oLog << "  --  GSegSCTelescope::addMAPMTFocalPlane" << endl;
@@ -782,10 +778,12 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
   mapmt->AddNode(mapmtBackObs, 1, new TGeoTranslation(0, 0,backObsPosition ));
   Double_t backObsTopPositionRelToMapmtCenter = backObsPosition + backObsThickness;
   
-  *oLog << " fWindowBottomRelToMapmtCenter  " << fWindowBottomRelToMapmtCenter << endl;
-  *oLog << " fCathodeTopRelToMapmtCenter  " << fCathodeTopRelToMapmtCenter << endl;
-  *oLog << " backObsTopPositionRelToMapmtCenter  " << backObsTopPositionRelToMapmtCenter << endl;
-
+  if(debug) {
+    *oLog << " fWindowBottomRelToMapmtCenter  " << fWindowBottomRelToMapmtCenter << endl;
+    *oLog << " fCathodeTopRelToMapmtCenter  " << fCathodeTopRelToMapmtCenter << endl;
+    *oLog << " backObsTopPositionRelToMapmtCenter  " << backObsTopPositionRelToMapmtCenter << endl;
+  }
+  
   fCathodeTopRelToFocalSurface =  fCathodeTopRelToMapmtCenter + fMAPMTOffset -
     fCathodeTopRelToMapmtCenter;
   fWindowBottomRelToFocalSurface = fWindowBottomRelToMapmtCenter + fMAPMTOffset -
@@ -804,8 +802,6 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
     exit(0);
   }
   
-  //const Double_t kZs = fF/fQ;
-  //const Double_t kZf = kZs - (1 - fAlpha)*fF;
   const Double_t kZf = fF * fZf;
   //*oLog << "  =================== kZf " << kZf << endl;
   // Make the focal plane
@@ -1176,15 +1172,6 @@ bool GSegSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
 };
 /********************** end of getCameraPhotonLocation *****************/
 
-//void GSegSCTelescope::setLogFile(const ofstream &logFile) {
-//bool debug = false;
-//if (debug) {
-//  *oLog << " -- GSegSCTelescope::setLogFile " << logFile << endl;
-//}
-//
-//};
-/********************** end of setLogFile *****************/
-
 void GSegSCTelescope::printTelescope() {
 
   bool debug = false;
@@ -1192,7 +1179,9 @@ void GSegSCTelescope::printTelescope() {
     *oLog << " -- GSegSCTelescope::printTelescope" << endl;
     *oLog << "      iPrtMode " << iPrtMode << endl;
   }
+
   if (iPrtMode > 0) {
+    *oLog << "   in GSegSCTelescope::printTelescope() " << endl;
     *oLog << "      fF " << fF << endl;
     *oLog << "      fPlateScaleFactor " << fPlateScaleFactor << endl;
     *oLog << "      fAvgTransitTime   " << fAvgTransitTime << endl;
@@ -1636,7 +1625,7 @@ void GSegSCTelescope::initialize() {
 
 void GSegSCTelescope::CloseGeometry() {
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::CloseGeometry" << endl;
   }

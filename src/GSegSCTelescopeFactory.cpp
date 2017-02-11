@@ -62,7 +62,7 @@ static const double  m = AOpticsManager::m();
  */
 SegSCStdOptics::SegSCStdOptics() {
 
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- SegSCStdOptics::SegSCStdOptics " << endl;
   }
@@ -141,7 +141,7 @@ SegSCStdOptics::SegSCStdOptics() {
 SegSCStdOptics::SegSCStdOptics(const SegSCStdOptics &sco) {
 
   (void) sco; // unused
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << "  -- SegSCStdOptics::SegSCStdOptics " << endl;
   }
@@ -178,6 +178,7 @@ void SegSCStdOptics::printSegSCStdOptics() {
     *oLog << "  -- SegSCStdOptics::printSegSCStdOptics " << endl;
   }
   if (iPrtMode == 0) return;
+  *oLog << " PRINTMODE iPrtMode = " << iPrtMode << endl;
   *oLog << "    SegSCStdOptics::printSegSCStdOptics() " << endl;
   *oLog << "        stdType " << stdType << endl;
   *oLog << "        telType " << getTelType(stdType) << endl;
@@ -278,8 +279,8 @@ GSegSCTelescopeFactory::
 GSegSCTelescopeFactory(GReadSegSCStd &scReader,
 		       const string &editPilotFile) {
   
-  printParameters = true;
-  bool debug = true;
+  printParameters = false;
+  bool debug = false;
   sPilotEdit = editPilotFile;
   if (debug) {
     *oLog << "  -- GSegSCTelescopeFactory Constructor:  " << sPilotEdit << endl;
@@ -343,7 +344,7 @@ GSegSCTelescopeFactory::~GSegSCTelescopeFactory() {
 GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
                                                      const int &std) {
   
-  int debug = true;
+  int debug = false;
   if (debug) {
     *oLog << " -- GSegSCTelescopeFactory::makeTelescope" << endl;
     *oLog << "      telID  = " << id << endl;
@@ -393,7 +394,7 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   
   (SegSCTel->fP)[0] = TMath::Power(fF,  1)* ((opt->fzp[0]));
 
-  //bool printParameters = true;
+  
   if (printParameters) {
     *oLog << endl;
     *oLog << "  calculation of primary parameters " << endl;
@@ -518,8 +519,8 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
 /************** end of makeTelescope ***********************/
 
 void GSegSCTelescopeFactory::editWorkingTelescope(GSegSCTelescope *SegSCTel1) {
-  SegSCTel1->printTelescope();  // unused
-  bool debug = true;
+  //SegSCTel1->printTelescope();  // unused
+  bool debug = false;
   if (debug) {
     *oLog << " -- GSegSCTelescopeFactory::editWorkingTelescope" << endl;
   }
@@ -534,8 +535,8 @@ void GSegSCTelescopeFactory::printStdTelescope(const int &iStd,
   (void) mode; // unused
   oStr << "unused oStr in parameter list" << endl;
   // DO NOT USE.
-  int debug = 0;
-  if (debug > 0) {
+  bool debug = false;
+  if (debug) {
     *oLog << " -- GSegSCTelescopeFactory::printStdTelescope" << endl;
   }
   
@@ -546,8 +547,8 @@ void GSegSCTelescopeFactory::setPrintMode(ostream &oStr,
                                           const int prtMode) {
   oStr << "unused ostream in parameter list" << endl;
   (void) prtMode; // unused
-  int debug = 1;
-  if (debug > 0) {
+  bool debug = false;
+  if (debug) {
     *oLog << " -- GSegSCTelescopeFactory::setPrintMode" << endl;
   }
  

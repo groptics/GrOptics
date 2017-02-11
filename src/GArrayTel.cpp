@@ -126,7 +126,7 @@ GArrayTel::GArrayTel(const ROOT::Math::XYZVector telLocGrd,
   //tel->getPointingOffset(&fpointingOffsetX,&fpointingOffsetX);
   tel->setPrintMode(*oLog,iPrintMode);
   
-  tel->printTelescope();
+  //tel->printTelescope();
 };
 /**************end of GArrayTel ***************************/
 

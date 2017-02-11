@@ -373,7 +373,7 @@ int main(int argc, char *argv[]) {
       SCFac = new GSCTelescopeFactory(*readerSC,vTelFac.at(i)->editFile);
     }
     else if ( vTelFac.at(i)->telType == SEGSC) {
-      *oLog << " in SEGSC" << endl;
+      //*oLog << " in SEGSC" << endl;
       readerSegSC = new GReadSegSCStd(vTelFac.at(i)->configFile);
       SegSCFac = new GSegSCTelescopeFactory(*readerSegSC,vTelFac.at(i)->editFile);
     }
@@ -456,6 +456,7 @@ int main(int argc, char *argv[]) {
     else if (telType==SEGSC) {
 
       GTelescope *tel = SegSCFac->makeTelescope(telId,telStd);
+
       tel->setPrintMode(*oLog,printMode);
       if (bDrawRayFlag) {
         tel->setRayPlotMode(eRayType);
@@ -1021,7 +1022,7 @@ int getTelescopeFactoryDetails(vector<TelFactory *> *vTelFac,
 
   delete pi;
 
-  if (0) {
+  if (debug) {
     *oLog << "       Telescope factories to instantiate" << endl;
     for (unsigned i = 0;i < vTelFac->size();++i) {
       *oLog << "         factory number " << i+1 << endl;
@@ -1035,28 +1036,29 @@ int getTelescopeFactoryDetails(vector<TelFactory *> *vTelFac,
     }
  
     // print telescope details structure
-    *oLog << "       array telescope details " << endl;
-    *oLog << "                    ";
-    *oLog << "type std   locX     locY    locZ  osX  osY  prtMode FixPtFlag fixPtAz fixPtZn" << endl;
-    //map<int,TelDetails *>::iterator mIter;    
+    if (debug) {
+      *oLog << "       array telescope details " << endl;
+      *oLog << "                    ";
+      *oLog << "type std   locX     locY    locZ  osX  osY  prtMode FixPtFlag fixPtAz fixPtZn" << endl;   
     
-    for (mIter=mTelDetails->begin();mIter!=mTelDetails->end();mIter++) {
-      *oLog << "         telNbr= " << mIter->first << "   ";
-      *oLog  << getTelType(mIter->second->telType) << "   ";
-      *oLog  << mIter->second->telStd << "   " 
-	     << mIter->second->telLocGrd.X() 
-	     << "    " << mIter->second->telLocGrd.Y() <<  "   " 
-	     << mIter->second->telLocGrd.Z();
-      *oLog  << "   " 
-	     << mIter->second->telOffSetX*(TMath::RadToDeg()) 
-	     << "     " 
-	     << mIter->second->telOffSetY*(TMath::RadToDeg()) 
-	     << "   " 
-	     << mIter->second->printMode << " "
-             << mIter->second->bFixedPtFlag << "   "
-             << (mIter->second->az_fixPt)*(TMath::RadToDeg()) << "   "
-             << (mIter->second->zn_fixPt)*(TMath::RadToDeg())
-             << endl;
+      for (mIter=mTelDetails->begin();mIter!=mTelDetails->end();mIter++) {
+	*oLog << "         telNbr= " << mIter->first << "   ";
+	*oLog  << getTelType(mIter->second->telType) << "   ";
+	*oLog  << mIter->second->telStd << "   " 
+	       << mIter->second->telLocGrd.X() 
+	       << "    " << mIter->second->telLocGrd.Y() <<  "   " 
+	       << mIter->second->telLocGrd.Z();
+	*oLog  << "   " 
+	       << mIter->second->telOffSetX*(TMath::RadToDeg()) 
+	       << "     " 
+	       << mIter->second->telOffSetY*(TMath::RadToDeg()) 
+	       << "   " 
+	       << mIter->second->printMode << " "
+	       << mIter->second->bFixedPtFlag << "   "
+	       << (mIter->second->az_fixPt)*(TMath::RadToDeg()) << "   "
+	       << (mIter->second->zn_fixPt)*(TMath::RadToDeg())
+	       << endl;
+      }
     }
   }
   return 1;
