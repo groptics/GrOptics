@@ -182,7 +182,7 @@ class GSegSCTelescopeFactory : public GTelescopeFactory {
   
   SegSCStdOptics *opt;  //*< working stdOptics for current telescope
   
-  GSegSCTelescope *SCTel;  //*< pointer to working telescope
+  GSegSCTelescope *SegSCTel;  //*< pointer to working telescope
   int iNumSCTelMade;
   /*! \brief editWorkingTelescope makes edits based on 
            pilotfile entries to telescope currently 
@@ -190,7 +190,7 @@ class GSegSCTelescopeFactory : public GTelescopeFactory {
 
            \param SCTel pointer to current telescope
    */
-  void editWorkingTelescope(GSegSCTelescope *SCTel1);
+  void editWorkingTelescope(GSegSCTelescope *SegSCTel1);
 
  public:
 

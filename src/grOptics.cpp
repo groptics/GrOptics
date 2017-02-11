@@ -362,7 +362,8 @@ int main(int argc, char *argv[]) {
       if (vTelFac.at(i)->rdType == GRISU) {
         // set up GRISU reader, make this a switch statement later
         readerDC = new GReadDCStdGrISU(vTelFac.at(i)->configFile);
-	// the factory now owns the readerDC, But passed in by value!!!
+	// the factory now owns the readerDC, passing in as a reference,
+	//    ok but confusing
 	// why not pass the pointer
         DCFac = new GDCTelescopeFactory(*readerDC,vTelFac.at(i)->editFile);
       }
@@ -379,11 +380,17 @@ int main(int argc, char *argv[]) {
   }
 
   // make arrayTelescope map<telid, ArrayTel*>
+  // each telescope will have an associated GArrayTel instance that
+  // contains the telescope location and pointing details. These are not
+  // contained in the telescope instance.
   map<int, GArrayTel *> mArrayTel;
   map<int, GArrayTel *>::iterator mArrayTelIter;
   
   int telnumm = 0;
-  
+
+  // loop through the telescopes, extract telescope details, ask the
+  // factory to make a telescope.  Then, make the GArrayTel instance
+  // that will contain the telescope instance.
   for (mIter=mTelDetails.begin();mIter!=mTelDetails.end();mIter++) {
     telnumm++;
     int telId = mIter->first;

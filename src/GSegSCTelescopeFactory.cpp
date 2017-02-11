@@ -289,7 +289,7 @@ GSegSCTelescopeFactory(GReadSegSCStd &scReader,
   sPilotEdit = "";
   mGRefl = 0;
   opt = 0;
-  SCTel = 0;
+  SegSCTel = 0;
 
   // make the reflectivity map 
   mGRefl = new map<int, TGraph *>;
@@ -302,7 +302,7 @@ GSegSCTelescopeFactory(GReadSegSCStd &scReader,
   pi = new GPilot(sPilotEdit);
  
   if (debug) {
-    *oLog << "    -- end of GSCTelescopeFactory constructor" << endl;
+    *oLog << "    -- end of GSegSCTelescopeFactory constructor" << endl;
   }
   
 };
@@ -359,37 +359,37 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   opt = mStdOptics[iStdID];
 
   // make the telescope
-  SCTel = new GSegSCTelescope;
+  SegSCTel = new GSegSCTelescope;
 
-  SCTel->iPrtMode = opt->iPrtMode;
+  SegSCTel->iPrtMode = opt->iPrtMode;
 
   // move over all reflection coefficients (the entire map)
-  SCTel->setReflCoeffMap(mGRefl);
+  SegSCTel->setReflCoeffMap(mGRefl);
   
-  SCTel->setTelID(idTel);
-  SCTel->setStdID(iStdID);
-  SCTel->eTelType = opt->stdType;
-  SCTel->fAvgTransitTime = opt->fAvgTransitTime;
-  SCTel->fRotationOffset = opt->fRotationOffset;
-  SCTel->fPlateScaleFactor = opt->fPlateScaleFactor;
+  SegSCTel->setTelID(idTel);
+  SegSCTel->setStdID(iStdID);
+  SegSCTel->eTelType = opt->stdType;
+  SegSCTel->fAvgTransitTime = opt->fAvgTransitTime;
+  SegSCTel->fRotationOffset = opt->fRotationOffset;
+  SegSCTel->fPlateScaleFactor = opt->fPlateScaleFactor;
 
   // general telescope parameters
-  SCTel->fF = (opt->fF);
-  SCTel->fAlpha = opt->fAlpha;
-  SCTel->fQ = opt->fQ;
+  SegSCTel->fF = (opt->fF);
+  SegSCTel->fAlpha = opt->fAlpha;
+  SegSCTel->fQ = opt->fQ;
 
   // primary parameters
-  SCTel->fRpMax = (opt->fRpMax);
-  SCTel->fRpMin = (opt->fRpMin);
-  SCTel->fZp = (opt->fZp);
-  //SCTel->fNp = opt->fNp;
-  SCTel->fNp = opt->iNParP;
-  SCTel->fzp = opt->fzp;
+  SegSCTel->fRpMax = (opt->fRpMax);
+  SegSCTel->fRpMin = (opt->fRpMin);
+  SegSCTel->fZp = (opt->fZp);
+  //SegSCTel->fNp = opt->fNp;
+  SegSCTel->fNp = opt->iNParP;
+  SegSCTel->fzp = opt->fzp;
   // make primary poly coefficients
-  SCTel->fP = new Double_t[SCTel->fNp];
-  Double_t fF = (SCTel->fF)*m;
+  SegSCTel->fP = new Double_t[SegSCTel->fNp];
+  Double_t fF = (SegSCTel->fF)*m;
   
-  (SCTel->fP)[0] = TMath::Power(fF,  1)* ((opt->fzp[0]));
+  (SegSCTel->fP)[0] = TMath::Power(fF,  1)* ((opt->fzp[0]));
 
   bool printParameters = true;
   if (printParameters) {
@@ -399,33 +399,33 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
     *oLog << "           fP[i]  =  TMath::Power(fF,  iPowerF)* fzp[i] " << endl;  
     *oLog << "  i     iPowerF     fzp[i]           fP[i] " << endl;
     *oLog <<"  0" << "        " << "1" << "       " << opt->fzp[0] << "       " 
-          << (SCTel->fP)[0] << endl;   
+          << (SegSCTel->fP)[0] << endl;   
   }
   int iPowerF = -1;
-  for (int i = 1;i < SCTel->fNp; i++) {
-    (SCTel->fP)[i] = TMath::Power(fF,  iPowerF)* ((opt->fzp[i]));  
+  for (int i = 1;i < SegSCTel->fNp; i++) {
+    (SegSCTel->fP)[i] = TMath::Power(fF,  iPowerF)* ((opt->fzp[i]));  
     if (printParameters) {
       *oLog << "  " <<  i << "       " << iPowerF
-            << "       " << opt->fzp[i] << "       " << (SCTel->fP)[i] << endl;
+            << "       " << opt->fzp[i] << "       " << (SegSCTel->fP)[i] << endl;
     }
     iPowerF = iPowerF -2;
   }
   if(printParameters) *oLog << endl;
   
   // secondary parameters
-  SCTel->fRsMax = (opt->fRsMax);
-  SCTel->fRsMin = (opt->fRsMin);
-  SCTel->fZs = (opt->fZs);
-  SCTel->fNs = opt->fNs;
-  SCTel->fS = opt->fS;
-  SCTel->iNParS = opt->iNParS;
-  SCTel->fNs = opt->iNParS;
-  SCTel->fzs = opt->fzs;
+  SegSCTel->fRsMax = (opt->fRsMax);
+  SegSCTel->fRsMin = (opt->fRsMin);
+  SegSCTel->fZs = (opt->fZs);
+  SegSCTel->fNs = opt->fNs;
+  SegSCTel->fS = opt->fS;
+  SegSCTel->iNParS = opt->iNParS;
+  SegSCTel->fNs = opt->iNParS;
+  SegSCTel->fzs = opt->fzs;
   // make secondary poly coefficients
-  SCTel->fS = new Double_t[SCTel->iNParS];
-  fF = (SCTel->fF)*m;
+  SegSCTel->fS = new Double_t[SegSCTel->iNParS];
+  fF = (SegSCTel->fF)*m;
 
-  (SCTel->fS)[0] = TMath::Power(fF,  1)* ((opt->fzs[0]));
+  (SegSCTel->fS)[0] = TMath::Power(fF,  1)* ((opt->fzs[0]));
 
   if (printParameters) {
     *oLog << "  calculation of secondary parameters " << endl;
@@ -433,90 +433,90 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
     *oLog << "           fS[i]  =  TMath::Power(fF,  iPowerF)* fzs[i] " << endl;  
     *oLog << "  i     iPowerF     fzs[i]           fS[i] " << endl;
     *oLog <<"  0" << "        " << "1" << "       " << opt->fzs[0] << "       " 
-          << (SCTel->fS)[0] << endl;   
+          << (SegSCTel->fS)[0] << endl;   
   }
 
   iPowerF = -1;
-  for (int i = 1;i < SCTel->fNs; i++) {
-    (SCTel->fS)[i] = TMath::Power(fF,  iPowerF)* ((opt->fzs[i]));  
+  for (int i = 1;i < SegSCTel->fNs; i++) {
+    (SegSCTel->fS)[i] = TMath::Power(fF,  iPowerF)* ((opt->fzs[i]));  
     if (printParameters) {
       *oLog << "  " <<  i << "       " << iPowerF
-            << "       " << opt->fzs[i] << "       " << (SCTel->fS)[i] << endl;
+            << "       " << opt->fzs[i] << "       " << (SegSCTel->fS)[i] << endl;
     }
     iPowerF = iPowerF -2;
   }
   if (printParameters) *oLog << endl;
 
   // primary segment details
-  SCTel->iNumP1Mirrors = opt->iNumP1Mirrors;
-  SCTel->iNumP2Mirrors = opt->iNumP2Mirrors;
-  SCTel->vSegP1 = opt->vSegP1;
-  SCTel->vSegP2 = opt->vSegP2;
+  SegSCTel->iNumP1Mirrors = opt->iNumP1Mirrors;
+  SegSCTel->iNumP2Mirrors = opt->iNumP2Mirrors;
+  SegSCTel->vSegP1 = opt->vSegP1;
+  SegSCTel->vSegP2 = opt->vSegP2;
 
  // secondary segment S1details
-  SCTel->iNumS1Mirrors = opt->iNumS1Mirrors;
-  SCTel->iNumS2Mirrors = opt->iNumS2Mirrors;
-  SCTel->vSegS1 = opt->vSegS1;
-  SCTel->vSegS2 = opt->vSegS2;
+  SegSCTel->iNumS1Mirrors = opt->iNumS1Mirrors;
+  SegSCTel->iNumS2Mirrors = opt->iNumS2Mirrors;
+  SegSCTel->vSegS1 = opt->vSegS1;
+  SegSCTel->vSegS2 = opt->vSegS2;
 
   // focal plane
-  SCTel->fKappa1 = opt->fKappa1;
-  SCTel->fKappa2 = opt->fKappa2;
-  SCTel->fRf     = opt->fRf;
-  SCTel->fZf     = opt->fZf;
+  SegSCTel->fKappa1 = opt->fKappa1;
+  SegSCTel->fKappa2 = opt->fKappa2;
+  SegSCTel->fRf     = opt->fRf;
+  SegSCTel->fZf     = opt->fZf;
 
   // primary baffle
-  SCTel->bpBaffleFlag = opt->bpBaffleFlag;
-  SCTel->fpBRadOffset = opt-> fpBRadOffset;
-  SCTel->fpBLen = opt-> fpBLen;
-  SCTel->fpBZOffset = opt-> fpBZOffset;
-  SCTel->fpBTilt = opt-> fpBTilt;
+  SegSCTel->bpBaffleFlag = opt->bpBaffleFlag;
+  SegSCTel->fpBRadOffset = opt-> fpBRadOffset;
+  SegSCTel->fpBLen = opt-> fpBLen;
+  SegSCTel->fpBZOffset = opt-> fpBZOffset;
+  SegSCTel->fpBTilt = opt-> fpBTilt;
 
   // secondary baffle
-  SCTel->bsBaffleFlag = opt->bsBaffleFlag;
-  SCTel->fsBRadOffset = opt-> fsBRadOffset;
-  SCTel->fsBLen = opt-> fsBLen;
-  SCTel->fsBZOffset = opt-> fsBZOffset;
-  SCTel->fsBTilt = opt-> fsBTilt;
+  SegSCTel->bsBaffleFlag = opt->bsBaffleFlag;
+  SegSCTel->fsBRadOffset = opt-> fsBRadOffset;
+  SegSCTel->fsBLen = opt-> fsBLen;
+  SegSCTel->fsBZOffset = opt-> fsBZOffset;
+  SegSCTel->fsBTilt = opt-> fsBTilt;
  
   // camera
-  SCTel->bCameraFlag = opt->bCameraFlag;
-  SCTel->fPixelSize   = opt->fPixelSize;
-  SCTel->fSubCells   = opt->fSubCells;
-  SCTel->fMAPMTWidth  = opt->fMAPMTWidth;
-  SCTel->fMAPMTLength = opt->fMAPMTLength;
-  SCTel->fInputWindowThickness   = opt->fInputWindowThickness;
-  SCTel->fMAPMTOffset = opt->fMAPMTOffset;
-  SCTel->fMAPMTGap    = opt->fMAPMTGap;
-  SCTel->fMAPMTRefIndex   = opt->fMAPMTRefIndex;
-  SCTel->bSingleMAPMTmodule = opt->bSingleMAPMTmodule;
+  SegSCTel->bCameraFlag = opt->bCameraFlag;
+  SegSCTel->fPixelSize   = opt->fPixelSize;
+  SegSCTel->fSubCells   = opt->fSubCells;
+  SegSCTel->fMAPMTWidth  = opt->fMAPMTWidth;
+  SegSCTel->fMAPMTLength = opt->fMAPMTLength;
+  SegSCTel->fInputWindowThickness   = opt->fInputWindowThickness;
+  SegSCTel->fMAPMTOffset = opt->fMAPMTOffset;
+  SegSCTel->fMAPMTGap    = opt->fMAPMTGap;
+  SegSCTel->fMAPMTRefIndex   = opt->fMAPMTRefIndex;
+  SegSCTel->bSingleMAPMTmodule = opt->bSingleMAPMTmodule;
 
   // entrance window
 
-  SCTel->bEntranceWindowFlag      = opt->bEntranceWindowFlag;
-  SCTel->bEntranceWindowAbsFlag   = opt->bEntranceWindowAbsFlag;
-  SCTel->fEntranceWindowThickness = opt->fEntranceWindowThickness;
-  SCTel->fEntranceWindowN         = opt->fEntranceWindowN;
-  SCTel->fEntranceWindowAbsLength = opt->fEntranceWindowAbsLength;
-  SCTel->fEntranceWindowOffset    = opt->fEntranceWindowOffset;
+  SegSCTel->bEntranceWindowFlag      = opt->bEntranceWindowFlag;
+  SegSCTel->bEntranceWindowAbsFlag   = opt->bEntranceWindowAbsFlag;
+  SegSCTel->fEntranceWindowThickness = opt->fEntranceWindowThickness;
+  SegSCTel->fEntranceWindowN         = opt->fEntranceWindowN;
+  SegSCTel->fEntranceWindowAbsLength = opt->fEntranceWindowAbsLength;
+  SegSCTel->fEntranceWindowOffset    = opt->fEntranceWindowOffset;
 
   //
 
-  SCTel->fFocalSurfaceXOffset     = opt->fFocalSurfaceXOffset;
-  SCTel->fFocalSurfaceYOffset     = opt->fFocalSurfaceYOffset;
-  SCTel->fFocalSurfaceZOffset     = opt->fFocalSurfaceZOffset;
-  SCTel->fFocalSurfacePhiOffset   = opt->fFocalSurfacePhiOffset;
-  SCTel->fFocalSurfaceThetaOffset = opt->fFocalSurfaceThetaOffset;
-  SCTel->fFocalSurfacePsiOffset   = opt->fFocalSurfacePsiOffset;
+  SegSCTel->fFocalSurfaceXOffset     = opt->fFocalSurfaceXOffset;
+  SegSCTel->fFocalSurfaceYOffset     = opt->fFocalSurfaceYOffset;
+  SegSCTel->fFocalSurfaceZOffset     = opt->fFocalSurfaceZOffset;
+  SegSCTel->fFocalSurfacePhiOffset   = opt->fFocalSurfacePhiOffset;
+  SegSCTel->fFocalSurfaceThetaOffset = opt->fFocalSurfaceThetaOffset;
+  SegSCTel->fFocalSurfacePsiOffset   = opt->fFocalSurfacePsiOffset;
  
-  SCTel->buildTelescope();
+  SegSCTel->buildTelescope();
 
-  return SCTel; 
+  return SegSCTel; 
 };
 /************** end of makeTelescope ***********************/
 
-void GSegSCTelescopeFactory::editWorkingTelescope(GSegSCTelescope *SCTel1) {
-  SCTel1->printTelescope();  // unused
+void GSegSCTelescopeFactory::editWorkingTelescope(GSegSCTelescope *SegSCTel1) {
+  SegSCTel1->printTelescope();  // unused
   bool debug = true;
   if (debug) {
     *oLog << " -- GSegSCTelescopeFactory::editWorkingTelescope" << endl;
