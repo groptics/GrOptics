@@ -42,6 +42,7 @@ using namespace std;
 #include "TH2D.h"
 #include "TGraph.h"
 
+
 #include "TGeoManager.h"
 #include "TGeoBBox.h"
 #include "TGeoMaterial.h"
@@ -98,7 +99,7 @@ static const double nm = AOpticsManager::nm();
 static const double  m = AOpticsManager::m();
 
 GSegSCTelescope::GSegSCTelescope() {
-
+  
   bool debug = false;
   if (debug) {
     *oLog << "  -- GSegSCTelescope::GSegSCTelescope() " << endl;
@@ -1320,7 +1321,7 @@ void GSegSCTelescope::drawTelescope(const int &option) {
 void GSegSCTelescope::setPrintMode(ostream &oStr,const int prtMode) {
   bool debug = false;
   iPrtMode = prtMode;
-  oStr << " " << endl;
+
   if (debug) {
     *oLog << " -- GSegSCTelescope::setPrintMode " << iPrtMode << endl;
   } 
@@ -1331,8 +1332,6 @@ void GSegSCTelescope::setPhotonHistory(const string &rootFile,
                                        const string &treeName,
                                        const int &option) {
   bool debug = false;
-
-  
   bPhotonHistoryFlag = true;
 
   historyFileName = rootFile;
@@ -1491,7 +1490,7 @@ TGraph * GSegSCTelescope::makeReflectivityGraph(const Int_t &irefl) {
 /************************* end of makeReflectivityGraph *****/
 
 void GSegSCTelescope::initialize() {
-  bool debug = true;
+  bool debug = false;
 
   if (debug) {
     *oLog << "  -- GSegSCTelescope::initialization " << endl;

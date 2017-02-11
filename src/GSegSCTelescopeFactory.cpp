@@ -344,7 +344,7 @@ GSegSCTelescopeFactory::~GSegSCTelescopeFactory() {
 GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
                                                      const int &std) {
   
-  int debug = false;
+  int debug = true;
   if (debug) {
     *oLog << " -- GSegSCTelescopeFactory::makeTelescope" << endl;
     *oLog << "      telID  = " << id << endl;

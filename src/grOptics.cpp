@@ -35,7 +35,6 @@ using namespace std;
 #include "TRint.h"
 #include "TROOT.h"
 #include "TRandom3.h"
-//#include "TString.h"
 #include "TSystem.h"
 #include "TVector3.h"
 #include "TPad.h"
@@ -190,7 +189,10 @@ int main(int argc, char *argv[]) {
 
   // set this to true to remain in root (useful for plotting rays on ogl images
   //bool rayTracePlotFlag = false;
-
+  
+  // set error level so the geometry manager does not print out Info messages.
+  gErrorIgnoreLevel = kWarning;
+  
   // log file output stream, initialize
   oLog = &cerr;  //!< set default log output stream 
 
