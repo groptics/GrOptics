@@ -1,3 +1,4 @@
+
 /*
 VERSION4.0
 30May2016
@@ -36,9 +37,9 @@ using namespace std;
 #define DEBUGW(x) *oLog << "         " << #x << " = " << x << endl
 
 #include "GUtilityFuncts.h"
-#include "GDefinition.h"
+#include "ADefinition.h"
 #include "GRootDCNavigator.h"
-#include "GTelescope.h"
+#include "ATelescope.h"
 #include "GDCTelescope.h"
 #include "GGeometryBase.h"
 #include "GDCGeometry.h"

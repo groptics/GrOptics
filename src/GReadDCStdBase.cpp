@@ -22,14 +22,14 @@ VERSION4.0
 
 using namespace std;
 
-#include "GDefinition.h"
+#include "ADefinition.h"
 #include "GUtilityFuncts.h"
 #include "GPilot.h"
 
-#include "GTelescope.h"
+#include "ATelescope.h"
 #include "GDCTelescope.h"
 
-#include "GTelescopeFactory.h"
+#include "ATelescopeFactory.h"
 #include "GDCTelescopeFactory.h"
 
 #include "GReadDCStdBase.h"

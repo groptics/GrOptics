@@ -22,7 +22,7 @@ VERSION4.0
 
 using namespace std;
 
-#include "GDefinition.h"
+#include "ADefinition.h"
 
 #include "GRayTracerBase.h"
 

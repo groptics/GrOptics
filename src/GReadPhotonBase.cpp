@@ -22,7 +22,7 @@ VERSION4.0
 
 using namespace std;
 
-#include "GDefinition.h"
+#include "ADefinition.h"
 #include "GReadPhotonBase.h"
 
 #define DEBUG(x) *oLog << #x << " = " << x << endl

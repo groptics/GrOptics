@@ -39,7 +39,7 @@ using namespace std;
 #include "TSystem.h"
 #include "TVector3.h"
 
-#include "GDefinition.h"
+#include "ADefinition.h"
 #include "GUtilityFuncts.h"
 #include "GPilot.h"
 
@@ -49,12 +49,12 @@ using namespace std;
 //#include "GSegSCTelescopeFactory.h"
 
 #include "GSegmentedMirror.h"
-#include "GTelescope.h"
+#include "ATelescope.h"
 #include "GDCTelescope.h"
 #include "GSCTelescope.h"
 #include "GSegSCTelescope.h"
 
-#include "GTelescopeFactory.h"
+#include "ATelescopeFactory.h"
 #include "GDCTelescopeFactory.h"
 #include "GSCTelescopeFactory.h"
 #include "GSegSCTelescopeFactory.h"

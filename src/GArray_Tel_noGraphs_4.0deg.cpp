@@ -49,13 +49,13 @@ using namespace std;
 #include "TTree.h"
 #include "TBranch.h"
 
-#include "GDefinition.h"
+#include "ADefinition.h"
 
 #include "GUtilityFuncts.h"
-#include "GTelescope.h"
+#include "ATelescope.h"
 #include "GDCTelescope.h"
 #include "GSCTelescope.h"
-#include "GTelescopeFactory.h"
+#include "ATelescopeFactory.h"
 #include "GDCTelescopeFactory.h"
 #include "GReadDCStdBase.h"
 #include "GReadDCStdGrISU.h"
@@ -86,7 +86,7 @@ GArrayTel::GArrayTel(const ROOT::Math::XYZVector telLocGrd,
 		     const int &telid,
                      const int &telstd,
 		     const int &printMode,
-		     GTelescope *ctel )
+		     ATelescope *ctel )
   
   : telLocGrdGC(telLocGrd),fpointingOffsetX(telOffsetX),
     fpointingOffsetY(telOffsetY), telType(teltype),
@@ -328,7 +328,7 @@ void GArrayTel::setPhoton(const ROOT::Math::XYZVector &pGrd,
   if (debugShort) {
     *oLog << endl;
     *oLog << "          bOnCamera  " << bOnCamera << endl;
-    *oLog << "       GArrayTel:  from GTelescope::getCameraPhotonLocation ";
+    *oLog << "       GArrayTel:  from ATelescope::getCameraPhotonLocation ";
     GUtilityFuncts::printGenVector(vPhotonCameraLoc);  *oLog << endl;
     *oLog << "          vPhotonCameraDcos ";
     GUtilityFuncts::printGenVector(vPhotonCameraDcos); *oLog << endl;

@@ -27,17 +27,17 @@ VERSION4.0
 
 using namespace std;
 
-#include "GDefinition.h"
+#include "ADefinition.h"
 #include "GPilot.h"
 #include "GUtilityFuncts.h"
 
 #include "GGeometryBase.h"
 #include "GDCGeometry.h"
 
-#include "GTelescope.h"
+#include "ATelescope.h"
 #include "GDCTelescope.h"
 
-#include "GTelescopeFactory.h"
+#include "ATelescopeFactory.h"
 #include "GDCTelescopeFactory.h"
 
 #include "GOrderedGrid.h"

@@ -15,6 +15,8 @@ VERSION4.0
 #include "Math/GenVector/RotationZfwd.h"
 
 #include "AOpticsManager.h"
+#include "ATelescopeFactory.h"
+#include "ATelescope.h"
 
 // forward declarations
 enum TelType;
@@ -35,7 +37,7 @@ class SegmentedObscuration;
   Akira Okamura's NewSCT.C root script included in the GrOptics/scripts/SegSC
   directory
 */
-class GSegSCTelescope : public GTelescope {
+class GSegSCTelescope : public ATelescope {
 
   friend class GSegSCTelescopeFactory;
  
@@ -223,6 +225,11 @@ class GSegSCTelescope : public GTelescope {
 
   void addSecondaryObscurationSeg(const char*name, 
                                   SegmentedObscuration *obscuration);
+
+
+    void addKrakowFrame(bool remove2nd = false);
+
+    void addPrimaryDesignFrame();
 
  public:
 

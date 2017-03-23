@@ -36,13 +36,13 @@ using namespace std;
 #include "Math/Rotation3D.h"
 #include "TVector3.h"
 
-#include "GDefinition.h"
+#include "ADefinition.h"
 
 #include "GUtilityFuncts.h"
-#include "GTelescope.h"
+#include "ATelescope.h"
 #include "GDCTelescope.h"
 #include "GSCTelescope.h"
-#include "GTelescopeFactory.h"
+#include "ATelescopeFactory.h"
 #include "GDCTelescopeFactory.h"
 #include "GReadDCStdBase.h"
 #include "GReadDCStdGrISU.h"

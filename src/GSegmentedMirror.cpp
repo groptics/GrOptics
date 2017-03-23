@@ -41,6 +41,7 @@ static const Double_t mm = AOpticsManager::mm();
 static const Double_t um = AOpticsManager::um();
 static const Double_t nm = AOpticsManager::nm();
 static const Double_t  m = AOpticsManager::m();
+static const Double_t inch = AOpticsManager::inch();
 
 //______________________________________________________________________________
 SegmentedMirror::SegmentedMirror(Double_t rmin, Double_t rmax,
@@ -187,7 +188,7 @@ AMirror* TetragonSegmentedMirror::BuildMirror(const char* name,
   Double_t d2r = TMath::DegToRad();
   Double_t ax = fRmin*TMath::Cos((90. - dphi)*d2r);
   Double_t ay = fRmin*TMath::Sin((90. - dphi)*d2r);
-  //Double_t bx = fRmax*TMath::Cos((90. - dphi)*d2r);
+  Double_t bx = fRmax*TMath::Cos((90. - dphi)*d2r);
   Double_t by = fRmax*TMath::Sin((90. - dphi)*d2r);
   Double_t p0x = ax - fMargin*(1./TMath::Sin(dphi*d2r) - 1.)/TMath::Tan((90. - dphi)*d2r);
   Double_t p0y = ay + fMargin;
@@ -246,8 +247,8 @@ AMirror* PentagonSegmentedMirror::BuildMirror(const char* name,
   Double_t d2r = TMath::DegToRad();
   Double_t ax = fRmin*TMath::Cos((90. - dphi)*d2r);
   Double_t ay = fRmin*TMath::Sin((90. - dphi)*d2r);
-  //Double_t bx = fRmax*TMath::Cos((90. - dphi)*d2r);
-  //Double_t by = fRmax*TMath::Sin((90. - dphi)*d2r);
+  Double_t bx = fRmax*TMath::Cos((90. - dphi)*d2r);
+  Double_t by = fRmax*TMath::Sin((90. - dphi)*d2r);
   Double_t cy = fRmax;
 
   Double_t p0x = ax - fMargin*(1./TMath::Sin(dphi*d2r) - 1.)/TMath::Tan((90. - dphi)*d2r);

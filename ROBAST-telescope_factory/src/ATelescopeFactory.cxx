@@ -1,27 +1,45 @@
-/******************************************************************************
- * Copyright (C) 2006-, Akira Okumura                                         *
- * All rights reserved.                                                       *
- *****************************************************************************/
+/*
+VERSION4.0
+30May2016
+*/
+/* ATelescopeFactory.cpp
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// ATelescopeFactory
-//
-// Factory class for telescopes
-//
-///////////////////////////////////////////////////////////////////////////////
+          Charlie Duke
+          Grinnell College
+          May 2011
+ */
+#include <iostream>
+#include <cstdlib>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <cmath>
+#include <map>
+#include <list>
+#include <iterator>
+#include <algorithm>
+#include <bitset>
+#include <iomanip>
 
+#include "TMatrixD.h"
+#include "TMath.h"
+#include "Math/Vector3D.h"
+
+using namespace std;
+
+#include "ADefinition.h"
+#include "ATelescope.h"
 #include "ATelescopeFactory.h"
 
-UInt_t ATelescopeFactory::fNTelescopes = 0;
+//ClassImp(ATelescopeFactory)
 
-ClassImp(ATelescopeFactory)
+ATelescopeFactory::ATelescopeFactory() {
 
-//______________________________________________________________________________
-ATelescope* ATelescopeFactory::MakeTelescope(const char* config)
-{
-  ATelescope* telescope = new ATelescope(config, fNTelescopes);
-  fNTelescopes++;
+  // initialize parameters
+  oPrtStrm = oLog;
+  iPrtMode = 0;
 
-  return telescope;
-}
+};
+/**************** end of ATelescopeFactory ****************/
+

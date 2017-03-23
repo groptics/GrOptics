@@ -34,7 +34,7 @@ using namespace std;
 #include "TROOT.h"
 #include "Math/Vector3D.h"
 
-#include "GDefinition.h"
+#include "ADefinition.h"
 #include "GRootWriter.h"
 
 //ClassImp(GRootWriter);

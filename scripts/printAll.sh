@@ -11,7 +11,7 @@ GDCTelescopeFactory GDCTelescope GDefinition GGeometryBase \
 GOrderedGrid GPilot GRayTracerBase GReadDCStdBase GReadDCStdGrISU \
 ReadPhotonBase GReadPhotonGrISU GReadSCStd GRootDCNavigator \
 GRootDCNavigatorLinkDef GRootWriter GRootWriterLinkDef \
-GSCTelescopeFactory GSCTelescope SimulateOptics GTelescopeFactory \
+GSCTelescopeFactory GSCTelescope SimulateOptics ATelescopeFactory \
 GTelescope GUtilityFuncts )
 
 linenumbers="-C"

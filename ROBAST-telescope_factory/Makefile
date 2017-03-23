@@ -45,10 +45,25 @@ DICTS	:=	$(SRCDIR)/$(NAME)Dict.$(SrcSuf)
 DICTI	:=	$(SRCDIR)/$(NAME)Dict.h
 DICTO	:=	$(SRCDIR)/$(NAME)Dict.$(ObjSuf)
 
-INCS	:=	$(filter-out $(INCDIR)/LinkDef.h,$(wildcard $(INCDIR)/*.h))
+FOI := $(INCDIR)/ADefinition.h,$(INCDIR)/ATelescopeFactory.h,$(INCDIR)/ATelescope.h,$(INCDIR)/LinkDef.h 
+FOS := $(SRCDIR)/$(DICT).%,$(SRCDIR)/ADefinition.$(SrcSuf),$(SRCDIR)/ATelescopeFactory.$(SrcSuf),$(SRCDIR)/ATelescope.$(SrcSuf)
+
+INCS	:=	$(filter-out $(INCDIR)/LinkDef.h ,$(wildcard $(INCDIR)/*.h))
+#INCS	:=	$(filter-out $(INCDIR)/ATelescopeFactory.h ,$(INCS))
+#INCS	:=	$(filter-out $(INCDIR)/ADefinition.h ,$(INCS))
+#INCS	:=	$(filter-out $(INCDIR)/ATelescope.h ,$(INCS))
+
 SRCS	:=	$(filter-out $(SRCDIR)/$(DICT).%,$(wildcard $(SRCDIR)/*.$(SrcSuf)))
+#SRCS	:=	$(filter-out $(SRCDIR)/ADefinition.$(SrcSuf),$(SRCS))
+#SRCS	:=	$(filter-out $(SRCDIR)/ATelescopeFactory.$(SrcSuf),$(SRCS))
+#SRCS	:=	$(filter-out $(SRCDIR)/ATelescope.$(SrcSuf),$(SRCS))
+
 OBJS	:=	$(patsubst %.$(SrcSuf),%.$(ObjSuf),$(SRCS)) $(DICTO)
 PCM	:=	$(NAME)Dict_rdict.pcm
+
+
+
+
 
 BSRCS	:=	$(wildcard $(SRCDIR)/bernlohr/*.c)
 BOBJS	:=	$(patsubst %.c,%.$(ObjSuf),$(BSRCS))
@@ -74,7 +89,8 @@ $(RMAP):	$(LIB) $(INCDIR)/LinkDef.h
 		rlibmap -f -o $@ -l $(LIB) -d $(DEPEND) -c $(INCDIR)/LinkDef.h
 
 $(DICTS):	$(INCS) $(INCDIR)/LinkDef.h
-		@echo "Generating dictionary ..."
+		@echo "Generating dictionary test ..."
+		@echo $(INCS)
 		 $(ROOTCLING) -f $@ -c -p $^
 else
 # ROOT 6
@@ -84,6 +100,7 @@ $(SRCDIR)/$(PCM):	$(DICTS)
 
 $(DICTS):	$(INCS) $(INCDIR)/LinkDef.h
 		@echo "Generating dictionary ..."
+		
 		$(ROOTCLING) -f $@ -c -p -I$(INCDIR) -rmf $(RMAP) -rml $(LIB) $^
 endif
 
@@ -116,18 +133,18 @@ endif
 		@echo "$@ done"
 
 $(SRCDIR)/%.$(ObjSuf):	$(SRCDIR)/%.$(SrcSuf) $(INCDIR)/%.h
-		@echo "Compiling" $<
+		@echo "Compiling s" $<
 		$(CXX) $(CXXFLAGS) -Wall -g -I$(INCDIR) -c $< -o $@
 
 $(SRCDIR)/%.$(ObjSuf):	$(SRCDIR)/%.c
-		@echo "Compiling" $<
+		@echo "Compiling b" $<
 		$(CC) $(CCFLAGS) -I$(BINCDIR) -fPIC -c $< -o $@
 
 $(PCM):		$(SRCDIR)/$(PCM)
 		cp $^ $@
 
 $(DICTO):	$(DICTS)
-		@echo "Compiling" $<
+		@echo "Compiling dicts" $<
 		$(CXX) $(CXXFLAGS) -I. -c $< -o $@
 
 doc:	all htmldoc

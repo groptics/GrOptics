@@ -9,8 +9,11 @@ VERSION4.0
 #ifndef GARRAYTEL
 #define GARRAYTEL
 
+#include "ATelescopeFactory.h"
+#include "ATelescope.h"
+
 // forward declarations
-class GTelescope;
+class ATelescope;
 class GDCTelescope;
 class TH2D;
 class TH1D;
@@ -92,7 +95,7 @@ class GArrayTel {
   vector<TH2D*> vHist;
   vector<TH1D*> vHistT;
 
-  GTelescope *tel;  //!< pointer to associated telescope 
+  ATelescope *tel;  //!< pointer to associated telescope
 
  protected:
 
@@ -123,7 +126,7 @@ class GArrayTel {
             const bool fixPtFlag,
             const double azFix,
             const double znFix,
-	    GTelescope *ctel);
+	    ATelescope *ctel);
 
   /*! destructor
    */

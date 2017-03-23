@@ -53,8 +53,8 @@ using namespace std;
 #include "TGraph.h"
 
 #include "GUtilityFuncts.h"
-#include "GDefinition.h"
-#include "GTelescope.h"
+#include "ADefinition.h"
+#include "ATelescope.h"
 #include "GSCTelescope.h"
 
 #define DEBUG(x) *oLog << #x << " = " << x << endl

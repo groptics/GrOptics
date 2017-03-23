@@ -21,6 +21,7 @@ class TGraph;
 #include "Math/GenVector/RotationZfwd.h"
 
 #include "AOpticsManager.h"
+#include "ATelescope.h"
 
 /*! GSCTelescope models a single SC telescope; inherits from GTelescope
 */
@@ -31,7 +32,7 @@ enum TelType;
 /*! GSCTelescope class modeling a Schwarzschild-Couder telescope; 
   inherits from GTelescope 
 */
-class GSCTelescope : public GTelescope {
+class GSCTelescope : public ATelescope {
 
   friend class GSCTelescopeFactory;
  

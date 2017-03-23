@@ -21,7 +21,7 @@ VERSION4.0
 using namespace std;
 
 // needed for extern declaration for oLog output stream
-#include "GDefinition.h"
+#include "ADefinition.h"
 
 #include "GPilot.h"
 

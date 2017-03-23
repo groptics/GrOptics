@@ -84,7 +84,7 @@ using namespace std;
 #include <Math/VectorUtil.h>
 
 
-#include "GDefinition.h"
+#include "ADefinition.h"
 #include "GUtilityFuncts.h"
 
 #define DEBUG(x) *oLog << #x << " = " << x << endl

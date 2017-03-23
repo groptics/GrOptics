@@ -6,6 +6,9 @@ VERSION4.0
 #ifndef GDCTELESCOPE
 #define GDCTELESCOPE
 
+#include "ATelescopeFactory.h"
+#include "ATelescope.h"
+
 // forward declarations
 class TFile;
 class TTree;
@@ -102,7 +105,7 @@ GDCTelescope provides the concrete class for Davies-Cotton
 telescopes.
 
 */
-class GDCTelescope : public GTelescope {
+class GDCTelescope : public ATelescope {
 
   friend class GRayTracerBase;
   friend class GDCRayTracer;

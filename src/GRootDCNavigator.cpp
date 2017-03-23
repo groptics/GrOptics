@@ -38,12 +38,12 @@ using namespace std;
 #include "TGeoPgon.h"
 
 //#include ".h"
-#include "GDefinition.h"
+#include "ADefinition.h"
 #include "GUtilityFuncts.h"
 #include "GGeometryBase.h"
 #include "GDCGeometry.h"
 
-#include "GTelescope.h"
+#include "ATelescope.h"
 #include "GDCTelescope.h"
 #include "GRootDCNavigator.h"
 

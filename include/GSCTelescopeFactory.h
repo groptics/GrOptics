@@ -13,11 +13,14 @@ GSCTelescopeFactory produces the SC telescopes.
 #ifndef GSCTELESCOPEFACTORY
 #define GSCTELESCOPEFACTORY
 
+#include "ATelescopeFactory.h"
+#include "ATelescope.h"
+
 // forward declarations
 class TGraph;
 class GPilot; 
 class GSCTelescope;
-class GTelescope;
+class ATelescope;
 class GReadSCStd;
 
 /*!  /brief SCStdOptics structure stores details of a standard 
@@ -110,7 +113,7 @@ struct SCStdOptics {
      SC telescope, inherits from GTelescopeFactory to implement
      factory method
  */
-class GSCTelescopeFactory : public GTelescopeFactory {
+class GSCTelescopeFactory : public ATelescopeFactory {
  private:
 
   friend class GReadSCStd; 

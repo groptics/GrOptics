@@ -32,16 +32,16 @@ VERSION4.0
 
 using namespace std;
 
-#include "GDefinition.h"
+#include "ADefinition.h"
 
 #include "GPilot.h"
 #include "GUtilityFuncts.h"
 
 #include "AOpticsManager.h" 
-#include "GTelescope.h"
+#include "ATelescope.h"
 #include "GSegSCTelescope.h"
 #include "GSCTelescope.h"
-#include "GTelescopeFactory.h"
+#include "ATelescopeFactory.h"
 #include "GSCTelescopeFactory.h"
 #include "GSegSCTelescopeFactory.h"
 

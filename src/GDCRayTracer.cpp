@@ -22,10 +22,10 @@ VERSION4.0
 
 using namespace std;
 
-#include "GDefinition.h"
+#include "ADefinition.h"
 #include "GUtilityFuncts.h"
 #include "GRayTracerBase.h"
-#include "GTelescope.h"
+#include "ATelescope.h"
 #include "GDCTelescope.h"
 #include "GOrderedGrid.h"
 #include "GRootDCNavigator.h"

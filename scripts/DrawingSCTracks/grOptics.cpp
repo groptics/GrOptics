@@ -34,15 +34,15 @@ using namespace std;
 #include "TSystem.h"
 #include "TVector3.h"
 
-#include "GDefinition.h"
+#include "ADefinition.h"
 #include "GUtilityFuncts.h"
 #include "GPilot.h"
 
-#include "GTelescope.h"
+#include "ATelescope.h"
 #include "GDCTelescope.h"
 #include "GSCTelescope.h"
 
-#include "GTelescopeFactory.h"
+#include "ATelescopeFactory.h"
 #include "GDCTelescopeFactory.h"
 #include "GSCTelescopeFactory.h"
 
@@ -261,8 +261,8 @@ int main(int argc, char *argv[]) {
   getTelescopeFactoryDetails(&vTelFac,&mTelDetails,pilot.arrayConfigFile);
 
   // set up factories
-  GTelescopeFactory *DCFac = 0;
-  GTelescopeFactory *SCFac = 0;
+  ATelescopeFactory *DCFac = 0;
+  ATelescopeFactory *SCFac = 0;
   GReadDCStdBase *readerDC = 0;
   GReadSCStd *readerSC = 0;
 
@@ -301,7 +301,7 @@ int main(int argc, char *argv[]) {
     xoffsettel = mIter->second->telOffSetX;
     yoffsettel = mIter->second->telOffSetY;
     if (telType==DC) {
-      GTelescope *tel = DCFac->makeTelescope(telId,telStd);
+      ATelescope *tel = DCFac->makeTelescope(telId,telStd);
       if (pilot.telToDraw == telId) {
 	app = new TRint("app",&pseudo_argc, argv,0,0,kFALSE );
 	tel->drawTelescope();
@@ -319,7 +319,7 @@ int main(int argc, char *argv[]) {
     }
     else if (telType==SC) {
 
-      GTelescope *tel = SCFac->makeTelescope(telId,telStd);
+      ATelescope *tel = SCFac->makeTelescope(telId,telStd);
       if (pilot.telToDraw == telId) {
 	app = new TRint("app",&pseudo_argc, argv,0,0,kFALSE );
 	tel->drawTelescope();

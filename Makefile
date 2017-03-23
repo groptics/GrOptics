@@ -61,7 +61,7 @@ printDebug:
 	@echo INCDIR $(INCDIR)
 	@echo OBJDIR $(OBJDIR)
 
-TESTOBJECTS = $(OBJDIR)/GUtilityFuncts.o $(OBJDIR)/GDefinition.o 
+TESTOBJECTS = $(OBJDIR)/GUtilityFuncts.o ROBAST-telescope_factory/src/ADefinition.o
 
 testUtilities: $(OBJDIR)/testUtilities.o  $(TESTOBJECTS)
 	@echo "building testUtilities"
@@ -189,11 +189,11 @@ removeRobast:
 
 clean: cleanGrOptics
 
-DEPEND=echo > Makefile.depend0 &&\
+DEPEND=echo > Makefile.depend0 ;\
 	makedepend -s "\#DEPEND LIST DONT DELETE" -- $(INCLUDEFLAGS) \
 		-Y --  $(SRCDIR)/*.cpp  $(INCDIR)/*.h  \
-		-f Makefile.depend0 > /dev/null 2>&1 &&\
-	sed "s/^[a-zA-Z0-9]*\//obj\//" Makefile.depend0 > Makefile.depend &&\
+		-f Makefile.depend0 > /dev/null 2>&1 ;\
+	sed "s/^[a-zA-Z0-9]*\//obj\//" Makefile.depend0 > Makefile.depend ;\
 	rm -f Makefile.depend0
 
 depend:

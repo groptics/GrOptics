@@ -13,11 +13,14 @@ GDCTelescopeFactory produces the DC telescopes.
 #ifndef GDCTELESCOPEFACTORY
 #define GDCTELESCOPEFACTORY
 
+#include "ATelescopeFactory.h"
+#include "ATelescope.h"
+
 // forward declarations
 class GPilot;
 class GReadDCStdBase; 
 class GDCTelescope;
-class GTelescope;
+class ATelescope;
 class GGeometryBase;
 //class GDCStdFacet;
 struct DCStdFacet;
@@ -99,7 +102,7 @@ struct DCStdOptics {
      DC telescope, inherits from GTelescopeFactory to implement
      factory method
  */
-class GDCTelescopeFactory : public GTelescopeFactory {
+class GDCTelescopeFactory : public ATelescopeFactory {
  private:
 
   friend class GReadDCStdGrISU;

@@ -33,7 +33,7 @@ using namespace std;
 #include "Math/Rotation3D.h"
 
 #include "GUtilityFuncts.h"
-#include "GDefinition.h"
+#include "ADefinition.h"
 #include "GOrderedGrid.h"
 
 #define DEBUG(x) *oLog << #x << " = " << x << endl

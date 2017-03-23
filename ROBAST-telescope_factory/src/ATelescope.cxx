@@ -1,72 +1,46 @@
-/******************************************************************************
- * Copyright (C) 2006-, Akira Okumura                                         *
- * All rights reserved.                                                       *
- *****************************************************************************/
+/*
+VERSION4.0
+30May2016
+*/
+#include <iostream>
+#include <cstdlib>
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <cmath>
+#include <map>
+#include <list>
+#include <iterator>
+#include <algorithm>
+#include <bitset>
+#include <iomanip>
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// ATelescope
-//
-// Telescope class
-//
-///////////////////////////////////////////////////////////////////////////////
+using namespace std;
 
+#include "AOpticsManager.h"
+#include "TMatrixD.h"
+#include "TMath.h"
+#include "Math/Vector3D.h"
+#include "TView.h"
+#include "TCanvas.h"
+#include "TPad.h"
+#include "TVector3.h"
+#include "TGeoPgon.h"
+#include "TRandom3.h"
+
+#include "ADefinition.h"
 #include "ATelescope.h"
 
-ClassImp(ATelescope)
+//#include "GGeometryBase.h"
+///#include "GDCGeometry.h"
 
-//_____________________________________________________________________________
-ATelescope::ATelescope()
-{
-  // Default constructor
-  fID = 0;
-  fManager = 0;
-  fPointingDirection.SetMagThetaPhi(1., 0., 0.);
-}
+//#include "GRayTracerBase.h"
+//ClassImp(ATelescope)
+ATelescope::ATelescope() {
+  oPrtStrm = oLog;
+  iPrtMode = 0;
 
-//_____________________________________________________________________________
-ATelescope::ATelescope(const char* config, UInt_t id)
-{
-  fID = id;
-  BuildGeometry(config);
-}
 
-//_____________________________________________________________________________
-ATelescope::~ATelescope()
-{
-  TThread::Lock();
-  if (fManager) {
-    gGeoManager = fManager;
-    SafeDelete(fManager);
-  }
-  TThread::UnLock();
-}
+};
 
-//_____________________________________________________________________________
-void ATelescope::BuildGeometry(const char* config)
-{
-  TThread::Lock();
-  gGeoManager = 0;
-  fManager = new AOpticsManager("manager", "Opics Manager");
-
-  // Read the config file and build the geometry
-
-  TThread::UnLock();
-}
-
-//_____________________________________________________________________________
-void ATelescope::SetPointingDirection(Double_t zenith , Double_t azimuth)
-{
-  fPointingDirection.SetMagThetaPhi(1., zenith*TMath::DegToRad(),
-                                    (90. - azimuth)*TMath::DegToRad());
-}
-
-//_____________________________________________________________________________
-void ATelescope::Trace(ARayArray* array)
-{
-  // First the "world" or the rays must be rotated to make the telescope points to
-  // (fZenith, fAzimuth)
-  // Write your code here...
-
-  
-}
