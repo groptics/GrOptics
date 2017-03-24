@@ -61,8 +61,6 @@ enum RayPlotType {FOCUSONLY, ALLSURFACES  };
 
 int RayPlotTypeToInt(const enum RayPlotType &rayplottype);
 
-//enum RayPlotType IntToRayPlotType(int i);
-
 enum RayPlotType IntToRayPlotType(int i);
 
 // set up common random number generator for all classes, move the 
