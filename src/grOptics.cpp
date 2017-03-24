@@ -40,7 +40,7 @@ using namespace std;
 #include "TPad.h"
 #include "TCanvas.h"
 
-#include "ADefinition.h"
+#include "GDefinition.h"
 #include "GUtilityFuncts.h"
 #include "GPilot.h"
 

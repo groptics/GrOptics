@@ -38,7 +38,7 @@ using namespace ROOT::Math;
 
 #define DEBUG(x) *oLog << #x << " = " << x << endl
 
-#include "ADefinition.h"
+#include "GDefinition.h"
 #include "GUtilityFuncts.h"
 
 bool GUtilityFuncts::polyInside(const int &sides, const double &alpha, 

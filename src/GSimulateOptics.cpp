@@ -36,7 +36,7 @@ using namespace std;
 #include "Math/Rotation3D.h"
 #include "TVector3.h"
 
-#include "ADefinition.h"
+#include "GDefinition.h"
 
 #include "GUtilityFuncts.h"
 #include "ATelescope.h"

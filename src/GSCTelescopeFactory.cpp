@@ -31,7 +31,7 @@ VERSION4.0
 
 using namespace std;
 
-#include "ADefinition.h"
+#include "GDefinition.h"
 
 #include "GPilot.h"
 #include "GUtilityFuncts.h"

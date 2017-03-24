@@ -49,7 +49,7 @@ using namespace std;
 #include "TTree.h"
 #include "TBranch.h"
 
-#include "ADefinition.h"
+#include "GDefinition.h"
 
 #include "GUtilityFuncts.h"
 #include "ATelescope.h"

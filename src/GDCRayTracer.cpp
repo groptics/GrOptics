@@ -22,7 +22,7 @@ VERSION4.0
 
 using namespace std;
 
-#include "ADefinition.h"
+#include "GDefinition.h"
 #include "GUtilityFuncts.h"
 #include "GRayTracerBase.h"
 #include "ATelescope.h"

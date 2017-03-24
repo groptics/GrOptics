@@ -35,7 +35,7 @@ using namespace std;
 #include <TRandom3.h>
 
 #include "GUtilityFuncts.h"
-#include "ADefinition.h"
+#include "GDefinition.h"
 
 #include "GReadPhotonBase.h"
 #include "GReadPhotonGrISU.h"

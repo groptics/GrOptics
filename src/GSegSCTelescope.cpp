@@ -82,7 +82,7 @@ using namespace std;
 #include "ARayShooter.h"
 
 #include "GUtilityFuncts.h"
-#include "ADefinition.h"
+#include "GDefinition.h"
 
 #include "GSegmentedMirror.h"
 #include "GSegmentedObscuration.h"

@@ -37,7 +37,7 @@ using namespace std;
 #define DEBUGW(x) *oLog << "         " << #x << " = " << x << endl
 
 #include "GUtilityFuncts.h"
-#include "ADefinition.h"
+#include "GDefinition.h"
 #include "GRootDCNavigator.h"
 #include "ATelescope.h"
 #include "GDCTelescope.h"

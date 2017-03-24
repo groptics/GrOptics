@@ -39,7 +39,7 @@ using namespace std;
 #include "TSystem.h"
 #include "TVector3.h"
 
-#include "ADefinition.h"
+#include "GDefinition.h"
 #include "GUtilityFuncts.h"
 #include "GPilot.h"
 

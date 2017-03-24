@@ -38,7 +38,7 @@ using namespace std;
 #include "TGeoPgon.h"
 
 //#include ".h"
-#include "ADefinition.h"
+#include "GDefinition.h"
 #include "GUtilityFuncts.h"
 #include "GGeometryBase.h"
 #include "GDCGeometry.h"
