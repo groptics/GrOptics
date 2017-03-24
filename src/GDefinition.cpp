@@ -290,3 +290,26 @@ string getGeoType(const enum GeoType &geoType) {
   return geoTypeStr;
 };
 /************* end of getGeoType **********************/
+int RayPlotTypeToInt(const enum RayPlotType &rayplottype) {
+
+  int ienum = 0;
+  if (rayplottype == FOCUSONLY) {
+    ienum = 0;
+  }
+  else if (rayplottype == ALLSURFACES) {
+    ienum = 1;
+  }
+  return ienum;
+};
+
+enum RayPlotType IntToRayPlotType(int i) {
+  enum RayPlotType eplot;
+  eplot = FOCUSONLY;
+  if (i == 0) {
+    eplot = FOCUSONLY;
+  }
+  else if (i = 1) {
+    eplot = ALLSURFACES;
+  }
+  return eplot;
+};

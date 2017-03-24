@@ -59,6 +59,8 @@ enum GrISURecType {SREC,PREC,RREC,HREC,CREC,EOFREC};
  */
 enum RayPlotType {FOCUSONLY, ALLSURFACES  };
 
+int RayPlotTypeToInt(const enum RayPlotType &rayplottype);
+
 // set up common random number generator for all classes, move the 
 // include to .cpp files later.  maybe have a separate include file for 
 // globals, GGlobal.h, fix this later.
