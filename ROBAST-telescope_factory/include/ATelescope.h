@@ -33,7 +33,8 @@ class ATelescope/*: public TObject*/ {
   int iPrtMode;
 
  public:
-
+  int iRayPlotInt;
+  
   //*! constructor
   ATelescope();
 
@@ -89,7 +90,8 @@ class ATelescope/*: public TObject*/ {
 
   //C.Duke
   //virtual void setRayPlotMode(const enum RayPlotType &eRayPlot) = 0;
-
+  virtual void setRayPlotModeInt(const int &iplt);
+  virtual int getRayPlotModeInt();
     //ClassDef(ATelescope, 1)
 };
 #endif // ATELESCOPE

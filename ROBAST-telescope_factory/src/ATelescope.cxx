@@ -40,9 +40,15 @@ using namespace std;
 ATelescope::ATelescope() {
   // C.Duke
   //oPrtStrm = oLog;
+  iRayPlotInt = 0;
   oPrtStrm = &cerr;
   iPrtMode = 0;
-
-
 };
 
+void ATelescope::setRayPlotModeInt(const int &iplt) {
+  iRayPlotInt = iplt;
+};
+
+int ATelescope::getRayPlotModeInt() {
+  return iRayPlotInt;
+};

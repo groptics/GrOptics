@@ -435,6 +435,7 @@ int main(int argc, char *argv[]) {
       ATelescope *tel = SCFac->makeTelescope(telId,telStd);
       tel->setPrintMode(*oLog,printMode);
       if (bDrawRayFlag) {
+	
 	//C.Duke
         //tel->setRayPlotMode(eRayType);
       }
@@ -462,6 +463,23 @@ int main(int argc, char *argv[]) {
 
       tel->setPrintMode(*oLog,printMode);
       if (bDrawRayFlag) {
+	if (0) {
+	  // just wanted to test these new functions
+	  // OK, they are just fine
+	  *oLog << "PRINTING eRayType " << eRayType << endl;
+	  *oLog << "PRINTING InttoRayType, i = 0/1" << endl;
+	  enum RayPlotType eplotnum;
+	  eplotnum = IntToRayPlotType(0);
+	  *oLog << "int 0 " << eplotnum << endl;
+	  eplotnum = IntToRayPlotType(1);
+	  *oLog << "int 1 " << eplotnum << endl;
+	  *oLog << " NOW TESTING RAYPLOT TO INT " << endl;
+	  eplotnum = FOCUSONLY;
+	  *oLog << "FOCUSONLY " << RayPlotTypeToInt(eplotnum) << endl;;
+	  eplotnum = ALLSURFACES;
+	  *oLog << "ALLSURFACES " << RayPlotTypeToInt(eplotnum) << endl;;     
+	  exit(0);
+	}
 	//C.Duke
 	//tel->setRayPlotMode(eRayType);
       }
