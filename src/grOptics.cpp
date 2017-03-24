@@ -435,7 +435,8 @@ int main(int argc, char *argv[]) {
       ATelescope *tel = SCFac->makeTelescope(telId,telStd);
       tel->setPrintMode(*oLog,printMode);
       if (bDrawRayFlag) {
-        tel->setRayPlotMode(eRayType);
+	//C.Duke
+        //tel->setRayPlotMode(eRayType);
       }
       if ( (pilot.telToDraw == telId) && (bDrawTelFlag) ) {
 	tel->drawTelescope(pilot.telDrawOption);
@@ -461,7 +462,8 @@ int main(int argc, char *argv[]) {
 
       tel->setPrintMode(*oLog,printMode);
       if (bDrawRayFlag) {
-        tel->setRayPlotMode(eRayType);
+	//C.Duke
+	//tel->setRayPlotMode(eRayType);
       }
       if ( (pilot.telToDraw == telId) && (bDrawTelFlag) ) {
 	*oLog << "READY TO DRAW TELESCOPE AND QUIT" << endl;

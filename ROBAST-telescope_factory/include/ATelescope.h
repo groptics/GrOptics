@@ -87,7 +87,8 @@ class ATelescope/*: public TObject*/ {
 
   virtual double getPlateScaleFactor() = 0;
 
-  virtual void setRayPlotMode(const enum RayPlotType &eRayPlot) = 0;
+  //C.Duke
+  //virtual void setRayPlotMode(const enum RayPlotType &eRayPlot) = 0;
 
     //ClassDef(ATelescope, 1)
 };

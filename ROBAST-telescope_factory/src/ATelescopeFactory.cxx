@@ -27,8 +27,8 @@ VERSION4.0
 #include "Math/Vector3D.h"
 
 using namespace std;
-
-#include "ADefinition.h"
+// C.Duke
+//#include "ADefinition.h"
 #include "ATelescope.h"
 #include "ATelescopeFactory.h"
 
@@ -37,7 +37,8 @@ using namespace std;
 ATelescopeFactory::ATelescopeFactory() {
 
   // initialize parameters
-  oPrtStrm = oLog;
+  // C.Duke
+  //oPrtStrm = oLog;
   iPrtMode = 0;
 
 };

@@ -28,8 +28,8 @@ using namespace std;
 #include "TVector3.h"
 #include "TGeoPgon.h"
 #include "TRandom3.h"
-
-#include "ADefinition.h"
+//C.Duke
+//#include "ADefinition.h"
 #include "ATelescope.h"
 
 //#include "GGeometryBase.h"
@@ -38,7 +38,9 @@ using namespace std;
 //#include "GRayTracerBase.h"
 //ClassImp(ATelescope)
 ATelescope::ATelescope() {
-  oPrtStrm = oLog;
+  // C.Duke
+  //oPrtStrm = oLog;
+  oPrtStrm = &cerr;
   iPrtMode = 0;
 
 
