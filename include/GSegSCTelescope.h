@@ -348,14 +348,24 @@ class GSegSCTelescope : public ATelescope {
   void setRayPlotMode(const enum RayPlotType &eRayPlot) {
     bRayPlotModeFlag = true;
     eRayPlotType = eRayPlot;    
-    bool debug = true;
+    bool debug = false;
     if (debug) {
       *oLog << "  -- GSegSCTelescope::setRayPlotMode " << endl;
       *oLog << "bRayPlotModeFlag eRayPlotType " 
             <<  bRayPlotModeFlag << "  " << eRayPlotType  << endl;
     }
-    
   };
+  void setRayPlotModeInt(const int &iplt) {
+    int ieplot = iplt;
+    bRayPlotModeFlag = true;
+    eRayPlotType =  IntToRayPlotType(iplt);
+    bool debug = true;
+    if (debug) {
+      *oLog << "  -- GSegSCTelescope::setRayPlotModeInt " << endl;
+      *oLog << "bRayPlotModeFlag eRayPlotType " 
+            <<  bRayPlotModeFlag << "  " << eRayPlotType  << endl;
+    }
+  }
 };
 
 

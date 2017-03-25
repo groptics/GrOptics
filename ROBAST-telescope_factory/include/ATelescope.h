@@ -88,9 +88,11 @@ class ATelescope/*: public TObject*/ {
 
   virtual double getPlateScaleFactor() = 0;
 
-  //C.Duke
+  //C.Duke  added two new methods so don't need to define enum in ATelescope.
+  // correctly implemented for GSegSCTelescope, not for DC yet
   //virtual void setRayPlotMode(const enum RayPlotType &eRayPlot) = 0;
   virtual void setRayPlotModeInt(const int &iplt);
+
   virtual int getRayPlotModeInt();
     //ClassDef(ATelescope, 1)
 };
