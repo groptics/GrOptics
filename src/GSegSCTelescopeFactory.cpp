@@ -276,7 +276,7 @@ void SegSCStdOptics::printSegVector (const vector<mirrorSegmentDetails *> &vec) 
 //////////////////////////////////////////////////////////////////////////
 
 GSegSCTelescopeFactory::
-GSegSCTelescopeFactory(GReadSegSCStd &scReader,
+GSegSCTelescopeFactory(GReadSegSCStd &segscReader,
 		       const string &editPilotFile) {
   
   printParameters = false;
@@ -296,7 +296,7 @@ GSegSCTelescopeFactory(GReadSegSCStd &scReader,
   // make the reflectivity map 
   mGRefl = new map<int, TGraph *>;
 
-  readSegSC = &(scReader);
+  readSegSC = &(segscReader);
   readSegSC->setSegSCTelescopeFactory(this);
 
   sPilotEdit = editPilotFile;
@@ -319,31 +319,23 @@ GSegSCTelescopeFactory::~GSegSCTelescopeFactory() {
   }
 
   for (itmStdOp=mStdOptics.begin();
-     itmStdOp!=mStdOptics.end(); itmStdOp++) {
-    // WHY CAN'T I DELETE THIS CLASS? thinks I have already deleted the class?
-    // was created in reader: SCFac->mStdOptics[i] = new SegSCStdOptics();
-    //SegSCStdOptics *tmpSeg;
-    //tmpSeg = itmStdOp->second;
-    //*oLog << "tmpSeg->stdNum " <<tmpSeg->stdNum << endl;
-    //delete tmpSeg;
+       itmStdOp!=mStdOptics.end(); itmStdOp++) {
+    
     SafeDelete( itmStdOp->second );
-    //*oLog << " (itmStdOp->second)->stdNum " <<  (itmStdOp->second)->stdNum << endl;
-    //*oLog << "itmStdOp->second " << itmStdOp->second << endl;
   }
-   for (itmGRefl=mGRefl->begin();
-    itmGRefl!=mGRefl->end(); itmGRefl++) {
-     SafeDelete(itmGRefl->second ); 
-   }
+  for (itmGRefl=mGRefl->begin();
+       itmGRefl!=mGRefl->end(); itmGRefl++) {
+    SafeDelete(itmGRefl->second ); 
+  }
   SafeDelete(mGRefl);
   SafeDelete(pi);
   SafeDelete(readSegSC);
- 
+  
 };
 /************** end of ~GSegSCTelescopeFactory ***********************/
 
 GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
                                                      const int &std) {
-  
   int debug = true;
   if (debug) {
     *oLog << " -- GSegSCTelescopeFactory::makeTelescope" << endl;
@@ -524,7 +516,31 @@ void GSegSCTelescopeFactory::editWorkingTelescope(GSegSCTelescope *SegSCTel1) {
   if (debug) {
     *oLog << " -- GSegSCTelescopeFactory::editWorkingTelescope" << endl;
   }
+  /*
+  int iTelID = SCTel->iTelID;
 
+  string flag = "EDITSCTEL";
+  pi->set_flag(flag);
+  while (pi->get_line_vector(tokens) >=0) {
+    vector<int> listTel;    
+    vector<int>::iterator itv;
+    GUtilityFuncts::decodeMatlabString(tokens[0],listTel);
+    
+    // are there edits for this telescope
+    itv = find(listTel.begin(),listTel.end(),iTelID);
+    if (itv != listTel.end() ) {
+      // there are edits for this telescope
+      if (tokens[1] == "DUMMY") {
+	double tmpfDummy = atof(tokens[2].c_str() );
+	int tmpiDummy = atoi(tokens[3].c_str() );
+	SCTel->fDummy = tmpfDummy;
+	SCTel->iDummy = tmpiDummy;
+	
+      }  // if tokens = DUMMY
+    }  // if edits for this telescope
+    
+  } // while loop
+  */ 
  
 };
 /************** end of editWorkingTelescope ***********************/

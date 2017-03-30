@@ -191,32 +191,30 @@ class GSegSCTelescopeFactory : public ATelescopeFactory {
            pilotfile entries to telescope currently 
            under construction
 
-           \param SCTel pointer to current telescope
+           \param SegSCTel1 pointer to current telescope
    */
   void editWorkingTelescope(GSegSCTelescope *SegSCTel1);
 
  public:
 
-  /*!  GSegSCTelescopeFactory constructs a SC telescope from 
+  /*!  GSegSCTelescopeFactory constructs a SEGSC telescope from 
        standard telescopes obtained from reader. USE THIS CONSTRUCTOR
 
-       \param dcReader SC telescope reader instance 
+       \param dcReader SEGSC telescope reader instance 
        \param editPilotFile pilotfile name containing telescope edit records
    */
-  GSegSCTelescopeFactory(GReadSegSCStd &scReader,
+  GSegSCTelescopeFactory(GReadSegSCStd &segscReader,
 		    const string &editPilotFile);
+
+  ~GSegSCTelescopeFactory();
+ 
   /*! \brief makeTelescope constructs a SC telescope based on 
              instructions in the pilot file
 
              \param id telescope id within array
              \param std number of standard telescope
-             \param xLoc x position within array (meters)
-             \param yLoc y position within array (meters)
-             \param zLoc z position within array (meters)
              \return GSegSCTelescope pointer to constructed telescope
   */
-
-  ~GSegSCTelescopeFactory();
 
   GSegSCTelescope *makeTelescope(const int &id,
 				 const int &std);
