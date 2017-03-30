@@ -380,11 +380,14 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SegSCTel->fZp = (opt->fZp);
   SegSCTel->fNp = opt->iNParP;
   SegSCTel->fzp = opt->fzp;
+
+  /*  move further down so can edit telescope first
   // make primary poly coefficients
   SegSCTel->fP = new Double_t[SegSCTel->fNp];
   Double_t fF = (SegSCTel->fF)*m;
   
-  (SegSCTel->fP)[0] = TMath::Power(fF,  1)* ((opt->fzp[0]));
+  //(SegSCTel->fP)[0] = TMath::Power(fF,  1)* ((opt->fzp[0]));
+  (SegSCTel->fP)[0] = TMath::Power(fF,  1)* ((SegSCTel->fzp[0]));
 
   
   if (printParameters) {
@@ -393,7 +396,7 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
     *oLog << "           fzp[i]: input parameters from configuration file " << endl;
     *oLog << "           fP[i]  =  TMath::Power(fF,  iPowerF)* fzp[i] " << endl;  
     *oLog << "  i     iPowerF     fzp[i]           fP[i] " << endl;
-    *oLog <<"  0" << "        " << "1" << "       " << opt->fzp[0] << "       " 
+    *oLog <<"  0" << "        " << "1" << "       " << SegSCTel->fzp[0] << "       " 
           << (SegSCTel->fP)[0] << endl;   
   }
   int iPowerF = -1;
@@ -401,12 +404,12 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
     (SegSCTel->fP)[i] = TMath::Power(fF,  iPowerF)* ((opt->fzp[i]));  
     if (printParameters) {
       *oLog << "  " <<  i << "       " << iPowerF
-            << "       " << opt->fzp[i] << "       " << (SegSCTel->fP)[i] << endl;
+            << "       " << SegSCTel->fzp[i] << "       " << (SegSCTel->fP)[i] << endl;
     }
     iPowerF = iPowerF -2;
   }
   if(printParameters) *oLog << endl;
-  
+  */
   // secondary parameters
   SegSCTel->fRsMax = (opt->fRsMax);
   SegSCTel->fRsMin = (opt->fRsMin);
@@ -418,25 +421,26 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SegSCTel->fzs = opt->fzs;
   // make secondary poly coefficients
   SegSCTel->fS = new Double_t[SegSCTel->iNParS];
-  fF = (SegSCTel->fF)*m;
+  Double_t fF = (SegSCTel->fF)*m;
 
-  (SegSCTel->fS)[0] = TMath::Power(fF,  1)* ((opt->fzs[0]));
+  //(SegSCTel->fS)[0] = TMath::Power(fF,  1)* ((opt->fzs[0]));
+  (SegSCTel->fS)[0] = TMath::Power(fF,  1)* ((SegSCTel->fzs[0]));
 
   if (printParameters) {
     *oLog << "  calculation of secondary parameters " << endl;
     *oLog << "           fzs[i]: input parameters from configuration file " << endl;
     *oLog << "           fS[i]  =  TMath::Power(fF,  iPowerF)* fzs[i] " << endl;  
     *oLog << "  i     iPowerF     fzs[i]           fS[i] " << endl;
-    *oLog <<"  0" << "        " << "1" << "       " << opt->fzs[0] << "       " 
+    *oLog <<"  0" << "        " << "1" << "       " << SegSCTel->fzs[0] << "       " 
           << (SegSCTel->fS)[0] << endl;   
   }
 
-  iPowerF = -1;
+  int iPowerF = -1;
   for (int i = 1;i < SegSCTel->fNs; i++) {
-    (SegSCTel->fS)[i] = TMath::Power(fF,  iPowerF)* ((opt->fzs[i]));  
+    (SegSCTel->fS)[i] = TMath::Power(fF,  iPowerF)* ((SegSCTel->fzs[i]));  
     if (printParameters) {
       *oLog << "  " <<  i << "       " << iPowerF
-            << "       " << opt->fzs[i] << "       " << (SegSCTel->fS)[i] << endl;
+            << "       " << SegSCTel->fzs[i] << "       " << (SegSCTel->fS)[i] << endl;
     }
     iPowerF = iPowerF -2;
   }
@@ -503,22 +507,65 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SegSCTel->fFocalSurfacePhiOffset   = opt->fFocalSurfacePhiOffset;
   SegSCTel->fFocalSurfaceThetaOffset = opt->fFocalSurfaceThetaOffset;
   SegSCTel->fFocalSurfacePsiOffset   = opt->fFocalSurfacePsiOffset;
- 
+
+
+  editWorkingTelescope();
+  
+  // make primary poly coefficients
+  SegSCTel->fP = new Double_t[SegSCTel->fNp];
+  fF = (SegSCTel->fF)*m;
+  
+  //(SegSCTel->fP)[0] = TMath::Power(fF,  1)* ((opt->fzp[0]));
+  (SegSCTel->fP)[0] = TMath::Power(fF,  1)* ((SegSCTel->fzp[0]));
+
+  
+  if (printParameters) {
+    *oLog << endl;
+    *oLog << "  calculation of primary parameters " << endl;
+    *oLog << "           fzp[i]: input parameters from configuration file " << endl;
+    *oLog << "           fP[i]  =  TMath::Power(fF,  iPowerF)* fzp[i] " << endl;  
+    *oLog << "  i     iPowerF     fzp[i]           fP[i] " << endl;
+    *oLog <<"  0" << "        " << "1" << "       " << SegSCTel->fzp[0] << "       " 
+          << (SegSCTel->fP)[0] << endl;   
+  }
+  iPowerF = -1;
+  for (int i = 1;i < SegSCTel->fNp; i++) {
+    (SegSCTel->fP)[i] = TMath::Power(fF,  iPowerF)* ((opt->fzp[i]));  
+    if (printParameters) {
+      *oLog << "  " <<  i << "       " << iPowerF
+            << "       " << SegSCTel->fzp[i] << "       " << (SegSCTel->fP)[i] << endl;
+    }
+    iPowerF = iPowerF -2;
+  }
+  if(printParameters) *oLog << endl;
+  
   SegSCTel->buildTelescope();
 
   return SegSCTel; 
 };
 /************** end of makeTelescope ***********************/
 
-void GSegSCTelescopeFactory::editWorkingTelescope(GSegSCTelescope *SegSCTel1) {
+void GSegSCTelescopeFactory::editWorkingTelescope() {
   //SegSCTel1->printTelescope();  // unused
-  bool debug = false;
+  bool debug = true;
   if (debug) {
     *oLog << " -- GSegSCTelescopeFactory::editWorkingTelescope" << endl;
+    *oLog << "    iTelID = " << SegSCTel->iTelID << endl;
   }
-  /*
-  int iTelID = SCTel->iTelID;
+  
+  int iTelID = SegSCTel->iTelID;
+  string flag = "EDITSEGSCTEL";
+  pi->set_flag(flag);
 
+  while (pi->get_line_vector(tokens) >=0) {
+    *oLog << "EDITSEGSCTEL " << tokens[0] << "  " << tokens[1] << endl;
+    vector<int> listTel;    
+    vector<int>::iterator itv;
+    GUtilityFuncts::decodeMatlabString(tokens[0],listTel);
+
+  }
+  return;
+  /*
   string flag = "EDITSCTEL";
   pi->set_flag(flag);
   while (pi->get_line_vector(tokens) >=0) {

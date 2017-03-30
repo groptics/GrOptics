@@ -193,7 +193,7 @@ class GSegSCTelescopeFactory : public ATelescopeFactory {
 
            \param SegSCTel1 pointer to current telescope
    */
-  void editWorkingTelescope(GSegSCTelescope *SegSCTel1);
+  void editWorkingTelescope();
 
  public:
 
