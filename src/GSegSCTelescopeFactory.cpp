@@ -559,9 +559,48 @@ void GSegSCTelescopeFactory::editWorkingTelescope() {
 
   while (pi->get_line_vector(tokens) >=0) {
     *oLog << "EDITSEGSCTEL " << tokens[0] << "  " << tokens[1] << endl;
+
     vector<int> listTel;    
     vector<int>::iterator itv;
     GUtilityFuncts::decodeMatlabString(tokens[0],listTel);
+    itv = find(listTel.begin(),listTel.end(),iTelID);
+    if (itv != listTel.end() ) {
+      if (debug) {
+        *oLog << "there are edits for this telescope, tel.num = " << iTelID << endl;        
+      }
+      if (tokens[1] == "CAMERA") {
+        int cflag = atoi(tokens.at(2).c_str() );
+        if (cflag) {
+          SegSCTel->bCameraFlag = true;
+        }
+        else {
+          SegSCTel->bCameraFlag = false;
+        }
+        SegSCTel->fPixelSize = atof(tokens.at(3).c_str() );
+        //SegSCTel->fPixelPitch = atof(tokens.at(4).c_str());
+        SegSCTel->fMAPMTWidth = atof(tokens.at(5).c_str());
+        SegSCTel->fMAPMTLength = atof(tokens.at(6).c_str());
+        SegSCTel->fInputWindowThickness = atof(tokens.at(7).c_str());
+        //SegSCTel->fMAPMTAngularSize = atof(tokens.at(7).c_str());
+        SegSCTel->fMAPMTOffset =  atof(tokens.at(8).c_str());
+        SegSCTel->fMAPMTGap =  atof(tokens.at(9).c_str());
+        if (tokens.size() > 9) {
+          SegSCTel->fMAPMTRefIndex =  atof(tokens.at(10).c_str());
+        }
+        if (tokens.size() > 10) {
+          Int_t tmpi = atoi(tokens.at(11).c_str());
+          if (tmpi > 0) 
+            SegSCTel->bSingleMAPMTmodule = true;
+          else {
+            SegSCTel->bSingleMAPMTmodule = false;
+          }
+        }
+        if (tokens.size() > 11) {
+          SegSCTel->fSubCells =  atof(tokens.at(12).c_str());
+        }
+      }
+      
+    }
 
   }
   return;
@@ -588,7 +627,28 @@ void GSegSCTelescopeFactory::editWorkingTelescope() {
     
   } // while loop
   */ 
- 
+  /* SegSCTel->bCameraFlag = opt->bCameraFlag;
+  SegSCTel->fPixelSize   = opt->fPixelSize;
+  SegSCTel->fSubCells   = opt->fSubCells;
+  SegSCTel->fMAPMTWidth  = opt->fMAPMTWidth;
+  SegSCTel->fMAPMTLength = opt->fMAPMTLength;
+  SegSCTel->fInputWindowThickness   = opt->fInputWindowThickness;
+  SegSCTel->fMAPMTOffset = opt->fMAPMTOffset;
+  SegSCTel->fMAPMTGap    = opt->fMAPMTGap;
+  SegSCTel->fMAPMTRefIndex   = opt->fMAPMTRefIndex;
+  SegSCTel->bSingleMAPMTmodule = opt->bSingleMAPMTmodule;
+
+  // entrance window
+
+  SegSCTel->bEntranceWindowFlag      = opt->bEntranceWindowFlag;
+  SegSCTel->bEntranceWindowAbsFlag   = opt->bEntranceWindowAbsFlag;
+  SegSCTel->fEntranceWindowThickness = opt->fEntranceWindowThickness;
+  SegSCTel->fEntranceWindowN         = opt->fEntranceWindowN;
+  SegSCTel->fEntranceWindowAbsLength = opt->fEntranceWindowAbsLength;
+  SegSCTel->fEntranceWindowOffset    = opt->fEntranceWindowOffset;
+  */
+
+  
 };
 /************** end of editWorkingTelescope ***********************/
 
