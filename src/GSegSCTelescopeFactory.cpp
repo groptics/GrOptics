@@ -547,7 +547,7 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
 
 void GSegSCTelescopeFactory::editWorkingTelescope() {
   //SegSCTel1->printTelescope();  // unused
-  bool debug = true;
+  bool debug = false;
   if (debug) {
     *oLog << " -- GSegSCTelescopeFactory::editWorkingTelescope" << endl;
     *oLog << "    iTelID = " << SegSCTel->iTelID << endl;
@@ -558,7 +558,6 @@ void GSegSCTelescopeFactory::editWorkingTelescope() {
   pi->set_flag(flag);
 
   while (pi->get_line_vector(tokens) >=0) {
-    *oLog << "EDITSEGSCTEL " << tokens[0] << "  " << tokens[1] << endl;
 
     vector<int> listTel;    
     vector<int>::iterator itv;
@@ -598,56 +597,48 @@ void GSegSCTelescopeFactory::editWorkingTelescope() {
         if (tokens.size() > 11) {
           SegSCTel->fSubCells =  atof(tokens.at(12).c_str());
         }
+
+        if (debug) {
+          DEBUG(SegSCTel->bCameraFlag);
+          DEBUG(SegSCTel->fPixelSize);
+          //DEBUG(SegSCTel->fPixelPitch);
+          DEBUG(SegSCTel->fMAPMTWidth);DEBUG(SegSCTel->fMAPMTLength);
+          DEBUG(SegSCTel->fInputWindowThickness);DEBUG(SegSCTel->fMAPMTOffset);
+          DEBUG(SegSCTel->fMAPMTGap);DEBUG(SegSCTel->fMAPMTRefIndex);
+          DEBUG(SegSCTel->bSingleMAPMTmodule);DEBUG(SegSCTel->fSubCells);
+        }
       }
-      
+      if (tokens[1] == "WINDOW") {
+        int cflag = atoi(tokens.at(2).c_str() );
+        if (cflag) {
+          SegSCTel->bEntranceWindowFlag = true;
+        }
+        else {
+          SegSCTel->bEntranceWindowFlag = false;
+        }
+        SegSCTel->fEntranceWindowThickness = atof(tokens.at(3).c_str() );
+        SegSCTel->fEntranceWindowN = atof(tokens.at(4).c_str() );
+        SegSCTel->fEntranceWindowOffset = atof(tokens.at(5).c_str() );
+        int aflag = atof(tokens.at(6).c_str() );
+        if (aflag) {
+          SegSCTel->bEntranceWindowAbsFlag = true;
+        }
+        else {
+          SegSCTel->bEntranceWindowAbsFlag = false;
+        }
+        SegSCTel->fEntranceWindowAbsLength = atof(tokens.at(7).c_str() );
+      }
+      if (debug) {
+        DEBUG(SegSCTel->bEntranceWindowFlag);DEBUG(SegSCTel->fEntranceWindowThickness);
+        DEBUG(SegSCTel->fEntranceWindowN);
+        DEBUG(SegSCTel->fEntranceWindowOffset);DEBUG(SegSCTel->bEntranceWindowAbsFlag);
+        DEBUG(SegSCTel->fEntranceWindowAbsLength);
+      }
     }
-
   }
+
+    
   return;
-  /*
-  string flag = "EDITSCTEL";
-  pi->set_flag(flag);
-  while (pi->get_line_vector(tokens) >=0) {
-    vector<int> listTel;    
-    vector<int>::iterator itv;
-    GUtilityFuncts::decodeMatlabString(tokens[0],listTel);
-    
-    // are there edits for this telescope
-    itv = find(listTel.begin(),listTel.end(),iTelID);
-    if (itv != listTel.end() ) {
-      // there are edits for this telescope
-      if (tokens[1] == "DUMMY") {
-	double tmpfDummy = atof(tokens[2].c_str() );
-	int tmpiDummy = atoi(tokens[3].c_str() );
-	SCTel->fDummy = tmpfDummy;
-	SCTel->iDummy = tmpiDummy;
-	
-      }  // if tokens = DUMMY
-    }  // if edits for this telescope
-    
-  } // while loop
-  */ 
-  /* SegSCTel->bCameraFlag = opt->bCameraFlag;
-  SegSCTel->fPixelSize   = opt->fPixelSize;
-  SegSCTel->fSubCells   = opt->fSubCells;
-  SegSCTel->fMAPMTWidth  = opt->fMAPMTWidth;
-  SegSCTel->fMAPMTLength = opt->fMAPMTLength;
-  SegSCTel->fInputWindowThickness   = opt->fInputWindowThickness;
-  SegSCTel->fMAPMTOffset = opt->fMAPMTOffset;
-  SegSCTel->fMAPMTGap    = opt->fMAPMTGap;
-  SegSCTel->fMAPMTRefIndex   = opt->fMAPMTRefIndex;
-  SegSCTel->bSingleMAPMTmodule = opt->bSingleMAPMTmodule;
-
-  // entrance window
-
-  SegSCTel->bEntranceWindowFlag      = opt->bEntranceWindowFlag;
-  SegSCTel->bEntranceWindowAbsFlag   = opt->bEntranceWindowAbsFlag;
-  SegSCTel->fEntranceWindowThickness = opt->fEntranceWindowThickness;
-  SegSCTel->fEntranceWindowN         = opt->fEntranceWindowN;
-  SegSCTel->fEntranceWindowAbsLength = opt->fEntranceWindowAbsLength;
-  SegSCTel->fEntranceWindowOffset    = opt->fEntranceWindowOffset;
-  */
-
   
 };
 /************** end of editWorkingTelescope ***********************/

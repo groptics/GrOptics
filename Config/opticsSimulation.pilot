@@ -131,7 +131,7 @@ does not use root geometry methods due to slow execution issues.  You may get
 strange results if you use other options for drawing DC telescopes (to be fixed
 soon)
 
-* DRAWTEL 1 20
+ DRAWTEL 1 20
  DRAWTEL 2 0
 
 TESTTEL <telescope number> <baseFileName for histograms>   

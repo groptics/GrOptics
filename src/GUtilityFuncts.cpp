@@ -181,7 +181,7 @@ bool GUtilityFuncts::decodeMatlabString(const string &matlabStr,
             (d2 == string::npos) ) {
     // we have a list of space delimited integers
     string list = matlabStr.substr(d1+1,d3-d1-1);
-    *oLog << "list: " << list << endl;
+    //*oLog << "list: " << list << endl;
     
     // tokenize and read into the vector
     GUtilityFuncts::tokenizer(list,tokens);
@@ -270,7 +270,7 @@ bool GUtilityFuncts::decodeMatlabString(const string &matlabStr,
             (d2 == string::npos) ) {
     // we have a list of space delimited integers
     string list = matlabStr.substr(d1+1,d3-d1-1);
-    *oLog << "list: " << list << endl;
+    //*oLog << "list: " << list << endl;
     
     // tokenize and read into the vector
     //    have to remove the [ and ] first
