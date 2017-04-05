@@ -662,8 +662,8 @@ void GSegSCTelescope::addKrakowFrame(bool remove2nd)
         fManager->GetTopVolume()->AddNodeOverlap(secondarySupportCircle1Obs, 2, new TGeoTranslation(0, 0, 352.04*inch+44.41*inch-61.32*inch));
 
         TGeoTube* secondaryV = new TGeoTube("secondaryV", 0.*m, 2.9083*m, (352.04*inch+44.41*inch-31.32*inch-(352.04*inch+44.41*inch-61.32*inch))/2.);
-        AObscuration* secondaryObs = new AObscuration("secondaryObs", secondaryV);
-        fManager->GetTopVolume()->AddNodeOverlap(secondaryObs, 1, new TGeoTranslation(0, 0, (352.04*inch+44.41*inch-31.32*inch + 352.04*inch+44.41*inch-61.32*inch)/2.));
+        AObscuration* secondaryObsK = new AObscuration("secondaryObsK", secondaryV);
+        fManager->GetTopVolume()->AddNodeOverlap(secondaryObsK, 1, new TGeoTranslation(0, 0, (352.04*inch+44.41*inch-31.32*inch + 352.04*inch+44.41*inch-61.32*inch)/2.));
     } // if
 
     // camera
@@ -947,8 +947,8 @@ void GSegSCTelescope::addPrimaryDesignFrame()
     cameraBoxV->DefineSection(0, 5595.0*mm + offset, 0*mm, 520.7*mm);
     cameraBoxV->DefineSection(1, 5596.0*mm + offset, 514.35*mm, 520.7*mm);
     cameraBoxV->DefineSection(2, 6617.35*mm + offset, 514.35*mm, 520.7*mm);
-    AObscuration* cameraBoxObs = new AObscuration("cameraBoxObs", cameraBoxV, 0);
-    fManager->GetTopVolume()->AddNodeOverlap(cameraBoxObs, 1, new TGeoRotation("", 22.5, 0, 0));
+    AObscuration* cameraBoxObsP = new AObscuration("cameraBoxObsP", cameraBoxV, 0);
+    fManager->GetTopVolume()->AddNodeOverlap(cameraBoxObsP, 1, new TGeoRotation("", 22.5, 0, 0));
 
     // Make secondary radial bars
     TVector3 v1(-41.2750*mm, 2883.0730*mm, 9328.7216*mm + offset);
@@ -1002,12 +1002,12 @@ void GSegSCTelescope::addPrimaryDesignFrame()
     phi   = v5.Phi()*TMath::RadToDeg();
 
     TGeoTube* cameraFrameV = new TGeoTube("cameraFrameV", 0*mm, 76.2*mm, v5.Mag());
-    AObscuration* cameraFrameObs = new AObscuration("cameraFrameObs", cameraFrameV);
+    AObscuration* cameraFrameObsK = new AObscuration("cameraFrameObsK", cameraFrameV);
 
     for(Int_t i = 0; i < 4; i++){
         Double_t c = TMath::Cos(TMath::Pi()/2.*i);
         Double_t s = TMath::Sin(TMath::Pi()/2.*i);
-        fManager->GetTopVolume()->AddNodeOverlap(cameraFrameObs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c + v0.Y()*s, v0.X()*s - v0.Y()*c, v0.Z()), TGeoRotation("", 90*i - phi + 90, theta, 0)));
+        fManager->GetTopVolume()->AddNodeOverlap(cameraFrameObsK, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c + v0.Y()*s, v0.X()*s - v0.Y()*c, v0.Z()), TGeoRotation("", 90*i - phi + 90, theta, 0)));
     } // i
 
     // secondary support frame
@@ -1072,8 +1072,8 @@ void GSegSCTelescope::addPrimaryDesignFrame()
 
     // Secondary support circles
     TGeoTorus* secondarySupportCircle1V = new TGeoTorus(2403.0383/2.*mm, 0, 76.2*mm, 0, 360);
-    AObscuration* secondarySupportCircle1Obs = new AObscuration("secondarySupportCircle1Obs", secondarySupportCircle1V);
-    fManager->GetTopVolume()->AddNodeOverlap(secondarySupportCircle1Obs, 1, new TGeoTranslation(0, 0, 9753.3950*mm + offset));
+    AObscuration* secondarySupportCircle1ObsK = new AObscuration("secondarySupportCircle1ObsK", secondarySupportCircle1V);
+    fManager->GetTopVolume()->AddNodeOverlap(secondarySupportCircle1ObsK, 1, new TGeoTranslation(0, 0, 9753.3950*mm + offset));
 
     TGeoTorus* secondarySupportCircle2V = new TGeoTorus(4817.0586/2.*mm, 0, 76.2*mm, 0, 360);
     AObscuration* secondarySupportCircle2Obs = new AObscuration("secondarySupportCircle2Obs", secondarySupportCircle2V);

@@ -57,13 +57,13 @@ FILEOUT <root filename> <TreeName> <telBaseTreeName> <photonDirCosBranchFlag>
 * FILEOUT photonLocation.root allT T 1
 
 name of grOptics log file, default use cerr (if no asterisk)
- LOGFILE logTest.log
+* LOGFILE logTest.log
 
 number of showers/photons, defaults -1
   NSHOWER <numShowers, <0, no limit>
           <numPhotons, <0, no limit>
  NSHOWER -1 -1
-* NSHOWER 1 1
+* NSHOWER 1 50
 You can see the paths of all 20 photons in the ogl image when you
 run the code (all photons from the photon.cph test input file).
 
