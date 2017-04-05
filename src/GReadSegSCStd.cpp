@@ -43,7 +43,7 @@ using namespace std;
 #define DEBUG(x) *oLog << #x << " = " << x << endl
 #define DEBUGS(x) *oLog << "       "<< #x << " = " << x << endl
 
-GReadSegSCStd::GReadSegSCStd(const string &pilotfile,GSegSCTelescopeFactory *SCFactory  ) {
+GReadSegSCStd::GReadSegSCStd(const string &pilotfile,GSegSCTelescopeFactory *SegSCFactory  ) {
 
   // initialize variables
   bool debug = false;
@@ -51,17 +51,17 @@ GReadSegSCStd::GReadSegSCStd(const string &pilotfile,GSegSCTelescopeFactory *SCF
     *oLog << "  -- GReadSegSCStd::GReadSegSCStd" << endl;
   }
 
-  SCFac = 0;
+  SegSCFac = 0;
   spilotfile = "";
   pi = 0;
   flagline = "";
   iStdNum = 0;
   opt = 0;
   
-  SCFac = SCFactory;
+  SegSCFac = SegSCFactory;
   spilotfile = pilotfile;
   *oLog << "spilotfile " << spilotfile << endl;
-  setupSCFactory();
+  setupSegSCFactory();
 
 };
 /****************** end of GReadSegSCStd **********/
@@ -76,7 +76,7 @@ GReadSegSCStd::GReadSegSCStd(const string &pilotfile) {
   }
 
  // initialize variables
-  SCFac = 0;
+  SegSCFac = 0;
   pi = 0;
   flagline = "";
   iStdNum = 0;
@@ -97,37 +97,37 @@ GReadSegSCStd::~GReadSegSCStd() {
 /****************** end of ~GReadSegSCStd **********/
 
 void GReadSegSCStd::
-setSegSCTelescopeFactory(GSegSCTelescopeFactory *SCFactory) {
+setSegSCTelescopeFactory(GSegSCTelescopeFactory *SegSCFactory) {
 
   bool debug = false;
   if (debug) {
     *oLog << "  -- GReadSegSCStd::setSegSCTelescopeFactory" << endl;
   }
 
-  if (SCFac != 0 ) {
+  if (SegSCFac != 0 ) {
     cerr << "GReadSegSCStd::setSCTelescopeFactory " << endl;
-    cerr << "   ERROR: SCFac pointer to SCFactory previously set" << endl;
+    cerr << "   ERROR: SegSCFac pointer to SegSCFactory previously set" << endl;
     cerr << "   stopping code " << endl;
     exit(0);
   }
 
-  SCFac = SCFactory;
-  setupSCFactory();
+  SegSCFac = SegSCFactory;
+  setupSegSCFactory();
   
 };
 
 /****************** end of setSCTelescopeFactory **********/
-void GReadSegSCStd::setupSCFactory() {
+void GReadSegSCStd::setupSegSCFactory() {
 
   bool debug = false;
 
   if (debug) {
-    *oLog << "  -- GReadSegSCStd::setupSCFactory" << endl;
+    *oLog << "  -- GReadSegSCStd::setupSegSCFactory" << endl;
     //*oLog << "       spilotfile " << spilotfile << endl;
   }
 
-  if (SCFac == 0) {
-    cerr << " GReadSegSCStd doesn't have a SCFactory object" << endl;
+  if (SegSCFac == 0) {
+    cerr << " GReadSegSCStd doesn't have a SegSCFactory object" << endl;
     cerr << "exiting code" << endl;
     exit(0);
   }
@@ -150,13 +150,13 @@ void GReadSegSCStd::setupSCFactory() {
   while (pi->get_line_vector(tokens) >=0) {
 
     int iStdOptNum = atoi(tokens.at(0).c_str());
-    SCFac->mStdOptics[iStdOptNum] =  new SegSCStdOptics();
-    opt = SCFac->mStdOptics[iStdOptNum];
+    SegSCFac->mStdOptics[iStdOptNum] =  new SegSCStdOptics();
+    opt = SegSCFac->mStdOptics[iStdOptNum];
 
     // set pointer in SCStdOptics for reflection coefficients.
     // maps to coefficients are now in all SCStdOptics objects.
-    //opt->mVReflWaveLgts = SCFac->mVReflWaveLgts;
-    //opt->mVCoeffs = SCFac->mVCoeffs;
+    //opt->mVReflWaveLgts = SegSCFac->mVReflWaveLgts;
+    //opt->mVCoeffs = SegSCFac->mVCoeffs;
 
     // set standard number (also available as map key)
     opt->stdNum = iStdOptNum;
@@ -181,7 +181,7 @@ void GReadSegSCStd::setupSCFactory() {
 
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt = SegSCFac->mStdOptics[iStdOptNum];   
     opt->fPlateScaleFactor = atof(tokens.at(1).c_str() );
   }
 
@@ -191,7 +191,7 @@ void GReadSegSCStd::setupSCFactory() {
 
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt = SegSCFac->mStdOptics[iStdOptNum];   
  
     opt->fRpMax = atof(tokens.at(1).c_str() );
     opt->fRpMin = atof(tokens.at(2).c_str());
@@ -206,7 +206,7 @@ void GReadSegSCStd::setupSCFactory() {
 
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt = SegSCFac->mStdOptics[iStdOptNum];   
     opt->fRsMax = atof(tokens.at(1).c_str() );
     opt->fRsMin = atof(tokens.at(2).c_str());
     // initialized to 1.5 meters in opt
@@ -220,7 +220,7 @@ void GReadSegSCStd::setupSCFactory() {
   pi->set_flag(flag);
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt = SegSCFac->mStdOptics[iStdOptNum];   
 
     if (tokens[1] == "BASIC") {
       readBasicRecord(tokens,P1,opt);
@@ -234,7 +234,7 @@ void GReadSegSCStd::setupSCFactory() {
   pi->set_flag(flag);
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt = SegSCFac->mStdOptics[iStdOptNum];   
 
     if (tokens[1] == "BASIC") {
       readBasicRecord(tokens,P2,opt);
@@ -248,7 +248,7 @@ void GReadSegSCStd::setupSCFactory() {
   pi->set_flag(flag);
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt = SegSCFac->mStdOptics[iStdOptNum];   
 
     if (tokens[1] == "BASIC") {
       readBasicRecord(tokens,S1,opt);
@@ -262,7 +262,7 @@ void GReadSegSCStd::setupSCFactory() {
   pi->set_flag(flag);
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt = SegSCFac->mStdOptics[iStdOptNum];   
 
     if (tokens[1] == "BASIC") {
       readBasicRecord(tokens,S2,opt);
@@ -277,7 +277,7 @@ void GReadSegSCStd::setupSCFactory() {
 
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt = SegSCFac->mStdOptics[iStdOptNum];   
     opt->fKappa1 = atof(tokens.at(1).c_str() );
     opt->fKappa2 = atof(tokens.at(2).c_str());
     opt->fRf = atof(tokens.at(3).c_str());
@@ -292,7 +292,7 @@ void GReadSegSCStd::setupSCFactory() {
 
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt = SegSCFac->mStdOptics[iStdOptNum];   
     opt->fFocalSurfaceXOffset = atof(tokens.at(1).c_str() );
     opt->fFocalSurfaceYOffset = atof(tokens.at(2).c_str() );
     opt->fFocalSurfaceZOffset = atof(tokens.at(3).c_str() );
@@ -306,7 +306,7 @@ void GReadSegSCStd::setupSCFactory() {
 
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt = SegSCFac->mStdOptics[iStdOptNum];   
     int cflag = atoi(tokens.at(1).c_str() );
     if (cflag) {
       opt->bCameraFlag = true;
@@ -343,7 +343,7 @@ void GReadSegSCStd::setupSCFactory() {
 
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt = SegSCFac->mStdOptics[iStdOptNum];   
     int cflag = atoi(tokens.at(1).c_str() );
     if (cflag) {
       opt->bEntranceWindowFlag = true;
@@ -369,7 +369,7 @@ void GReadSegSCStd::setupSCFactory() {
 
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt = SegSCFac->mStdOptics[iStdOptNum];   
     int cflag = atoi(tokens.at(1).c_str() );
     if (cflag) {
       opt->bpBaffleFlag = true;
@@ -388,7 +388,7 @@ void GReadSegSCStd::setupSCFactory() {
 
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt = SegSCFac->mStdOptics[iStdOptNum];   
     int cflag = atoi(tokens.at(1).c_str() );
     if (cflag) {
       opt->bsBaffleFlag = true;
@@ -408,7 +408,7 @@ void GReadSegSCStd::setupSCFactory() {
 
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
-    opt = SCFac->mStdOptics[iStdOptNum];   
+    opt = SegSCFac->mStdOptics[iStdOptNum];   
     opt->iPrimReflID = atoi(tokens.at(1).c_str() );
     opt->iSecReflID = atoi(tokens.at(2).c_str());
   }
@@ -429,20 +429,20 @@ void GReadSegSCStd::setupSCFactory() {
   if (debug) {
     *oLog << endl;
     *oLog << "       printing all SEGSC standard optics objects" << endl;
-    for (SCFac->itmStdOp = SCFac->mStdOptics.begin();
-    	 SCFac->itmStdOp != SCFac->mStdOptics.end();
-    	 SCFac->itmStdOp++) {
-      (*(SCFac->itmStdOp)).second->printSegSCStdOptics();
+    for (SegSCFac->itmStdOp = SegSCFac->mStdOptics.begin();
+    	 SegSCFac->itmStdOp != SegSCFac->mStdOptics.end();
+    	 SegSCFac->itmStdOp++) {
+      (*(SegSCFac->itmStdOp)).second->printSegSCStdOptics();
     }
   }
 
   if (debug) {
-    *oLog << "  -- end of setupSCFactory" << endl;
+    *oLog << "  -- end of setupSegSCFactory" << endl;
   }
 
 };
 
-/******************** end of setupSCFactory ****************/
+/******************** end of setupSegSCFactory ****************/
  void GReadSegSCStd::readBasicRecord(const vector<string> &tokens1,
                                      const MirSeg &eMirPS,
                                      SegSCStdOptics *opt1) {
@@ -570,7 +570,7 @@ void GReadSegSCStd::getPolyCoeffs() {
          (tokens1.at(1) == "PRIMCOEFF") )  {
       int index = atoi(tokens1.at(2).c_str());
       int number = atoi(tokens1.at(3).c_str());
-      opt = SCFac->mStdOptics[index];
+      opt = SegSCFac->mStdOptics[index];
       opt->iNParP = number;
       // read and store the coefficients
       for (int i = 0;i<number;i++) {
@@ -592,7 +592,7 @@ void GReadSegSCStd::getPolyCoeffs() {
          (tokens1.at(1) == "SECONDCOEFF") )  {
       int index = atoi(tokens1.at(2).c_str());
       int number = atoi(tokens1.at(3).c_str());
-      opt = SCFac->mStdOptics[index];
+      opt = SegSCFac->mStdOptics[index];
       opt->iNParS = number;
       // read and store the coefficients
       for (int i = 0;i<number;i++) {
@@ -635,16 +635,16 @@ void GReadSegSCStd::getReflCoeff() {
       int index = atoi(tokens1.at(2).c_str());
       int number = atoi(tokens1.at(3).c_str());
       map<int, TGraph *>::iterator itGr;
-      itGr =  SCFac->mGRefl->find(index);
+      itGr =  SegSCFac->mGRefl->find(index);
 
-      if (itGr!=SCFac->mGRefl->end()) {
+      if (itGr!=SegSCFac->mGRefl->end()) {
         cerr << "trying to load reflection curve " << index << endl;
         cerr << "but curve already in the map: check pilot files " << endl;
         exit(0);
       }
 
-      (*(SCFac->mGRefl))[index] = new TGraph(number);
-      TGraph *grTmp = (*(SCFac->mGRefl))[index];
+      (*(SegSCFac->mGRefl))[index] = new TGraph(number);
+      TGraph *grTmp = (*(SegSCFac->mGRefl))[index];
 
       // get ready to read and load reflection coefficients
 
@@ -682,7 +682,7 @@ void GReadSegSCStd::getReflCoeff() {
     }
   }
 
-  if (SCFac->mGRefl->size() == 0) {
+  if (SegSCFac->mGRefl->size() == 0) {
     *oLog << "no reflection coeffient table found in config file" << endl;
     *oLog << "    STOPPING CODE" << endl;
     exit(0);

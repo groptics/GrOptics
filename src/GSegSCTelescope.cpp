@@ -195,8 +195,8 @@ void GSegSCTelescope::buildTelescope()
   addSecondaryObscuration();
   addPrimaryObscuration();
 
-    addKrakowFrame();
-    addPrimaryDesignFrame();
+  addKrakowFrame();
+  addPrimaryDesignFrame();
 
   //The entrance window MUST be added prior to the camera in order to properly compute
   //the focal plane offset introduced by the window's refraction (not elegant, I know...) 
@@ -1579,35 +1579,55 @@ bool GSegSCTelescope::getCameraPhotonLocation(ROOT::Math::XYZVector *photonLoc,
          (eRayPlotType == ALLSURFACES) ) {
       *oLog << " ready to draw polyline" << endl;
       *oLog << "      ray->GetNpoints(): " << ray->GetNpoints() << endl;
+
+      //Double_t xLast[3];
+      //ray->GetLastPoint(xLast);
+      //*oLog << "  get last point from ray " << xLast[0] << "  "
+      //    << xLast[1] << "  " << xLast[2] << endl;
+      
       TPolyLine3D *pol = ray->MakePolyLine3D();
-      for (Int_t ii = 0 ;ii < pol->GetN(); ii++ ) {
-  *oLog << ii << "  " << (pol->GetP())[ii] << endl;
+
+      //*oLog << "      pol->GetN() " << pol->GetN() << endl;
+      Float_t *Pa = pol->GetP();
+      //for (Int_t ii = 0 ;ii < pol->GetN(); ii++ ) {
+      //*oLog << ii << "  " << Pa[ii] << endl;
+      //}
+      // don't use the Print("all"), can't redirect to the logfile, uses printf in ROOT.
+      //*oLog << "    Print(all) " << endl;
+      //pol->Print("all");
+      
+      //*oLog << " pol->Size() " << pol->Size() << endl;
+      // Size() same as ray->GetNpoints
+      for (Int_t i=0;i<pol->Size();i++) {
+        *oLog << "x["<<i<<"]="<<Pa[3*i]<<" y["<<i<<"]="<<Pa[3*i+1]<<" z["<<i<<"]="<<Pa[3*i+2] << endl;
       }
-      pol->Print("all");
+      
+      //std::cout.rdbuf(backup);
+      
       *oLog << " fStatusLast " << fStatusLast << "  ";
       if (fStatusLast == 0) {
-  *oLog << "kRun" << endl;
+        *oLog << "kRun" << endl;
       }
       else if (fStatusLast == 1) {
-  *oLog << "kStop" << endl;
+        *oLog << "kStop" << endl;
       }
       else if (fStatusLast == 2) {
-  *oLog << "kExit" << endl;
+        *oLog << "kExit" << endl;
       }
       else if (fStatusLast == 3) {
-  *oLog << "kFocus" << endl;
+        *oLog << "kFocus" << endl;
       }
       else if (fStatusLast == 4) {
-  *oLog << "kSuspend" << endl;
+        *oLog << "kSuspend" << endl;
       }
       else if (fStatusLast == 5) {
-  *oLog << "kAbsorb" << endl;
+        *oLog << "kAbsorb" << endl;
       }
       else if (fStatusLast == 1) {
-  *oLog << "kStop" << endl;
+        *oLog << "kStop" << endl;
       }
       else {
-  *oLog << " can't interpret fStatusLast" << endl;
+        *oLog << " can't interpret fStatusLast" << endl;
       }
       *oLog << endl;
       

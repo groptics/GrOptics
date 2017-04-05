@@ -22,7 +22,7 @@ class GReadSegSCStd {
   //ostream *oPrtStrm;
   //int iPrtMode;
 
-  GSegSCTelescopeFactory *SCFac;
+  GSegSCTelescopeFactory *SegSCFac;
 
   // for reading pilot file, can be appended files
   string spilotfile;   //!< pilot file
@@ -37,7 +37,7 @@ class GReadSegSCStd {
 
   SegSCStdOptics *opt;  //!< working SCStdOptics from DCFac.
 
-  void setupSCFactory();
+  void setupSegSCFactory();
 
   void getReflCoeff();
 
@@ -52,13 +52,13 @@ void readChangeRecord(const vector<string> &tokens,
                        SegSCStdOptics *opt);
  public:
 
-  GReadSegSCStd(const string &pilotfile,GSegSCTelescopeFactory *SCFactory );
+  GReadSegSCStd(const string &pilotfile,GSegSCTelescopeFactory *SegSCFactory );
 
   GReadSegSCStd(const string &pilotfile);
 
   ~GReadSegSCStd();
 
-  void setSegSCTelescopeFactory(GSegSCTelescopeFactory *SCFactory);  
+  void setSegSCTelescopeFactory(GSegSCTelescopeFactory *SegSCFactory);  
 
   //void setPrintMode(ostream &oStr=cout,const int prtMode=0);
 
