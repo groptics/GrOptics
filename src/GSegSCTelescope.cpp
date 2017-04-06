@@ -650,20 +650,31 @@ void GSegSCTelescope::addKrakowFrame(bool remove2nd)
     // primary
     //TGeoTorus* primarySupportCircle1V = new TGeoTorus(4.41093*m, 0, 3*inch, 0, 360);
     TGeoTorus* primarySupportCircle1V = new TGeoTorus(4.8705*m, 0, 3*inch, 0, 360);
-    AObscuration* primarySupportCircle1Obs = new AObscuration("primarySupportCircle1Obs", primarySupportCircle1V);
-    fManager->GetTopVolume()->AddNodeOverlap(primarySupportCircle1Obs, 1, new TGeoTranslation(0, 0, -0.2902*m));
-//  fManager->GetTopVolume()->AddNodeOverlap(primarySupportCircle1Obs, 1, new TGeoTranslation(0, 0, 0*m));
+    AObscuration* primarySupportCircle1Obs = new AObscuration("primarySupportCircle1Obs",
+                                                              primarySupportCircle1V);
+    fManager->GetTopVolume()->AddNodeOverlap(primarySupportCircle1Obs, 1,
+                                             new TGeoTranslation(0, 0, -0.2902*m));
+    //  fManager->GetTopVolume()->AddNodeOverlap(primarySupportCircle1Obs, 1,
+    // new TGeoTranslation(0, 0, 0*m));
     if(not remove2nd){
         // secondary
-//  TGeoTorus* secondarySupportCircle1V = new TGeoTorus(2.8*m, 0, 3*inch, 0, 360);
+      //  TGeoTorus* secondarySupportCircle1V = new TGeoTorus(2.8*m, 0, 3*inch, 0, 360);
         TGeoTorus* secondarySupportCircle1V = new TGeoTorus(2.9083*m, 0, 3*inch, 0, 360);
-        AObscuration* secondarySupportCircle1Obs = new AObscuration("secondarySupportCircle1Obs", secondarySupportCircle1V);
-        fManager->GetTopVolume()->AddNodeOverlap(secondarySupportCircle1Obs, 1, new TGeoTranslation(0, 0, 352.04*inch+44.41*inch-31.32*inch));
-        fManager->GetTopVolume()->AddNodeOverlap(secondarySupportCircle1Obs, 2, new TGeoTranslation(0, 0, 352.04*inch+44.41*inch-61.32*inch));
+        AObscuration* secondarySupportCircle1Obs = new AObscuration("secondarySupportCircle1Obs",
+                                                                    secondarySupportCircle1V);
+        fManager->GetTopVolume()->AddNodeOverlap(secondarySupportCircle1Obs, 1,
+                                                 new TGeoTranslation(0, 0,
+                                                                     352.04*inch+44.41*inch-31.32*inch));
+        fManager->GetTopVolume()->AddNodeOverlap(secondarySupportCircle1Obs,
+                                                 2, new TGeoTranslation(0, 0,
+                                                                        352.04*inch+44.41*inch-61.32*inch));
 
-        TGeoTube* secondaryV = new TGeoTube("secondaryV", 0.*m, 2.9083*m, (352.04*inch+44.41*inch-31.32*inch-(352.04*inch+44.41*inch-61.32*inch))/2.);
+        TGeoTube* secondaryV = new TGeoTube("secondaryV", 0.*m, 2.9083*m, (352.04*inch+44.41*inch-31.32*inch-
+                                                                           (352.04*inch+44.41*inch-61.32*inch))/2.);
         AObscuration* secondaryObsK = new AObscuration("secondaryObsK", secondaryV);
-        fManager->GetTopVolume()->AddNodeOverlap(secondaryObsK, 1, new TGeoTranslation(0, 0, (352.04*inch+44.41*inch-31.32*inch + 352.04*inch+44.41*inch-61.32*inch)/2.));
+        fManager->GetTopVolume()->AddNodeOverlap(secondaryObsK, 1, new TGeoTranslation(0, 0,
+                                                                                       (352.04*inch+44.41*inch-31.32*inch +
+                                                                                        352.04*inch+44.41*inch-61.32*inch)/2.));
     } // if
 
     // camera
@@ -716,14 +727,20 @@ void GSegSCTelescope::addKrakowFrame(bool remove2nd)
         if (i == 0) {
             c = 1.;
             s = 0.;
-            fManager->GetTopVolume()->AddNodeOverlap(mainObs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c + v0.Y()*s, v0.X()*s - v0.Y()*c, v0.Z()),
-                                                                                        TGeoRotation("", TMath::ACos(c)*TMath::RadToDeg(), theta, 0)));
+            fManager->GetTopVolume()->AddNodeOverlap(mainObs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c +
+                                                                                                        v0.Y()*s, v0.X()*s - v0.Y()*c,
+                                                                                                        v0.Z()),
+                                                                                        TGeoRotation("", TMath::ACos(c)*TMath::RadToDeg(),
+                                                                                                     theta, 0)));
         }
         else if (i == 1) {
             c = TMath::Cos(TMath::Pi()*3./4.);
             s = TMath::Sin(TMath::Pi()*3./4.);
-            fManager->GetTopVolume()->AddNodeOverlap(mainObs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c + v0.Y()*s, v0.X()*s - v0.Y()*c, v0.Z()),
-                                                                                        TGeoRotation("", TMath::ACos(c)*TMath::RadToDeg()*s/TMath::Abs(s), theta, 0)));
+            fManager->GetTopVolume()->AddNodeOverlap(mainObs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c +
+                                                                                                        v0.Y()*s, v0.X()*s - v0.Y()*c,
+                                                                                                        v0.Z()),
+                                                                                        TGeoRotation("", TMath::ACos(c)*TMath::RadToDeg()*
+                                                                                                     s/TMath::Abs(s), theta, 0)));
         }
         else if (i == 2) {
             c = TMath::Cos(TMath::Pi()*5./4.);
@@ -751,20 +768,31 @@ void GSegSCTelescope::addKrakowFrame(bool remove2nd)
         if (i == 0) {
             c = 1.;
             s = 0.;
-            fManager->GetTopVolume()->AddNodeOverlap(zigzag1Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c + v0.Y()*s, v0.X()*s - v0.Y()*c, v0.Z()),
-                                                                                           TGeoRotation("", TMath::ACos(c)*TMath::RadToDeg(), theta, 0)));
+            fManager->GetTopVolume()->AddNodeOverlap(zigzag1Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*
+                                                                                                           c + v0.Y()*s, v0.X()*s -
+                                                                                                           v0.Y()*c, v0.Z()),
+                                                                                           TGeoRotation("", TMath::ACos(c)*
+                                                                                                        TMath::RadToDeg(), theta, 0)));
         }
         else if (i == 1) {
             c = TMath::Cos(TMath::Pi()*3./4.);
             s = TMath::Sin(TMath::Pi()*3./4.);
-            fManager->GetTopVolume()->AddNodeOverlap(zigzag1Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c + v0.Y()*s, v0.X()*s - v0.Y()*c, v0.Z()),
-                                                                                           TGeoRotation("", TMath::ACos(c)*TMath::RadToDeg()*s/TMath::Abs(s), theta, 0)));
+            fManager->GetTopVolume()->AddNodeOverlap(zigzag1Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c +
+                                                                                                           v0.Y()*s, v0.X()*s - v0.Y()*c,
+                                                                                                           v0.Z()),
+                                                                                           TGeoRotation("", TMath::ACos(c)*
+                                                                                                        TMath::RadToDeg()*s/TMath::Abs(s),
+                                                                                                        theta, 0)));
         }
         else if (i == 2) {
             c = TMath::Cos(TMath::Pi()*5./4.);
             s = TMath::Sin(TMath::Pi()*5./4.);
-            fManager->GetTopVolume()->AddNodeOverlap(zigzag1Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c + v0.Y()*s, v0.X()*s - v0.Y()*c, v0.Z()),
-                                                                                           TGeoRotation("", TMath::ACos(c)*TMath::RadToDeg()*s/TMath::Abs(s), theta, 0)));
+            fManager->GetTopVolume()->AddNodeOverlap(zigzag1Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c +
+                                                                                                           v0.Y()*s, v0.X()*s - v0.Y()*c,
+                                                                                                           v0.Z()),
+                                                                                           TGeoRotation("", TMath::ACos(c)*
+                                                                                                        TMath::RadToDeg()*s/TMath::Abs(s),
+                                                                                                        theta, 0)));
         }
     } // i
 
@@ -784,20 +812,31 @@ void GSegSCTelescope::addKrakowFrame(bool remove2nd)
         if (i == 0) {
             c = 1.;
             s = 0.;
-            fManager->GetTopVolume()->AddNodeOverlap(zigzag2Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c + v0.Y()*s, v0.X()*s - v0.Y()*c, v0.Z()),
-                                                                                           TGeoRotation("", TMath::ACos(c)*TMath::RadToDeg(), theta, 0)));
+            fManager->GetTopVolume()->AddNodeOverlap(zigzag2Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*
+                                                                                                           c + v0.Y()*s, v0.X()*s - v0.Y()*
+                                                                                                           c, v0.Z()),
+                                                                                           TGeoRotation("", TMath::ACos(c)*
+                                                                                                        TMath::RadToDeg(), theta, 0)));
         }
         else if (i == 1) {
             c = TMath::Cos(TMath::Pi()*3./4.);
             s = TMath::Sin(TMath::Pi()*3./4.);
-            fManager->GetTopVolume()->AddNodeOverlap(zigzag2Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c + v0.Y()*s, v0.X()*s - v0.Y()*c, v0.Z()),
-                                                                                           TGeoRotation("", TMath::ACos(c)*TMath::RadToDeg()*s/TMath::Abs(s), theta, 0)));
+            fManager->GetTopVolume()->AddNodeOverlap(zigzag2Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*
+                                                                                                           c + v0.Y()*s, v0.X()*s -
+                                                                                                           v0.Y()*c, v0.Z()),
+                                                                                           TGeoRotation("",
+                                                                                                        TMath::ACos(c)*TMath::RadToDeg()*
+                                                                                                        s/TMath::Abs(s), theta, 0)));
         }
         else if (i == 2) {
             c = TMath::Cos(TMath::Pi()*5./4.);
             s = TMath::Sin(TMath::Pi()*5./4.);
-            fManager->GetTopVolume()->AddNodeOverlap(zigzag2Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c + v0.Y()*s, v0.X()*s - v0.Y()*c, v0.Z()),
-                                                                                           TGeoRotation("", TMath::ACos(c)*TMath::RadToDeg()*s/TMath::Abs(s), theta, 0)));
+            fManager->GetTopVolume()->AddNodeOverlap(zigzag2Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*
+                                                                                                           c + v0.Y()*s, v0.X()*s -
+                                                                                                           v0.Y()*c, v0.Z()),
+                                                                                           TGeoRotation("", TMath::ACos(c)*
+                                                                                                        TMath::RadToDeg()*s/TMath::Abs(s),
+                                                                                                        theta, 0)));
         }
     } // i
 
@@ -817,20 +856,32 @@ void GSegSCTelescope::addKrakowFrame(bool remove2nd)
         if (i == 0) {
             c = 1.;
             s = 0.;
-            fManager->GetTopVolume()->AddNodeOverlap(zigzag3Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c + v0.Y()*s, v0.X()*s - v0.Y()*c, v0.Z()),
-                                                                                           TGeoRotation("", TMath::ACos(c)*TMath::RadToDeg(), theta, 0)));
+            fManager->GetTopVolume()->AddNodeOverlap(zigzag3Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*
+                                                                                                           c + v0.Y()*s, v0.X()*s -
+                                                                                                           v0.Y()*c, v0.Z()),
+                                                                                           TGeoRotation("",
+                                                                                                        TMath::ACos(c)*TMath::RadToDeg(),
+                                                                                                        theta, 0)));
         }
         else if (i == 1) {
             c = TMath::Cos(TMath::Pi()*3./4.);
             s = TMath::Sin(TMath::Pi()*3./4.);
-            fManager->GetTopVolume()->AddNodeOverlap(zigzag3Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c + v0.Y()*s, v0.X()*s - v0.Y()*c, v0.Z()),
-                                                                                           TGeoRotation("", TMath::ACos(c)*TMath::RadToDeg()*s/TMath::Abs(s), theta, 0)));
+            fManager->GetTopVolume()->AddNodeOverlap(zigzag3Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*
+                                                                                                           c + v0.Y()*s, v0.X()*s -
+                                                                                                           v0.Y()*c, v0.Z()),
+                                                                                           TGeoRotation("", TMath::ACos(c)*
+                                                                                                        TMath::RadToDeg()*s/TMath::Abs(s),
+                                                                                                        theta, 0)));
         }
         else if (i == 2) {
             c = TMath::Cos(TMath::Pi()*5./4.);
             s = TMath::Sin(TMath::Pi()*5./4.);
-            fManager->GetTopVolume()->AddNodeOverlap(zigzag3Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c + v0.Y()*s, v0.X()*s - v0.Y()*c, v0.Z()),
-                                                                                           TGeoRotation("", TMath::ACos(c)*TMath::RadToDeg()*s/TMath::Abs(s), theta, 0)));
+            fManager->GetTopVolume()->AddNodeOverlap(zigzag3Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*
+                                                                                                           c + v0.Y()*s, v0.X()*s -
+                                                                                                           v0.Y()*c, v0.Z()),
+                                                                                           TGeoRotation("", TMath::ACos(c)*
+                                                                                                        TMath::RadToDeg()*s/TMath::Abs(s),
+                                                                                                        theta, 0)));
         }
     } // i
 
@@ -851,8 +902,11 @@ void GSegSCTelescope::addKrakowFrame(bool remove2nd)
         if (i == 0) {
             c = 1.;
             s = 0.;
-            fManager->GetTopVolume()->AddNodeOverlap(zigzag4Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c + v0.Y()*s, v0.X()*s - v0.Y()*c, v0.Z()),
-                                                                                           TGeoRotation("", TMath::ACos(c)*TMath::RadToDeg(), theta, 0)));
+            fManager->GetTopVolume()->AddNodeOverlap(zigzag4Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*
+                                                                                                           c + v0.Y()*s, v0.X()*s -
+                                                                                                           v0.Y()*c, v0.Z()),
+                                                                                           TGeoRotation("", TMath::ACos(c)*
+                                                                                                        TMath::RadToDeg(), theta, 0)));
         }
         else if (i == 1) {
             c = TMath::Cos(TMath::Pi()*3./4.);
@@ -863,8 +917,12 @@ void GSegSCTelescope::addKrakowFrame(bool remove2nd)
         else if (i == 2) {
             c = TMath::Cos(TMath::Pi()*5./4.);
             s = TMath::Sin(TMath::Pi()*5./4.);
-            fManager->GetTopVolume()->AddNodeOverlap(zigzag4Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*c + v0.Y()*s, v0.X()*s - v0.Y()*c, v0.Z()),
-                                                                                           TGeoRotation("", TMath::ACos(c)*TMath::RadToDeg()*s/TMath::Abs(s), theta, 0)));
+            fManager->GetTopVolume()->AddNodeOverlap(zigzag4Obs, i + 1, new TGeoCombiTrans(TGeoTranslation(v0.X()*
+                                                                                                           c + v0.Y()*s, v0.X()*
+                                                                                                           s - v0.Y()*c, v0.Z()),
+                                                                                           TGeoRotation("", TMath::ACos(c)*
+                                                                                                        TMath::RadToDeg()*s/TMath::Abs(s),
+                                                                                                        theta, 0)));
         }
     } // i
 
