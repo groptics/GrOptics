@@ -308,7 +308,7 @@ enum RayPlotType IntToRayPlotType(int i) {
   if (i == 0) {
     eplot = FOCUSONLY;
   }
-  else if (i = 1) {
+  else if (i == 1) {
     eplot = ALLSURFACES;
   }
   return eplot;
