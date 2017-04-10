@@ -41,7 +41,7 @@ cherenkov photon GRISU-type input file,
 same type input file as for grisudet. 
 FILEIN <filename>  
 * FILEIN ./Config/photon.cph
-
+ 
 see GrOptics/Make_Photons/README to create this test file
  FILEIN ./Make_Photons/veritasStarOffset.cph
 
@@ -62,8 +62,8 @@ name of grOptics log file, default use cerr (if no asterisk)
 number of showers/photons, defaults -1
   NSHOWER <numShowers, <0, no limit>
           <numPhotons, <0, no limit>
- NSHOWER -1 -1
-* NSHOWER 1 50
+* NSHOWER -1 -1
+ NSHOWER 1 50
 You can see the paths of all 20 photons in the ogl image when you
 run the code (all photons from the photon.cph test input file).
 
@@ -131,7 +131,7 @@ does not use root geometry methods due to slow execution issues.  You may get
 strange results if you use other options for drawing DC telescopes (to be fixed
 soon)
 
-* DRAWTEL 1 20
+ DRAWTEL 1 20
  DRAWTEL 2 0
 
 TESTTEL <telescope number> <baseFileName for histograms>   
