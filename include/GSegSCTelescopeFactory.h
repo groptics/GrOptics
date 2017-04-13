@@ -81,7 +81,12 @@ struct SegSCStdOptics {
   Double_t* fP;   // Polynomial coefficients (p0, p1 ...)
   Double_t* fS;   // Polynomial coefficients (s0, s1 ...)
 
-  // Primary baffle
+    //  Frame
+
+    bool frameFlag;
+
+
+    // Primary baffle
 
   bool bpBaffleFlag;
   Double_t fpBRadOffset;
@@ -98,6 +103,8 @@ struct SegSCStdOptics {
   Double_t fsBLen;
   Double_t fsBZOffset;
   Double_t fsBTilt;
+
+
 
   // MAPMT Parameters
   bool bCameraFlag;

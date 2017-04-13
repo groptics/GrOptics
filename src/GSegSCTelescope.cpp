@@ -190,13 +190,21 @@ void GSegSCTelescope::buildTelescope()
   //fManager->SetTopVisible(.9); 
 
   makePrimarySecondaryDisks();
-  addPrimaryF();
-  addSecondaryJ();
+
   addSecondaryObscuration();
   addPrimaryObscuration();
+    addPrimaryF();
+    addSecondaryJ();
 
-  addKrakowFrame();
-  addPrimaryDesignFrame();
+
+  if(frameFlag) {
+     // *oLog << "  Adding frame stuff n1 " << frameFlag<<endl;
+      addKrakowFrame(false);
+      addPrimaryDesignFrame();
+
+  }
+
+
 
   //The entrance window MUST be added prior to the camera in order to properly compute
   //the focal plane offset introduced by the window's refraction (not elegant, I know...) 
@@ -653,6 +661,11 @@ void GSegSCTelescope::addSecondaryBaffle() {
 /*******************************************************************/
 void GSegSCTelescope::addKrakowFrame(bool remove2nd)
 {
+
+    bool debug = false;
+    if (debug) {
+        *oLog << "  --  GSegSCTelescope::addKrakowFrame" << endl;
+    }
     // From Akira1.pdf
     // primary
     //TGeoTorus* primarySupportCircle1V = new TGeoTorus(4.41093*m, 0, 3*inch, 0, 360);
@@ -1096,6 +1109,11 @@ void GSegSCTelescope::addKrakowFrame(bool remove2nd)
 /**/
 void GSegSCTelescope::addPrimaryDesignFrame()
 {
+    bool debug = false;
+    if (debug) {
+        *oLog << "  --  GSegSCTelescope::addPrimaryDesignFrame" << endl;
+    }
+
     Double_t offset = -1200*mm; // needed because the camera position seems to be wroing in the CAD file
 
     // Make the volume for the camera housing
@@ -1944,6 +1962,11 @@ void GSegSCTelescope::printTelescope() {
                                         << fEntranceWindowAbsLength << endl;
       *oLog << "        fFocalPlaneOffsetCorrection  " << fFocalPlaneOffsetCorrection << endl;
     }
+    if(frameFlag) {
+        *oLog << "      ******* Krakov Frame On " << endl;
+        //add details
+    }
+      else {*oLog << "      ******* Krakov Frame Off " << endl;}
     if (bpBaffleFlag) {
       *oLog << "      ******* Primary Baffle " << endl;
       *oLog << "        fpBLen  " << fpBLen << endl;
@@ -2237,6 +2260,9 @@ void GSegSCTelescope::initialize() {
   fKappa2        = 0.0;
   fRf = 0.0;
   fZf = 0.0;
+
+  frameFlag = false;
+  //add frame config here -k
 
   bpBaffleFlag = false;
   fpBRadOffset = 0.0;

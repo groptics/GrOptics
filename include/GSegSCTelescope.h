@@ -137,6 +137,11 @@ class GSegSCTelescope : public ATelescope {
 
   Double_t fRotationOffset;
 
+
+    //Frame
+    bool frameFlag;
+    //declare frame config param here -k
+
   // Primary baffle
 
   bool bpBaffleFlag;

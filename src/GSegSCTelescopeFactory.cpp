@@ -172,7 +172,7 @@ SegSCStdOptics::~SegSCStdOptics() {
 /********************* end of ~SegSCStdOptics *****************/
 
 void SegSCStdOptics::printSegSCStdOptics() {
-
+    *oLog << "        frameFlag  " << frameFlag << endl;
   bool debug = false;
   if (debug) {
     *oLog << "  -- SegSCStdOptics::printSegSCStdOptics " << endl;
@@ -211,7 +211,8 @@ void SegSCStdOptics::printSegSCStdOptics() {
   *oLog << "        Focal Surface fKappa1 fKappa2 fRf " 
         << fKappa1 << " " << fKappa2 << " " 
         << fRf << endl;
-  
+
+  *oLog << "        frameFlag  " << frameFlag << endl;
   *oLog << "        bpBaffleFlag  " << bpBaffleFlag << endl;
   *oLog << "        fpBLen        " << fpBLen << endl;
   *oLog << "        fpBTilt       " << fpBTilt << endl;
@@ -341,6 +342,7 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
     *oLog << " -- GSegSCTelescopeFactory::makeTelescope" << endl;
     *oLog << "      telID  = " << id << endl;
     *oLog << "      telStd = " << std << endl;
+
   }
 
   Int_t idTel = id;
@@ -352,7 +354,7 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   assert(itmStdOp != mStdOptics.end());
   // make pointer to working stdoptics structure, easier typing
   opt = mStdOptics[iStdID];
-
+    *oLog << "        frameFlag  " << opt->frameFlag << endl;
   // make the telescope
   SegSCTel = new GSegSCTelescope;
 
@@ -463,7 +465,8 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SegSCTel->fKappa2 = opt->fKappa2;
   SegSCTel->fRf     = opt->fRf;
   SegSCTel->fZf     = opt->fZf;
-
+  // krakov frame
+  SegSCTel->frameFlag = opt->frameFlag;
   // primary baffle
   SegSCTel->bpBaffleFlag = opt->bpBaffleFlag;
   SegSCTel->fpBRadOffset = opt-> fpBRadOffset;

@@ -364,8 +364,23 @@ void GReadSegSCStd::setupSegSCFactory() {
     opt->fEntranceWindowAbsLength = atof(tokens.at(6).c_str() );
   }
 
+  flag = "PRIMFRAME";
+  pi->set_flag(flag);
+
+  while (pi->get_line_vector(tokens) >=0) {
+    int iStdOptNum = atoi(tokens.at(0).c_str());
+    opt = SegSCFac->mStdOptics[iStdOptNum];
+    int cflag = atoi(tokens.at(1).c_str());
+    if (cflag) {
+      opt->frameFlag = true;
+    } else {
+      opt->frameFlag = false;
+    }
+  }
+
   flag = "PRIMBAFFLE"; 
   pi->set_flag(flag);
+
 
   while (pi->get_line_vector(tokens) >=0) {
     int iStdOptNum = atoi(tokens.at(0).c_str() );
