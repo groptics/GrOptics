@@ -301,7 +301,7 @@ void GReadSegSCStd::setupSegSCFactory() {
     opt->fFocalSurfacePsiOffset = atof(tokens.at(6).c_str() );
   }
 
-  flag = "CAMERA"; 
+  flag = "CAMERA"; //CAMERA 1 1 6.75 0.0 54.0 32.7 0.1 0.0 0.0 0.0 0.0 1.55 0 2
   pi->set_flag(flag);
 
   while (pi->get_line_vector(tokens) >=0) {
@@ -320,21 +320,25 @@ void GReadSegSCStd::setupSegSCFactory() {
     opt->fMAPMTLength = atof(tokens.at(5).c_str());
     opt->fInputWindowThickness = atof(tokens.at(6).c_str());
     //opt->fMAPMTAngularSize = atof(tokens.at(7).c_str());
-    opt->fMAPMTOffset =  atof(tokens.at(7).c_str());
-    opt->fMAPMTGap =  atof(tokens.at(8).c_str());
-    if (tokens.size() > 9) {
-      opt->fMAPMTRefIndex =  atof(tokens.at(9).c_str());
+    opt->fMAPMTOffset_x =  atof(tokens.at(7).c_str());
+    opt->fMAPMTOffset_y =  atof(tokens.at(8).c_str());
+    opt->fMAPMTOffset =  atof(tokens.at(9).c_str()); //this is z axis offset
+    opt->fMAPMTRoll =  atof(tokens.at(10).c_str());
+    opt->fMAPMTPitch =  atof(tokens.at(11).c_str());
+    opt->fMAPMTGap =  atof(tokens.at(12).c_str());
+    if (tokens.size() > 12) {
+      opt->fMAPMTRefIndex =  atof(tokens.at(13).c_str());
     }
-    if (tokens.size() > 10) {
-      Int_t tmpi = atoi(tokens.at(10).c_str());
+    if (tokens.size() > 13) {
+      Int_t tmpi = atoi(tokens.at(14).c_str());
       if (tmpi > 0) 
         opt->bSingleMAPMTmodule = true;
       else {
         opt->bSingleMAPMTmodule = false;
       }
     }
-    if (tokens.size() > 11) {
-      opt->fSubCells =  atof(tokens.at(11).c_str());
+    if (tokens.size() > 14) {
+      opt->fSubCells =  atof(tokens.at(15).c_str());
     }
   }
 
@@ -352,16 +356,20 @@ void GReadSegSCStd::setupSegSCFactory() {
       opt->bEntranceWindowFlag = false;
     }
     opt->fEntranceWindowThickness = atof(tokens.at(2).c_str() );
-    opt->fEntranceWindowN = atof(tokens.at(3).c_str() );
-    opt->fEntranceWindowOffset = atof(tokens.at(4).c_str() );
-    int aflag = atof(tokens.at(5).c_str() );
+      opt->iEntranceTrCurveIndex = atof(tokens.at(3).c_str()) ;
+      if(atof(tokens.at(3).c_str()) > 0 ) {
+          getTranCurve();
+      }
+    opt->fEntranceWindowN = atof(tokens.at(4).c_str() );
+    opt->fEntranceWindowOffset = atof(tokens.at(5).c_str() );
+    int aflag = atof(tokens.at(6).c_str() );
     if (aflag) {
       opt->bEntranceWindowAbsFlag = true;
     }
     else {
       opt->bEntranceWindowAbsFlag = false;
     }
-    opt->fEntranceWindowAbsLength = atof(tokens.at(6).c_str() );
+    opt->fEntranceWindowAbsLength = atof(tokens.at(7).c_str() );
   }
 
   flag = "PRIMFRAME";
@@ -704,3 +712,107 @@ void GReadSegSCStd::getReflCoeff() {
   }
   
 };
+
+/******************** end of getReflCoeff ****************/
+
+void GReadSegSCStd::getTranCurve() {
+
+    // wavelengths in the config. file have nm units
+    // here convert to cm as required robast usage
+    bool debug = false;
+
+    if (debug) {
+        *oLog << "  -- GReadSegSCStd::getTranCurve() " << endl;
+        *oLog << "       spilotfile " << spilotfile << endl;
+    }
+
+    ifstream inFile(spilotfile.c_str(),ios::in);
+    if (! inFile) {
+        cerr << "  -- GReadSegSCStd::getTranCurve " << endl;
+        cerr << "    could not open file: " << spilotfile << endl;
+        exit(0);
+    }
+
+    string pilotline;
+    while( getline(inFile,pilotline,'\n')) {
+        vector<string> tokens1;
+        GUtilityFuncts::tokenizer(pilotline,tokens1);
+        if ( (tokens1.size() > 0) &&
+             (tokens1.at(0) == "*")  &&
+             (tokens1.at(1) == "TRCRV") )  {
+
+            int index = atoi(tokens1.at(2).c_str());
+            int number = atoi(tokens1.at(3).c_str());
+
+            map<int, TGraph *>::iterator itGrAbs;
+            itGrAbs =  SegSCFac->mGTranAbsLength->find(index);
+
+            if (itGrAbs!=SegSCFac->mGTranAbsLength->end()) {
+                cerr << "trying to load transmittance curve " << index << endl;
+                cerr << "but curve already in the map: check pilot files " << endl;
+                exit(0);
+            }
+
+            map<int, TGraph *>::iterator itGrN;
+            itGrAbs =  SegSCFac->mGTranN->find(index);
+
+            if (itGrAbs!=SegSCFac->mGTranN->end()) {
+                cerr << "trying to load transmittance curve " << index << endl;
+                cerr << "but curve already in the map: check pilot files " << endl;
+                exit(0);
+            }
+
+            (*(SegSCFac->mGTranAbsLength))[index] = new TGraph(number);
+            TGraph *grTmpAbs = (*(SegSCFac->mGTranAbsLength))[index];
+
+            (*(SegSCFac->mGTranN))[index] = new TGraph(number);
+            TGraph *grTmpN = (*(SegSCFac->mGTranN))[index];
+
+            // get ready to read and load transmittance coefficients
+
+            // read and store the transmittance coefficients
+            for (int i = 0;i<number;i++) {
+                double wavel     = 0.0;
+                double refindex = 0.0;
+                double absl = 0.0;
+                inFile >> wavel >> refindex >> absl;
+                // convert to cm from nm.
+                wavel = wavel*1.0e-07;
+                grTmpN->SetPoint(i,wavel,refindex);
+                grTmpAbs->SetPoint(i,wavel,absl);
+            }
+            getline(inFile,pilotline);// finish the end of the line
+
+            if (debug) {
+                *oLog << "       reading in transmittance curve " << index
+                      << "   with " << number << " points" << endl;
+                *oLog << "             converting from nm to cm for robast" << endl;
+            }
+
+            if (debug) {
+                *oLog << "      print transmittance vectors for index: " << index
+                      << "  number of points " << number << endl;
+                *oLog << "             wavelengths stored in cm, not nm" << endl;
+                for (int i=0;i<number;i++) {
+                    double x = 0.0;
+                    double y = 0.0;
+                    double z = 0.0;
+                    grTmpN->GetPoint(i,x,y);
+                    grTmpAbs->GetPoint(i,x,z);
+                    *oLog << "          " << setw(4) << i << "   "
+                          << x/1.0e-07 << "     "
+                          <<  y <<  z << endl;
+                }
+                *oLog << endl;
+            }
+        }
+    }
+
+    if (SegSCFac->mGTranN->size() == 0) {
+        *oLog << "no transmittance coeffient table found in config file" << endl;
+        *oLog << "    STOPPING CODE" << endl;
+        exit(0);
+    }
+
+};
+

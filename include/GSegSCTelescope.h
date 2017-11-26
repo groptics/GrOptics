@@ -178,9 +178,16 @@ class GSegSCTelescope : public ATelescope {
   Double_t fMAPMTWidth;
   Int_t fSubCells; 
   Double_t fMAPMTLength; 
-  Double_t fInputWindowThickness; 
-  Double_t fMAPMTOffset; 
-  Double_t fMAPMTGap; 
+  Double_t fInputWindowThickness;
+    Double_t fMAPMTOffset; //z
+    Double_t fMAPMTOffset_x;
+    Double_t fMAPMTOffset_y;
+
+    Double_t fMAPMTRoll;
+    Double_t fMAPMTPitch;
+
+
+    Double_t fMAPMTGap;
   Double_t fMAPMTRefIndex;  
 
   Double_t fCathodeTopRelToFocalSurface;
@@ -196,7 +203,11 @@ class GSegSCTelescope : public ATelescope {
   Double_t fEntranceWindowN;
   Double_t fEntranceWindowAbsLength;
   Double_t fEntranceWindowOffset;
+  Int_t iEntranceTrCurveIndex;
   Double_t fFocalPlaneOffsetCorrection;
+
+    map<int, TGraph *> *mGTranAbsLength;
+    map<int, TGraph *> *mGTranN;
   //
 
   bool bRayPlotModeFlag;
@@ -256,7 +267,7 @@ class GSegSCTelescope : public ATelescope {
 
   void addMAPMTFocalPlane();
 
-  void addEntranceWindow();
+  void addEntranceWindow(Double wl=0);
 
   void addPrimaryBaffle();
 
@@ -321,6 +332,8 @@ class GSegSCTelescope : public ATelescope {
     iStdID = stdID; };
  
   void setReflCoeffMap(map<int, TGraph *> *mGr);
+    void setTransmittanceNMap(map<int, TGraph *> *mGr);
+    void setTransmittanceAbsMap(map<int, TGraph *> *mGr);
 
   void testFocalPlane();
 
@@ -343,6 +356,8 @@ class GSegSCTelescope : public ATelescope {
   }
 
   TGraph * makeReflectivityGraph(const Int_t &irefl);
+    TGraph * makeTransmittanceAbsGraph(const Int_t &itran);
+    TGraph * makeTransmittanceNGraph(const Int_t &itran);
 
   void testPerformance();
 

@@ -47,7 +47,7 @@ see GrOptics/Make_Photons/README to create this test file
 
 camera output root file specification type
       - root file name
-      - name for tree containing parameters common to all photons
+      - name for tree contxaining parameters common to all photons
       - base name for photon trees, one tree per telescope, 
         telescope number appended to base name
       - photonDirCosine flag: 0/1, if 1 add dirCosineCamera branches
@@ -63,7 +63,7 @@ number of showers/photons, defaults -1
   NSHOWER <numShowers, <0, no limit>
           <numPhotons, <0, no limit>
  NSHOWER -1 -1
-* NSHOWER 1 1
+* NSHOWER 4 50
 You can see the paths of all 20 photons in the ogl image when you
 run the code (all photons from the photon.cph test input file).
 
@@ -131,7 +131,7 @@ does not use root geometry methods due to slow execution issues.  You may get
 strange results if you use other options for drawing DC telescopes (to be fixed
 soon)
 
- *DRAWTEL 1 0
+ DRAWTEL 1 10
  DRAWTEL 2 0
 
 TESTTEL <telescope number> <baseFileName for histograms>   
@@ -149,7 +149,7 @@ DO THAT.
 The graphs and histograms are printed to png files using the base filenames.
 
 TESTTEL <telescope number> <baseFileName for histograms>   
- TESTTEL 1  PsfSegSpotTrCurve
+* TESTTEL 1  PsfSegSpot2
 
 fixed telescope pointing option is now in the array configuration file
 See the ARRAYTEL record to set fixed pointing for individual telescopes 

@@ -184,7 +184,7 @@ void GPilot::tokenizer(string& str, vector<string>& tokens1) {
     if ( (tokenstr.find("]") != string::npos) &&
          (tokenstr.find("[") == string::npos) ) {
  
-      cerr << "found pilot line with ] bracket and no matchine [" << endl;
+      cerr << "found pilot line with ] bracket and no matching [" << endl;
       cerr << "pilotfile line with problem follows:" << endl;
       cerr << strc << endl;
       exit(0);

@@ -264,9 +264,9 @@ void GReadSCStd::setupSCFactory() {
     opt->fMAPMTLength = atof(tokens.at(5).c_str());
     opt->fInputWindowThickness = atof(tokens.at(6).c_str());
     opt->fMAPMTAngularSize = atof(tokens.at(7).c_str());
-    opt->fMAPMTOffset =  atof(tokens.at(8).c_str());
-    opt->fMAPMTGap =  atof(tokens.at(9).c_str());
-    if (tokens.size() == 11) {
+    opt->fMAPMTOffset =  atof(tokens.at(10).c_str());
+    opt->fMAPMTGap =  atof(tokens.at(11).c_str());
+    if (tokens.size() == 12) {
       opt->fMAPMTRefIndex =  atof(tokens.at(10).c_str());
     }
   }

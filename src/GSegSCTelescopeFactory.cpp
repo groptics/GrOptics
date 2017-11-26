@@ -107,13 +107,18 @@ SegSCStdOptics::SegSCStdOptics() {
   fInputWindowThickness = 0.0; // Thickness of the input window
   fMAPMTGap = 0.0;
   fMAPMTRefIndex = 0.0;
-  fMAPMTOffset = 0.0;
+  fMAPMTOffset = 0.0; //z offset
+    fMAPMTOffset_x = 0.0;
+    fMAPMTOffset_y = 0.0;
+  fMAPMTRoll = 0.0;
+  fMAPMTPitch = 0.0;
   bSingleMAPMTmodule = false;
 
   // Entrance Window Parameters
 
   bEntranceWindowFlag      = false;
   bEntranceWindowAbsFlag   = false;
+    iEntranceTrCurveIndex  = 0;
   fEntranceWindowThickness = 0.0;
   fEntranceWindowN         = 0.0;
   fEntranceWindowAbsLength = 0.0;
@@ -231,7 +236,11 @@ void SegSCStdOptics::printSegSCStdOptics() {
   *oLog << "        fMAPMTWidth   " << fMAPMTWidth << endl;
   *oLog << "        fMAPMTLength   " << fMAPMTLength << endl;
   *oLog << "        fInputWindowThickness   " << fInputWindowThickness << endl;
-  *oLog << "        fMAPMTOffset        " << fMAPMTOffset << endl;
+    *oLog << "        fMAPMTOffset_x    " << fMAPMTOffset_x << endl;
+    *oLog << "        fMAPMTOffset_y        " << fMAPMTOffset_y << endl;
+  *oLog << "        fMAPMTOffset (z)       " << fMAPMTOffset << endl;
+  *oLog << "        fMAPMTRoll       " << fMAPMTRoll << endl;
+  *oLog << "        fMAPMTPitch       " << fMAPMTPitch << endl;
   *oLog << "        fMAPMTGap        " << fMAPMTGap << endl;
   *oLog << "        fMAPMTRefIndex        " << fMAPMTRefIndex << endl;
   *oLog << "        bSingleMAPMTmodule " << bSingleMAPMTmodule << endl;
@@ -291,11 +300,15 @@ GSegSCTelescopeFactory(GReadSegSCStd &segscReader,
   pi = 0;
   sPilotEdit = "";
   mGRefl = 0;
+    mGTranAbsLength = 0;
+    mGTranN = 0;
   opt = 0;
   SegSCTel = 0;
 
   // make the reflectivity map 
   mGRefl = new map<int, TGraph *>;
+    mGTranAbsLength = new map<int, TGraph *>;
+    mGTranN = new map<int, TGraph *>;
 
   readSegSC = &(segscReader);
   readSegSC->setSegSCTelescopeFactory(this);
@@ -324,11 +337,24 @@ GSegSCTelescopeFactory::~GSegSCTelescopeFactory() {
     
     SafeDelete( itmStdOp->second );
   }
-  for (itmGRefl=mGRefl->begin();
-       itmGRefl!=mGRefl->end(); itmGRefl++) {
-    SafeDelete(itmGRefl->second ); 
+  for (itmGTranAbsLength=mGTranAbsLength->begin();
+       itmGTranAbsLength!=mGTranAbsLength->end(); itmGTranAbsLength++) {
+    SafeDelete(itmGTranAbsLength->second );
   }
-  SafeDelete(mGRefl);
+  SafeDelete(mGTranAbsLength);
+
+    for (itmGTranN=mGTranN->begin();
+         itmGTranN!=mGTranN->end(); itmGTranN++) {
+        SafeDelete(itmGTranN->second );
+    }
+    SafeDelete(mGTranN);
+
+    for (itmGRefl=mGRefl->begin();
+         itmGRefl!=mGRefl->end(); itmGRefl++) {
+        SafeDelete(itmGRefl->second );
+    }
+    SafeDelete(mGRefl);
+
   SafeDelete(pi);
   SafeDelete(readSegSC);
   
@@ -488,7 +514,11 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SegSCTel->fMAPMTWidth  = opt->fMAPMTWidth;
   SegSCTel->fMAPMTLength = opt->fMAPMTLength;
   SegSCTel->fInputWindowThickness   = opt->fInputWindowThickness;
-  SegSCTel->fMAPMTOffset = opt->fMAPMTOffset;
+    SegSCTel->fMAPMTOffset_x = opt->fMAPMTOffset_x;
+    SegSCTel->fMAPMTOffset_y = opt->fMAPMTOffset_y;
+    SegSCTel->fMAPMTOffset = opt->fMAPMTOffset;
+  SegSCTel->fMAPMTRoll = opt->fMAPMTRoll;
+  SegSCTel->fMAPMTPitch = opt->fMAPMTPitch;
   SegSCTel->fMAPMTGap    = opt->fMAPMTGap;
   SegSCTel->fMAPMTRefIndex   = opt->fMAPMTRefIndex;
   SegSCTel->bSingleMAPMTmodule = opt->bSingleMAPMTmodule;
@@ -498,9 +528,14 @@ GSegSCTelescope* GSegSCTelescopeFactory::makeTelescope(const int &id,
   SegSCTel->bEntranceWindowFlag      = opt->bEntranceWindowFlag;
   SegSCTel->bEntranceWindowAbsFlag   = opt->bEntranceWindowAbsFlag;
   SegSCTel->fEntranceWindowThickness = opt->fEntranceWindowThickness;
+    SegSCTel->iEntranceTrCurveIndex = opt->iEntranceTrCurveIndex;
   SegSCTel->fEntranceWindowN         = opt->fEntranceWindowN;
   SegSCTel->fEntranceWindowAbsLength = opt->fEntranceWindowAbsLength;
   SegSCTel->fEntranceWindowOffset    = opt->fEntranceWindowOffset;
+    if(opt->iEntranceTrCurveIndex > 0) {
+        SegSCTel->setTransmittanceNMap(mGTranN);
+        SegSCTel->setTransmittanceAbsMap(mGTranAbsLength);
+    }
 
   //
 

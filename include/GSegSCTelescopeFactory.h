@@ -116,12 +116,19 @@ struct SegSCStdOptics {
   Double_t fMAPMTGap;
   Double_t fMAPMTRefIndex;
   Double_t fMAPMTOffset;
+    Double_t fMAPMTOffset_x;
+    Double_t fMAPMTOffset_y;
+
+    Double_t fMAPMTRoll;
+    Double_t fMAPMTPitch;
+
   Bool_t bSingleMAPMTmodule;
 
   // Entrance window
 
   bool bEntranceWindowFlag;
   bool bEntranceWindowAbsFlag;
+    Int_t iEntranceTrCurveIndex;
   Double_t fEntranceWindowThickness;
   Double_t fEntranceWindowN;
   Double_t fEntranceWindowAbsLength;
@@ -188,6 +195,12 @@ class GSegSCTelescopeFactory : public ATelescopeFactory {
 
   map<int, TGraph *> *mGRefl;  //*< mirror reflection coefficients map container
   map<int, TGraph *>::iterator itmGRefl; //*< iterator for above map container
+
+    map<int, TGraph *> *mGTranAbsLength;  //*< mirror reflection coefficients map container
+    map<int, TGraph *>::iterator itmGTranAbsLength; //*< iterator for above map container
+
+    map<int, TGraph *> *mGTranN;  //*< mirror reflection coefficients map container
+    map<int, TGraph *>::iterator itmGTranN; //*< iterator for above map container
   
   SegSCStdOptics *opt;  //*< working SegSCstdOptics structure for current telescope
   

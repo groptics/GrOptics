@@ -41,6 +41,8 @@ class GReadSegSCStd {
 
   void getReflCoeff();
 
+    void getTranCurve();
+
   void getPolyCoeffs();
 
   void readBasicRecord(const vector<string> &tokens,

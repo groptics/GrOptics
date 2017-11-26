@@ -58,6 +58,7 @@ using namespace std;
 //#include "TGeoCombiTrans.h"
 #include "AGeoAsphericDisk.h"
 #include "AGlassCatalog.h"
+#include "ARefractiveIndex.h"
 #include "TView.h"
 #include "TCanvas.h"
 #include "TPad.h"
@@ -161,7 +162,11 @@ void GSegSCTelescope::buildTelescope()
   fMAPMTWidth = fMAPMTWidth*mm;
   fMAPMTLength = fMAPMTLength*mm;
   fInputWindowThickness = fInputWindowThickness*mm;
-  fMAPMTOffset = fMAPMTOffset*mm;
+    fMAPMTOffset_x = fMAPMTOffset_x*mm;
+    fMAPMTOffset_y = fMAPMTOffset_y*mm;
+    fMAPMTOffset = fMAPMTOffset*mm; //z
+    fMAPMTPitch = fMAPMTPitch*TMath::DegToRad();
+  fMAPMTRoll = fMAPMTRoll*TMath::DegToRad();
   fMAPMTGap = fMAPMTGap*mm;
 
   fEntranceWindowThickness = fEntranceWindowThickness*mm;
@@ -1304,9 +1309,11 @@ void GSegSCTelescope::addPrimaryDesignFrame()
                                              new TGeoTranslation(0, 0, 9357.1550*mm + offset));
 }
 /*******************************************************************/
-void GSegSCTelescope::addEntranceWindow() {
+void GSegSCTelescope::addEntranceWindow(Double wl=0) {
   gGeoManager = fManager;
- 
+
+
+
   bool debug = false;
   if (debug) {
     *oLog << "  --  GSegSCTelescope::addEntranceWindow" << endl;
@@ -1319,12 +1326,51 @@ void GSegSCTelescope::addEntranceWindow() {
   }
 
   const Double_t kZf = fF * fZf;
-  TGeoTube* ewind = new TGeoTube("ewind", 0., fRf*m, fEntranceWindowThickness/2);
-  TGeoTranslation* ewindTrans = new TGeoTranslation("ewindTrans", 0., 0., kZf+fEntranceWindowOffset);
-  ALens* ewindLen = new ALens("ewindLen", ewind);
-  ewindLen->SetConstantRefractiveIndex(fEntranceWindowN);
-  if (bEntranceWindowAbsFlag) ewindLen->SetConstantAbsorptionLength(fEntranceWindowAbsLength);
 
+    TGeoTube* ewind = new TGeoTube("ewind", 0., fRf*m, fEntranceWindowThickness/2);
+  TGeoTranslation* ewindTrans = new TGeoTranslation("ewindTrans", 0., 0., kZf+fEntranceWindowOffset);
+
+  if(!wl) {
+  ALens* ewindLen = new ALens("ewindLen", ewind); }
+  else {
+    TGeoMaterial* mat = new TGeoMaterial("ROBAST_OpaqueVacuumMaterial", 0, 0, 0);
+    mat->SetTransparency(absgraph->Eval(photWaveLgt)*100);
+    TGeoMedium* med = new TGeoMedium("ROBAST_OpaqueVacuumMedium", 1, mat);
+
+  }
+
+    if(iEntranceTrCurveIndex == 0) {
+        ewindLen->SetConstantRefractiveIndex(fEntranceWindowN);
+        if (bEntranceWindowAbsFlag) ewindLen->SetConstantAbsorptionLength(fEntranceWindowAbsLength);
+    } else {
+
+        class TempRefIndex : public ARefractiveIndex {
+        private:
+            TGraph* graph; // Parameters
+
+        public:
+            TempRefIndex(TGraph* graph) {
+                graph = graph;
+            };
+
+            Double_t GetIndex(Double_t lambda) const {
+                return graph->Eval(lambda);
+            };
+
+        };
+
+        TGraph* refindexgraph = makeTransmittanceAbsGraph(iEntranceTrCurveIndex);
+        TempRefIndex* refIndex = new TempRefIndex(refindexgraph);
+
+        ewindLen->SetRefractiveIndex(refIndex);
+        //if (bEntranceWindowAbsFlag) {
+
+          //  TGraph *absgraph = makeTransmittanceAbsGraph(iEntranceTrCurveIndex);
+            //ewindLen->SetAbsorptionLength(absgraph);
+        //}
+    }
+
+    ewindLen->SetConstantAbsorptionLength(fEntranceWindowAbsLength);
   fManager->GetTopVolume()->AddNode(ewindLen, 1, ewindTrans);
 
   double lowang = 15.;//deg                                                                   
@@ -1382,7 +1428,7 @@ void GSegSCTelescope::addIdealFocalPlane()  {
 /*************************************************************************************/
 
 void GSegSCTelescope::addMAPMTFocalPlane()  {
-  bool debug = false;
+  bool debug = true;
 
   if (debug) {
     *oLog << "  --  GSegSCTelescope::addMAPMTFocalPlane" << endl;
@@ -1506,7 +1552,7 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
     Double_t dy = j*fMAPMTWidth;
     Double_t r2 = (i*i + j*j)*fMAPMTWidth*fMAPMTWidth;
     Double_t dz = fKappa1*TMath::Power(fF, -1)*r2 + fKappa2*TMath::Power(fF, -3)*r2*r2;
-    focVol->AddNode(mapmt, n, new TGeoTranslation(dx, dy, 
+    focVol->AddNode(mapmt, n, new TGeoTranslation(dx, dy ,
               mapmtPositionReltoFocalSurface +
               + fMAPMTOffset + dz));
     n++;
@@ -1518,7 +1564,7 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
         Double_t dy = j*fMAPMTWidth+(l+1/2)*(fMAPMTWidth/fSubCells);
         Double_t r2 = subdx*subdx+dy*dy;
         Double_t dz = fKappa1*TMath::Power(fF, -1)*r2 + fKappa2*TMath::Power(fF, -3)*r2*r2;
-        focVol->AddNode(mapmt, n, new TGeoTranslation(subdx, dy, 
+        focVol->AddNode(mapmt, n, new TGeoTranslation(subdx, dy,
                   mapmtPositionReltoFocalSurface +
                   + fMAPMTOffset + dz));
         n++;
@@ -1532,19 +1578,30 @@ void GSegSCTelescope::addMAPMTFocalPlane()  {
     Double_t dx = 0.0;
     Double_t dy = 0.0;
     Double_t dz = 0.0;
-    focVol->AddNode(mapmt, 1, new TGeoTranslation(dx, dy, 
+    focVol->AddNode(mapmt, 1, new TGeoTranslation(dx , dy,
                                                   mapmtPositionReltoFocalSurface +
                                                   + fMAPMTOffset + dz));
 
   }
+
+  Double_t fMAPMTphi = 0.0;
+  Double_t fMAPMTtheta = 0.0;
+  Double_t fMAPMTpsi = 0.0;
+
+  //Converting roll and pitch rotations to ZYZ euler angles
+//  if(fMAPMTRoll != 0.0 && fMAPMTPitch != 0.0) {
+    fMAPMTphi = TMath::ATan2(TMath::Sin(fMAPMTRoll), -(TMath::Cos(fMAPMTRoll) * TMath::Sin(fMAPMTPitch))) *
+                TMath::RadToDeg();
+    fMAPMTtheta = TMath::ACos(TMath::Cos(fMAPMTRoll) * TMath::Cos(fMAPMTPitch)) * TMath::RadToDeg();
+    fMAPMTpsi =
+            TMath::ATan2(TMath::Sin(fMAPMTRoll) * TMath::Cos(fMAPMTPitch), TMath::Sin(fMAPMTPitch)) * TMath::RadToDeg();
+  //}  */
   fManager->GetTopVolume()->AddNode(focVol,1,new TGeoCombiTrans("cFocS",
-                                                             0.0,
-                                                             0.0,
+                                                                fMAPMTOffset_x,
+                                                                fMAPMTOffset_y,
                                                              kZf-fFocalPlaneOffsetCorrection,
                                                              new TGeoRotation("rFocS",
-                                                                              0.0,
-                                                                              0.0,
-                        0.0)));
+                                                                              fMAPMTphi, fMAPMTtheta, fMAPMTpsi))); //
   /* 
  fManager->GetTopVolume()->AddNode(focVol,1,new TGeoCombiTrans("cFocS",
                                                                0.0,
@@ -1575,8 +1632,8 @@ void GSegSCTelescope::injectPhoton(const ROOT::Math::XYZVector &photonLocT,
                                 const ROOT::Math::XYZVector &photonDirT,
         const double &photWaveLgt) {
   gGeoManager = fManager;
-
-  bool debug = false;
+  //  TGraph *absgraph = makeTransmittanceAbsGraph(iEntranceTrCurveIndex);
+  bool debug = true;
   if (debug) {
     *oLog << " -- GSegSCTelescope::injectPhoton " << endl;
     *oLog << "       photonLocT  ";
@@ -1584,6 +1641,8 @@ void GSegSCTelescope::injectPhoton(const ROOT::Math::XYZVector &photonLocT,
     *oLog << "       photonDirT  ";
     GUtilityFuncts::printGenVector(photonDirT); *oLog << endl;
     *oLog << "      bPhotonHistoryFlag " << bPhotonHistoryFlag << endl;
+      *oLog<<" Wavelength " << photWaveLgt<<endl;
+     // *oLog<<" Transparency " << 100*absgraph->Eval(photWaveLgt)<<endl;
   } 
   // for debugging and testing only
 
@@ -1605,10 +1664,14 @@ void GSegSCTelescope::injectPhoton(const ROOT::Math::XYZVector &photonLocT,
 
   photonLocT.GetCoordinates(fInitialInjectLoc);
   photonLocT.GetCoordinates(fphotonInjectLoc);
-  photonDirT.GetCoordinates(fphotonInjectDir); 
+  photonDirT.GetCoordinates(fphotonInjectDir);
+
+
 
   // convert to cm as required for robast
-  fphotWaveLgt = photWaveLgt*nm;
+    //
+
+    fphotWaveLgt = photWaveLgt*nm;
 
   // move base of injection location vector to center of primary mirror
   // (add rotation offset)
@@ -1634,7 +1697,21 @@ void GSegSCTelescope::injectPhoton(const ROOT::Math::XYZVector &photonLocT,
   ray = new ARay(0, fphotWaveLgt, x*m, y*m, z*m, t, dx, dy, dz);
 
   gGeoManager = fManager;
+  //fManager->GetVolume("focVol")->SetTransparency(0);
 
+
+  //TGeoMaterial* mat = new TGeoMaterial("ROBAST_OpaqueVacuumMaterial", 0, 0, 0);
+  //mat->SetTransparency(absgraph->Eval(photWaveLgt)*100);
+  //TGeoMedium* med = new TGeoMedium("ROBAST_OpaqueVacuumMedium", 1, mat);
+
+
+  //TGeoNode *node = fManager->GetTopVolume()->FindNode("ewindLen");
+  //fManager->GetTopVolume()->ReplaceNode(node,0,0, med);
+  //TGeoNode *node2 = fManager->GetTopVolume()->FindNode("focVol");
+  //fManager->GetTopVolume()->ReplaceNode(node2,0,0, med);
+  //fManager->GetVolume("ewindLen")->SetTransparency(absgraph->Eval(photWaveLgt)*100);
+  //gGeoManager->GetVolume("focVol")->SetTransparency(absgraph->Eval(photWaveLgt)*100);
+  //gGeoManager->GetVolume("ewindLen")->SetTransparency(absgraph->Eval(photWaveLgt)*100); //absgraph->Eval(photWaveLgt)*
   fManager->TraceNonSequential(*ray);
  
   // Here you can get the traced result
@@ -1942,7 +2019,11 @@ void GSegSCTelescope::printTelescope() {
     *oLog << "        fSubCells  " << fSubCells<<" x "<< fSubCells << endl;
     *oLog << "        fMAPMTLength  " << fMAPMTLength << endl;
     *oLog << "        fInputWindowThickness  " << fInputWindowThickness << endl;
-    *oLog << "        fMAPMTOffset  " << fMAPMTOffset << endl;
+    *oLog << "        fMAPMTOffset_x  " << fMAPMTOffset_x << endl;
+      *oLog << "        fMAPMTOffset_y  " << fMAPMTOffset_y << endl;
+      *oLog << "        fMAPMTOffset (z) " << fMAPMTOffset << endl;
+    *oLog << "        fMAPMTRoll " << fMAPMTRoll << endl;
+    *oLog << "        fMAPMTPitch " << fMAPMTPitch << endl;
     *oLog << "        fMAPMTGap  " << fMAPMTGap << endl;
     *oLog << "        fMAPMTRefIndex  " << fMAPMTRefIndex << endl << endl;
     *oLog << "        fCathodeTopRelToFocalSurface "
@@ -2199,6 +2280,115 @@ TGraph * GSegSCTelescope::makeReflectivityGraph(const Int_t &irefl) {
 };
 /************************* end of makeReflectivityGraph *****/
 
+// Quick coding to demonstrate it can work.
+// A more efficient way would be to have only one function to setMaps and one function to makeGraphs (we have 3 maps and 3 graphs with the same structure). -Karan
+
+
+void GSegSCTelescope::setTransmittanceNMap(map<int, TGraph *> *mGr) {
+
+    bool debug = false;
+    if (debug) {
+        *oLog << "  -- GSegSCTelescope::setReflCoeffMap" << endl;
+        *oLog << "       mGr->size() " << mGr->size() << endl;
+    }
+    mGTranN = new map<int, TGraph *>;
+
+    // make a copy of the map
+    map<int, TGraph *>::iterator iter;
+    for (iter = mGr->begin();iter != mGr->end(); iter++) {
+        Int_t id = iter->first;
+        if (debug) {
+            *oLog << " building new graph " << iter->first << endl;
+        }
+        TGraph *tmpOld = iter->second;
+        TGraph *tmpNew = new TGraph(*tmpOld);
+        (*mGTranN)[id] = tmpNew;
+    }
+    if (debug) {
+        *oLog << "      size of mGTranN " << mGTranN->size() << endl;
+    }
+};
+/************************* end of setReflCoeffMap *****/
+
+void GSegSCTelescope::setTransmittanceAbsMap(map<int, TGraph *> *mGr) {
+
+    bool debug = false;
+    if (debug) {
+        *oLog << "  -- GSegSCTelescope::setTransmittanceAbsMap" << endl;
+        *oLog << "       mGr->size() " << mGr->size() << endl;
+    }
+    mGTranAbsLength = new map<int, TGraph *>;
+
+    // make a copy of the map
+    map<int, TGraph *>::iterator iter;
+    for (iter = mGr->begin();iter != mGr->end(); iter++) {
+        Int_t id = iter->first;
+        if (debug) {
+            *oLog << " building new graph " << iter->first << endl;
+        }
+        TGraph *tmpOld = iter->second;
+        TGraph *tmpNew = new TGraph(*tmpOld);
+        (*mGTranAbsLength)[id] = tmpNew;
+    }
+    if (debug) {
+        *oLog << "      size of mGTranAbsLength " << mGTranAbsLength->size() << endl;
+    }
+};
+/************************* end of setTransmittanceAbsGraph *****/
+
+TGraph * GSegSCTelescope::makeTransmittanceNGraph(const Int_t &itran) {
+
+    bool debug = false;
+    if (debug) {
+        *oLog << "  -- GSegSCTelescope::makeTransmittanceNGraph" << endl;
+        *oLog << "    size of mGTranAbsLength " << mGTranN->size() << endl;
+    }
+    Int_t id = itran;
+    TGraph *tmpNew;
+    tmpNew = 0;
+
+    map<int, TGraph *>::iterator iter;
+    if ( (iter = mGTranN->find(itran) ) != mGTranN->end() ) {
+        TGraph *tmpOld = iter->second;
+        tmpNew = new TGraph(*tmpOld);
+        if (debug) {
+            *oLog << "     ready to print TGraph: reflect curve = " << id << endl;
+            tmpNew->Print();
+        }
+
+    }
+    return tmpNew;
+};
+
+/************************* end of makeTransmittanceNGraph *****/
+
+TGraph * GSegSCTelescope::makeTransmittanceAbsGraph(const Int_t &itran) {
+
+    bool debug = false;
+    if (debug) {
+        *oLog << "  -- GSegSCTelescope::makeTransmittanceAbsGraph" << endl;
+        *oLog << "    size of mGTranAbsLength " << mGTranAbsLength->size() << endl;
+    }
+    Int_t id = itran;
+    TGraph *tmpNew;
+    tmpNew = 0;
+
+    map<int, TGraph *>::iterator iter;
+    if ( (iter = mGTranAbsLength->find(itran) ) != mGTranAbsLength->end() ) {
+        TGraph *tmpOld = iter->second;
+        tmpNew = new TGraph(*tmpOld);
+        if (debug) {
+            *oLog << "     ready to print TGraph: reflect curve = " << id << endl;
+            tmpNew->Print();
+        }
+
+    }
+    return tmpNew;
+};
+
+/************************* end of makeTransmittanceAbsGraph *****/
+
+
 void GSegSCTelescope::initialize() {
   bool debug = false;
 
@@ -2283,7 +2473,11 @@ void GSegSCTelescope::initialize() {
   fMAPMTWidth  = 0.0;
   fMAPMTLength = 0.0;
   fInputWindowThickness = 0.0;
+    fMAPMTOffset_x = 0.0;
+    fMAPMTOffset_y = 0.0;
   fMAPMTOffset = 0.0;
+  fMAPMTPitch = 0.0;
+  fMAPMTRoll = 0.0;
   fMAPMTGap    = 0.0;
   fMAPMTRefIndex        = 0.0;
   bSingleMAPMTmodule    = false;
@@ -2296,6 +2490,7 @@ void GSegSCTelescope::initialize() {
   bEntranceWindowFlag         = false;
   bEntranceWindowAbsFlag      = false;
   fEntranceWindowThickness    = 0.0;
+    iEntranceTrCurveIndex     = 0;
   fEntranceWindowN            = 0.0;
   fEntranceWindowAbsLength    = 0.0;
   fEntranceWindowOffset       = 0.0;
