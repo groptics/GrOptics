@@ -1,0 +1,3646 @@
+#LyX 2.2 created this file. For more info see http://www.lyx.org/
+\lyxformat 508
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+
+
+% UsersGuideGrOptics
+% Charlie Duke, Grinnell College
+
+\usepackage{latexsym}
+\usepackage{graphics}
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package none
+\inputencoding auto
+\fontencoding default
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry false
+\use_package amsmath 2
+\use_package amssymb 2
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+GrOptics User's Guide 
+\begin_inset Newline newline
+\end_inset
+
+ Version 4.0
+\end_layout
+
+\begin_layout Author
+Charlie Duke 
+\begin_inset Newline newline
+\end_inset
+
+ Grinnell College 
+\begin_inset Newline newline
+\end_inset
+
+ Grinnell, Iowa 50112 
+\begin_inset Newline newline
+\end_inset
+
+ duke@grinnell.edu 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+and
+\end_layout
+
+\end_inset
+
+ Akira Okumura 
+\begin_inset Newline newline
+\end_inset
+
+ Solar-Terrestrial Environment Laboratory 
+\begin_inset Newline newline
+\end_inset
+
+Nagoya University 
+\begin_inset Newline newline
+\end_inset
+
+ Furo-cho, Chikusa-ku, Nagoya 464-8601, Japan 
+\begin_inset Newline newline
+\end_inset
+
+ oxon@mac.com
+\end_layout
+
+\begin_layout Date
+January 11, 2017
+\end_layout
+
+\begin_layout Abstract
+GrOptics is a detailed simulation program for ray-tracing Cherenkov photons
+ through large arrays of atmospheric Cherenkov telescopes.
+ Shower packages, such as GrISU 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "GRISU"
+
+\end_inset
+
+ and CORSIKA 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "CORSIKA"
+
+\end_inset
+
+, provide Cherenkov photons after conversion to GrISU format.
+ The output to a ROOT file records individual photons striking the camera
+ surface.
+ The package models both VERITAS Davies-Cotton (DC) and Schwarzchild-Coudee
+ (SC, SEGSC) telescopes with all telescope parameters taken from input files.
+ There is no limit to the number or type of array telescopes.
+ Adding new telescope types or input and output formats, is straightforward
+ using standard C++ coding techniques with existing base classes.
+ Reference 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "GROPTICS"
+
+\end_inset
+
+ gives the GrOptics download site.
+ 
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "S:INTRO"
+
+\end_inset
+
+ GrOptics is a detailed C++ Monte Carlo ray-tracing program to study the
+ passage of atmospheric Cherenkov photons through telescopes designed to
+ study atmospheric Cherenkov air showers.
+ Photons produced by standard air shower codes enter the telescope; the
+ output ROOT file contains tree records of the photons that strike the telescope
+ cameras.
+ GrOptics provides the input to the CARE telescope electronics code 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "CARE"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+There are no intrinsic limits to the number or type of telescopes placed
+ in the air Cherenkov telescope (ACT) array.
+ Currently, the code contains three telescope classes: for VERITAS DC telescopes
+, SC telescopes, and for SC telescopes with segmented mirrors.
+ Input pilot or configuration files contain all the array and telescope
+ parameters.
+\end_layout
+
+\begin_layout Subsection
+Installation
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "SS:INSTALL"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+GrOptics relies heavily on ROOT
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ROOT"
+
+\end_inset
+
+.
+ I use the following installation method: 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Be sure you have installed gsl for use by ROOT 
+\end_layout
+
+\begin_layout Itemize
+Download the ROOT source package 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ROOT"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+Follow package instructions to compile and link ROOT; it's best not to specify
+ a –prefix directory.
+ 
+\end_layout
+
+\begin_layout Itemize
+Setup all necessary ROOT environmental variables by sourcing 
+\emph on
+thisroot.sh
+\emph default
+ or 
+\emph on
+thisroot.csh
+\emph default
+ in your 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ rootDirectory
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+/bin 
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+The SC and SEGSC telescope classes use the ROBAST package 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ROBAST"
+
+\end_inset
+
+.
+ ROBAST (ROot BAsed Simulator for ray Tracing) is a non-sequential ray tracing
+ program which utilizes the 3D geometry library in ROOT.
+ The ROBAST package is automatically downloaded by 
+\emph on
+curl
+\emph default
+ within 
+\emph on
+make
+\emph default
+ when producing the GrOptics executable.
+ GrOptics currently uses ROBAST version 4.2.1 which requires an edited source
+ file to be compatible with GrOptics.
+ The new file is copied using Makefile commands to the ROBAST src directory
+ prior to compilation.
+ These details should be transparent to all users.
+ 
+\end_layout
+
+\begin_layout Enumerate
+After installing ROOT, download the GrOptics git repository 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "GROPTICS"
+
+\end_inset
+
+.
+ Go to the GrOptics directory and run 
+\emph on
+make
+\emph default
+ to produce the grOptics executable.
+ The ROBAST download and file copy occurs during this step.
+\end_layout
+
+\begin_layout Enumerate
+To test the installation, execute 
+\emph on
+grOptics
+\emph default
+ from the GrOptics directory.
+ The code will use the default configuration and pilot files and a test
+ Cherenkov photon file, all within the GrOptics/Config directory, to produce
+ an output root file, 
+\emph on
+photonLocation.root
+\emph default
+.
+ Other test possibilities (see later sections) for using this configuration
+ are telescope drawings and psf camera plots.
+ 
+\end_layout
+
+\begin_layout Subsection
+QuickStart
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "SS:QSTART"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+grOptics
+\emph default
+ executable can use the configuration and pilot files and a test Cherenkov
+ photon file, all within the GrOptics/Config directory, downloaded with
+ the git repository.
+ The file, 
+\emph on
+opticsSimulation.pilot
+\emph default
+ steers the simulation and specifies the output.
+ The file, 
+\emph on
+arrayConfig.cfg
+\emph default
+, defines the ACT array.
+ You'll see the downloaded file defines a four-telescope array that is compatibl
+e with the 
+\emph on
+photon.cph
+\emph default
+ test input Cherenkov photon file.
+ The first telescope is a SEGSC telescope; the remaining thre are DC telescopes.
+ The parameters in these files are documented both in these files and in
+ following sections in this document.
+\end_layout
+
+\begin_layout Enumerate
+Execute the grOptics code from the GrOptics directory to produce 
+\emph on
+photonLocation.root
+\emph default
+ as specified in 
+\emph on
+opticsSimulation.pilot
+\emph default
+.
+ You'll find the output trees with records of the photons on the camera
+ surface for each telescope in this file.
+ You'll also find a history ROOT file for each telescope which documents
+ the history of each photon incident onto the telescope (useful for debugging).
+ You can turn off the creation of these history files by removing the leading
+ asterisk of the 
+\emph on
+PHOTONHIST 
+\emph default
+record.
+\end_layout
+
+\begin_layout Enumerate
+To create an 
+\emph on
+opengl
+\emph default
+ drawing of a telescope using the ROOT geometry classes, add a leading asterisk
+ to the 
+\emph on
+DRAWTEL
+\emph default
+ record in 
+\emph on
+opticsSimulation.pilot
+\emph default
+, select the telescope, and execute 
+\emph on
+grOptics
+\emph default
+.
+ Note that for DC telescopes, the code does not draw the mirror facets as
+ the ray-tracing for the facets does not use the ROOT geometry classes.
+ For SC and SEGSC telescopes, the ROOT geometry classes will draw the complete
+ telescope, including photon ray-traces if you have selected that option.
+\end_layout
+
+\begin_layout Enumerate
+To change telescope types, open the 
+\emph on
+arrayConfig.cfg
+\emph default
+ file and activate the appropriate telescope factory record.
+ Then, in the 
+\emph on
+ARRAYTEL
+\emph default
+ records use the DC, SEGSC, or SC telescope types.
+ You can then run the same tests as described above.
+ 
+\end_layout
+
+\begin_layout Enumerate
+To produce a series of spot patterns on the camera using internally produced
+ photons, activate the 
+\emph on
+TESTTEL
+\emph default
+ record in 
+\emph on
+opticsSimulation.pilot
+\emph default
+ by adding a leading asterisk.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%-------------------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%-------------------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Code Overview
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "S:OVERV"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+See 
+\emph on
+DevelopersGuideGrOptics.pdf
+\emph default
+ for more details.
+ This section only introduces standard telescopes, telescope arrays, and
+ the various coordinate systems used in GrOptics.
+\end_layout
+
+\begin_layout Standard
+GrOptics uses standard C++ plus ROOT and the ROBAST package.
+\end_layout
+
+\begin_layout Subsection
+Standard Telescopes
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "SSS:STEL"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The GrOptics package currently produces telescopes from each of three telescope
+ factories, for DC telescopes, SC telescopes and for SEGSC telescopes.
+ All telescope parameters are in configuration files to maintain maximum
+ flexibility.
+ However, having separate configuration files for each array telescope leads
+ to large, unmanagable file sizes.
+ Thus, the factories can produce a limited number of standard telescopes
+ based on configuration files in the 
+\emph on
+GrOptics/Config
+\emph default
+ directory.
+ The factories then use edit records taken from the configuration files
+ to change specific telescope parameters, e.g.
+ the mirror reflectivity, thus maintaining complete flexibility for parameter
+ selection for individual telescopes.
+ The edit records use matlab colon notation so that a single record may
+ change a parameter for a range of telescopes and elements within each telescope
+, e.g., facet reflectivities.
+ Edit records for additional parameters can easily be added.
+ Currently, this editing procedure is only possible for DC telescopes; I'll
+ add similar editing later.
+\end_layout
+
+\begin_layout Standard
+None of the telescope dimensions or super structures may be edited.
+ Changing these dimensions requires a separate standard telescope.
+\end_layout
+
+\begin_layout Subsection
+Telescope Arrays
+\end_layout
+
+\begin_layout Standard
+The telescope factories provide individual standard telescopes, after editing,
+ to the ACT array as defined by telescope type, standard ID number, ground
+ location, and pointing offset.
+ Telescope numbering starts at 
+\begin_inset Formula $1$
+\end_inset
+
+, not 
+\begin_inset Formula $0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Coordinate Systems
+\end_layout
+
+\begin_layout Standard
+Understanding the coordinate systems used in our simulation codes is always
+ difficult, especially if your memory is as bad as mine.
+ So, these descriptions should help.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+GrISU Ground Coordinate System
+\end_layout
+
+\begin_layout Standard
+The GrISU Cherenkov files either from GrISU or from the CORSIKA I/O Reader
+ use the following coordinate system:
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset space \hspace*{}
+\length 20pt
+\end_inset
+
+x: East 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset space \hspace*{}
+\length 20pt
+\end_inset
+
+y: South 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset space \hspace*{}
+\length 20pt
+\end_inset
+
+z: Down 
+\begin_inset Newline newline
+\end_inset
+
+ to form a right-handed system
+\end_layout
+
+\begin_layout Subsubsection
+GrOptics ground coordinate system
+\end_layout
+
+\begin_layout Standard
+The incoming GrISU produced incoming photons are immediately transformed
+ by GrOptics to the system:
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset space \hspace*{}
+\length 20pt
+\end_inset
+
+x: East 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset space \hspace*{}
+\length 20pt
+\end_inset
+
+y: North
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset space \hspace*{}
+\length 20pt
+\end_inset
+
+z: up
+\begin_inset Newline newline
+\end_inset
+
+ forming a right-handed system.
+ The telescope locations in the VERITAS GrISU configuration file use this
+ coordinate system.
+\end_layout
+
+\begin_layout Subsubsection
+Telescope Coordinate System
+\end_layout
+
+\begin_layout Standard
+Each telescope has a coordinate system with origin at the telescope rotation
+ point and with z axis pointed toward the sky along the optic axis of the
+ telescope.
+ In stow position (DC telescopes), the z axis is horizontal and pointed
+ toward the North, the y axis is down, and the x axis is toward the East.
+ To point the telescope to a given location on the sky, GrOptics first rotates
+ the telescope about the vertical through the azimuthal angle.
+ Then, it raises the telescope about its new x axis through the elevation
+ angle.
+ This new coordinate system is the "telescope coordinate system".
+ Prior to injection into the GTelescope class, the photons undergo a coordinate
+ transformation to this telescope coordinate system.
+\end_layout
+
+\begin_layout Subsubsection
+Array Coordinate System
+\end_layout
+
+\begin_layout Standard
+Prior to added pointing misalignments, all telescopes point to the same
+ location on the sky with coordinate systems previously defined.
+ The array coordinate system is similarly defined, but its origin is at
+ the origin of the array.
+\end_layout
+
+\begin_layout Subsubsection
+Camera Coordinate System
+\end_layout
+
+\begin_layout Standard
+For historical reasons, the camera coordinate system's y axis is a reflection
+ of the y-axis of the telescope coordinate system.
+ For the VERITAS telescope, stand in front of the camera with the telescope
+ in stow position.
+ The camera y axis is up and the camera x axis is to your right (to the
+ East).
+ The telescope y-axis is down; its x axis is to the right.
+\end_layout
+
+\begin_layout Standard
+In the output tree of grOptics, the photon locations on the camera are in
+ camera coordinates for all telescope types.
+ I'll add an input flag later to select photon camera locations in either
+ telescope or camera coordinates.
+\end_layout
+
+\begin_layout Subsubsection
+Azimuth, zenith angle, and elevation
+\end_layout
+
+\begin_layout Standard
+In all cases, the azimuthal angle is measured from the North toward the
+ East.
+ The zenith angle and elevation are measured as usual.
+\end_layout
+
+\begin_layout Section
+Input Files
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "S:INPUT"
+
+\end_inset
+
+ The git repository contains input files for steering the simulation, setting
+ up the array, and defining the standard telescopes.
+ These files have unique record flags and can be self-referential for combining
+ into single files.
+\end_layout
+
+\begin_layout Subsection
+Simulation Steering
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "SS:STEER"
+
+\end_inset
+
+ The default input steering file is 
+\emph on
+GrOptics/Config/opticsSimulation.pilot
+\emph default
+.
+ Execute 
+\emph on
+grOptics -h
+\emph default
+ so obtain command line options to use other filenames.
+ The 
+\emph on
+opticsSimulation.pilot
+\emph default
+ file is fully documented.
+ Much of the documentation is reproduced here for completeness.
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+opticsSimulation.pilot
+\emph default
+ file contains the following records.
+ Each record has a leading asterisk (not reproduced here) when active.
+ In the following list, the bolded name is the record flag with the adjustable
+ parameter listing following.
+\end_layout
+
+\begin_layout Description
+FILEIN 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ filename of GrISU-type file
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Description
+FILEOUT 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ root filename
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ TreeName
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ telBaseTreeName
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ photonDirCosBranchFlag
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+itemsep}{0cm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+parskip}{0cm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Quote
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ root filename
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ : name of output data root file 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ TreeName
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ : name of ROOT tree containing parameters common to all photons 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ telBaseTreeName
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ : telescope number to be appended to this base tree name 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ photonDirCosBranchFlag
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ : if 1, add dirCosineCamera branches.
+\end_layout
+
+\end_deeper
+\begin_layout Description
+LOGFILE 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ name of logfile
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%    
+\backslash
+textless 
+\backslash
+textgreater
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% 
+\backslash
+begin{quote}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% 
+\backslash
+end{quote}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Description
+NSHOWER 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ number Showers
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ number Photons
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Quote
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ number Showers
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ : 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula $0$
+\end_inset
+
+, no limit 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ number Photons
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ : 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula $0$
+\end_inset
+
+, no limit 
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Description
+ARRAYCONFIG 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ filename: default ./Config/arrayConfig.cfg
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+SEED 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ TRandom3 seed, default 
+\begin_inset Formula $0$
+\end_inset
+
+ : set by machine clock 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+WOBBLE 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ xSource
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ ySource
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ source Extension
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ latitude
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Quote
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ xSource
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ ySource
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ : coordinates (deg) of source in field of view
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ source Extension
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ : source extension radius (deg) 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+latitude
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ : latitude of observatory 
+\begin_inset Newline newline
+\end_inset
+
+If the latitude is less than 90 degrees, the source position in x corresponds
+ to an offset in the east west direction while the y position corresponds
+ to north south.
+ 
+\begin_inset Newline newline
+\end_inset
+
+ Example: 
+\begin_inset Newline newline
+\end_inset
+
+ wobble North: WOBBLE 0.0 0.5 0.0 31.675 
+\begin_inset Newline newline
+\end_inset
+
+ wobble East : WOBBLE 0.5 0.0 0.0 31.675 
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Description
+DRAWTEL 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ <telescope number to draw>, default 0 (no drawing)
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Description
+TESTTEL 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ telescope number
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ baseName for histograms 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Description
+PHOTONHISTORY 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ ROOT filename, tel.number to be appended 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ tree name
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%-------------------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Array Configuration
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "SS:ARRAY"
+
+\end_inset
+
+ The default array configuration filename, set in 
+\emph on
+GrOptics/Config/opticsSimulation.pilot
+\emph default
+, is 
+\emph on
+GrOptics/Config/arrayConfig.cfg
+\emph default
+.
+ This file specifies telescope locations, types, and configuration files
+ for standard telescopes.
+ Edit records for individual telescopes usually appear in this file.
+ The 
+\emph on
+arrayConfig.cfg
+\emph default
+ file is fully documented.
+ Much of the documentation is reproduced here for completeness.
+\end_layout
+
+\begin_layout Standard
+The array defined here may be a subset of the array used to create the photon
+ file.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%    
+\backslash
+textless 
+\backslash
+textgreater
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% 
+\backslash
+begin{quote}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+% 
+\backslash
+end{quote}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+TELFAC telescope factory type and parameters
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ factory type: DC, SEGSC, or SC 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ photon reader type: GRISU (only option) 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ configuration filename 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ telescope edit filename 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Description
+ARRAYTEL parameters listed below 
+\end_layout
+
+\begin_deeper
+\begin_layout Quote
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ telescope number, 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula $0$
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Quote
+The array numbering need not be sequential and can be a subset of the array
+ used to create the photon file.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Quote
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ x telescope location (meters)
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ y telescope location (meters)
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ z telescope location (meters)
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ pointing offset x 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ : 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula $0$
+\end_inset
+
+ is left on tangent plane in degrees 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ pointing offset y 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ : 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula $0$
+\end_inset
+
+ is down on tangent plane in degrees 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ telescope print mode 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ : fully implemented for DC telescopes only 
+\end_layout
+
+\begin_deeper
+\begin_layout Quote
+0: no printing 
+\begin_inset Newline newline
+\end_inset
+
+1: print summary information 
+\begin_inset Newline newline
+\end_inset
+
+2: add geometry details 
+\begin_inset Newline newline
+\end_inset
+
+3: add facet details 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%-------------------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Telescope Parameter Editing
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "SSS:TEDIT"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The telescope editing records in the git repository are contained in the
+ 
+\emph on
+arrayConfig.cfg
+\emph default
+ file.
+ The editing flags are 
+\emph on
+EDITDCTEL
+\emph default
+ for DC telescopes and 
+\emph on
+EDITSCTEL
+\emph default
+ for SC telescopes.
+ Only the 
+\emph on
+EDITDCTEL
+\emph default
+ are currently implemented.
+\end_layout
+
+\begin_layout Subsubsection
+Colon Numbering Notation
+\end_layout
+
+\begin_layout Standard
+The colon numbering notation (used in Matlab and Octave) is useful for containin
+g multiple entries in a single record.
+ It is easily explained with several examples.
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quote
+\begin_inset Formula $[1:3]=[1\;\;2\;\;3]$
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset Formula $[1:3\;\;5]=[1\;\;2\;\;3\;\;5]$
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+\noindent
+Thus, if the telescope number in an EDITDCTEL record is 
+\begin_inset Formula $[1:3]$
+\end_inset
+
+, the telescope parameter changes defined on the remainer of the record
+ will apply to telescope numbers 1, 2, and 3.
+ Similarly, if the telescope number is 
+\begin_inset Formula $[4\;\;5:8\;\;10\;\;11]$
+\end_inset
+
+, the changes will apply to telescopes 4, 5, 6, 7, 8, 10,and 11.
+\end_layout
+
+\begin_layout Subsubsection
+DC Telescope Editing
+\end_layout
+
+\begin_layout Standard
+The edit records normally are placed in the 
+\emph on
+arrayConfigure.cfg
+\emph default
+ file.
+ These edit records apply to specific telescopes, not to standard telescopes.
+ The telescope factories create the telescopes and then look for edit records
+ specific to that telescope.
+\end_layout
+
+\begin_layout Description
+EDITDCTEL DC telescope edit record 
+\end_layout
+
+\begin_deeper
+\begin_layout Quote
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ telescope number (matlab notation)
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ edit Flag1 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\emph on
+FACET
+\emph default
+ only current option 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ facet number (matlab notation) 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ edit Flag2 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\emph on
+align
+\emph default
+ or 
+\emph on
+reflect
+\emph default
+ are current options
+\end_layout
+
+\begin_deeper
+\begin_layout Quote
+Parameter following 
+\emph on
+align
+\emph default
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ maximum misalignment (degrees)
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quote
+Parameters following 
+\emph on
+reflect
+\emph default
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ blur radius 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ mirror degradation factor 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textless
+\end_layout
+
+\end_inset
+
+ reflective curve (int) 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+textgreater
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Examples: 
+\begin_inset Newline newline
+\end_inset
+
+ EDITDCTEL [1:2] FACET [1:50] align 0.5 
+\begin_inset Newline newline
+\end_inset
+
+ EDITDCTEL [5:10] FACET [10:100] reflect 0.2 0.95 2
+\end_layout
+
+\end_deeper
+\begin_layout Subsubsection
+SC Telescope Editing
+\end_layout
+
+\begin_layout Standard
+The edit records normally are placed in the 
+\emph on
+arrayConfigure.cfg
+\emph default
+ file.
+ These edit records apply to specific telescopes, not to standard telescopes.
+ The telescope factories create the telescopes and then look for edit records
+ specific to that telescope.
+\end_layout
+
+\begin_layout Description
+EDITSCTEL SC telescope edit record, no options implemented at present 
+\end_layout
+
+\begin_layout Subsection
+Standard Telescopes
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "SSS:STEL1"
+
+\end_inset
+
+ The telescope DC and SC factories produce standard, editable telescopes
+ for the array.
+ The standard telescope configuration files are given in the 
+\emph on
+arrayConfiguration.cfg
+\emph default
+ file.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%-------------------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Davies-Cotton Telescopes
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "SSS:DCTEL"
+
+\end_inset
+
+ At present, the only implemented DC telescope is the VERITAS telescope.
+ Please be careful about changing the dimensions of this telescope.
+ In particular, the dimensions and placements of the supporting quad arms
+ and cross arms for the focus box are tightly coupled to the telescope dimension
+s.
+ The file, 
+\emph on
+GrOptics/Config/veritas.cfg
+\emph default
+, defines 4 standard VERITAS telescopes, all with identical dimensions.
+ The file contains a series of records partially defining each of the 4
+ standard telescopes followed by a sample, partial VERITAS telescope configurati
+on file from the GrISU VERITAS simulation package.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%-------------------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Schwarzchild-Coudee Telescopes
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "SSS:SCTEL"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%-------------------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%-------------------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Data Files
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "S:DATAF"
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%-------------------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Input Data Files
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "SS:INDATA"
+
+\end_inset
+
+ The photon Cherenkov file begins with a header followed by photon lines
+ (see 
+\emph on
+GrOptics/Config/photon.cph
+\emph default
+.
+ The header file contains information passed from shower and photon production
+ code.
+ All header information must occur between the initial HEADF flag and the
+ final DATAF flag which indicates the start of data records.
+ The following data records are from the beginning of the 
+\emph on
+GrOptics/Config/photon.cph
+\emph default
+ file: 
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+ R 1.000000 
+\begin_inset Newline newline
+\end_inset
+
+ H 1307.645000 
+\begin_inset Newline newline
+\end_inset
+
+ S 0.80000 50.0 -50.0 -0.2500 0.4330 1307.6 -1000 -10777 -32656 
+\begin_inset Newline newline
+\end_inset
+
+ P -1.4 79.9 -0.2519 0.4403 13509.0 239.0 534 3 2 
+\begin_inset Newline newline
+\end_inset
+
+ P -0.2 79.6 -0.2518 0.4402 13531.4 237.5 498 3 2 
+\begin_inset Newline newline
+\end_inset
+
+ The 
+\emph on
+R
+\emph default
+ record carries the photon thinning fraction.
+ 
+\begin_inset Newline newline
+\end_inset
+
+ The 
+\emph on
+H
+\emph default
+ record carries the observatory height in meters 
+\begin_inset Newline newline
+\end_inset
+
+ The 
+\emph on
+S
+\emph default
+ record indicates the start of a new shower and contains information about
+ the primary in this order: 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%
+\backslash
+begin{enumerate}
+\backslash
+addtolength{
+\backslash
+itemsep}{-0.5
+\backslash
+baselineskip}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%
+\backslash
+begin{enumerate}
+\backslash
+addtolength{
+\backslash
+itemsep}{-0.5
+\backslash
+baselineskip}
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+itemsep}{0cm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+parskip}{0cm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Primary energy in TeV 
+\end_layout
+
+\begin_layout Enumerate
+x coordinate of the core (meters) 
+\end_layout
+
+\begin_layout Enumerate
+y coordinate of the core (meters) 
+\end_layout
+
+\begin_layout Enumerate
+x-direction cosine of the core 
+\end_layout
+
+\begin_layout Enumerate
+y-direction cosine of the core 
+\end_layout
+
+\begin_layout Enumerate
+observatory height (meters) 
+\end_layout
+
+\begin_layout Enumerate
+three negative random-number seeds
+\end_layout
+
+\begin_layout Standard
+\noindent
+The 
+\emph on
+P
+\emph default
+ record contains the Cherenkov photon details as follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+itemsep}{0cm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+parskip}{0cm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+x-coordinate (meters) on the ground relative to an individual telescope
+ at telescope level for CORSIKA or at ground level for KASCADE.
+ 
+\end_layout
+
+\begin_layout Enumerate
+y-coordinate (meters) on the ground relative to an individual telescope
+ at telescope level for CORSIKA or at ground level for KASCADE.
+ 
+\end_layout
+
+\begin_layout Enumerate
+x-direction cosine in ground coordinates 
+\end_layout
+
+\begin_layout Enumerate
+y-direction cosine in ground coordinates 
+\end_layout
+
+\begin_layout Enumerate
+height (meters) of emission 
+\end_layout
+
+\begin_layout Enumerate
+relative time (nsecs) of emission 
+\end_layout
+
+\begin_layout Enumerate
+wavelength (nanometers) 
+\end_layout
+
+\begin_layout Enumerate
+particle type 
+\end_layout
+
+\begin_layout Enumerate
+telescope id number intercepting the photon 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%-------------------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Output Data Trees
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "SS:ODATA"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Subsubsection
+allTel Tree
+\end_layout
+
+\begin_layout Standard
+The allTel tree contains information that is constant for all showers in
+ the file.
+ The tree branches are as follows: 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+itemsep}{0cm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+parskip}{0cm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+fileHeader string 
+\end_layout
+
+\begin_layout Enumerate
+globalEffic globalEffic/D 
+\end_layout
+
+\begin_layout Enumerate
+obsHgt obsHgt/D 
+\end_layout
+
+\begin_layout Enumerate
+telIDVector vector<int> 
+\end_layout
+
+\begin_layout Enumerate
+telLocXVector vector<float> 
+\end_layout
+
+\begin_layout Enumerate
+telLocYVector vector<float> 
+\end_layout
+
+\begin_layout Enumerate
+telLocZVector vector<float> 
+\end_layout
+
+\begin_layout Enumerate
+transitTimeVector vector<float> 
+\end_layout
+
+\begin_layout Subsubsection
+Individual Telescope Tree
+\end_layout
+
+\begin_layout Standard
+Each telescope has its own tree.
+ The branches are as follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+itemsep}{0cm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+setlength{
+\backslash
+parskip}{0cm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+eventNumber eventNumber/i 
+\end_layout
+
+\begin_layout Enumerate
+primaryType primaryType/i 
+\end_layout
+
+\begin_layout Enumerate
+primaryEnergy primaryEnergy/F 
+\end_layout
+
+\begin_layout Enumerate
+Xcore Xcore/F 
+\end_layout
+
+\begin_layout Enumerate
+Ycore Ycore/F 
+\end_layout
+
+\begin_layout Enumerate
+Xcos Xcos/F 
+\end_layout
+
+\begin_layout Enumerate
+Ycos Ycos/F 
+\end_layout
+
+\begin_layout Enumerate
+Xsource Xsource/F 
+\end_layout
+
+\begin_layout Enumerate
+Ysource Ysource/F 
+\end_layout
+
+\begin_layout Enumerate
+delay delay/F 
+\end_layout
+
+\begin_layout Enumerate
+photonX vector<float> 
+\end_layout
+
+\begin_layout Enumerate
+photonY vector<float> 
+\end_layout
+
+\begin_layout Enumerate
+time vector<float> 
+\end_layout
+
+\begin_layout Enumerate
+wavelength vector<float>
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%-------------------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%-------------------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Graphical Output Options
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "S:GRAPH"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%-------------------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+%-------------------------------------------------------------
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Appendices
+\end_layout
+
+\begin_layout Subsection
+Formats for this file
+\end_layout
+
+\begin_layout Standard
+I created this users guide using 
+\emph on
+lyx
+\emph default
+ to produce a .lyx file (
+\emph on
+lyx
+\emph default
+ is a nice gui-based tex editor).
+ The .tex and .html files are exported from lyx using the latex(plain) and
+ html export options.
+ The .pdf file was exported from lyx using one of the PDF export options.
+ Note that the 
+\emph on
+PDF (dvipdfm) 
+\emph default
+option does not include the hyperlinks in the .pdf file.
+ If you make changes in the .tex file, you can import the new tex file into
+ 
+\emph on
+lyx
+\emph default
+.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "GROPTICS"
+
+\end_inset
+
+ GrOptics git repository (read only) 
+\begin_inset Newline newline
+\end_inset
+
+ git clone http://gtlib.gatech.edu/pub/IACT/GrOptics.git
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "GRISU"
+
+\end_inset
+
+ GrISU download site 
+\begin_inset Newline newline
+\end_inset
+
+ http://www.physics.utah.edu/gammaray/GrISU/
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "CORSIKA"
+
+\end_inset
+
+ CORSIKA: A Monte Carlo Code to Simulate Extensive Air Showers
+\begin_inset Newline newline
+\end_inset
+
+ D.
+ Heck, J.
+ Knapp, J.N.
+ Capdevielle, G.
+ Schatz, T.
+ Thouw 
+\begin_inset Newline newline
+\end_inset
+
+ Forschungszentrum Karlsruhe Report FZKA 6019 (1998)
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "CARE"
+
+\end_inset
+
+ CARE git repository (read only) 
+\begin_inset Newline newline
+\end_inset
+
+ git clone http://gtlib.gatech.edu/pub/IACT/CARE.git
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "ROOT"
+
+\end_inset
+
+ Rene Brun and Fons Rademakers,
+\begin_inset Newline newline
+\end_inset
+
+ ROOT - An Object Oriented Data Analysis Framework,
+\begin_inset Newline newline
+\end_inset
+
+ Proceedings AIHENP'96 Workshop, Lausanne, Sep.
+ 1996, 
+\begin_inset Newline newline
+\end_inset
+
+ Nucl.
+ Inst.
+ & Meth.
+ in Phys.
+ Res.
+ A 389 (1997) 81-86.
+ 
+\begin_inset Newline newline
+\end_inset
+
+ See also http://root.cern.ch/drupal/
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "ROBAST"
+
+\end_inset
+
+ Development of Non-sequential Ray-tracing Software for Cosmic-ray Telescopes
+ Authors: Akira Okumura, Masaaki Hayashida, Hideaki Katagiri, Takayuki Saito,
+ Vladimir Vassiliev.
+ http://arxiv.org/abs/1110.4448 Download site http://sourceforge.net/projects/robas
+t/
+\end_layout
+
+\end_body
+\end_document

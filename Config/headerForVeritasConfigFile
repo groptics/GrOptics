@@ -1,0 +1,85 @@
+cat this file to the beginning of a standard 4-telescope Veritas
+configuration file to produce a "veritasDaviesCotton" configuration file
+for GrOptics.
+
+C.Duke
+Grinnell College
+
+VERSION2.3 
+3OCT2012
+
+Only records with an initial "*" are active.
+
+The VGA_ReadDCStdGrISU reader creates standard telescopes for use with the 
+DCTelescope factory. The reader uses a standard
+GrISU configuration file to make standard telescopes based on 
+instructions given in TELSTD records, each of which specifies a
+telescope from the GrISU configuration file for creating the 
+standard telescope.  
+
+The DC factory will produce a DC Telescope based on a given DC standard 
+telescope (see the array configuration file). Each individual array 
+telescope may be edited from edit records in the array configuration file.
+
+Telescope standard selection record
+  - standard telescope id number. Must be >0, but does not
+      have to be sequential nor start from 1.
+  - telescope number in GrISU configuration file
+  - standard geometry number. The geometry specification is
+    not part of GrISU config.file (see following PILOTF record)
+  - ray-tracing algorithm number 
+        - 0: root structural shadowing turned off
+        - 1: shadowing as in grisudet (uses ROOT only for structural shadowing)
+  - average transit time in nsec (from the telescope plane to camera for photons
+    normally incident on the telescope plane.
+  - print option for this standard telescope
+     0:  no printing
+     1:  print summary information
+     2:  add geometry details 
+     3:  add facet details
+* TELSTD 1 1 1 1 37.2 0
+* TELSTD 2 2 1 1 37.2 0
+* TELSTD 3 3 1 1 37.2 0
+* TELSTD 4 4 1 1 37.2 0
+
+camera radius in mm (for veritas Rmax for pixel position is 357.58 mm
+                     pixel radius is 14.00 mm. so 375.00 mm is the camera radius
+including the camera restricts the photon locations to lie within this radius on
+the camera plane.  If left out, all photons striking the camera plane extended
+across the entire base of the focus box, but at camera level will be recorded
+ in the root file.
+* CAMRAD 1 375.0
+* CAMRAD 2 375.0
+* CAMRAD 3 375.0
+* CAMRAD 4 375.0
+
+GRIDF defines an ordered hash table for fast searches for facet hits.
+The hash table is a 2D grid that is either produced by the code or read
+from a file. There is a separate grid for each standard telescope.
+     - standard telescope number
+     - gridFlag
+         0, no grid, full facet/pixel loop 
+    	 1, make grid and use grid in facet search
+    	 2, made grid and write to filename:
+       	   in later searches read this file rather than calculating 
+       	   the grid (to be implemented soon) 
+         3, read grid if file is available, else make and write grid
+     - nbinsx, number of bins in the x direction
+     - nbinsy, number of bins in the y direction
+     - fileName, name of grid file (for either reading or writing)
+Default (no GRIDF record) do full loop sequentially over all facets.
+* GRIDF 1 2 15 15 gridfileStdDC1.txt
+* GRIDF 2 2 15 15 gridfileStdDC1.txt
+* GRIDF 3 2 15 15 gridfileStdDC1.txt
+ GRIDF 2 1 15 15 
+
+additional pilot files to combine with this file
+can have more than one on the following PILOTF record
+Files listed here is a veritas cfg file and the standard geometry records for the root
+shadowing routines.
+* PILOTF ./Config/geoConfig.cfg
+
+
+
+  STANDARD VERITAS CONFIGURATION FILE FOLLOWS
+

@@ -1,0 +1,188 @@
+Makefile:205: Makefile.depend: No such file or directory
+echo > Makefile.depend0 ; makedepend -s "#DEPEND LIST DONT DELETE" -- -IROBAST-telescope_factory/include -I. -I./include -Y --  src/*.cpp  include/*.h -f Makefile.depend0 > /dev/null 2>&1 ; sed "s/^[a-zA-Z0-9]*\//obj\//" Makefile.depend0 > Makefile.depend ; rm -f Makefile.depend0
+ready to copy robast edit files
+cp ROBASTEditedFile/AOpticalComponent.cxx ROBAST-telescope_factory/src/.; 
+touch ROBASTEditedFile/copyFile
+cd ROBAST-telescope_factory; make;
+make[1]: Entering directory `/media/psf/Dropbox/Research/Otte/Aug17GrOptics/GrOptics/ROBAST-telescope_factory'
+Compiling s src/AOpticalComponent.cxx
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include  -Wall -g -Iinclude -c src/AOpticalComponent.cxx -o src/AOpticalComponent.o
+g++ -shared -O2 -m64 src/AGeoWinstonConePoly.o src/AGeoUtil.o src/AGeoBezierPgon.o src/AGlassCatalog.o src/AGeoAsphericDisk.o src/AObscuration.o src/ABorderSurfaceCondition.o src/AGeoBezierPcon.o src/ASchottFormula.o src/ACorsikaIACTFile.o src/ACorsikaIACTRunHeader.o src/ALens.o src/ARay.o src/AGeoWinstonCone2D.o src/AOpticalComponent.o src/ACauchyFormula.o src/ACorsikaIACTEventHeader.o src/ARayShooter.o src/ATelescope.o src/ATelescopeFactory.o src/ASellmeierFormula.o src/AMirror.o src/AFocalSurface.o src/ARayArray.o src/AOpticsManager.o src/ARefractiveIndex.o src/ROBASTDict.o src/bernlohr/straux.o src/bernlohr/warning.o src/bernlohr/fileopen.o src/bernlohr/eventio.o src/bernlohr/io_simtel.o -o  libROBAST.so 
+libROBAST.so done
+rlibmap -f -o libROBAST.rootmap -l libROBAST.so -d libCore libGeom libGeomPainter libPhysics libGraf libGraf3d -c include/LinkDef.h
+make[1]: Leaving directory `/media/psf/Dropbox/Research/Otte/Aug17GrOptics/GrOptics/ROBAST-telescope_factory'
+robast ready and waiting
+        Compiling src/grOptics.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/grOptics.cpp -o obj/grOptics.o
+In file included from src/grOptics.cpp:50:0:
+./include/GSegSCTelescope.h: In member function ‘virtual void GSegSCTelescope::setRayPlotModeInt(const int&)’:
+./include/GSegSCTelescope.h:378:9: warning: unused variable ‘ieplot’ [-Wunused-variable]
+     int ieplot = iplt;
+         ^
+src/grOptics.cpp: In function ‘int main(int, char**)’:
+src/grOptics.cpp:201:8: warning: variable ‘runApp’ set but not used [-Wunused-but-set-variable]
+   bool runApp = false;  // TRint for possible use later with 
+        ^
+src/grOptics.cpp:588:14: warning: ‘fO’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+   fO->Close();
+              ^
+Done
+        Compiling src/GSegSCTelescope.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GSegSCTelescope.cpp -o obj/GSegSCTelescope.o
+In file included from src/GSegSCTelescope.cpp:90:0:
+./include/GSegSCTelescope.h: In member function ‘virtual void GSegSCTelescope::setRayPlotModeInt(const int&)’:
+./include/GSegSCTelescope.h:378:9: warning: unused variable ‘ieplot’ [-Wunused-variable]
+     int ieplot = iplt;
+         ^
+src/GSegSCTelescope.cpp: In member function ‘void GSegSCTelescope::addKrakowFrame(bool)’:
+src/GSegSCTelescope.cpp:756:14: warning: variable ‘phi’ set but not used [-Wunused-but-set-variable]
+     Double_t phi   = v3.Phi()*TMath::RadToDeg();
+              ^
+Done
+        Compiling src/GDefinition.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GDefinition.cpp -o obj/GDefinition.o
+Done
+        Compiling src/GPilot.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GPilot.cpp -o obj/GPilot.o
+Done
+        Compiling src/GSegSCTelescopeFactory.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GSegSCTelescopeFactory.cpp -o obj/GSegSCTelescopeFactory.o
+In file included from src/GSegSCTelescopeFactory.cpp:42:0:
+./include/GSegSCTelescope.h: In member function ‘virtual void GSegSCTelescope::setRayPlotModeInt(const int&)’:
+./include/GSegSCTelescope.h:378:9: warning: unused variable ‘ieplot’ [-Wunused-variable]
+     int ieplot = iplt;
+         ^
+Done
+        Compiling src/GRayTracerBase.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GRayTracerBase.cpp -o obj/GRayTracerBase.o
+Done
+        Compiling src/GDCGeometry.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GDCGeometry.cpp -o obj/GDCGeometry.o
+Done
+        Compiling src/GDCTelescopeFactory.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GDCTelescopeFactory.cpp -o obj/GDCTelescopeFactory.o
+src/GDCTelescopeFactory.cpp: In member function ‘virtual void GDCTelescopeFactory::printStdTelescope(const int&, const int&, std::ostream&)’:
+src/GDCTelescopeFactory.cpp:399:7: warning: variable ‘stdNum’ set but not used [-Wunused-but-set-variable]
+   int stdNum = iStd;
+       ^
+Done
+        Compiling src/GReadPhotonBase.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GReadPhotonBase.cpp -o obj/GReadPhotonBase.o
+Done
+        Compiling src/GOrderedGrid.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GOrderedGrid.cpp -o obj/GOrderedGrid.o
+Done
+        Compiling src/GRootDCNavigator.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GRootDCNavigator.cpp -o obj/GRootDCNavigator.o
+src/GRootDCNavigator.cpp: In member function ‘void GRootDCNavigator::makeCrossArms()’:
+src/GRootDCNavigator.cpp:932:12: warning: variable ‘psi’ set but not used [-Wunused-but-set-variable]
+   Double_t psi   = 0.0;
+            ^
+src/GRootDCNavigator.cpp:934:12: warning: variable ‘euler0’ set but not used [-Wunused-but-set-variable]
+   Double_t euler0 = -(45.0 - phi);
+            ^
+src/GRootDCNavigator.cpp:935:12: warning: variable ‘euler1’ set but not used [-Wunused-but-set-variable]
+   Double_t euler1 = -theta;
+            ^
+Done
+        Compiling src/GSCTelescope.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GSCTelescope.cpp -o obj/GSCTelescope.o
+Done
+        Compiling src/GReadDCStdBase.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GReadDCStdBase.cpp -o obj/GReadDCStdBase.o
+Done
+        Compiling src/GSegmentedMirror.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GSegmentedMirror.cpp -o obj/GSegmentedMirror.o
+src/GSegmentedMirror.cpp: In member function ‘virtual AMirror* TetragonSegmentedMirror::BuildMirror(const char*, AGeoAsphericDisk*, Bool_t)’:
+src/GSegmentedMirror.cpp:191:12: warning: unused variable ‘bx’ [-Wunused-variable]
+   Double_t bx = fRmax*TMath::Cos((90. - dphi)*d2r);
+            ^
+src/GSegmentedMirror.cpp: In member function ‘virtual AMirror* PentagonSegmentedMirror::BuildMirror(const char*, AGeoAsphericDisk*, Bool_t)’:
+src/GSegmentedMirror.cpp:250:12: warning: unused variable ‘bx’ [-Wunused-variable]
+   Double_t bx = fRmax*TMath::Cos((90. - dphi)*d2r);
+            ^
+src/GSegmentedMirror.cpp:251:12: warning: unused variable ‘by’ [-Wunused-variable]
+   Double_t by = fRmax*TMath::Sin((90. - dphi)*d2r);
+            ^
+Done
+        Compiling src/GReadSegSCStd.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GReadSegSCStd.cpp -o obj/GReadSegSCStd.o
+In file included from src/GReadSegSCStd.cpp:36:0:
+./include/GSegSCTelescope.h: In member function ‘virtual void GSegSCTelescope::setRayPlotModeInt(const int&)’:
+./include/GSegSCTelescope.h:378:9: warning: unused variable ‘ieplot’ [-Wunused-variable]
+     int ieplot = iplt;
+         ^
+Done
+        Compiling src/GRootWriter.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GRootWriter.cpp -o obj/GRootWriter.o
+Done
+        Compiling src/GSCTelescopeFactory.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GSCTelescopeFactory.cpp -o obj/GSCTelescopeFactory.o
+src/GSCTelescopeFactory.cpp: In member function ‘virtual void GSCTelescopeFactory::printStdTelescope(const int&, const int&, std::ostream&)’:
+src/GSCTelescopeFactory.cpp:410:7: warning: variable ‘stdNum’ set but not used [-Wunused-but-set-variable]
+   int stdNum = iStd;
+       ^
+src/GSCTelescopeFactory.cpp:412:8: warning: variable ‘allFlag’ set but not used [-Wunused-but-set-variable]
+   bool allFlag = false;
+        ^
+Done
+        Compiling src/GReadPhotonGrISU.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GReadPhotonGrISU.cpp -o obj/GReadPhotonGrISU.o
+Done
+        Compiling src/GDCRayTracer.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GDCRayTracer.cpp -o obj/GDCRayTracer.o
+Done
+        Compiling src/GReadSCStd.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GReadSCStd.cpp -o obj/GReadSCStd.o
+Done
+        Compiling src/GSegmentedObscuration.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GSegmentedObscuration.cpp -o obj/GSegmentedObscuration.o
+Done
+        Compiling src/GGeometryBase.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GGeometryBase.cpp -o obj/GGeometryBase.o
+Done
+        Compiling src/GDCTelescope.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GDCTelescope.cpp -o obj/GDCTelescope.o
+Done
+        Compiling src/GUtilityFuncts.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GUtilityFuncts.cpp -o obj/GUtilityFuncts.o
+src/GUtilityFuncts.cpp: In function ‘bool GUtilityFuncts::polyInside(const int&, const double&, const double&, const double&, const double&)’:
+src/GUtilityFuncts.cpp:55:10: warning: variable ‘x1’ set but not used [-Wunused-but-set-variable]
+   double x1,y1;
+          ^
+Done
+        Compiling src/GReadDCStdGrISU.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GReadDCStdGrISU.cpp -o obj/GReadDCStdGrISU.o
+Done
+        Compiling src/GSimulateOptics.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GSimulateOptics.cpp -o obj/GSimulateOptics.o
+Done
+        Compiling src/GArrayTel.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GArrayTel.cpp -o obj/GArrayTel.o
+In file included from src/GArrayTel.cpp:64:0:
+./include/GArrayTel.h: In constructor ‘GArrayTel::GArrayTel(ROOT::Math::XYZVector, const double&, const double&, const TelType&, const int&, const int&, const int&, bool, double, double, ATelescope*)’:
+./include/GArrayTel.h:92:7: warning: ‘GArrayTel::iPrintMode’ will be initialized after [-Wreorder]
+   int iPrintMode;
+       ^
+./include/GArrayTel.h:62:10: warning:   ‘bool GArrayTel::bFixedPointing’ [-Wreorder]
+   bool   bFixedPointing   ;
+          ^
+src/GArrayTel.cpp:81:1: warning:   when initialized here [-Wreorder]
+ GArrayTel::GArrayTel(const ROOT::Math::XYZVector telLocGrd,
+ ^
+src/GArrayTel.cpp: In member function ‘void GArrayTel::makeTelescopeTest(const string&)’:
+src/GArrayTel.cpp:435:12: warning: variable ‘rmsYT’ set but not used [-Wunused-but-set-variable]
+   Double_t rmsYT = 0.0;
+            ^
+Done
+Generating GrOpticsDict dictionary include/GRootWriter.h ... 
+rootcint -v -f src/GrOpticsDict.cpp -c  include/GRootWriter.h include/LinkDef.h
+Info: Class GRootWriter: Streamer() not declared
+rootcint SHELL mv src/GRootWriterDict.h include/.
+cp src/GrOpticsDict.h  include/.
+Done
+        Compiling src/GrOpticsDict.cpp ... 
+g++ -O2 -Wall -fPIC -pthread -m64 -I/home/karan/root/include -IROBAST-telescope_factory/include -I. -I./include -c src/GrOpticsDict.cpp -o obj/GrOpticsDict.o
+Done
+building grOptics
+g++ -O2 -m64 -LROBAST-telescope_factory -Xlinker -rpath -Xlinker ROBAST-telescope_factory -L/home/karan/root/lib -lCore -lCint -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -pthread -lm -ldl -rdynamic  -lMinuit -lTreePlayer -lGenVector   -lGeomBuilder  -lGeomPainter  -lGeom -lGed -lROBAST obj/grOptics.o obj/GSegSCTelescope.o obj/GDefinition.o obj/GPilot.o obj/GSegSCTelescopeFactory.o obj/GRayTracerBase.o obj/GDCGeometry.o obj/GDCTelescopeFactory.o obj/GReadPhotonBase.o obj/GOrderedGrid.o obj/GRootDCNavigator.o obj/GSCTelescope.o obj/GReadDCStdBase.o obj/GSegmentedMirror.o obj/GReadSegSCStd.o obj/GRootWriter.o obj/GSCTelescopeFactory.o obj/GReadPhotonGrISU.o obj/GDCRayTracer.o obj/GReadSCStd.o obj/GSegmentedObscuration.o obj/GGeometryBase.o obj/GDCTelescope.o obj/GUtilityFuncts.o obj/GReadDCStdGrISU.o obj/GSimulateOptics.o obj/GArrayTel.o obj/GrOpticsDict.o -o  grOptics

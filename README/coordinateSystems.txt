@@ -1,0 +1,50 @@
+October 14, 2011
+VERSION 1.0
+6Jan2012
+C. Duke
+Grinnell College
+
+Understanding the coordinate systems used in our simulation codes is always difficult,
+especially if your memory is as bad as mine.  So, these descriptions should help.
+
+GrISU ground coordinate system 
+      The GrISU Cherenkov photon files use the following axes:
+      	  x: East
+	  y: South
+	  z: down
+      to form a right-handed system. 
+
+GrOptics ground coordinate system
+      The incoming GrISU produced incoming photons are immediately transformed
+      to the system:
+         x: East
+	 y: North
+	 z: up
+      forming a right-handed system. Note that the telescope locations in the
+      VERITAS GrISU configuration file use this coordinate system.
+
+Telescope coordinate system
+     Each telescope has a coordinate system with origin at the telescope rotation 
+     point and with z axis pointed toward the sky along the optic axis of the 
+     telescope.  In stow position (DC telescopes), the z axis is horizontal, the y axis is down, and 
+     the x axis is toward the East.  To point the telescope to a given location on the 
+     sky, first rotate the telescope about the vertical through the azimuthal angle. 
+     Then, raise the telescope about its new x axis through the elevation angle.  This
+     new coordinate system is the "telescope coordinate system".  Prior to injection 
+     into the GTelescope class, the photons undergo a coordinate transformation to this
+     telescope coordinate system.
+
+Array coordinate system
+     Prior to added pointing misalignments, all telescopes point to the same location
+     on the sky.  The array coordinate system points to this same location, but its
+     origin is at the at the origin of the array.
+
+Camera coordinate system
+     For historical reasons, the camera coordinate system's y axis is a reflection of the 
+     y-axis of the telescope coordinate system. For the veritas telescope, stand in from of the
+     camera with the telescope in stow position. The camera y axis is up and the camera x axis
+     is to your right (to the East).  The telescope y-axis is down; its x axis is to the right.
+
+     In the output tree of grOptics, the photon locations on the camera are in camera coordinates,
+     both for DC and for SC telescopes.  I'll add an input flag later to select photon camera
+     locations in either telescope or camera coordinates.

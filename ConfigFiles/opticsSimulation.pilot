@@ -1,0 +1,155 @@
+  Steering pilot file for GrOptics
+  Used for testing versions
+VERSION4.0 
+30May2016
+
+Charlie Duke
+Grinnell College
+
+This version (4.0) contains the new segmented sc telescope class, factory, and
+reader.  It will continue to evolve with better documentation over the next
+months. Thus, you should do a git pull fairly often. I'll alert you to any
+major changes via e-mail.  I'm currently updating the pdf User's Guide; in
+the meanwhile, additional documentation for the new SEGSC class is in this file,
+the arrayConfig.cfg file and the new devSegSCTelescopes.cfg file.  Please
+read these files carefully to save consternation later.
+
+The segmented telescope class is based on the NewSCT.C root script by Akira
+Okumura. you can find this script in GrOptics/scripts/NewSCT.C.
+
+The DRAWTEL options are useful for SEGSC telescopes as is the "single mapmt module"
+option for confirming your camera position - see comments at the end of
+this file.
+
+THE CODE IS ALL SET TO RUN. JUST "make" AND EXECUTE "GrOptics". You should 
+see an ogl image with the paths of 20 photons across a segmented mirror SC
+telescope.
+
+ToDo's include: making the printoption consistent across telescopes, using
+valgrind for memory usage and leak testing for the new segsc code, making
+the screen/log output nicer, adding error offsets for the focal surface.
+
+I also have not yet specified axes for the rotational errors (segsc only).
+As you see other details to be added, please let me know.
+
+If you are not on the GrOptics email list, I can add your name;
+email duke-at-grinnell.edu.
+
+Only records with an initial "*" are active.  
+
+cherenkov photon GRISU-type input file, 
+same type input file as for grisudet. 
+FILEIN <filename>  
+* FILEIN ./Config/photon.cph
+ 
+see GrOptics/Make_Photons/README to create this test file
+ FILEIN ./Make_Photons/veritasStarOffset.cph
+
+camera output root file specification type
+      - root file name
+      - name for tree containing parameters common to all photons
+      - base name for photon trees, one tree per telescope, 
+        telescope number appended to base name
+      - photonDirCosine flag: 0/1, if 1 add dirCosineCamera branches
+      If you plan to use any utility scripts, you should use the parameter
+      values given in the git repository file, i.e. photonLocation.root allT T 1.e
+FILEOUT <root filename> <TreeName> <telBaseTreeName> <photonDirCosBranchFlag>
+* FILEOUT photonLocation.root allT T 1
+
+name of grOptics log file, default use cerr (if no asterisk)
+ LOGFILE logTest.log
+
+number of showers/photons, defaults -1
+  NSHOWER <numShowers, <0, no limit>
+          <numPhotons, <0, no limit>
+ NSHOWER -1 -1
+* NSHOWER 1 50
+You can see the paths of all 20 photons in the ogl image when you
+run the code (all photons from the photon.cph test input file).
+
+WOBBLE <X> <Y> <R> <latitude>
+where X and Y are the coordinates of the source in the camera
+field of view and R is the source extension radius (all in degrees).
+The fourth parameter is the latitude of the observatory in degrees. 
+
+If the latitude is set to 90 degrees X and Y give the source position along the
+camera axes.  If the latitude is less than 90 degrees, Y is the
+offset along the hour circle toward Polaris; X is the offset along 
+a perpendicular to the hour circle in the direction of increasing azimuth.
+These offsets are thus not parallel to the camera axes.
+
+Example: 
+wobble Y, North: WOBBLE 0.0 0.5 0.0 31.675  (offset toward Polaris)  
+wobble X, East : WOBBLE 0.5 0.0 0.0 31.675  (offset perpendicular to hour circle)
+* WOBBLE 0.0 0.0 0.0 90.0
+
+array configuration file
+ ARRAYCONFIG <filename: default ./Config/arrayConfig.cfg>
+* ARRAYCONFIG ./Config/arrayConfig.cfg
+
+random number seed for TRandom3: default seed = 0, set by machine clock.
+seed must be an unsigned integer
+* SEED 12345
+
+vector capacities: may be useful for memory management, set to 100 if
+vector is left out. Seems to work ok up to 1000000 for my machine (lots of
+memory).  Should just set to 100 and forget about it (hopefully)
+* VECCAPACITY 100
+
+photonHistory file, no history file if no asterisk, each telescope has 
+a history file
+Very useful for code tests and debugging
+ PHOTONHISTORY <root file, tel.number appended to base name> 
+               <tree name: default = "his">
+* PHOTONHISTORY photonhistory.root his
+
+core/telescope location in grd.and tel.system branches added for debuging.
+default 0 for compatibility with earlier opticsSimulation.pilot versions.
+* DEBUGBRANCHES 0
+///////////////  draw possibilities for checking configuration and
+                               debugging
+			       
+DRAWTEL <telescope number>  <drawtel option>          
+The code makes an opengl drawing of the telescope and immediately 
+stops with the root prompt. These are cool drawings.
+
+For segmented SC telescope, option 0: only draw telescope
+                            option 1: draw MAPMT module and MAPMT camera
+                            option 2: draw all of the above.
+
+                            option 10: plot rays reaching cathode or focal
+                                       surface on telescope image
+                            option 20: plot all rays on telescope image
+			    For options 10 and 20, limit the number of photons
+			    using the NSHOWER record above to something like
+			    100 photons or you will be sorry.
+NOTE: for ideal SC telescope, camera is not drawn - coming soon.
+
+For DC telescopes, option 0 is the only possibility and the facets are not drawn
+(they are not placed in the root geometry nodes and the ray-tracing algorithm
+does not use root geometry methods due to slow execution issues.  You may get
+strange results if you use other options for drawing DC telescopes (to be fixed
+soon)
+
+ DRAWTEL 1 20
+ DRAWTEL 2 0
+
+TESTTEL <telescope number> <baseFileName for histograms>   
+THis is a very useful option for producing spot histograms and spot rms
+plots; the code doesn't use a photon input file; the photons are internally
+produced. However, at present, you still need a valid photon input file 
+in the above FILEIN record.
+
+Makes histograms and graphs of psf width and psf spot for a number of 
+photon incident angles. Makes histograms and graphs for transit time width
+for the same incident angles.  Be sure to set the number of photons to some 
+small number in the NSHOWER record; the code does not stop after making the 
+test graphs. DO NOT ADD A ROOT EXTENSION TO THE BASEFILENAME, THE CODE WILL
+DO THAT.
+The graphs and histograms are printed to png files using the base filenames.
+
+TESTTEL <telescope number> <baseFileName for histograms>   
+* TESTTEL 1  PsfSegSpot
+
+fixed telescope pointing option is now in the array configuration file
+See the ARRAYTEL record to set fixed pointing for individual telescopes 

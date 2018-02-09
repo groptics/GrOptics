@@ -1,0 +1,94 @@
+VERSION 1.0
+6Jan2012
+C. Duke
+Grinnell College
+
+Configuration files currently in use
+
+Can combine configuration files into a single file by self-referencing within the files
+since all record flags are unique across configuration and pilot files. I haven't tried this yet.
+
+Overview of flags within pilot and configuration files
+Detailed documentation in each pilot/configuration file
+
+I.  grOptics pilot file:  svn file: Config/opticsSimulation.pilot
+
+    Config/opticsSimulation.pilot
+	FILEIN <filename of GrISU-type file>
+	FILEOUT <root filename> <generalTreeName> <telBaseTreeName> <photonDirCosBranchFlag>
+	LOGFILE <name of logfile>
+	ARRAYCONFIG <filename: default ./Config/arrayConfig.cfg>
+  	NSHOWER <numShowers, <0, no limit> <numPhotons, <0, no limit>
+	SEED <random number seed, unsigned integer, if 0, from machine clock>
+	PHOTONHISTORY <root file, tel.number appended to base name> <tree name: default = "his">
+	WOBBLE 0.0 0.0 0.0 40.0 (telescope offset, see description in opticsSimulation.pilot)
+	DRAWTEL <telescope number to draw>, default 0 (no drawing), code stops with root prompt 
+                after drawing	  
+
+II. arrayConfig file, svn file: Config/arrayConfig.cfg, specified in opticsSimulation.pilot
+
+    Gives factory information and specifies each telescope in the array.
+    All telescope edit records are currently in this file
+
+    specify telescope factories
+    TELFAC <type> <Reader> <configFile> <TeleEditFile>
+
+    specify each array telescope
+    The telescope Numbers, telNum, must all be greater than zero and can be in any order. For example, 
+    photon file may contain photons for e.g. 50 telescopes while the array may be defined through the 
+    ARRAYTEL telNum's for a subarray of e.g. 10 telescopes. 
+    ARRAYTEL <telNum> <stdNum>  <telType> <location x/y/z> <ptOffsets x/y> <printMode>
+
+    edit records for DC telescopes: use matlab notation if needed
+    To edit individual facet misalignments
+    EDITDCTEL <tel.number(s)> FACET  <facet_num(s)> align <max. mis_align(degrees)>
+ 
+    To edit individual facet blur radii, degradation factors, and reflection curve id's
+    EDITDCTEL <tel.number(s)> FACET  <facet_num(s)> reflect <blur_rad> <degrad_factor> <refl_curve> 
+
+    no EDITSCTEL records yet. To be added later.
+
+III.  standard DC telescope config file, svn file: veritas4Tel.cfg: specified in arrayConfig.cfg
+
+      specify standard telescopes using telescope numbers in GrISU configuration file
+      TELSTD <stdNum> <telNum> <stdGeo> <ray-tracing algorithm number> <avg.transit time> <print option>
+
+      specify ordered hash table grid for facet search for a given standard telescope
+      This is same record as currently in grisudet pilot file, detector.pilot
+      GRIDF stdNum gridflag nbinsx nbinsy filename (either read or write)
+
+      specify additional pilot or configuration files needed, I separated out the telescope structure
+      details needed by the root geometry methods.
+      PILOTF ./Config/geoConfig.cfg  [additional pilot files to combine with this file]
+      
+      plus the usual GrISU configuration file. Each telescope ( 1 through 4) in a VERITAS config file
+      corresponds to a different standard telescope if selected via the TELSTD record. 
+
+IV.  geometry file, svn file:  Config/geoConfig.cfg  (for use in root shadowing routines for DC telescopes
+     This is specifically for VERITAS-type structures only.  Need different readers
+     for different structures, e.g. circular focus box, 3 support arms, etc.
+
+     GEOST <stdNum> STANDARD <geoEnum=0> for veritas-like structure
+     GEOST 1 STANDARD 0
+     GEOST 1 TOPVOL 1.0
+     GEOST 1 FOCBOX 1.5 1.5 1.02 45.0 0.0 0.0     
+     GEOST 1 EDGEBOX 1 0.1778 0.1778 1.02 0.0 0.0 0.0 0.0 
+     GEOST 1 EDGEBOX 2 0.1778 0.1778 1.02 0.0 0.0 0.0 0.0 
+     GEOST 1 EDGEBOX 3 0.1778 0.1778 1.02 0.0 0.0 0.0 0.0 
+     GEOST 1 EDGEBOX 4 0.1778 0.1778 1.02 0.0 0.0 0.0 0.0
+     GEOST 1 SHUTTER 0.2286 0.01 -45.0 0.0 0.0
+     GEOST 1 QUADARMSIZE  0.1778 0.1778 0.0
+     GEOST 1 QUADARM 1 0.0 4.436
+     GEOST 1 QUADARM 2 0.0 -4.436
+     GEOST 1 QUADARM 3 4.18 0.0
+     GEOST 1 QUADARM 4 -4.18 0.0
+     GEOST 1 CAMERARADIUS .2
+     facet details from GrISU configuration file
+
+
+
+
+
+
+     
+

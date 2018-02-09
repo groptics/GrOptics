@@ -1,0 +1,129 @@
+ERSION 2.0
+6Jan2012
+C. Duke
+Grinnell College
+
+The GrOptics output root file contain the following root trees:
+(default names used here. Names set in opticsSimulation.pilot file.
+
+Note that the average transit time for each telescope is read from an
+input file and recorded in the telescope output tree. No accomodation 
+for average transit time is make in individual photon timing. Similarly,
+the telescope delay times are included for each photon, but they are not
+included in the photon times.
+
+ TFile*		photonLocation.root	
+  KEY: TTree	allT;1	allT
+  KEY: TTree	T1;1	photon data for telescope 1
+  KEY: TTree	T2;1	photon data for telescope 2
+  KEY: TTree	T3;1	photon data for telescope 3
+  KEY: TTree	T4;1	photon data for telescope 4
+
+The trees contain the following branches
+
+allT tree branches
+root [6] allT->Print()
+******************************************************************************
+*Tree    :allT      : allT                                                   *
+*Entries :        1 : Total =            6511 bytes  File  Size =       2393 *
+*        :          : Tree compression factor =   1.30                       *
+******************************************************************************
+*Br    0 :fileHeader : fileHeader/C                                          *
+*Entries :        1 : Total  Size=       1568 bytes  File Size  =        651 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.65     *
+*............................................................................*
+*Br    1 :globalEffic : globalEffic/D                                        *
+*Entries :        1 : Total  Size=        592 bytes  File Size  =         86 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
+*............................................................................*
+*Br    2 :obsHgt    : obsHgt/D                                               *
+*Entries :        1 : Total  Size=        567 bytes  File Size  =         81 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
+*............................................................................*
+*Br    3 :telIDVector : vector<int>                                          *
+*Entries :        1 : Total  Size=        618 bytes  File Size  =        116 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
+*............................................................................*
+*Br    4 :telLocXVector : vector<float>                                      *
+*Entries :        1 : Total  Size=        628 bytes  File Size  =        118 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
+*............................................................................*
+*Br    5 :telLocYVector : vector<float>                                      *
+*Entries :        1 : Total  Size=        628 bytes  File Size  =        118 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
+*............................................................................*
+*Br    6 :telLocZVector : vector<float>                                      *
+*Entries :        1 : Total  Size=        628 bytes  File Size  =        116 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.02     *
+*............................................................................*
+*Br    7 :transitTimeVector : vector<float>                                  *
+*Entries :        1 : Total  Size=        648 bytes  File Size  =        122 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
+*............................................................................*
+
+
+T1 tree branches (ditto for T2,3,4 trees).
+No photon on-camera direction cosines included. Can turn this option on 
+in opticsSimulation.pilot.
+root [5] T1->Print()
+******************************************************************************
+*Tree    :T1        : photon data for telescope 1                            *
+*Entries :        1 : Total =          134106 bytes  File  Size =     100098 *
+*        :          : Tree compression factor =   1.28                       *
+******************************************************************************
+*Br    0 :eventNumber : eventNumber/i                                        *
+*Entries :        1 : Total  Size=        578 bytes  File Size  =         80 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
+*............................................................................*
+*Br    1 :primaryType : primaryType/i                                        *
+*Entries :        1 : Total  Size=        578 bytes  File Size  =         80 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
+*............................................................................*
+*Br    2 :primaryEnergy : primaryEnergy/F                                    *
+*Entries :        1 : Total  Size=        588 bytes  File Size  =         82 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
+*............................................................................*
+*Br    3 :Xcore     : Xcore/F                                                *
+*Entries :        1 : Total  Size=        548 bytes  File Size  =         74 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
+*............................................................................*
+*Br    4 :Ycore     : Ycore/F                                                *
+*Entries :        1 : Total  Size=        548 bytes  File Size  =         74 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
+*............................................................................*
+*Br    5 :Xcos      : Xcos/F                                                 *
+*Entries :        1 : Total  Size=        543 bytes  File Size  =         73 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
+*............................................................................*
+*Br    6 :Ycos      : Ycos/F                                                 *
+*Entries :        1 : Total  Size=        543 bytes  File Size  =         73 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
+*............................................................................*
+*Br    7 :Xsource   : Xsource/F                                              *
+*Entries :        1 : Total  Size=        558 bytes  File Size  =         76 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
+*............................................................................*
+*Br    8 :Ysource   : Ysource/F                                              *
+*Entries :        1 : Total  Size=        558 bytes  File Size  =         76 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
+*............................................................................*
+*Br    9 :delay     : delay/F                                                *
+*Entries :        1 : Total  Size=        548 bytes  File Size  =         74 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.00     *
+*............................................................................*
+*Br   10 :photonX   : vector<float>                                          *
+*Entries :        1 : Total  Size=      31964 bytes  File Size  =      28210 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.12     *
+*............................................................................*
+*Br   11 :photonY   : vector<float>                                          *
+*Entries :        1 : Total  Size=      31964 bytes  File Size  =      28328 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.11     *
+*............................................................................*
+*Br   12 :time      : vector<float>                                          *
+*Entries :        1 : Total  Size=      31949 bytes  File Size  =      25406 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.24     *
+*............................................................................*
+*Br   13 :wavelength : vector<float>                                         *
+*Entries :        1 : Total  Size=      31979 bytes  File Size  =      16024 *
+*Baskets :        1 : Basket Size=      32000 bytes  Compression=   1.96     *
+*............................................................................*

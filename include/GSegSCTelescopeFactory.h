@@ -1,0 +1,262 @@
+/*
+VERSION4.0
+30May2016
+*/
+/*! \brief GSegSCTelescopeFactory concrete class for creating ACT 
+  Telescopes
+
+Modified Factory design pattern where GTelescopeFactory provides 
+the base class for DC and SC telescope concrete factories. 
+GSegSCTelescopeFactory produces the SC telescopes.
+
+*/
+#ifndef GSEGSCTELESCOPEFACTORY
+#define GSEGSCTELESCOPEFACTORY
+
+#include "ATelescopeFactory.h"
+#include "ATelescope.h"
+// forward declarations
+class TGraph;
+class GPilot; 
+class GSegSCTelescope;
+class ATelescope;
+class GReadSegSCStd;
+struct mirrorSegmentDetails;
+
+// move following declaration to GDefinition.h
+// if a structure/variable used in more than one file
+// put the declaration in GDefinition.h
+/*
+  struct mirrorSegmentDetails {
+  Double_t rmin;
+  Double_t rmax;
+  Double_t margin;
+  Double_t delPhi;
+  Int_t reflect;
+  Double_t posErrorX;
+  Double_t posErrorY;
+  Double_t posErrorZ;
+  Double_t rotErrorPhi;
+  Double_t rotErrorTheta;
+  Double_t rotErrorPsi;
+  Double_t roughness;
+  Int_t bRead; // if 0, set from BASIC; if 1, set from CHANGE
+};
+*/
+
+/*!  /brief SegSCStdOptics structure stores details of a standard 
+     Davis-Cotton telescope
+ */
+struct SegSCStdOptics {
+
+  Int_t iPrimReflID;
+  Int_t iSecReflID;
+  ostream *oStr;
+  Int_t iPrtMode;
+
+  TelType stdType; 
+  Int_t stdNum;
+  Double_t fAvgTransitTime;
+  Double_t fRotationOffset;
+  Double_t fPlateScaleFactor;
+
+  Double_t fF;     // Focal length
+  Double_t fAlpha; // \alpha
+  Double_t fQ;     // q
+  Double_t fRpMax; // Primary radius max
+  Double_t fRpMin; // Primary radius min
+  Double_t fRsMax; // Secondary radius max
+  Double_t fRsMin; // Secondary radius min
+
+  Double_t fKappa1;// Focal plane sag constant
+  Double_t fKappa2;// Focal plane sag constant
+  Double_t fRf;  // focal surface radius
+
+  Double_t fZp;  // primary position on z axis
+  Double_t fZs;  // secondary position on z axis, foc.length units
+  Double_t fZf;  // focal surf. position on z axis, foc.length units
+
+  Int_t     fNp;   // Number of coefficients for the primary
+  Int_t     fNs;   // Number of coefficients for the secondary
+  Double_t* fP;   // Polynomial coefficients (p0, p1 ...)
+  Double_t* fS;   // Polynomial coefficients (s0, s1 ...)
+
+    //  Frame
+
+    bool frameFlag;
+
+
+    // Primary baffle
+
+  bool bpBaffleFlag;
+  Double_t fpBRadOffset;
+  Double_t fRpBMaxOffset;
+  Double_t fpBLen;
+  Double_t fpBZOffset;
+  Double_t fpBTilt;
+
+  // Secondary baffle
+
+  bool bsBaffleFlag;
+  Double_t fsBRadOffset;
+  Double_t fRsBMaxOffset;
+  Double_t fsBLen;
+  Double_t fsBZOffset;
+  Double_t fsBTilt;
+
+
+
+  // MAPMT Parameters
+  bool bCameraFlag;
+  Double_t fPixelSize;            // Width of a MAPMT pixel
+  Double_t fMAPMTWidth;           // Housing width
+  Int_t fSubCells;                // Module divided into fSubCells^2 subcells
+  Double_t fMAPMTLength;          // between input window and anode pins
+  Double_t fInputWindowThickness; // Thickness of the input window
+  Double_t fMAPMTGap;
+  Double_t fMAPMTRefIndex;
+  Double_t fMAPMTOffset;
+    Double_t fMAPMTOffset_x;
+    Double_t fMAPMTOffset_y;
+
+    Double_t fMAPMTRoll;
+    Double_t fMAPMTPitch;
+
+  Bool_t bSingleMAPMTmodule;
+
+  // Entrance window
+
+  bool bEntranceWindowFlag;
+  bool bEntranceWindowAbsFlag;
+    Int_t iEntranceTrCurveIndex;
+  Double_t fEntranceWindowThickness;
+  Double_t fEntranceWindowN;
+  Double_t fEntranceWindowAbsLength;
+  Double_t fEntranceWindowOffset;
+
+  //
+  Double_t fFocalSurfaceXOffset;     // xOffset, entered in mm
+  Double_t fFocalSurfaceYOffset;     // yOffset, entered in mm
+  Double_t fFocalSurfaceZOffset;     // zOffset, entered in mm 
+  Double_t fFocalSurfacePhiOffset;   // Euler angle offset, degrees
+  Double_t fFocalSurfaceThetaOffset; // Euler angle offset, degrees
+  Double_t fFocalSurfacePsiOffset;   // Euler angle offset, degrees
+
+  Int_t iNParP;
+  vector<Double_t> fzp;
+  Int_t iNParS;
+  vector<Double_t> fzs;
+
+  Int_t iNumP1Mirrors;
+  Int_t iNumP2Mirrors;
+  Int_t iNumS1Mirrors;
+  Int_t iNumS2Mirrors;
+
+  vector<mirrorSegmentDetails *> vSegP1;
+  vector<mirrorSegmentDetails *> vSegP2;
+  vector<mirrorSegmentDetails *> vSegS1;
+  vector<mirrorSegmentDetails *> vSegS2;
+
+  SegSCStdOptics(); 
+
+  ~SegSCStdOptics();
+
+  // copy constructor
+  SegSCStdOptics(const SegSCStdOptics &sco);
+
+  void setPrintOptions(ostream *outStr, const int &prtMode) {
+    oStr = outStr;
+    iPrtMode = prtMode;
+  };
+
+  void printSegSCStdOptics();
+  void printSegVector (const vector<mirrorSegmentDetails *> &vec);
+};
+
+////////////////////////////////////////////////////////////////
+
+/*! \brief  GSegSCTelescopeFactory concrete class for constructing 
+     SC telescope, inherits from GTelescopeFactory to implement
+     factory method
+ */
+class GSegSCTelescopeFactory : public ATelescopeFactory {
+ private:
+
+  friend class GReadSegSCStd; 
+
+  GReadSegSCStd *readSegSC;  //!< SegSC base reader
+  bool printParameters;  //!< print parameters upon construction when true
+  GPilot *pi;  //!< pilot reader pointer
+  vector<string> tokens;  //!< string vector for GPilot use
+  string sPilotEdit;  //!< pilot file string from edit record
+
+  map<int,SegSCStdOptics*> mStdOptics;    //*< map of standard telescopes
+  map<int,SegSCStdOptics*>::iterator itmStdOp;  //*< iterator for this map
+
+  map<int, TGraph *> *mGRefl;  //*< mirror reflection coefficients map container
+  map<int, TGraph *>::iterator itmGRefl; //*< iterator for above map container
+
+    map<int, TGraph *> *mGTranAbsLength;  //*< mirror reflection coefficients map container
+    map<int, TGraph *>::iterator itmGTranAbsLength; //*< iterator for above map container
+
+    map<int, TGraph *> *mGTranN;  //*< mirror reflection coefficients map container
+    map<int, TGraph *>::iterator itmGTranN; //*< iterator for above map container
+  
+  SegSCStdOptics *opt;  //*< working SegSCstdOptics structure for current telescope
+  
+  GSegSCTelescope *SegSCTel;  //*< pointer to working telescope
+  int iNumSegSCTelMade;  
+  
+  /*! \brief editWorkingTelescope makes edits based on 
+           pilotfile entries to telescope currently 
+           under construction
+
+           \param SegSCTel1 pointer to current telescope
+   */
+  void editWorkingTelescope();
+
+ public:
+
+  /*!  GSegSCTelescopeFactory constructs a SEGSC telescope from 
+       standard telescopes obtained from reader. USE THIS CONSTRUCTOR
+
+       \param dcReader SEGSC telescope reader instance 
+       \param editPilotFile pilotfile name containing telescope edit records
+   */
+  GSegSCTelescopeFactory(GReadSegSCStd &segscReader,
+		    const string &editPilotFile);
+
+  ~GSegSCTelescopeFactory();
+ 
+  /*! \brief makeTelescope constructs a SC telescope based on 
+             instructions in the pilot file
+
+             \param id telescope id within array
+             \param std number of standard telescope
+             \return GSegSCTelescope pointer to constructed telescope
+  */
+
+  GSegSCTelescope *makeTelescope(const int &id,
+				 const int &std);
+  
+  /*! \brief printStdTelescope debug print based on prtMode
+
+      \param iStd standard telescope id
+      \param mode printmode (see SegSCStdOptics::printSegSCStdOptics
+      in this file, default 0
+      \param oStr output stream, default cout
+   */
+  void printStdTelescope(const int &iStd, const int &mode = 0,
+                         ostream &oStr=cout);
+
+  /*! \brief setPrintMode defines the print mode for 
+          SegSCStdOptics::printSegSCStdOptics (documented in this file)
+
+      \param oStr output stream, default cout
+      \param prtMode  see SegSCStdOptics::printSegSCStdOptics earlier in this file
+      \param prtMode  -1: print all standard telescopes
+   */
+  void setPrintMode(ostream &oStr=cout,const int prtMode=0);
+};
+
+#endif
