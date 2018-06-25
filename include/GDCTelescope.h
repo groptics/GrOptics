@@ -20,6 +20,34 @@ class TTree;
  */
 struct DCStdFacet {
   
+  int facNum;      /*!< facet number, starting from 0 */
+
+  int type;        /*!< 1=Circular, 2=Hexagonal*/
+  int sides;        /*!< number of sides in facet polygon (1 = circle) */
+  double radius;    /*!< External radius*/
+  double curv;      /*!< Spherical curvature radius*/
+  double xm;        /*!< x location on the dish*/
+  double ym;        /*!< y location on the dish*/
+  double zm;        /*!< z location on the dish*/
+  ROOT::Math::XYZVector vFacLoc; //*! facet location on dish from foc.pt. 
+  ROOT::Math::XYZVector vFacCentrCurv; /*!< center of curvature, from foc.pt.*/
+  ROOT::Math::XYZVector vFacPlLoc;    /*!< location of facet plane origin */
+  ROOT::Math::XYZVector vUnitFacPlToCC; /*!< unit vector: facet plane to cur.cent.*/
+  ROOT::Math::Rotation3D rotTelToFP;  /*! rotation matrix from tel. plane to facet plane*/
+  
+  double mis_align; /*!< Maximum misalignment of element axis*/
+  
+  double ftprot;    /*!< rotation angle of facet dir. in tel.plane */
+  double ffprot;    /*!< rotation angle of facet in facet plane */
+  /* currently, there is no distinction between
+     these angles and ftprot=ffprot=0.0. Soon,
+     these values can be read from the config.file
+  */
+  double roughness; /*!< Maximum angle between the real reflecting 
+                      surface and the ideal sphere.*/
+  double reflect;   /*!< Mirror element reflectivity degradation factor*/
+  int rflctid;   /*!< Mirror element reflectivity curve identifier*/
+ 
   /*! \brief constructor: initializes parameters to zero
    */
   DCStdFacet();
@@ -63,34 +91,7 @@ struct DCStdFacet {
    */
   void printDCStdFacet(ostream &oStr=cout);
 
-  int facNum;      /*!< facet number, starting from 0 */
-
-  int type;        /*!< 1=Circular, 2=Hexagonal*/
-  int sides;        /*!< number of sides in facet polygon (1 = circle) */
-  double radius;    /*!< External radius*/
-  double curv;      /*!< Spherical curvature radius*/
-  double xm;        /*!< x location on the dish*/
-  double ym;        /*!< y location on the dish*/
-  double zm;        /*!< z location on the dish*/
-  ROOT::Math::XYZVector vFacLoc; //*! facet location on dish from foc.pt. 
-  ROOT::Math::XYZVector vFacCentrCurv; /*!< center of curvature, from foc.pt.*/
-  ROOT::Math::XYZVector vFacPlLoc;    /*!< location of facet plane origin */
-  ROOT::Math::XYZVector vUnitFacPlToCC; /*!< unit vector: facet plane to cur.cent.*/
-  ROOT::Math::Rotation3D rotTelToFP;  /*! rotation matrix from tel. plane to facet plane*/
-  
-  double mis_align; /*!< Maximum misalignment of element axis*/
-  
-  double ftprot;    /*!< rotation angle of facet dir. in tel.plane */
-  double ffprot;    /*!< rotation angle of facet in facet plane */
-  /* currently, there is no distinction between
-     these angles and ftprot=ffprot=0.0. Soon,
-     these values can be read from the config.file
-  */
-  double roughness; /*!< Maximum angle between the real reflecting 
-                      surface and the ideal sphere.*/
-  double reflect;   /*!< Mirror element reflectivity degradation factor*/
-  int rflctid;   /*!< Mirror element reflectivity curve identifier*/
-
+ 
 };
 /**************************end of DCStdFacet ******************************/
 
