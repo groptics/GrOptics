@@ -183,6 +183,8 @@ bool GDCRayTracer::findFacet() {
   double x = vPhotonOnTelT.X();
   double y = vPhotonOnTelT.Y();
 
+  ROOT::Math::XYZVector vPhotonFPFC;
+  
   // grid facet parameters, will use if grid flag is true
   list<GridFacet> *gridList = 0;
   list<GridFacet>::iterator gridIter;
@@ -308,16 +310,31 @@ bool GDCRayTracer::findFacet() {
       double alpha = DCTel->facet[fNum].ftprot;
       double radius = DCTel->facet[fNum].radius;
       int sides = DCTel->facet[fNum].sides;
+      
+      vPhotonFPFC = (DCTel->facet[fNum].rotTelToFP) * vPhotonFP;
+      
+      //double xfp = vPhotonFP.X();
+      //double yfp = vPhotonFP.Y();
+      
+      double xfp = vPhotonFPFC.X();
+      double yfp = vPhotonFPFC.Y();
 
-      double xfp = vPhotonFP.X();
-      double yfp = vPhotonFP.Y();
       if (debug) {
         *oLog << "   Found a facet within reach: number " 
               << fNum << endl;
         DEBUGS(alpha);DEBUGS(radius);DEBUGS(sides);
         DEBUGS(xfp); DEBUGS(yfp);
         *oLog << "   ready to run polyInside " << endl;
-        
+      }
+
+      vPhotonFPFC = (DCTel->facet[fNum].rotTelToFP) * vPhotonFP;
+ 
+      if (debug) {
+	*oLog << "      vPhotonFP ";
+	GUtilityFuncts::printGenVector(vPhotonFP); *oLog << endl;
+	*oLog << "      vPhotonFPFC ";
+	GUtilityFuncts::printGenVector(vPhotonFPFC); *oLog << endl;
+	*oLog << endl;
       }
       
       bool polyTest = GUtilityFuncts::polyInside(sides,alpha,
