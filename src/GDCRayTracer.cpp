@@ -313,14 +313,20 @@ bool GDCRayTracer::findFacet() {
       /* C. Duke 27June2018 added rotation to facet plane. This rotation was
          present in grisudet but until now left out of GrOptics.
        
-         You can ignore the rotation to the facet plane by using vPhotonFP
+         You can ignore the rotation to the facet plane by using vPhoton.FP
          rather than vPhotonFPFC for xfp/yfp.  makes little difference
+	 To change use the following boolean variable.
       */
-      //double xfp = vPhotonFP.X();
-      //double yfp = vPhotonFP.Y();
-      
-      double xfp = vPhotonFPFC.X();
-      double yfp = vPhotonFPFC.Y();
+      bool useFPinFacetCoor = true;
+      double xfp, yfp;
+      if (useFPinFacetCoor) {
+	xfp = vPhotonFPFC.X();
+	yfp = vPhotonFPFC.Y();
+      }
+      else {
+	xfp = vPhotonFP.X();
+	yfp = vPhotonFP.Y();
+      }
 
       if (debug) {
         *oLog << "   Found a facet within reach: number " 
