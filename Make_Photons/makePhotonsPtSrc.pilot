@@ -7,8 +7,8 @@
 
    documentation update to this file: 17Feb2019.  No change in code detais.
 
-   makePhotonsPtSrc.cpp produces a grisudet compatible .cph file 
-   of cherenkov photons from a designated point source. 
+   makePhotonsPtSrc.cpp produces a grOptics or grisudet compatible .cph file 
+   of cherenkov photons from a designated point source located above the telescopes.. 
    The photons are randomly placed on the telescope area with  
    radius increased by 10%.  Telescope locations and radii are from 
    a standard GrISU telescope configuration file or from a makePhotonsPtrSrc
