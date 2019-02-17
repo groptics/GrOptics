@@ -29,7 +29,7 @@
 	GrISU-type configuration file,
 	needed for telescope locations and radii
  CONFG ../../Config/Files/veritas2013Feb1_GrISU_version5.0.0.cfg
-* CONFG ../../Config/Files/veritas2013Sept16_GrISU_version6.0.0.cfg
+* CONFG ../Config/veritas.cfg
 
     NUMBR <numevents: default 1> <numphotons: default 10000
 * NUMBR  1 500000
