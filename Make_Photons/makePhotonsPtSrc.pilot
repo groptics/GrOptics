@@ -1,38 +1,59 @@
-  version: 6.1.0    date: 2014-05-06
+  VERSION4.0
+  30May2016
+
+	written by: Charlie Duke
+		    Grinnell College
+		    Version 4.0: May2016
+
+   documentation update to this file: 17Feb2019.  No change in code detais.
+
    makePhotonsPtSrc.cpp produces a grisudet compatible .cph file 
    of cherenkov photons from a designated point source. 
    The photons are randomly placed on the telescope area with  
    radius increased by 10%.  Telescope locations and radii are from 
-   a standard GrISU telescope configuration file. The code has 
-   a ROOT dependency. All input information designated by this pilot file.
+   a standard GrISU telescope configuration file or from a makePhotonsPtrSrc
+   pilot file (see below).
 
-   All log information goes to cerr.
+   The code has a ROOT dependency.
+   All input information designated by this pilot file.
+   All log and debug information goes to cerr.
 
    Testing of this code is straightforward using a photon_history debug
-   file (see the DEBUG record in detector.pilot). This history file may
+   file. This file is a root file for GrOptics.  For grisudet, the history file may
    be converted to a root tree in GrISU/Utilities/Diagnostics.
 
    usage:  makePhotonsPtSrc [name of pilotfile: default makePhotonsPtSrc.pilot]
 
-   Coor.System: ground X(East), Y(North), Z(up). When pointing to zenith
-   as is always the case here, the telescope axes are parallel to these
-   ground coordinate axes.  The camera axes are slightly different, camera
-   X axis is parallel to the telescope x axis; the camera y axis is
-   opposite to the telescope y axis (thus permitting x camera to the right and y
-   camera up when facing the camera with telescope in stow position).
+   Coor.Systems:
+
+   ground:  X(East), Y(North), Z(up).
+
+   telescope: When pointing to zenith, the telescope axes are parallel to the
+   ground coordinate axes.
+
+   Photon file: the .cph input file to grOptics and to grisudet use the Kascade
+   coordinate system:  X(East), Y(South), Z(down).
+   
+   camera: The camera axes are slightly different, camera X axis is parallel to
+   the telescope x axis; the camera y axis is opposite to the telescope
+   y axis (thus permitting x camera to the right and y camera up when facing
+   the camera with veritas telescope in stow position). Someone needs to verify
+   this for the SEGSC telescope
 
     OUTFL <filename: default stdout> 
-    formatted as .cph input file to grisudet
-* OUTFL starPtSrc.cph
+    formatted as .cph input file for either grOptics or grisudet
+* OUTFL grOpticsMakePhotonsPtSrc.cph
 
     CONFG  <filename: no default>
 	GrISU-type configuration file,
 	needed for telescope locations and radii
- CONFG ../../Config/Files/veritas2013Feb1_GrISU_version5.0.0.cfg
-* CONFG ../Config/veritas.cfg
+	OR any file, such as this one, with location and mirror records
+	(see below)
+* CONFG ./makePhotonsPtSrc.pilot
+ CONFG ../Config/veritas.cfg
 
     NUMBR <numevents: default 1> <numphotons: default 10000
-* NUMBR  1 500000
+* NUMBR  1 10000
 
   SRCPT <x:default 0.0> <y: default 0.0> <z:default 10000.0>
   photon point source location, ground system coor.system: 
@@ -47,3 +68,17 @@
 
 H record in cph file, height of observatory, default 1277.06
 * OBSER 1277.06
+
+The telescope locations (copied from Config/veritas.cfg), can be adopted to any telescope type)
+TLLOC telnum  xtel ytel ztel (remaining fields not used and can be removed)
+* TLLOC 1     75.0   0.0  0.0 12.0 0.0 0.0
+* TLLOC 2     0.0  -75.0  0.0 12.0 0.0 0.0
+* TLLOC 3   -75.0    0.0  0.0 12.0 0.0 0.0
+* TLLOC 4     0.0   75.0  0.0 12.0 0.0 0.0
+
+The mirror radii (photons thrown circle of radius 10% larger than mirror radius)
+MIROR telnum mirRadius  (remaining fields unused and can be removed)
+* MIROR 1 7.0 12.0 0. 1 357
+* MIROR 2 7.0 12.0 0. 1 357
+* MIROR 3 7.0 12.0 0. 1 357
+* MIROR 4 7.0 12.0 0. 1 357
