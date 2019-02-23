@@ -40,12 +40,10 @@ Only records with an initial "*" are active.
 cherenkov photon GRISU-type input file, 
 same type input file as for grisudet. 
 FILEIN <filename>  
-* FILEIN ./Config/photon.cph
+* FILEIN ./Make_Photons/starPtSrc.cph
 
-see GrOptics/Make_Photons/README to create either of these test files. More details
-are in the files GrOptics/Make_Photons/*.pilot.
- FILEIN ./Make_Photons/grOpticsStarOffset.cph
- FILEIN ./Make_Photons/grOpticsMakePhotonsPtSrc.cph
+see GrOptics/Make_Photons/README to create this test file
+ FILEIN ./Make_Photons/veritasStarOffset.cph
 
 camera output root file specification type
       - root file name
@@ -64,8 +62,9 @@ name of grOptics log file, default use cerr (if no asterisk)
 number of showers/photons, defaults -1
   NSHOWER <numShowers, <0, no limit>
           <numPhotons, <0, no limit>
-* NSHOWER -1 -1
+ NSHOWER -1 -1
  NSHOWER 1 100
+* NSHOWER 1 20
 You can see the paths of all 20 photons in the ogl image when you
 run the code (all photons from the photon.cph test input file).
 
@@ -83,7 +82,8 @@ These offsets are thus not parallel to the camera axes.
 Example: 
 wobble Y, North: WOBBLE 0.0 0.5 0.0 31.675  (offset toward Polaris)  
 wobble X, East : WOBBLE 0.5 0.0 0.0 31.675  (offset perpendicular to hour circle)
-* WOBBLE 0.0 0.0 0.0 90.0
+* WOBBLE 0.0 0.0 0.0 90
+ WOBBLE 0.0 0.0 0.0 31.675
 
 array configuration file
  ARRAYCONFIG <filename: default ./Config/arrayConfig.cfg>
@@ -107,7 +107,7 @@ Very useful for code tests and debugging
 
 core/telescope location in grd.and tel.system branches added for debuging.
 default 0 for compatibility with earlier opticsSimulation.pilot versions.
-* DEBUGBRANCHES 0
+* DEBUGBRANCHES 1
 ///////////////  draw possibilities for checking configuration and
                                debugging
 			       
@@ -133,8 +133,9 @@ does not use root geometry methods due to slow execution issues.  You may get
 strange results if you use other options for drawing DC telescopes (to be fixed
 soon)
 
- DRAWTEL 1 20
-
+ DRAWTEL 1 0
+* DRAWTEL 1 20
+ DRAWTEL 1 10
 TESTTEL <telescope number> <baseFileName for histograms>   
 THis is a very useful option for producing spot histograms and spot rms
 plots; the code doesn't use a photon input file; the photons are internally
