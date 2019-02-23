@@ -408,6 +408,15 @@ bool GReadPhotonGrISU::getPhoton(ROOT::Math::XYZVector *pGrd,
     ycos = -ycos;
     zcos = -sqrt(1 - xcos*xcos - ycos*ycos);
 
+    
+    bool bFlasherFlag = false;
+    if (bFlasherFlag) {
+      // reverse photon direction for flasher
+      xcos = -xcos;
+      ycos = -ycos;
+      zcos = -zcos;
+    }
+
     if (debugP) {
       DEBUGS(xGrd);DEBUGS(yGrd);DEBUGS(zGrd);DEBUGS(xcos);
       DEBUGS(ycos);DEBUGS(zcos);DEBUGS(fPHgtEmiss);DEBUGS(fPTime);
