@@ -282,6 +282,7 @@ void readConfig(struct Pilot *pilot) {
   while (pi->get_line_vector(tokens) >= 0) {
     int iTel = atoi(tokens[0].c_str());
     double radius = atof(tokens[1].c_str());
+    cout << "RADIUS " << radius << endl;
     pilot->TelRadius[iTel-1] = radius*1.1;  // increase radius by 10%
                          
   }

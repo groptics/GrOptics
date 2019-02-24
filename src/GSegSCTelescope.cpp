@@ -946,6 +946,21 @@ void GSegSCTelescope::injectPhoton(const ROOT::Math::XYZVector &photonLocT,
   double dy = fphotonInjectDir[1];
   double dz = fphotonInjectDir[2];
 
+  //flasher
+  bool bFlasherFlag = true;
+  if (bFlasherFlag) {
+    //*oLog <<" fF fZp fZs " << fF <<" " << fZp << " " << fZs << endl;
+    double tmpp = fF * fZs;
+    //*oLog << "fF * fZs " << tmpp << endl;
+    //*oLog << "Orig INJECTION AT " << x << " " << y << " " << z << endl;
+    //*oLog << "Orig dircos " << dx << " " << dy << " " << dz << endl;
+    x = 0.0;  y  = 0.0;
+    z = (tmpp/100.0);
+    //*oLog << "New INJECTION AT " << x << " " << y << " " << z << endl;
+  }
+     
+							       
+
   SafeDelete(ray);
   ray = new ARay(0, fphotWaveLgt, x*m, y*m, z*m, t, dx, dy, dz);
 

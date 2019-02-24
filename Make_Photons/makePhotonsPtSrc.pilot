@@ -1,4 +1,37 @@
-  version: 6.1.0    date: 2014-05-06
+pilot file to create flasher photons. You can plot the final location
+of the photon by ploting xlast vs ylast in the root history file for T1.
+The status parameter codes the type of final location as follows:
+    status     meaning
+      0          kRun
+      1		 kStop
+      2		 kExit
+      3		 kFocus
+      4		 kSuspend
+      5		 kAbsorb
+
+These are used in the ROBAST code to determine when to stop tracking
+the photon. So, cut on status and plot either zlast or xlast vs ylast
+to see the details.  The zlast plot will show peaks at the z values of
+the primary, secondary, and camera locations.  The kExit occurs if the
+photon exits the top volume of the geometry. e.g. at z = +-15 meters.
+
+Adding the flasher was straightforward. Search on "Flasher"
+in GSegSCTelescope.cpp to see the changes. You'll see that I only
+changed the injection location for the photons, i.e. we don't want
+to inject from the top of the top volume.
+I also reduced the radius in the MIROR record in this file so more
+photons would strike the camera;  I haven't tried to optimize this.
+
+Finally, if the flasher addition appears useful, I can add a flasher
+option.  There are actually two alternatives.  Use an external photon
+file as we have here.  Or create the photons internally.  If done
+internally, we should probably add to the ARRAYTEL records a flasher on/off
+flag, flasher position (x,y,z), and wavelength; the code can figure out
+the angular spread given the camera radius and location.
+
+This has been fun.  I haven't looked at the code in some time.
+
+   version: 6.1.0    date: 2014-05-06
    makePhotonsPtSrc.cpp produces a grisudet compatible .cph file 
    of cherenkov photons from a designated point source. 
    The photons are randomly placed on the telescope area with  
@@ -35,8 +68,8 @@
 * CONFG ./makePhotonsPtSrc.pilot
 
     NUMBR <numevents: default 1> <numphotons: default 10000
- NUMBR  1 500000
-* NUMBR  1 1000
+* NUMBR  1 500000
+ NUMBR  1 1000
 
 
   SRCPT <x:default 0.0> <y: default 0.0> <z:default 10000.0>
@@ -57,5 +90,6 @@ H record in cph file, height of observatory, default 1277.06
  TLLOC 1 75.0   0.0   0.0    0.0 0.0  0
 * TLLOC 1 0.0   0.0   0.0    0.0 0.0  0
 
-* MIROR 1 4.8319 5.6 0. 2 48
+  MIROR 1 4.8319 5.6 0. 2 48
+* MIROR 1 2.0 2.0 0. 2 48
 
