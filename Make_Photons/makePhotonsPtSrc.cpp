@@ -220,6 +220,12 @@ void readPilot(struct Pilot *pilot,const string &pilotfile) {
     float z = atof(tokens[2].c_str());
     pilot->srcPt.SetXYZ(x,y,z);
   }
+  flag = "WAVEL";
+  pi->set_flag(flag);
+  while (pi->get_line_vector(tokens) >= 0) {
+    int wl = atoi(tokens[0].c_str());
+    pilot->waveLgt = wl;
+  }
   flag = "SEEDR";
   pi->set_flag(flag);
   while (pi->get_line_vector(tokens) >= 0) {
@@ -238,6 +244,7 @@ void readPilot(struct Pilot *pilot,const string &pilotfile) {
   *oLog << "          maxPhotons     " << pilot->maxPhotons << endl;  
   *oLog << "          srcPoint:x/y/z " << pilot->srcPt.X() << " " 
         << pilot->srcPt.Y() << " " << pilot->srcPt.Z() << endl;
+  *oLog << "          waveLgt  " << pilot->waveLgt << endl;
   *oLog << "          seed           " << pilot->seedr << endl;
   *oLog << "          obser.height   " << pilot->obser << endl;
 

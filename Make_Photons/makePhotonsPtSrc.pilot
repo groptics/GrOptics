@@ -32,6 +32,9 @@ the angular spread given the camera radius and location.
 This has been fun.  I haven't looked at the code in some time.
 
    version: 6.1.0    date: 2014-05-06
+   C. Duke: 26Feb2019
+   added WAVEL input record for photon wavelength
+
    makePhotonsPtSrc.cpp produces a grisudet compatible .cph file 
    of cherenkov photons from a designated point source. 
    The photons are randomly placed on the telescope area with  
@@ -80,9 +83,13 @@ This has been fun.  I haven't looked at the code in some time.
  SRCPT 0.0 0.0 8.35
 * SRCPT 0.0 0.0 7.8
 
+  WAVEL <photon wavelength, an integer: default 500>
+ WAVEL 450
     SEEDR <integer: default 0>
        random number generator seed for TRandom3
 * SEEDR 63565
+
+
 
 H record in cph file, height of observatory, default 1277.06
 * OBSER 1307.645000

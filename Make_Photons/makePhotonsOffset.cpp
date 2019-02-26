@@ -411,6 +411,12 @@ void readPilot(struct Pilot *pilot,const string &pilotfile) {
     pilot->maxShowers = atoi(tokens[0].c_str());
     pilot->maxPhotons = atoi(tokens[1].c_str());
   }
+  
+  flag = "WAVEL";
+  pi->set_flag(flag);
+  while (pi->get_line_vector(tokens) >= 0) {
+    pilot->waveLgt = atoi(tokens[0].c_str());
+  }
 
   flag = "SEEDR";
   pi->set_flag(flag);
@@ -462,7 +468,8 @@ void readPilot(struct Pilot *pilot,const string &pilotfile) {
   *oLog << "          outFileName    " << pilot->outFileName << endl;  
   *oLog << "          configFileName " << pilot->configFileName << endl;  
   *oLog << "          maxShowers     " << pilot->maxShowers << endl;  
-  *oLog << "          maxPhotons     " << pilot->maxPhotons << endl;  
+  *oLog << "          maxPhotons     " << pilot->maxPhotons << endl;
+  *oLog << "          wavelength     " << pilot->waveLgt << endl;
   *oLog << "          seed           " << pilot->seedr << endl;
   *oLog << "          obser.height   " << pilot->obser << endl;
   *oLog << "          star azimuth   " << pilot->az << endl;

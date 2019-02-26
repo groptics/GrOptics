@@ -6,7 +6,8 @@ VERSION4.0
 		    Grinnell College
 		    Version 4.0: May2016
 
-  documentation update to this file: 17Feb2019.  No change in code detais.
+  C. Duke: 26Feb2019. 
+  added WAVEL input record to set photon wavelength
   
   pilot file for makePhotonsOffset
   active records in this pilot file:  begin with an asterisk (*).
@@ -71,6 +72,9 @@ CONFG  <filename: no default>
 NUMBR <numevents: default 1> <numphotons: default 10000 >
     Normally, create one shower and set the number of photons to some large number
 * NUMBR  1 10000
+
+  WAVEL < photon wavelength, integer: default 500>
+ WAVEL 450
 
 SEEDR <integer: default 0> random number generator seed for TRandom3
 * SEEDR 63565
