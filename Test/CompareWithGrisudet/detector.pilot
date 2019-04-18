@@ -1,4 +1,17 @@
-  version: 6.2.0    date: 2017-01-18
+18April2019
+C. Duke  
+
+detector.pilot file for grisudet in comparison tests between grisudet
+and GrOptics. Note the two possible array configuration files and the
+name of the photon file (which must be generated in the Make_Photons
+directory of GrOptics.
+
+The comparisons use the photon_history files, so the history option must
+be activated (see the following DEBUG record).
+
+
+
+version: 6.2.0    date: 2017-01-18
  
   Changes for version 6.1.0
   There are no changes to this pilot file from version 6.0.0.
@@ -53,10 +66,10 @@ All output options now accept stdout as a filename option (output to stdout)
 
  ARRAY ./Config/Files/veritas2014May13_GrISU_version6.1.0.cfg
   default for CHERP (if no asterisk) standard input 
- ARRAY ./Config/Files/veritasForGrOpticsCompare.cfg
+ ARRAY ./Config/Files/veritasGrISUforGrOpticsCompare_oneTel_mirrorParmsZero.cfg
 * ARRAY ./Config/Files/veritasGrISUforGrOpticsCompare_oneTel.cfg
 
-* CHERP  ./photon.cph 
+* CHERP  ./veritasStarOffset.cph
 
  These four output options can have "stdout" as filename to direct output
 to stdout.

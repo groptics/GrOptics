@@ -1,4 +1,10 @@
-  Steering pilot file for GrOptics
+18April2019
+
+Use this pilot file for steering GrOptics in the comparison tests between grisudet
+and GrOptics.
+The PHOTONHISTORY record must be activated for later work.
+
+Steering pilot file for GrOptics
   Used for testing versions
 VERSION4.0 
 30May2016
@@ -40,10 +46,10 @@ Only records with an initial "*" are active.
 cherenkov photon GRISU-type input file, 
 same type input file as for grisudet. 
 FILEIN <filename>  
-* FILEIN ./Config/photon.cph
+ FILEIN ./Config/photon.cph
 
 see GrOptics/Make_Photons/README to create this test file
- FILEIN ./Make_Photons/veritasStarOffset.cph
+* FILEIN ./Make_Photons/veritasStarOffset.cph
 
 camera output root file specification type
       - root file name

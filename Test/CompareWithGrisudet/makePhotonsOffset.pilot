@@ -1,3 +1,13 @@
+18April2019
+C. Duke
+
+This file is ready to produce a star file to use for comparisons between
+grisudet and GrOptics. A separate veritas configuration file is no longer needed
+as this file contains the required configuration records.
+The generated photons only fall on a single telescope (TEL 1); this simplifies
+later work.
+
+The OFFSET is currently set to 0.5 degree, this can be changed for additional files.
 
 VERSION4.0
 30May2016
