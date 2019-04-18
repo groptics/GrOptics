@@ -350,12 +350,22 @@ bool GDCRayTracer::findFacet() {
 	*oLog << endl;
       }
       
+      /*
+      // C.Duke, 24March2019  testing history
+      if (DCTel->bPhotonHistoryFlag) {
+	DCTel->onFacetFlag = 1;
+ 	DCTel->facetNum = fNum;
+ 	DCTel->facetX = vPhotonOnFacT.X();
+	DCTel->facetY = vPhotonOnFacT.Y();
+	DCTel->facetZ = vPhotonOnFacT.Z();
+      }
+      */
       bool polyTest = GUtilityFuncts::polyInside(sides,alpha,
                                                  radius,xfp,yfp);
       if (debug) {
         *oLog << "    polyTest " << polyTest << endl;
       }
-
+      
       if (polyTest) {
         // find intersection of photon with facet.
         // same method as finding intersection of photon 
@@ -417,10 +427,21 @@ bool GDCRayTracer::findFacet() {
           DCTel->facetZ = vPhotonOnFacT.Z();
         }
         break;
-      }
+      }     // if polytest
+    }       // r less that facet radius
+  }         // initial for loop over facets or grid facets
+  
+  // C.Duke, 24March2019  testing history
+  /*
+  if (DCTel->bPhotonHistoryFlag) {
+    if (bOnFacetFlag==0) {
+      DCTel->facetNum = 1000;
+      DCTel->facetX = vPhotonOnFacT.X();
+      DCTel->facetY = vPhotonOnFacT.Y();
+      DCTel->facetZ = vPhotonOnFacT.Z();
     }
   }
-
+  */
   return bOnFacetFlag;
 };
 /******************* end of getPhotonOnFacet ******************/
