@@ -1,0 +1,27 @@
+April 17, 2019
+Charlie Duke
+Sorry for the confusion here... BUT
+
+DO NOT USE the makePhotonsOffset.cpp code in GrISU/Simulations/Make_Photons
+to create a test file for use by both GrOptics and GrISU.
+
+Instead use the pilot file in this directory with the GrOptics/Make_Photons
+makePhotonsOffset.cpp code. 
+
+The code in the GrOptics package uses GrOptics classes which
+of course are not available in the GrISU package.
+
+And, use these files:
+detector.pilot:  the usual grisudet pilot file
+
+veritasGrISUforGrOpticsCompare_oneTel_mirrorParmsZero.cfg :GrISU telescope
+cfg file with mirror mis-align and blur radius parameters set to zero.
+Reflection coefficients are 1.0. 
+
+veritasGrISUforGrOpticsCompare_oneTel.cfg : GrISU telescope cfg file with
+mirror misalign and blur radius parameters at usual values.  Reflection
+coefficients are 1.0
+
+veritasCompareGrOptics.cfg:  GrOptics veritas cfg file
+
+-------------------------------------------------------------

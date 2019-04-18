@@ -1,0 +1,257 @@
+  version: 6.2.0    date: 2017-01-18
+ 
+  Changes for version 6.1.0
+  There are no changes to this pilot file from version 6.0.0.
+  See the README file in the GrISU directory for more details about 
+  version 6.1.0. Thus, grisudet will accept both version 6.0.0 and 
+  version 6.1.0 labeled detector.pilot files.
+
+  grisudet will accept any version 6 labeled pilot file.
+
+Be sure to have a look at the REIMP record at the end of this file.
+
+                  --- GRISUDET SIMULATION PILOT ---
+
+This file is used to specify the i/o files and operating conditions for the
+grisudet code contained within the GrISU simulation package. 
+
+Any line not starting with a '*' is a comment.
+
+A 5-character flag preceeds input data with only one such flag per line 
+
+current version number (to match that specified in read_array.h. Must be 
+same version number as in the configuration file (currently 6.0.0).
+* VERSN 6.1.0
+
+THE FILE NAMES:
+-If the log-book file name is not provided, a log-book file will not be
+ produced. Conditions specified before specification of a logbook will 
+not apprear in the log book.
+ 
+-If the array configuration file name is not provided, the program will
+stop. If more than one of each are provided,  
+only the last instance of each will be used.
+
+LOGBK: The log-book file name.
+ARRAY: The array configuration file.
+CHERP: A Cherenkov Photon file; default- standard input
+OUTPU: The output file name; There is no default, you may 
+       use stdout as the output file name for standard output
+OPTIC: When this record is used, the electronics response is not
+       simulated and individual photon information is written to the specified
+       file.  Used to test the optics model and produce point-spread functions.
+KUMAC: The file specified by this command will be a kumac procedure which
+       generates a graphical description of the array configuration.
+PEOUT: Output dump of individual pe's, no electronics
+       simulation.
+
+CMOUT: output dump of all photons on the camera, output options for telescope
+       number, camera x and y locations, photon wavelength, and arrival
+       time OR telescope number, pixel number, wavelentgh, and arrival time.
+ 
+All output options now accept stdout as a filename option (output to stdout)
+
+ ARRAY ./Config/Files/veritas2014May13_GrISU_version6.1.0.cfg
+  default for CHERP (if no asterisk) standard input 
+ ARRAY ./Config/Files/veritasForGrOpticsCompare.cfg
+* ARRAY ./Config/Files/veritasGrISUforGrOpticsCompare_oneTel.cfg
+
+* CHERP  ./photon.cph 
+
+ These four output options can have "stdout" as filename to direct output
+to stdout.
+ OUTPU  stdout
+  PEOUT stdout
+  OPTIC star.opt
+
+     new output option (see above for more details)
+ CMOUT camera.out 
+    if CMPHO 0, cmout option is pe pixel numbers; if 1, cmout option is 
+    Cherenkov photon camera locations.  default is 0
+    The second parameter is the headerWriteFlag, if 0 (default) don't write
+    .cph header. If 1, write the header.
+ CMPHO 0 0
+
+*  LOGBK  ./grisudet.log
+  KUMAC  ./Dump/test.kumac
+
+ filename for list of thrown energies (in TeV); default no file
+* ENOUT  ./photon.eng
+
+/////////////////////  vbf stuff //////////////////////
+
+VBFOF <vbf output file>, default: no vbf output file 
+* VBFOF photon.vbf
+
+
+vbf pedestal output file, default: include peds in vbf output file.
+ * VBFPF pedestal.vbf
+
+vbf parameters
+
+vbf start time, three strings 
+* VBFST 2007-11-28   02:00:00.000000000   GPS  
+
+vbf eventtime parameters
+vbf_ped_flag = 0, no pedestals sent to vbf files
+VBFTM <meandatarate(Hz)> <vbf_ped_flag> <ped_time_interval(sec)> 
+The ped_time_interval(sec) is an integer
+ VBFTM 100.0 1 1 
+* VBFTM 2.0 1 1 
+
+ VBFPR <simulator> <vbfrunnumber> 
+      <observatory_height_meters>
+      <particle type: see kascade.pilot for particle code>
+      <if 1, also write simul.data header for non array-trigger showers
+          only write vbf simulation_data header for these packets>
+
+if observatory_height_meters < 0.0, then use observatory height
+from cherenkov "H" line. You can thus use older cherenkov files that do not
+have the "H" line that carries the observatory height.
+if you are using "corsika", you must enter the
+particle code as the last field. If you are using "kascade", the particle
+code is carried in kascade's header and you should enter a negative
+number for the particle code 
+* VBFPR duke 97000 -1.0 1 1
+
+////////////////////// end of vbf stuff /////////////////
+
+OPERATING CONDITIONS
+
+Number of Cherenkov events (NBREV) to be simulated (0 implies no
+limitation) and number of times to cycle through (ONLY USE 1) a given
+shower. WARNING: ONLY USE 1 FOR THE NUMBER OF TIMES TO CYCLE THROUGH A
+GIVEN SHOWER!!!!
+ 
+* NBREV 0 1
+
+random number seed for TRandom3, can be a positive or negative integer.
+default 0: seed will be set by TRandom, different integer each time.
+Same seed used for all three TRandom3 generators; separate generators for
+photon pulses, night-sky background, and electronic noise.
+* RANDM 28424
+
+Number of QADCpedestal records followed by the number of FADC pedestal
+records.
+
+NBRPR is followed by
+-the number of QADC pedestal events that will be produced
+-the number of FADC pedestal events that will be produced
+For accurate determination of peds/pedvars with the FADC option, use a
+large noise-loop size (see the SIMUL record in the configuration file).
+For the QADC option, use a large noise-loop size as described above. Create
+a large number of pedestal events, e.g. 400, in the NBRPR record. 
+You may create pedestal files from analysis.c.  
+* NBRPR  0 0
+
+Source characteristics(SOURC): x and y coordinates of the source in the field
+of view followed by the source extention radius (all in degrees). The fourth
+parameter is the latitude of the observatory in degrees. If the latitude is
+set to 90degrees the source position is given in camera corrdinates. If the
+latitude is less than 90 degrees, the source position in x corresponds to an
+offset in the east west direction while the y position corresponds to north 
+south.
+Example: 
+wobble North: SOURC 0.0 0.5 0.0 31.675  
+wobble East : SOURC 0.5 0.0 0.0 31.675
+ SOURC 0.0 0.5 1.0 31.675  
+ SOURC 0.0 0.0 0.0 90.0  
+
+record to fix the telescope azimuth and zenith angles to specific
+values. Default: do not use a fixed telescope pointing so that telescope
+pointing determined by primary direction plus wobble and telescope
+offsets. (Can also leave out the record if you do not wish to use this
+option.). added for version 5.0.0.
+
+FXTEL <0/1: 0 do not fix az/zn; 1 use given az/zn> <az(deg)> <zn(deg)>
+  FXTEL 0 31.0 21.0
+
+In versions < 5.0 of grisudet, the difference between the az/zn
+values of the primary and the telescope have been correct;but the absolute
+values of the az/zn have differed slightly from their correct values.  
+Setting the TRUAZ value to 1 gives the corrected values in the VBF file. 
+A value of 0 gives the usual az/zn values (which are incorrect) in the VBF
+file.  With no asterisk, the default is 0 (use the old values)
+*  TRUAZ 0
+
+Noise characteristics (NOISE): Declination and right ascention (in
+degrees) of the starfield to be used for the noise estimates followed by
+the diffuse noise component in photoelectrons per nanosecondes per
+square metters and per steradian.
+FOR NON-ZERO NOISE......DON'T FORGET TO SET THE SIZE OF THE BACKGROUND LOOP
+IN DEFINITION.H. (see documentation at the head of the
+GrISU/Simulation/Detector/definiiton.h file)
+ NOISE 0.0 0.0 500.0
+* NOISE 0.0 0.0 0.0
+
+If NUMPE is 1, output records of type N (giving number of photoelectrons
+in each pixel, are produced.
+* NUMPE 0
+
+if FRECP is 1, an F record will follow every R record (digital count
+samples) in the asci .rec file given by the OUTPU record. The format of the
+F record is:  
+event_nbr, tel_num, pix_num, num_of_pes, hi/lo_flag,
+millivolt_samples_at_fadc_input. 
+F records are useful for plotting the pmt pulse shape before digitization. 
+* FRECP 0
+ 
+If NOPIX is 1, no pixel output records are printed; only S and T records
+are printed. Default is 0 where pixel records are printed.
+* NOPIX 0 
+
+Set * USEOC 1 if you wish to use .cph files created from earlier versions 
+of cherenkov (before 3.0.0). Then, you may use .cph files that start 
+telescope numbering from 0 rather than 1 (as is the case in version 3.0.0).  
+The default is 0 if the asterisk is not present.
+* USEOC 0
+
+----------------------------------
+useful for debugging or for testing code. 
+totals_flag = 1: produce photon_totals.txt file
+  which shows for each shower and each telescope the total
+  number of photons striking the telescope, hitting a facet,
+  leaving the facet, etc. through the number producing a 
+  photoelectron.  See the grisudet.c procedure "photon_totals" for
+  the list and formats of printed values. 
+history_flag = 1: produce photon_history.txt file
+  which gives a complete history of each photon striking the
+  ground. See the grisudet.c procedure "photon_history" for
+  the list and formats of printed values. 
+DEBUG totals_flag history_flag <totals filename> <history filename>
+* DEBUG 1 1 photon_totals.txt photon_history.txt
+
+--------------------------------------------
+ grid flag for facet/pixel grid search:
+ USE ONLY IF YOU DO NOT WISH TO USE THE DEFAULT VALUES WHICH
+ ARE CALCUATED TO GIVE the SAME APPROPRIATE NUMBER OF ELEMENTS IN 
+ EACH GRID ELEMENT.
+  GRIDF flag for facets;  GRIDP flag for pixels
+  GRIDF/P gridflag nbinsx nbinsy
+  gridflag
+    0, no grid, full facet/pixel loop as in earlier versions. 
+    1, make grid and use grid in facet/pixel search
+    2, (for testing) made grid and write to grid file. filenames: 
+       facetgrid.out and pixelgridlout
+  nbinsx/y
+    number of bins in the x and y directions for the facet/pixel
+    grid search. 
+* GRIDF 2 15 15
+* GRIDP 2 19 19
+
+  previous versions of grisudet randomly randomly placed the primary
+  ground impact point in a box with 0.1m sides centered at the input 
+  impact point.  Useful for 2 decimal point accuracy in the input
+  impact point.  Corsika provides greater accuracy for all input locations
+  and does not require this random placement.  This random placement is
+  removed by default, but it can be reinstated by the following REIMP record 
+  in detector.pilot.
+
+if REIMP is 1, the primary ground impact point is
+randomly placed in a box with .1m size.  This is useful when the impact
+point from the cph file has limited resolution, e.g. with cherenkf,
+x/yimpac are given with a resolution of 0.1 m to conserve file size and
+reimp should be set to 1.  x/yimpac from Corsika has higher resolution and
+the resol parameter should be set to 0 or just leave off this record as the
+default value is 0.
+ REIMP 1
