@@ -60,6 +60,6 @@ If shadowing is turned on, you will not be able to follow individual photons. In
 grisudet, only those photons that produce a photoelectron are tested for shadowing
 (thus leading to a faster execution speed). In GrOptics all photons are tested as
 they pass through the telescope. But, if you know what you are doing, you can add a
-one of two lines of code that sets a flag indicating photoelectron production and
+one or two lines of code that sets a flag indicating photoelectron production and
 sets the pmt hit number to e.g. 100.
 
