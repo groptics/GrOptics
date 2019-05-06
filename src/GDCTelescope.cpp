@@ -163,16 +163,17 @@ void DCStdFacet::findFacetPlaneRotationMatrix() {
   tmp1 = dmfp/dnfp;
   alpha = 1/sqrt(1 + tmp1*tmp1 );
 
+  // C.Duke 21June18, fixed indices
   t[0][0] = alpha*(dnfp +(tmp1*dmfp));
   t[0][1] = -alpha*tmp1*dlfp;
   t[0][2] = -alpha*dlfp;
 
-  t[0][0] = 0.0;
-  t[0][1] = alpha;
-  t[0][2] = -alpha*tmp1;
-  t[0][0] = dlfp;
-  t[0][1] = dmfp;
-  t[0][2] = dnfp;
+  t[1][0] = 0.0;
+  t[1][1] = alpha;
+  t[1][2] = -alpha*tmp1;
+  t[2][0] = dlfp;
+  t[2][1] = dmfp;
+  t[2][2] = dnfp;
 
   rotTelToFP.SetComponents(t[0][0],t[0][1],t[0][2],
                            t[1][0],t[1][1],t[1][2],

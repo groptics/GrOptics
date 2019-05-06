@@ -94,11 +94,12 @@ bool GDCRayTracer::getPhotonOnTelescope() {
   /*  determine if photon strikes telescope sphere; if so
       determine the location RELATIVE TO THE ROTATIONOFFSET
       POINT, NORMALLY THE FOCAL POINT
-
    */
+  
   DCTel->vPhotonInjectLocTRO = DCTel->vPhotonInjectLocRT -
     DCTel->vRotationOffsetT;
 
+  // I don't know why this is necessary?
   bool debug = false;
   if (DCTel->iTelID==1) {
     debug = false;
@@ -182,7 +183,7 @@ bool GDCRayTracer::findFacet() {
   // onTelescope hit location
   double x = vPhotonOnTelT.X();
   double y = vPhotonOnTelT.Y();
-
+  
   // grid facet parameters, will use if grid flag is true
   list<GridFacet> *gridList = 0;
   list<GridFacet>::iterator gridIter;
@@ -207,8 +208,8 @@ bool GDCRayTracer::findFacet() {
         *oLog << endl;
       }
     }
-
   }
+  
   // we now have a group of grid elements to loop over, built in 
   // loop over all facets for testing.
 
@@ -249,10 +250,6 @@ bool GDCRayTracer::findFacet() {
       gridIter++;
     }
 
-    //DCTel->facet[k1].vFacPlLoc facet plane center
-    //vPhotonDirT  photon direction cosines
-    //DCTel->facet[k1].vUnitFacPlToCC unit vector
-    //vPhotonOnTelT photon telescope impact 
     if (debug) {
       *oLog << "       DCTel->facet[fNum].vFacPlLoc  ";
       *oLog << " fNum " << fNum << endl;
@@ -265,9 +262,11 @@ bool GDCRayTracer::findFacet() {
     
     double dd = dot1/dot2;
     
-    // get location of photon on the facet plane
+    // photon location on the facet plane in telescope coor.
     ROOT::Math::XYZVector vPhotonFP = vDelta - dd*vPhotonDirT;
-    
+
+    ROOT::Math::XYZVector vPhotonFPFC; // photon location on facet plane
+                                       // in facet coordinates
     // get distance from facet center and see if too large
     double r = sqrt(vPhotonFP.Dot(vPhotonFP));
     if (debug) {
@@ -308,25 +307,65 @@ bool GDCRayTracer::findFacet() {
       double alpha = DCTel->facet[fNum].ftprot;
       double radius = DCTel->facet[fNum].radius;
       int sides = DCTel->facet[fNum].sides;
+      
+      vPhotonFPFC = (DCTel->facet[fNum].rotTelToFP) * vPhotonFP;
 
-      double xfp = vPhotonFP.X();
-      double yfp = vPhotonFP.Y();
+      /* C. Duke 27June2018 added rotation to facet plane. This rotation was
+         present in grisudet but until now left out of GrOptics.
+       
+         You can ignore the rotation to the facet plane by using vPhoton.FP
+         rather than vPhotonFPFC for xfp/yfp.  makes little difference
+	 To change use the following boolean variable.
+      */
+      bool useFPinFacetCoor = true;
+      double xfp, yfp;
+      if (useFPinFacetCoor) {
+	xfp = vPhotonFPFC.X();
+	yfp = vPhotonFPFC.Y();
+      }
+      else {
+	xfp = vPhotonFP.X();
+	yfp = vPhotonFP.Y();
+      }
+
       if (debug) {
         *oLog << "   Found a facet within reach: number " 
               << fNum << endl;
         DEBUGS(alpha);DEBUGS(radius);DEBUGS(sides);
         DEBUGS(xfp); DEBUGS(yfp);
         *oLog << "   ready to run polyInside " << endl;
-        
+      }
+
+      vPhotonFPFC = (DCTel->facet[fNum].rotTelToFP) * vPhotonFP;
+
+      /* use if (1) here and limit number of photons in the pilot file to
+         compare locations on FP in telescope coors. and on FPFC in facet
+         frame coordinates.
+       */
+      if (0) {
+	*oLog << "      vPhotonFP ";
+	GUtilityFuncts::printGenVector(vPhotonFP); *oLog << endl;
+	*oLog << "      vPhotonFPFC ";
+	GUtilityFuncts::printGenVector(vPhotonFPFC); *oLog << endl;
+	*oLog << endl;
       }
       
+      /*
+      // C.Duke, 24March2019  testing history
+      if (DCTel->bPhotonHistoryFlag) {
+	DCTel->onFacetFlag = 1;
+ 	DCTel->facetNum = fNum;
+ 	DCTel->facetX = vPhotonOnFacT.X();
+	DCTel->facetY = vPhotonOnFacT.Y();
+	DCTel->facetZ = vPhotonOnFacT.Z();
+      }
+      */
       bool polyTest = GUtilityFuncts::polyInside(sides,alpha,
                                                  radius,xfp,yfp);
       if (debug) {
         *oLog << "    polyTest " << polyTest << endl;
-
       }
-
+      
       if (polyTest) {
         // find intersection of photon with facet.
         // same method as finding intersection of photon 
@@ -388,10 +427,21 @@ bool GDCRayTracer::findFacet() {
           DCTel->facetZ = vPhotonOnFacT.Z();
         }
         break;
-      }
+      }     // if polytest
+    }       // r less that facet radius
+  }         // initial for loop over facets or grid facets
+  
+  // C.Duke, 24March2019  testing history
+  /*
+  if (DCTel->bPhotonHistoryFlag) {
+    if (bOnFacetFlag==0) {
+      DCTel->facetNum = 1000;
+      DCTel->facetX = vPhotonOnFacT.X();
+      DCTel->facetY = vPhotonOnFacT.Y();
+      DCTel->facetZ = vPhotonOnFacT.Z();
     }
   }
-
+  */
   return bOnFacetFlag;
 };
 /******************* end of getPhotonOnFacet ******************/
@@ -426,14 +476,13 @@ bool GDCRayTracer::getPhotonReflect() {
   }
 
   return DCTel->bFacetReflectFlag;
-  
 };
 /******************* end of getPhotonReflect ******************/
 
 bool GDCRayTracer::getPhotonOnCamera() {
 
   // reflect the photon and get its direction cosines
- bool debug = false;
+  bool debug = false;
   if (debug) {
     *oLog << " -- GDCRayTracer::getPhotonOnCamera" << endl;
     GUtilityFuncts::printGenVector(vPhotonOnFacT); *oLog << endl;
@@ -533,7 +582,7 @@ bool GDCRayTracer::getPhotonLocCamera(ROOT::Math::XYZVector *pCam,
                                           ROOT::Math::XYZVector *pDcos,
                                           double *ptime) {
 
-  // will probably enter results directly in DCTel object, easier.
+  // will probably later enter results directly in DCTel object, easier.
 
   bool debug = false;
   if (debug) {

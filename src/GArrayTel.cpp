@@ -48,6 +48,7 @@ using namespace std;
 #include "TLatex.h"
 #include "TTree.h"
 #include "TBranch.h"
+#include "TEllipse.h"
 
 #include "GDefinition.h"
 
@@ -435,7 +436,7 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
   Double_t rmsYT = 0.0;
   Double_t degT  = 0.0;
   ttree->Branch("rmsX",&rmsXT,"rmsX/D");
-  ttree->Branch("rmsY",&rmsXT,"rmsY/D");
+  ttree->Branch("rmsY",&rmsYT,"rmsY/D");
   ttree->Branch("deg",&degT,"deg/D");
 
   bool debug = false;
@@ -460,7 +461,8 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
 
   double rangeGraphTimeX = 5.0;
   double rangeGraphTimeY = 0.8;
-  double rangeGraphPsfX = 5.0;
+  double rangeGraphPsfX = 6.0;
+  //double rangeGraphPsfX = 5.0;
   double rangeGraphPsfY = 0.8;
   double spotHistXY = 8.0;
   double timeHistXY = 6.0;
@@ -471,8 +473,10 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
 
   // use these values for SC telescope (telType ==1)
   if (telType > 0) {
-    numDegBins = 8;
-    deltaDeg = 0.5;
+    numDegBins = 41;
+    //numDegBins = 8;
+    //deltaDeg = 0.5;
+    deltaDeg = 0.1;
  
     rangeGraphTimeX = 5.0;
     rangeGraphTimeY = 0.8;
@@ -485,19 +489,24 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
 
   // these values are for the veritas DC telescope
   if (telType ==0) {
-    numDegBins = 5;
-    deltaDeg = 0.5;
+    numDegBins = 40;
+    //numDegBins = 5;
+    //deltaDeg = 0.5;
+    deltaDeg = 0.1;
 
-    rangeGraphTimeX = 3.0;
+    //rangeGraphTimeX = 3.0;
+    rangeGraphTimeX = 5.0;
     rangeGraphTimeY = 10.0;
-    rangeGraphPsfX = 2.5;
+    //rangeGraphPsfX = 2.5;
+    rangeGraphPsfX = 5.0;
     rangeGraphPsfY = 10.0;
     spotHistXY = 20.0;
     timeHistXY = 10.0;
      // fill in the rest later if have time
   }
   // set number of photons
-  int nPhotons = 5000;
+  //int nPhotons = 5000;
+  int nPhotons = 20000;
 
   vector<double> vDeg;
   double setdeg = 0.0;
@@ -516,11 +525,14 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
   TGraph* graT = new TGraph;
   graT->SetTitle(";Field angle (deg);Photon propagation time spread (RMS) (ns)");
   double spot = spotHistXY;
+  //OH
+  double spotX = 8;
+  double spotY = 6;
   for(Int_t n = 0; n < kN; n++){
     
     double deg = vDeg[n];
 
-    vHist.push_back(new TH2D(Form("hist%d", n), Form("#it{#theta} = %4.1f (deg);X (arcmin);Y (arcmin)", deg), 1000, -spot, spot, 1000, -spot, spot) );
+    vHist.push_back(new TH2D(Form("hist%d", n), Form("#it{#theta} = %4.1f (deg);X (arcmin);Y (arcmin)", deg), 1000, -spotX, spotX, 1000, -spotY, spotY) );
  
     vHistT.push_back(new TH1D(Form("histT%d",n), Form("#it{#theta} = %4.1f (deg);Propagation delay (ns);Entries", deg), 120, -timeHistXY, timeHistXY) );
   }
@@ -635,6 +647,12 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
     Double_t rmsx = vHist[ideg]->GetRMS(1);
     Double_t rmsy = vHist[ideg]->GetRMS(2);
 
+    //OH
+    //Double_t meanx = vHist[ideg]->GetMean(1);
+    //Double_t meany = vHist[ideg]->GetMean(2);
+    //meanXT = meanx;
+    //meanYT = meany;
+
     rmsXT = rmsx;
     rmsYT = rmsy;
     degT = vDeg[ideg];
@@ -652,22 +670,73 @@ void GArrayTel::makeTelescopeTest(const string& testfile) {
 
   string imageFilename;
 
-  TCanvas* canSpot = new TCanvas("canSpot", "canSpot", 1200, 600);
-  canSpot->Divide(4, 2);
-  TCanvas* canTime = new TCanvas("canTime", "canTime", 1200, 600);
-  canTime->Divide(4, 2);
+  TCanvas* canSpot1 = new TCanvas("canSpot1", "canSpot1", 1400, 1000);
+  canSpot1->Divide(3, 3);
+  TCanvas* canTime1 = new TCanvas("canTime1", "canTime1", 1600, 900);
+  canTime1->Divide(3, 3);
+  
+  double PSFmax;
 
-  for(Int_t i = 0; i < kN; i++){
-    canSpot->cd(i + 1);   
+
+  for(Int_t i = 0; i < kN; i+=5){
+    canSpot1->cd(i/5 + 1);
+    vHist[i]->SetStats(0);   
+    vHist[i]->SetMaximum(140);
+    vHist[i]->SetMinimum(1);
+    gPad->SetLogz();
     vHist[i]->DrawCopy("colz");
-    canTime->cd(i + 1);
+    //PSF ellipse
+    TEllipse *el1 = new TEllipse(0,0,vHist[i]->GetRMS(1)*2.,vHist[i]->GetRMS(2)*2.);
+    //el1->SetFillColorAlpha(0, 0); //for pdf transparency
+    el1->SetFillStyle(4000);
+    el1->Draw();
+    //PSF cicle max
+    PSFmax = (vHist[i]->GetRMS(1) > vHist[i]->GetRMS(2) ? vHist[i]->GetRMS(1): vHist[i]->GetRMS(2))*2;
+    TEllipse *el2 = new TEllipse(0,0,PSFmax,PSFmax);
+    //el2->SetFillColorAlpha(0, 0);
+    el2->SetFillStyle(4000);
+    el2->SetLineColor(2);
+    el2->Draw();
+    canTime1->cd(i/5 + 1);
     vHistT[i]->DrawCopy();
   }
+
+  imageFilename = baseName + "_Spot1." + imageFileType;
+  canSpot1->SaveAs(imageFilename.c_str());
+  imageFilename = baseName + "_Time1." + imageFileType;
+  canTime1->SaveAs(imageFilename.c_str());
+
+/*
+  TCanvas* canSpot2 = new TCanvas("canSpot2", "canSpot2", 1400, 1000);
+  canSpot2->Divide(5, 4);
+  TCanvas* canTime2 = new TCanvas("canTime2", "canTime2", 1600, 900);
+  canTime2->Divide(5, 4);
+
+  for(Int_t i = 0; i < kN/2; i++){
+    canSpot2->cd(i + 1);   
+    vHist[i+kN/2]->SetStats(0);
+    vHist[i+kN/2]->DrawCopy("colz");
+    TEllipse *el1 = new TEllipse(0,0,vHist[i+kN/2]->GetRMS(1)*2.,vHist[i+kN/2]->GetRMS(2)*2.);
+    //el1->SetFillColorAlpha(0, 0);
+    el1->SetFillStyle(4000);
+    el1->Draw();
+    //PSF cicle max
+    PSFmax = (vHist[i+kN/2]->GetRMS(1) > vHist[i+kN/2]->GetRMS(2) ? vHist[i+kN/2]->GetRMS(1): vHist[i+kN/2]->GetRMS(2))*2;
+    TEllipse *el2 = new TEllipse(0,0,PSFmax,PSFmax);
+    //el2->SetFillColorAlpha(0, 0); 
+    el2->SetFillStyle(4000);
+    el2->SetLineColor(2);
+    el2->Draw();
+    canTime2->cd(i + 1);
+    vHistT[i+kN/2]->DrawCopy();
+  }
  
-  imageFilename = baseName + "_Spot." + imageFileType;
-  canSpot->SaveAs(imageFilename.c_str());
-  imageFilename = baseName + "_Time." + imageFileType;
-  canTime->SaveAs(imageFilename.c_str());
+  imageFilename = baseName + "_Spot2." + imageFileType;
+  canSpot2->SaveAs(imageFilename.c_str());
+  imageFilename = baseName + "_Time2." + imageFileType;
+  canTime2->SaveAs(imageFilename.c_str());
+*/
+
   //*oLog << " EXITING " << endl;
   //exit(0); 
   TCanvas* canGrPSF = new TCanvas("canGrPSF", "canGrPSF", 600, 300);

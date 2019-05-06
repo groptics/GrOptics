@@ -20,43 +20,6 @@ class TTree;
  */
 struct DCStdFacet {
   
-  /*! \brief constructor: initializes parameters to zero
-   */
-  DCStdFacet();
-
-  /*!  \brief copy constructor
-   */
-  DCStdFacet(const DCStdFacet &dcf);
-
-  /*!  \brief determine location of facet curvature center
-              with added mis_align error 
-
-      \param focLgt telescope focal length
-   */
-  void findFacetCurvatureCenter(const double &focLgt);
-
-  /*! determine rotation matrix for coordinate system
-      rotation from telescope frame to facet surface frame.
-
-      Facet frame has z axis perpendicular to facet surface
-      and y axis in the telescope y-z plane.
-   */
-  void findFacetPlaneRotationMatrix();
-  
-  /*!  determine unit vector normal to the facet plane and location
-              vector of the center of the facet plane. The facet plane covers the
-              front of the facet. The intersection of the facet with its plane is the
-              facet polygon. The polygon external radius is the external radius of
-              the facet.
-   */
-  void findFacetPlane();
-
-  /*! printDCStdFacet prints facet parameters.
-
-      \param oStr output stream
-   */
-  void printDCStdFacet(ostream &oStr=cout);
-
   int facNum;      /*!< facet number, starting from 0 */
 
   int type;        /*!< 1=Circular, 2=Hexagonal*/
@@ -84,7 +47,51 @@ struct DCStdFacet {
                       surface and the ideal sphere.*/
   double reflect;   /*!< Mirror element reflectivity degradation factor*/
   int rflctid;   /*!< Mirror element reflectivity curve identifier*/
+ 
+  /*! \brief constructor: initializes parameters to zero
+   */
+  DCStdFacet();
 
+  /*!  \brief copy constructor
+   */
+  DCStdFacet(const DCStdFacet &dcf);
+
+  /*!  \brief determine location of facet curvature center
+              with added mis_align error.  
+
+      \param focLgt telescope focal length
+   */
+  void findFacetCurvatureCenter(const double &focLgt);
+
+  /*! determine rotation matrix for coordinate system
+      rotation from telescope frame to facet surface frame.
+
+      The facet frame has its z axis perpendicular to facet surface
+      and y axis in the telescope y-z plane. Thus, the z axis of the
+      facet frame is toward the curvature center, the j axis of
+      the facet frame is the intersection line of the two planes
+      defined by the vector toward the curvature center and by
+      the x axis of the telescope frame.  That is, the dot product 
+      of the y axis of the facet frame with the x axis of the 
+      telescope frame is 0.0.
+   */
+  void findFacetPlaneRotationMatrix();
+  
+  /*!  Determine the unit vector normal to the facet plane and location
+       vector of the center of the facet plane. The facet plane covers the
+       front of the facet. The intersection of the facet with its plane is the
+       facet polygon. The polygon external radius is the external radius of
+       the facet.
+   */
+  void findFacetPlane();
+
+  /*! printDCStdFacet prints facet parameters.
+
+      \param oStr output stream
+   */
+  void printDCStdFacet(ostream &oStr=cout);
+
+ 
 };
 /**************************end of DCStdFacet ******************************/
 

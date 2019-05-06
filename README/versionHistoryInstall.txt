@@ -122,6 +122,17 @@ GrOptics accepts input from GrISU compatible photon files.
 
        tag name: v3.1
 
+       For veritas telescopes, the DCRayTracer now uses the photon
+       location on the facet plane in facet plane coordinates rather
+       than in telescope coordinates.  This change makes little
+       difference for veritas DC telescope simulations.  The number of
+       photons determined to strike a facet differs by less that 0.3%
+       between use of the two coordinate systems.  The only code
+       changes are in GDCTelescope.cpp and GDCRayTracer.cpp.
+
+       tag name v3.1.1
+       
+
 1. Installation
 
    Dependencies: ROOT, Gsl, robast	
@@ -157,7 +168,5 @@ GrOptics accepts input from GrISU compatible photon files.
    Expect fairly frequent updates.
 
 -------------------------------------------------------------------------
-branch name: v400Beta.  All changes now in this branch, will merge
-later
 
 

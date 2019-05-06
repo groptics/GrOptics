@@ -362,6 +362,16 @@ void GReadDCStdGrISU::makeStdTelescope() {
       f->reflect     = atof(tokens[10].c_str());
       f->rflctid     = atoi(tokens[11].c_str());
 
+      // change rotation and x and y positions, per earlier veritas config files
+      if (0) {
+	f->ftprot = 0.0/(TMath::RadToDeg());
+	double x = f->xm;
+	double y = f->ym;
+	f->xm = y;
+	f->ym = -x;
+	*oLog << " facet  num rot loc " << f->facNum << " " << f->ftprot << " " << f->xm << " " << f->ym << endl;
+      }
+      
       (telp->facet)[numf - 1] = f;
     }
   }
