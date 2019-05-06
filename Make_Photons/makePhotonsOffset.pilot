@@ -62,7 +62,7 @@ CONFG  <filename: no default>
 
 NUMBR <numevents: default 1> <numphotons: default 10000 >
     Normally, create one shower and set the number of photons to some large number
-* NUMBR  1 500000
+* NUMBR  1 100000
 
 SEEDR <integer: default 0> random number generator seed for TRandom3
 * SEEDR 63565
@@ -91,14 +91,14 @@ OFFSET <WobbleX> <WobbleY> <WobbleR>
    default values (no asterisk) all 0.0.   
 
  OFFSET 0.0 0.00 0.0
- OFFSET 0.0 0.25 0.0
+* OFFSET 0.0 0.25 0.0
 * OFFSET 0.0 0.50 0.0
- OFFSET 0.0 0.75 0.0
- OFFSET 0.0 1.00 0.0
- OFFSET 0.0 1.25 0.0
- OFFSET 0.0 1.50 0.0
- OFFSET 0.0 1.75 0.0
- OFFSET 0.0 2.00 0.0
+* OFFSET 0.0 0.75 0.0
+* OFFSET 0.0 1.00 0.0
+* OFFSET 0.0 1.25 0.0
+* OFFSET 0.0 1.50 0.0
+* OFFSET 0.0 1.75 0.0
+* OFFSET 0.0 2.00 0.0
 
 
 for debugging only, prints lots of intermediate steps.  Use with a small
