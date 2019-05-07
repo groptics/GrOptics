@@ -168,5 +168,34 @@ GrOptics accepts input from GrISU compatible photon files.
    Expect fairly frequent updates.
 
 -------------------------------------------------------------------------
+       tag name: v4.0
+       Version following merge from v400Beta branch, many changes
+
+-------------------------------------------------------------------------
+       tag name: v4.1
+       Tag prior to merge from DCFacetP branch, only a few minor changes
+       (no program logic changes) from v4.0.
+
+-------------------------------------------------------------------------
+       tag name: v4.2
+       Version following merge from DCFacetP. No changes to logic of SEGSC
+       ray tracing.  Bug fix for DC raytracing; added coordinate
+       transformation from telescope coordinates to facet plane coordinates
+       in grid search in findFacet method in GDCRaytracing.cpp code. There
+       is no change in the psf and less than a 1 percent change in the number
+       of photons creating a photoelectron.
+
+       New makePhotonsOffset.pilot file in the Make_Photons directory
+       Improved root graphs from the TESTTEL option
+       
+--------------------------------------------------------------------------
+       tag name: v4.2.1
+       Documentation additions only (mainly in this file)
+       
+
+
+   
+
+
 
 
