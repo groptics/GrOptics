@@ -19,7 +19,11 @@ class TFile;
 #include "TTree.h"
 #include "TFile.h"
 
+#include <string>
+
 #include "Math/Vector3Dfwd.h"
+
+using namespace std;
 
 class GRootWriter
 {
